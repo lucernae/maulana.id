@@ -1,0 +1,22 @@
+---
+backend:
+  name: github
+  repo: lucernae/maulana.id
+  branch: master
+publish_mode: editorial_workflow
+media_folder: "content/assets/uploads"
+public_folder: "/static/content/assets/uploads"
+extension:
+collections:
+  - name: "blog"
+    extension: mdx
+    format: frontmatter
+    label: "Blog"
+    folder: "content/blog"
+    create: true
+    slug: "{{year}}--{{month}}--{{day}}--{{slug}}"
+    fields: 
+      - {label: "Layout", name: "layout", widget: "string", default: "blog-posts"}
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Date", name: "date", widget: "datetime"}
+      - {label: "Body", name: "body", widget: "mdx"}
