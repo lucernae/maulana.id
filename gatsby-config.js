@@ -1,14 +1,14 @@
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Starter Blog`,
+    title: `Maulana's personal blog`,
     author: {
-      name: `Kyle Mathews`,
-      summary: `who lives and works in San Francisco building useful things.`,
+      name: `Rizky Maulana Nugraha`,
+      summary: `Software Developer. Currently remotely working from Indonesia.`,
     },
-    description: `A starter blog demonstrating what Gatsby can do.`,
-    siteUrl: `https://gatsby-starter-blog-demo.netlify.app/`,
+    description: `Personal notes for my hobbies.`,
+    siteUrl: `https://maulana.id/`,
     social: {
-      twitter: `kylemathews`,
+      twitter: `maulana_pcfre`,
     },
   },
   plugins: [
@@ -33,9 +33,10 @@ module.exports = {
       },
     },
     {
-      resolve: `gatsby-transformer-remark`,
+      resolve: `gatsby-plugin-mdx`,
       options: {
-        plugins: [
+        extensions: [`.mdx`, `.md`],
+        gatsbyRemarkPlugins: [
           {
             resolve: `gatsby-remark-images`,
             options: {
@@ -59,10 +60,10 @@ module.exports = {
     {
       resolve: `gatsby-plugin-google-analytics`,
       options: {
-        //trackingId: `ADD YOUR TRACKING ID HERE`,
+        trackingId: `UA-173947917-1`,
       },
     },
-    `gatsby-plugin-feed`,
+    `gatsby-plugin-feed-mdx`,
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
