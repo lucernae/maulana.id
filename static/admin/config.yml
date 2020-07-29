@@ -18,6 +18,7 @@ collections:
     fields: 
       - {label: "Layout", name: "layout", widget: "string", default: "blog-posts"}
       - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "string"}
       - {label: "Date", name: "date", widget: "datetime"}
       - {label: "Body", name: "body", widget: "mdx"}
   - name: "sandbox"
@@ -30,6 +31,7 @@ collections:
     fields: 
       - {label: "Layout", name: "layout", widget: "string", default: "blog-posts"}
       - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "string"}
       - {label: "Date", name: "date", widget: "datetime"}
       - {label: "Body", name: "body", widget: "mdx"}
   - name: "soft-dev"
@@ -42,6 +44,7 @@ collections:
     fields: 
       - {label: "Layout", name: "layout", widget: "string", default: "blog-posts"}
       - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "string"}
       - {label: "Date", name: "date", widget: "datetime"}
       - {label: "Body", name: "body", widget: "mdx"}
       
