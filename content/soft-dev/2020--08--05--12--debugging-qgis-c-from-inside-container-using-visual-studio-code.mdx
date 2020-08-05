@@ -1,0 +1,15 @@
+---
+layout: blog-posts
+title: Debugging QGIS C++ from inside container using Visual Studio Code
+description: Yes you can... But why?
+date: 2020-08-05T12:07:41.171Z
+---
+Why do you even need to compile C++ code from inside a docker container. Even more so, why do you go to such length to debug it? Things will be easier if you can just compile natively...
+
+Well like every good story, there are reasons to do that and I would be very happy to rant it to you. But for those who are not interested and to see how that is technically possible, just skip to [How](#how).
+
+For those who wants to hear the reason, well, bear with me :D
+
+# Intro
+
+It all started when I was trying to port my old Python app from Python 2 to 3.
