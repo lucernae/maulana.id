@@ -12,4 +12,183 @@ For those who wants to hear the reason, well, bear with me :D
 
 # Intro
 
-It all started when I was trying to port my old Python app from Python 2 to 3.
+It all started when I was trying to port my old Python app from Python 2 to 3. I saw that there are some weird unit tests that failed in a certain QGIS version, almost consistently. However, it doesn't print any useful error logs or stacktrace. That means the app crashed before it began testing something.
+
+This is the problematic output taken from Travis CI:
+
+```
+Test saving Current scenario. ... skipped 'Skip when running on Travis'
+
+test_validate_input (gui.tools.test.test_save_scenario.SaveScenarioTest)
+
+Test validate input. ... skipped 'Skip when running on Travis'
+
+test_analysis_wizard (gui.tools.wizard.test.test_function_centric_wizard.TestImpactFunctionCentricWizard)
+
+Test Analysis Wizard. ... Warning: QSvgHandler: Image filename is empty
+
+QGIS died on signal 11QGIS died on signal 11
+
+Finished running test test_suite.test_package (codes: IS_DEAD=0 IS_FAILED=1 IS_PASSED=1).
+
+The command "docker-compose exec qgis-testing-environment qgis_testrunner.sh test_suite.test_package" exited with 1.
+```
+
+As you can see there, QGIS just died without printing anything...
+
+Before I go deep. Let me explain about the environment. QGIS is a desktop application for GIS (Geographic Information Systems), built in C++ using Qt Framework. QGIS has two flavor of API, which is QGIS C++ API and PyQGIS (QGIS API wrapped in Python). My Python application is a plugin in QGIS that uses PyQGIS API. PyQGIS itself is mostly just a wrapper. It will call the actual function written in C++. In Travis CI, my unittests were run from inside QGIS containers. In the past we built our own docker image, but now QGIS has it's own official image and equipped with scripts to run unittests in QGIS context.
+
+In my current context, things are happening somewhere deep inside the function that calls PyQGIS API then it just crashed. Before I went to debug the C++ code, of course my first attempt were to just track the python side of things. I mainly use PyCharm if I need python debugger. I systematically follow and track which line where the program crashed, then finally I arrived at the statement `layer.commitChanges()` which I can't debug anymore because it is a QGIS object wrapped in python.
+
+So my choice were only to figure out what happened in the C++ code. The statement doesn't tell anything because it is doing internal process (no input or output).
+
+However I'm reluctant with compiling QGIS code. Not because I don't know C++, but, compiling huge codebase like QGIS might take literally hours if done in my poor laptop. I don't want to do that just for tracking my app. I didn't intend to do some modification on the QGIS code, I just want to see the code flow and do some inspections about the internal data. 
+
+One other barrier to notice is because I have my own QGIS copy in my machine. If I want to build from source, I need to track my dependencies to follow the documentations. That is sincerely troublesome for me. 
+
+To solve that, I was thinking that maybe I would just built an image in Debug mode. Dockerhub will built it for me, their infra probably are much powerful. Then I can just download it, extract the cache or binaries, then just debug it from inside the container. That sounds reasonable.
+
+Since I'm using QGIS official image to run the unittests, the first thing that I check is wether the image already has compiled cache. It turns out there is! I was quite surprised at first, because I thought they will make the image slim. However, they don't have debug binaries or debug-mode container.
+
+That leave me with no choice to try to build the image my self. Using official QGIS image, I set out to extend it to include debugging tools. I would rather download a 2 GB image and waiting for it to finish in 20 minutes rather than making my machine compiling for several hours and block my other work.
+
+# How
+
+Now the fun part, I will explain step-by-step my reasoning to reproduce.
+
+I dump the resources in my repo here:
+https://github.com/lucernae/qgis-debug-mode/
+
+The general ideas are like this:
+
+1. Create Dockerfile recipe using existing QGIS official image
+2. Build the image using Docker Hub
+3. Pull the image
+4. Run the containers
+5. Extract caches, binaries, headers from the containers
+6. Rerun container for debug mode, this time mounting my host volume inside
+7. Run remote debugger server inside the container
+8. Connect from my host machine using Visual Studio Code remote debugging and source code map
+9. Trace the code
+
+We are going to iterate one by one.
+
+## Create Debug-mode image
+
+You need to consider what kind of abilities you want the container to have. For me:
+
+1. Ability to change the CMAKE Flags (so I can switch it to Debug mode build).
+2. Include SSH Server, in case I need it to rsync or access the container using VSCode or PyCharm tools
+3. Include VNC server, in case I want to see visual GUI feedback when the unittest is running
+4. Add entrypoint script injection, in case I need to do preparation step before debugging session (like installing some binaries, etc).
+
+You can check the final recipe here:
+https://github.com/lucernae/qgis-debug-mode/blob/master/Dockerfile
+
+## Build the image using Docker Hub
+
+This one is pretty simple. You go to the docker hub:
+https://hub.docker.com/
+
+Create a new repo, then link it with your github repositories that contains the recipe. You can then trigger build from there. I think there are many articles that describes this step
+
+## Pulling the image
+
+Once your image is built. Pull it in your machine like this:
+
+```shell
+docker pull lucernae/qgis-debug-mode
+```
+
+Replace `lucernae` with your docker hub username.
+Replace `qgis-debug-mode` with your docker image repo name.
+If no tag is specified, it will take the `latest` tag.
+
+## Run the containers and extract caches
+
+Basically, you need a running containers if you want to copy the files inside it to your host. The script https://github.com/lucernae/qgis-debug-mode/blob/master/scripts/sync-cache.sh does just that.
+
+There are 3 directories that I think is important. You can decide if you want to extract it or not.
+
+**build directories**
+
+Inside the containers, it is located in `/QGIS/build`. This is where the cmake config and the build output is located. 
+
+**ccache directories**
+
+Inside the containers, it is located in `/QGIS/.ccache_image_build`. You might want to store it if you want to do a recompilation and save time doing that.
+
+**development headers**
+
+This is especially important since I want to debug the code, I need the C++ dev headers. This is because I don't want to install the header inside my machine. The headers, as usual, is located in `/usr/include`. I copied it into my host's build directory.
+
+## Running containers with persistence
+
+After I extracted those 3 directories, I rerun the container with those directories mounted. This is because I want to keep the state, separated from the containers. If I need a recompile, then the changes will be persisted.
+
+The final `docker-compose.override.yml` in my case is:
+
+```yaml
+version: '3'
+services: 
+    qgis:
+        image: lucernae/qgis-debug-mode
+        command: /bin/bash -c "while [ 'TRUE' ]; do gdbserver 0.0.0.0:34567 /QGIS/build/output/bin/qgis; done"
+        ports: 
+            - "34567:34567"
+            - "322:22"
+        environment:
+            DISPLAY: ":98"
+        volumes:
+            - /home/lucernae/WorkingDir/QGIS/QGIS/.ccache_image_build:/QGIS/.ccache_image_build
+            - /home/lucernae/WorkingDir/QGIS/QGIS/build:/QGIS/build
+            - /home/lucernae/WorkingDir/QGIS/QGIS/src:/QGIS/src
+            - ${PWD}/user_scripts/my_startup.sh:/docker-entrypoint-scripts.d/my_startup.sh
+            - ${PWD}/user_scripts:/user_scripts
+            # InaSAFE
+            - /home/lucernae/WorkingDir/InaSAFE/inasafe:/tests_directory
+```
+
+As you can guess from the recipe:
+
+- I ran gdbserver in a loop in port 34567. Whenever my session ended, gdbserver will be ready again.
+- I expose the ssh port into port 322, and the debug server to 34567
+- I used `DISPLAY: ":98"` which is where the VNC server is listening. The container will feed the display stream here.
+- I mounted several directories (which is the cache that I told you before) from another folder where my QGIS repo is located in my machine. This is just to keep things organized
+- I mount my start up scripts
+- I mount my python plugin inside the container (so I can run the python unittests)
+
+
+If you are interested with my startup scripts, here it is:
+
+```shell
+#!/usr/bin/env
+
+# GDB Server must run inside the container as Host
+# Then debugger client must connect to it
+
+apt -y update; apt -y install gdbserver
+
+pip3 install pydevd-pycharm~=201.8743.11
+```
+
+Basically I installed gdbserver and pydevd-pycharm package. These are packages needed for my debugging session. Gdbserver is used to debug C++ code, pydevd is used to debug my python code.
+
+"Whoaa, wait, are you debugging both the python code and C++???"
+
+Well yes, I don't knwo what this is actually called (maybe mixed-mode debugging?), but it's actually not that complex. The app run on a single thread and not distributed so we can block the process either from Python or C++, but in my case I need to attach breakpoints on both side to inspect the values.
+
+Now, to start the debugging session, we just need to start the container.
+
+In my repo, I provided simple make command to start the container.
+
+```shell
+make up
+# which is an alias for
+# docker-compose up -d
+```
+
+This will start the gdbserver
+
+
+## Mixed Mode Debugging with C++ and Python
