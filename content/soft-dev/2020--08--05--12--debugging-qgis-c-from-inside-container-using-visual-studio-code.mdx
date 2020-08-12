@@ -238,9 +238,9 @@ In your project repo/vscode workspace, create the `.vscode` directory. Inside it
 }
 ```
 
-If you are not familiar with VSCode launch.json file, I will explain a bit. This file is needed for VSCode to understand what kind of debugging session you want to make. In my case here, I am using \`type: cppdb\` config. The full option can be seen in: https://code.visualstudio.com/docs/cpp/launch-json-reference .
+If you are not familiar with VSCode launch.json file, I will explain a bit. This file is needed for VSCode to understand what kind of debugging session you want to make. In my case here, I am using `type: cppdbg` config. The full option can be seen in: https://code.visualstudio.com/docs/cpp/launch-json-reference .
 
-Some options for highlight is the \`miDebuggerPath\` which must point to your gdb executable in the \*\*host\*\*, \`miDebuggerServerAddress\` which points to the debug server address, which in turns come from our QGIS Debug container port that we exposed to our host in port 34567. The sourceFileMap is used to map files inside the container to the very same files inside my project repo in the host. Notice that I also map the header files.
+Some options for highlight is the `miDebuggerPath` which must point to your gdb executable in the **host**, `miDebuggerServerAddress` which points to the debug server address, which in turns come from our QGIS Debug container port that we exposed to our host in port 34567. The sourceFileMap is used to map files inside the container to the very same files inside my project repo in the host. Notice that I also map the header files.
 
 After this file is ready you can go to the VSCode debug menu and start the session. Usually by pressing F5, or clicking Run > Start Debugging menu. The Debug console will appear. If you also setup VNC connections, QGIS UI can also be seen. Here's what it looks like:
 
