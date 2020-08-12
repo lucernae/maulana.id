@@ -151,13 +151,12 @@ services:
 
 As you can guess from the recipe:
 
-- I ran gdbserver in a loop in port 34567. Whenever my session ended, gdbserver will be ready again.
-- I expose the ssh port into port 322, and the debug server to 34567
-- I used `DISPLAY: ":98"` which is where the VNC server is listening. The container will feed the display stream here.
-- I mounted several directories (which is the cache that I told you before) from another folder where my QGIS repo is located in my machine. This is just to keep things organized
-- I mount my start up scripts
-- I mount my python plugin inside the container (so I can run the python unittests)
-
+* I ran gdbserver in a loop in port 34567. Whenever my session ended, gdbserver will be ready again.
+* I expose the ssh port into port 322, and the debug server to 34567
+* I used `DISPLAY: ":98"` which is where the VNC server is listening. The container will feed the display stream here.
+* I mounted several directories (which is the cache that I told you before) from another folder where my QGIS repo is located in my machine. This is just to keep things organized
+* I mount my start up scripts
+* I mount my python plugin inside the container (so I can run the python unittests)
 
 If you are interested with my startup scripts, here it is:
 
@@ -174,11 +173,13 @@ pip3 install pydevd-pycharm~=201.8743.11
 
 Basically I installed gdbserver and pydevd-pycharm package. These are packages needed for my debugging session. Gdbserver is used to debug C++ code, pydevd is used to debug my python code.
 
-"Whoaa, wait, are you debugging both the python code and C++???"
+> "Whoaa, wait, are you debugging both the python code and C++???"
 
-Well yes, I don't knwo what this is actually called (maybe mixed-mode debugging?), but it's actually not that complex. The app run on a single thread and not distributed so we can block the process either from Python or C++, but in my case I need to attach breakpoints on both side to inspect the values.
+Well yes, I don't know what this is actually called (maybe mixed-mode debugging?), but it's actually not that complex. The app run on a single thread and not distributed so we can block the process either from Python or C++, but in my case I need to attach breakpoints on both sides to inspect the values.
 
-Now, to start the debugging session, we just need to start the container.
+## Mixed Mode Debugging with C++ and Python
+
+Now, to start the debugging session, we just need to start the QGIS Debug container first.
 
 In my repo, I provided simple make command to start the container.
 
@@ -188,7 +189,208 @@ make up
 # docker-compose up -d
 ```
 
-This will start the gdbserver
+This will start the gdbserver and if you view the container logs, it will show something like this:
+
+```
+gdbserver: Error disabling address space randomization: Operation not permitted
+Process /QGIS/build/output/bin/qgis created; pid = 356
+Listening on port 34567
+```
+
+Gdbserver now ready to accept debug session. Next, I will start the session from within VSCode that opens my QGIS repo. I created a `launch.json` file for that.
+
+In your project repo/vscode workspace, create the `.vscode` directory. Inside it, put the `launch.json` configuration, like this:
+
+```json
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+      {
+          "name": "QGIS C++ Debug Launch",
+          "type": "cppdbg",
+          "request": "launch",
+          "program": "${workspaceRoot}/build/output/bin/qgis",
+          "miDebuggerPath": "/usr/bin/gdb",
+          "miDebuggerServerAddress": "localhost:34567",
+          "args": [],
+          "stopAtEntry": false,
+          "cwd": "${workspaceRoot}",
+          "sourceFileMap": {
+            "/QGIS": "${workspaceRoot}",
+            "/usr/include": "${workspaceRoot}/build/include"
+          },
+          "environment": [],
+          "externalConsole": true,
+            "linux": {
+              "MIMode": "gdb"
+            },
+            "osx": {
+              "MIMode": "gdb"
+            },
+            "windows": {
+              "MIMode": "gdb"
+            }
+      }
+  ]
+}
+```
+
+If you are not familiar with VSCode launch.json file, I will explain a bit. This file is needed for VSCode to understand what kind of debugging session you want to make. In my case here, I am using \`type: cppdb\` config. The full option can be seen in: https://code.visualstudio.com/docs/cpp/launch-json-reference .
+
+Some options for highlight is the \`miDebuggerPath\` which must point to your gdb executable in the \*\*host\*\*, \`miDebuggerServerAddress\` which points to the debug server address, which in turns come from our QGIS Debug container port that we exposed to our host in port 34567. The sourceFileMap is used to map files inside the container to the very same files inside my project repo in the host. Notice that I also map the header files.
+
+After this file is ready you can go to the VSCode debug menu and start the session. Usually by pressing F5, or clicking Run > Start Debugging menu. The Debug console will appear. If you also setup VNC connections, QGIS UI can also be seen. Here's what it looks like:
+
+![VSCode and VNC Debug Session side by side](/static/content/assets/uploads/screenshot_20200813_031044.png "VSCode and VNC Debug Session side by side")
+
+If you don't know how to receive VNC stream, you need to get a VNC client first. I used KRDC, KDE's distro packaged Remote Desktop Client. Create a new connection by putting this settings:
+
+* Protocol: VNC
+* Server address: localhost (since we are exposing the port from container to our host directly)
+* Server port: 5998 (which is port 5900 + Display Number 98)
+* User: root (hardcoded in entrypoint script)
+* Password: userpass (hardcoded in entrypoint script)
+
+The VNC part is not necessary but a nice thing to have when you want to click thru things or viewing the GUI when running unittests.
+
+One other thing to watch out for is checking if the debug symbols are properly loaded. If it is, the breakpoints will glow red as in the screenshots. If not then VSCode can't find the symbols.
+
+You can start the debug session in C++ now, but for me I needed to fire up python unittests, because my unittests are in Python.
+
+To do that, I open my trusty Python IDE (which is PyCharm... sorry VSCode).
+
+I created a Python Debug Server Configuration as seen in the screenshot below:
+
+![PyCharm Python Debug Server](/static/content/assets/uploads/screenshot_20200813_032047.png "PyCharm Python Debug Server")
+
+In nut shell, I want to start a debug server. However contrary with how gdbserver works, the debug server will be running in my host, by PyCharm. This is why I put my ethernet interface IP address in the IDE hostname field. You can't use `localhost` because from the process inside the containers, localhost is the container itself, so you won't connect. You have to put where your host is, which is the interface address from the container perspectives. If you are still confused, perceive the container as a separate computer somewher that is connected with your LAN or WiFi. In that case, obviously you need to put your real host IP Adress for the container to be able to reach you.
+
+Next, run the debug server. PyCharm will open debug console with some instructions on how to attach the debugger in your code.
+
+![PyCharm Debug Console](/static/content/assets/uploads/screenshot_20200813_032705.png "PyCharm Debug Console")
+
+Follow the instructions. In my case, I copy paste the code and put it in my plugins entrypoint, which is `__init__.py` of my main module. Like this:
+
+![Attaching the debug client](/static/content/assets/uploads/screenshot_20200813_033026.png "Attaching the debug client")
+
+Ok. My setup is ready now.
+
+We just need to run the unittest.
+
+My unittest is a python code, so how do we start it by keep making it attached with the C++ debug session?
+
+It's easier than I think. I just need to tell gdbserver to watch out the process name I want to debug.
+
+QGIS provides a bash script to run python unittests using QGIS python shell. So I just run that. In my case I run it like this
+
+```shell
+# From inside the container
+qgis_testrunner.sh test_suite.test_one
+# The argument is my package name
+```
+
+What I want to see is how it actually calls qgis. After I run that, the program paused because PyCharm paused it (the debug attach works). I have time to figure out the process arguments.
+
+```shell
+# The previous command will hang for now, so we open another shell session
+# In this shell, try to figure out the PID of qgis
+# Then find it from ps -ax output
+# Then pipe it to less to view the full args
+ps -ax | grep `pidof qgis` | less
+
+# I got this following full command:
+qgis --version-migration --nologo --code /usr/bin/qgis_testrunner.py test_suite.test_one
+```
+
+The debug setup that I know will work is to put this command as the program I want to debug. So I changed gdbserver argument to become like this:
+
+```shell
+gdbserver 0.0.0.0:34567 /QGIS/build/output/bin/qgis --version-migration --nologo --code /usr/bin/qgis_testrunner.py test_suite.test_one
+```
+
+Noticed that I replaces `qgis` with `/QGIS/build/output/bin/qgis` because that is my debug executable.
+
+For convenience I put this as a command in my docker-compose.override.yml. Then restart the containers. Gdbserver will exit after each debug session, this command made the debug server restart after each debug session.
+
+```yaml
+services:
+  qgis:
+    command: /bin/bash -c "while [ 'TRUE' ]; do gdbserver 0.0.0.0:34567 /QGIS/build/output/bin/qgis --version-migration --nologo --code /usr/bin/qgis_testrunner.py test_suite.test_one; done"
+```
+
+I restart my debug session.
+
+As a recap, this is what happens in order:
+
+1. When you restart your container, gdbserver start and waiting for gdbclient to connect
+2. When you run C++ debug mode in VSCode, it will start to connect to gdbserver start the session
+3. Gdbserver will run the unittest. It will pause because python debugger is attached in PyCharm
+4. I disabled all my C++ breakpoints, because I only want to step thru C++ code in the area where the unittest will fails
+5. I step into the python code in PyCharm and paused just before it is ready to run python wrapper that calls C++ code that will crash QGIS
+6. I enabled my C++ breakpoints
+7. I let the python code runs in PyCharm
+8. I am paused in VSCode because it hits breakpoints
+9. Now I step thru C++ code until I found the problem
+10. Rinse and repeat for the next bug
+
+It is a little bit crazy that you jump from PyCharm to VSCode, but I really like PyCharm Pro features even though you can also use VSCode to run Python Debugger.
+
+Long story short, I found the problem and fix it.
+
+\## Useful tips to print Qt object values
+
+As QGIS uses Qt framework, I was forced to watch Qt variables. One of the annoying things for me is I wouldn't be able to see QString text in VSCode debuggers because it can't read the data structure.
+
+I found a useful gdb command to do that in this article:
+
+```
+# Taken from http://silmor.de/qtstuff.printqstring.php
+
+define printqs5static
+  set $d=$arg0.d
+  printf "(Qt5 QString)0x%x length=%i: \"",&$arg0,$d->size
+  set $i=0
+  set $ca=(const ushort*)(((const char*)$d)+$d->offset)
+  while $i < $d->size
+    set $c=$ca[$i++]
+    if $c < 32 || $c > 127
+      printf "\\u%04x", $c
+    else
+      printf "%c" , (char)$c
+    end
+  end
+  printf "\"\n"
+end
+
+define printqs5dynamic
+  set $d=(QStringData*)$arg0.d
+  printf "(Qt5 QString)0x%x length=%i: \"",&$arg0,$d->size
+  set $i=0
+  while $i < $d->size
+    set $c=$d->data()[$i++]
+    if $c < 32 || $c > 127
+      printf "\\u%04x", $c
+    else
+      printf "%c" , (char)$c
+    end
+  end
+  printf "\"\n"
+end
+```
+
+You can copy paste that and put it into `~/.gdbinit`. This will allow you to access this command inside gdb session. I use it like this in VSCode:
+
+![Print Qt String as text](/static/content/assets/uploads/screenshot_20200813_044206.png "Print Qt String as text")
+
+In the debug console, I run `-exec printqt5static <variable name>`
+
+Special thanks for http://silmor.de/qtstuff.printqstring.php for the neat macro.
 
 
-## Mixed Mode Debugging with C++ and Python
+
+\# Conclusions
+
+It is such a rare occasion that I need to go deep and cross from Python realm into internal C++ code structure of QGIS. I mostly deals with PyQGIS code anyway. I am also not assigned on any QGIS core code related tasks. However this kind of setup works with any reasonable C++ development. It's not unthinkable that you need to do a remote debugging session from inside container. Especially for project that have huge native dependencies like QGIS. With this setup, people like me, that is not a daily contributor of QGIS can easily focus on tracing the code instead of dealing with dependencies issues in my daily driver computer that is not properly equipped to do that kind of tasks. Let docker hub build the debug version of the app and you can just use it right away.
