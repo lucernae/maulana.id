@@ -4,7 +4,7 @@ title: Debugging QGIS C++ from inside container using Visual Studio Code
 description: Yes you can... But why?
 date: 2020-08-05T12:07:41.171Z
 ---
-Why do you even need to compile C++ code from inside a docker container. Even more so, why do you go to such length to debug it? Things will be easier if you can just compile natively...
+Why do you even need to compile C++ code from inside a docker container? Even more so, why do you go to such length to debug it? Things will be easier if you can just compile natively...
 
 Well like every good story, there are reasons to do that and I would be very happy to rant it to you. But for those who are not interested and to see how that is technically possible, just skip to [How](#how).
 
@@ -244,7 +244,7 @@ Some options for highlight is the `miDebuggerPath` which must point to your gdb 
 
 After this file is ready you can go to the VSCode debug menu and start the session. Usually by pressing F5, or clicking Run > Start Debugging menu. The Debug console will appear. If you also setup VNC connections, QGIS UI can also be seen. Here's what it looks like:
 
-![VSCode and VNC Debug Session side by side](/static/content/assets/uploads/screenshot_20200813_031044.png "VSCode and VNC Debug Session side by side")
+![VSCode and VNC Debug Session side by side](/images/uploads/screenshot_20200813_031044.png "VSCode and VNC Debug Session side by side")
 
 If you don't know how to receive VNC stream, you need to get a VNC client first. I used KRDC, KDE's distro packaged Remote Desktop Client. Create a new connection by putting this settings:
 
@@ -254,9 +254,9 @@ If you don't know how to receive VNC stream, you need to get a VNC client first.
 * User: root (hardcoded in entrypoint script)
 * Password: userpass (hardcoded in entrypoint script)
 
-The VNC part is not necessary but a nice thing to have when you want to click thru things or viewing the GUI when running unittests.
+The VNC part is not necessary, but a nice thing to have when you want to click thru things or viewing the GUI when running unittests.
 
-One other thing to watch out for is checking if the debug symbols are properly loaded. If it is, the breakpoints will glow red as in the screenshots. If not then VSCode can't find the symbols.
+One other thing to watch out for is checking if the debug symbols are properly loaded. If it is, the breakpoints will glow red as in the screenshots. If not, then VSCode can't find the symbols.
 
 You can start the debug session in C++ now, but for me I needed to fire up python unittests, because my unittests are in Python.
 
@@ -264,17 +264,17 @@ To do that, I open my trusty Python IDE (which is PyCharm... sorry VSCode).
 
 I created a Python Debug Server Configuration as seen in the screenshot below:
 
-![PyCharm Python Debug Server](/static/content/assets/uploads/screenshot_20200813_032047.png "PyCharm Python Debug Server")
+![PyCharm Python Debug Server](/images/uploads/screenshot_20200813_032047.png "PyCharm Python Debug Server")
 
-In nut shell, I want to start a debug server. However contrary with how gdbserver works, the debug server will be running in my host, by PyCharm. This is why I put my ethernet interface IP address in the IDE hostname field. You can't use `localhost` because from the process inside the containers, localhost is the container itself, so you won't connect. You have to put where your host is, which is the interface address from the container perspectives. If you are still confused, perceive the container as a separate computer somewher that is connected with your LAN or WiFi. In that case, obviously you need to put your real host IP Adress for the container to be able to reach you.
+In a nut shell, I want to start a debug server. However, contrary with how gdbserver works, the debug server will be running in my host, by PyCharm. This is why I put my ethernet interface IP address in the IDE hostname field. You can't use `localhost` because from the process inside the container, localhost is the container itself, so you won't connect. You have to put the address where your host really is, which is the interface address from the container perspectives. If you are still confused, perceive the container as a separate computer somewhere that is connected with your LAN or WiFi. In that case, obviously you need to put your real host IP address for the container to be able to reach you.
 
 Next, run the debug server. PyCharm will open debug console with some instructions on how to attach the debugger in your code.
 
-![PyCharm Debug Console](/static/content/assets/uploads/screenshot_20200813_032705.png "PyCharm Debug Console")
+![PyCharm Debug Console](/images/uploads/screenshot_20200813_032705.png "PyCharm Debug Console")
 
 Follow the instructions. In my case, I copy paste the code and put it in my plugins entrypoint, which is `__init__.py` of my main module. Like this:
 
-![Attaching the debug client](/static/content/assets/uploads/screenshot_20200813_033026.png "Attaching the debug client")
+![Attaching the debug client](/images/uploads/screenshot_20200813_033026.png "Attaching the debug client")
 
 Ok. My setup is ready now.
 
@@ -340,9 +340,9 @@ It is a little bit crazy that you jump from PyCharm to VSCode, but I really like
 
 Long story short, I found the problem and fix it.
 
-\## Useful tips to print Qt object values
+## Useful tips to print Qt object values
 
-As QGIS uses Qt framework, I was forced to watch Qt variables. One of the annoying things for me is I wouldn't be able to see QString text in VSCode debuggers because it can't read the data structure.
+As QGIS uses Qt framework, I was forced to watch Qt variables. One of the annoying things for me is I wouldn't be able to see QString text in VSCode debugger because it can't read the data structure.
 
 I found a useful gdb command to do that in this article:
 
@@ -383,7 +383,7 @@ end
 
 You can copy paste that and put it into `~/.gdbinit`. This will allow you to access this command inside gdb session. I use it like this in VSCode:
 
-![Print Qt String as text](/static/content/assets/uploads/screenshot_20200813_044206.png "Print Qt String as text")
+![Print Qt String as text](/images/uploads/screenshot_20200813_044206.png "Print Qt String as text")
 
 In the debug console, I run `-exec printqt5static <variable name>`
 
