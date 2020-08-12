@@ -391,6 +391,6 @@ Special thanks for http://silmor.de/qtstuff.printqstring.php for the neat macro.
 
 
 
-\# Conclusions
+# Conclusions
 
 It is such a rare occasion that I need to go deep and cross from Python realm into internal C++ code structure of QGIS. I mostly deals with PyQGIS code anyway. I am also not assigned on any QGIS core code related tasks. However this kind of setup works with any reasonable C++ development. It's not unthinkable that you need to do a remote debugging session from inside container. Especially for project that have huge native dependencies like QGIS. With this setup, people like me, that is not a daily contributor of QGIS can easily focus on tracing the code instead of dealing with dependencies issues in my daily driver computer that is not properly equipped to do that kind of tasks. Let docker hub build the debug version of the app and you can just use it right away.
