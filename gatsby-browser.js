@@ -5,7 +5,7 @@ import "typeface-merriweather"
 import "prismjs/themes/prism.css"
 
 
-const addScript = ({url}) => {
+const addScript = (url) => {
     const script = document.createElement('script')
     script.async = true
     script.src = url
@@ -13,5 +13,6 @@ const addScript = ({url}) => {
 }
 
 export const wrapPageElement = ({element}) => {
+    console.log('wrapPage')
     addScript(`https://platform.twitter.com/widgets.js`)
 }

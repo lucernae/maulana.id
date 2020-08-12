@@ -45,6 +45,11 @@ const BlogPostTemplate = ({ data, pageContext, location }) => {
           }}
         />
         <footer>
+          <span>
+            <i>
+            Comments or questions? Send me an <a href="mailto:lana.pcfre@gmail.com">email</a>
+            </i>
+          </span>
           <Bio />
         </footer>
       </article>

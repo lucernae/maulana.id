@@ -29,6 +29,7 @@ const Bio = () => {
           }
           social {
             twitter
+            github
           }
         }
       }
@@ -63,7 +64,12 @@ const Bio = () => {
         {` `}
         
         <br/>
-        <a href={`https://twitter.com/${social.twitter}?ref_src=twsrc%5Etfw`} className="twitter-follow-button" data-show-count="false">{`Follow me: @${social.twitter}`}</a>
+        <a href={`https://twitter.com/${social.twitter}`}>
+          <img alt="Twitter Follow" src={`https://img.shields.io/twitter/follow/${social.twitter}?style=social`}></img>
+        </a>
+        <a href={`https://github.com/${social.github}`}>
+          <img alt="GitHub followers" src={`https://img.shields.io/github/followers/${social.github}?style=social`}></img>
+        </a>
       </p>
     </div>
   )
