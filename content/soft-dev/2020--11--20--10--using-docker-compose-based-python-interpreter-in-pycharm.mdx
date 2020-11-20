@@ -1,0 +1,25 @@
+---
+layout: blog-posts
+title: Using Docker Compose based Python Interpreter in PyCharm
+description: Debugging container just becomes slightly easier
+date: 2020-11-20T09:57:03.865Z
+---
+# Intro
+
+I was involved with different kinds of Django project in the past. Back then the standard approach of attaching your debug interpreter is by creating a virtual environment in your python project. We debug using PyCharm at that time. JetBrains has generously gave us free open source license to use the whole suite of JetBrains tools.
+
+However, back then the notion of developing a Django project from inside a container is not so common. We already manage some of our projects as microservices described by a (or several) docker-compose file. To debug with this kind of setup, we are using SSH daemon inside our container. Then we setup PyCharm so that it treats the docker container as a **remote interpreter**. This is working for quite a long time. Then finally JetBrains released some supports to allow interpreters inside a docker-compose configuration.
+
+Things didn't transition smoothly back then. First issue that I remember is that the interpreter forgets all of the environment variable declared in the docker-compose file. Since Django used environment variable to override it's settings file, this setup were unusable. So we keep doing the old ways, using remote interpreter.
+
+Recent PyCharm version is making it more difficult to set up a remote interpreter. As of now, in version 2020.2, when we set up a remote interpreter, we implicitly defined deployment configuration. This is not needed if you are using a container, because the files were already mounted there, you don't need to copy it again using sftp, etc. However the new interface is quite confusing because you can't disable the setting at first. You are only allowed to delete the deployment configuration after you've made the configuration (funny, eh?). I've also tried different approach, such as creating the SSH configuration first, then set it as remote interpreter, but still it generate the deployment configuration.
+
+So, fed up with this, I decided to try the docker-compose-based interpreter again. I noticed several improvements:
+
+1. You can now include multiple docker-compose recipes (useful for overriding local config on top of production config)
+2. You are allowed to include an environment file (they fixed the main deal breaker from previous issue)
+3. You can map local directory with the directory inside container (so that PyCharm knew it was the same thing)
+4. When you create a Run Configuration, the environment the interpreter use is the one coming from docker-compose. So, you won't need to redeclare your environment variables again. Hurray!
+
+
+# 
