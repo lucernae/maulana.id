@@ -142,23 +142,23 @@ docker-compose down
 
 To see how much PyCharm improve our workflow, using the same repo, open the folder in PyCharm.
 
-PyCharm bundled the docker-compose plugin integration by default. If for some reason you can't use it, refer to [official doc](https://www.jetbrains.com/help/pycharm/docker-compose.html).
+PyCharm bundled the docker-compose plugin integration by default. If for some reason you can't use it, refer to [official doc][1].
 
 Open the `docker-compose.yml` file in the `deployment` directory. You will see that the lines are annotated by arrows like this:
 
 ![docker-compose.yml file](/images/uploads/screen-shot-2020-11-22-at-18.51.14.png "docker-compose.yml file")
 
-You can click the arrow. Click the double arrow in the \`services:\` line. PyCharm will deploy that recipe for you. The service tab will appear to let you know that the compose file are deployed.
+You can click the arrow. Click the double arrow in the `services:` line. PyCharm will deploy that recipe for you. The service tab will appear to let you know that the compose file are deployed.
 
 ![](/images/uploads/screen-shot-2020-11-22-at-18.57.02.png)
 
-As you can see, it also pick up the \`COMPOSE_PROJECT_NAME\` that you specify in \`.env\` file. \`mysite\` is the name of the stack and you can drill it down to see the services. This tab offer some controls too. You can redeploy, stop, or down the deployment with just a click. Right click the deployment name to see the context menu.
+As you can see, it also pick up the `COMPOSE_PROJECT_NAME` that you specify in `.env` file. `mysite` is the name of the stack and you can drill it down to see the services. This tab offer some controls too. You can redeploy, stop, or down the deployment with just a click. Right click the deployment name to see the context menu.
 
-After some sightseeing you will notice that what you deploy (even though it picks up \`.env\` file) is only the recipe from \`docker-compose.yml\` file. It is evident if you see the service log of django, it shows uWSGI running and not Django debug server.
+After some sightseeing you will notice that what you deploy (even though it picks up `.env` file) is only the recipe from `docker-compose.yml` file. It is evident if you see the service log of django, it shows uWSGI running and not Django debug server.
 
 ![](/images/uploads/screen-shot-2020-11-22-at-19.02.44.png)
 
-So, edit the PyCharm configuration. You can do it from the deployment context menu then Edit Configuration, or deployment configuration bar on the top menu. Basically add the file \`docker-compose.override.yml\` in the Compose files field. So you will have something like this:
+So, edit the PyCharm configuration. You can do it from the deployment context menu then Edit Configuration, or deployment configuration bar on the top menu. Basically add the file `docker-compose.override.yml` in the Compose files field. So you will have something like this:
 
 ![](/images/uploads/screen-shot-2020-11-22-at-19.06.45.png)
 
@@ -170,7 +170,7 @@ In a typical development session, you mostly run the deployment once, do some co
 
 We first setup the Python Interpreter.
 
-Open PyCharm Project settings, then navigate to Project Interpreter. Click the gear icon and click Add. You will be given several options to select the source of your interpreter. Choose docker-compose. Fill in the settings, which consists of Configuration file(s) (Put \`docker-compose.yml\` and \`docker-compose.override.yml\` in that order), and the service (Pick \`django\`). It should looks like in the image below. Click OK.
+Open PyCharm Project settings, then navigate to Project Interpreter. Click the gear icon and click Add. You will be given several options to select the source of your interpreter. Choose docker-compose. Fill in the settings, which consists of Configuration file(s) (Put `docker-compose.yml` and `docker-compose.override.yml` in that order), and the service (Pick `django`). It should looks like in the image below. Click OK.
 
 ![](/images/uploads/screen-shot-2020-11-22-at-19.15.30.png)
 
@@ -200,6 +200,25 @@ It's the same thing you get from running `docker-compose exec django python mana
 
 Now, let's step up further and create a Django server run configuration.
 
-Mark `django_project` directory as a **Source Directory** by right clicking the directory and select **Mark Directory as** > ** Sources Root** . If it's not detected already, mark the `django_project/mysite/templates` directory as **Templates Folder**. You will now be able to activate code completions in that folder.
+Mark `django_project` directory as a **Source Directory** by right clicking the directory and select **Mark Directory as** >  **Sources Root** . If it's not detected already, mark the `django_project/mysite/templates` directory as **Templates Folder**. You will now be able to activate code completions in that folder.
 
-# Reference
+To create a new Run/Debug Config (for Django now), click the Configuration selector, or navigate from menu **Run** > **Edit Configuration**. As you can see, you already have docker-compose run configuration. We now want to add Django run config. Click the + button and choose **Django Server**. Most of our config resides in `.env` file. So we don't actually need to modify anything else here besides the target server address to match the port that we expose to in the container (currently 8080). See the screenshot for reference:
+
+![](/images/uploads/screen-shot-2020-11-22-at-19.48.18.png)
+
+Click OK. Then you can click the Run Button with **Django** config selected (or whatever the name you gave for the config in previous step). Run button will run the Django Debug Server as usual, meanwhile Debug button will attach PyCharm debugger to Django. Let's check what Debug button do.
+
+Debug mode panel will show up after you click Debug button. It basically recreates service to attach debugger. You can also see the log in that panel, which is nice because you don't need to go inside the container to see that now.
+
+![](/images/uploads/screen-shot-2020-11-22-at-19.51.18.png)
+
+As with any debugging session, you can attach breakpoint to any of your python code in the sources folder. With PyCharm you can even attach breakpoint in the template! You can debug in realtime when the template is currently rendered. This is such an awesome features. Here's what it looks like when you are currently debugging Django Template:
+
+![](/images/uploads/screen-shot-2020-11-22-at-20.05.03.png)
+
+You can do many things in this mode, such as inspecting variables and so on. If for some reason this template debugger doesn't work for you, check out the [documentation][2] and make sure that you set the current template language to be Django instead of Jinja. 
+
+Finally, the last 
+
+[1]: https://www.jetbrains.com/help/pycharm/docker-compose.html
+[2]: https://www.jetbrains.com/help/pycharm/templates.html
