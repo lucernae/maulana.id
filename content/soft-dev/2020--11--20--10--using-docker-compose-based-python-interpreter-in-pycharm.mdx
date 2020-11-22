@@ -6,7 +6,7 @@ date: 2020-11-20T09:57:03.865Z
 ---
 # Intro
 
-I was involved with different kinds of Django project in the past. Back then the standard approach of attaching your debug interpreter is by creating a virtual environment in your python project. We debug using PyCharm at that time. JetBrains has generously gave us free open source license to use the whole suite of JetBrains tools.
+I was involved with different kinds of Django projects in the past. Back then the standard approach of attaching your debug interpreter is by creating a virtual environment in your python project. We debug using PyCharm at that time. JetBrains has generously gave us free open source license to use the whole suite of JetBrains tools.
 
 However, back then the notion of developing a Django project from inside a container is not so common. We already manage some of our projects as microservices described by a (or several) docker-compose file. To debug with this kind of setup, we are using SSH daemon inside our container. Then we setup PyCharm so that it treats the docker container as a **remote interpreter**. This is working for quite a long time (almost 5 years). Then finally JetBrains released some supports to allow interpreters inside a docker-compose configuration.
 
@@ -39,7 +39,7 @@ In addition to that, since we are using PyCharm, you need PyCharm Pro Edition to
 
 In order to demonstrate how PyCharm enhance our development workflow -- and not ruining it or conflicting with the current workflow --. I create a small sample repo here so you can see our basic [Django setup](https://github.com/lucernae/django-ide-setup). My explanations will refer to that repo. Clone the repo to start experimenting on it.
 
-We are going to setup a small microservice based django server. The repo contains two folder `django_project` and `deployment`. The `deployment` folder contains orchestration script to run the project. The `django_project` is where the actual Django app is located.
+We are going to setup a small microservice based django server. The repo contains two folders `django_project` and `deployment`. The `deployment` folder contains orchestration script to run the project. The `django_project` is where the actual Django app is located.
 
 To run the project, we (by we, I mean my colleague and myself) usually go into the deployment folder and run `make` scripts to spin up the server. We don't have those now since we want to be a bit more technical and dive in. We are going to run docker-compose directly.
 
@@ -47,7 +47,7 @@ To run the project, we (by we, I mean my colleague and myself) usually go into t
 docker-compose up --build -d
 ```
 
-This is just to warm up docker. We want to build our initial images and see it running. One of good rule of thumbs to help you later setup production build: Prepare one initial docker-compose that can be run immediately without having to do further customization so developers can easily check the code out.
+This is just to warm up docker. We want to build our initial images and see it running. One good rule of thumb to help you later setup production build: Prepare one initial docker-compose that can be run immediately without having to do further customization so developers can easily check the code out.
 
 If you open your browser and navigate to http://localhost/ . You will see the default welcome screen. It will only says `Welcome in localhost`.
 
@@ -65,7 +65,7 @@ Copy the file `.template.env` as just `.env`. This is docker compose environment
 
 default value --> env file --> shell environment variables
 
-This means if a variable are defined in the env file but not in the shell, then docker-compose will use whatever value defined in the env file. This is very flexible and support declarative deployment. For example, in the previous docker-compose command, if you look at the basic recipe `docker-compose.yml` You will see that we have defined environment variable inside django container to take value from the shell with some default value:
+This means if a variable is defined in the env file but not in the shell, then docker-compose will use whatever value defined in the env file. This is very flexible and support declarative deployment. For example, in the previous docker-compose command, if you look at the basic recipe `docker-compose.yml` You will see that we have defined environment variable inside django container to take value from the shell with some default value:
 
 ```yaml
 services:
@@ -180,7 +180,7 @@ Open PyCharm Project settings, then navigate to Project Interpreter. Click the g
 
 It might take some times for PyCharm to build it's custom images (with pycharm helpers inside the containers).
 
-Next, you want to set project path mappings. The location of codes in your repo in your host computer are different with the locations **inside** the container. That's why PyCharm needs to know it. Specify this project path mappings. In our case we map `django_project` into `/home/web/django_project` inside the container. This is as reflected in the volume declarations of our `docker-compose.override.yml`. In your own project, you need decide by yourself what are the paths that needed to be mapped out, because it can be more than one.
+Next, you want to set project path mappings. The location of codes in your repo in your host computer are different with the locations **inside** the container. That's why PyCharm needs to know it. Specify this project path mappings. In our case we map `django_project` into `/home/web/django_project` inside the container. This is as reflected in the volume declarations of our `docker-compose.override.yml`. In your own project, you need to decide by yourself what are the paths that needed to be mapped out, because it can be more than one.
 
 Screenshot below can be used as visual guide:
 
