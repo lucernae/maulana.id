@@ -120,3 +120,86 @@ Now that we're ready, spin up the stack (without rebuilding)
 docker-compose up -d
 ```
 
+You can then check again http://localhost:8080/ . Now it says `Welcome in myothersite.test`, which is the value of `SITENAME` that we declared in the `.env` file. It will also spawn a Django debug server in port 8080 by default. We setup two server like this because Django debug server supports hot reload. So if you change codes or templates, you may want to see the changes immediately. In that case, you can navigate to http://localhost:8080/ to see the changes.
+
+This is as far as our native setup goes without IDE. Basically you do the development in the files in your host machine, but the python and Django server were deployed using container.
+
+One other thing worth mention is how we run unittest. Since Django and Python is in a container, we run Django tests like this:
+
+```bash
+docker-compose exec django python manage.py test
+```
+
+As you can see, the command becomes very long. That's why we store `Makefile` to provide a shortcut command in the deployment directory.
+
+Before continuing the next section, don't forget to shut down the stack
+
+```bash
+docker-compose down
+```
+
+# IDE Setup Using PyCharm
+
+To see how much PyCharm improve our workflow, using the same repo, open the folder in PyCharm.
+
+PyCharm bundled the docker-compose plugin integration by default. If for some reason you can't use it, refer to [official doc](https://www.jetbrains.com/help/pycharm/docker-compose.html).
+
+Open the `docker-compose.yml` file in the `deployment` directory. You will see that the lines are annotated by arrows like this:
+
+![docker-compose.yml file](/images/uploads/screen-shot-2020-11-22-at-18.51.14.png "docker-compose.yml file")
+
+You can click the arrow. Click the double arrow in the \`services:\` line. PyCharm will deploy that recipe for you. The service tab will appear to let you know that the compose file are deployed.
+
+![](/images/uploads/screen-shot-2020-11-22-at-18.57.02.png)
+
+As you can see, it also pick up the \`COMPOSE_PROJECT_NAME\` that you specify in \`.env\` file. \`mysite\` is the name of the stack and you can drill it down to see the services. This tab offer some controls too. You can redeploy, stop, or down the deployment with just a click. Right click the deployment name to see the context menu.
+
+After some sightseeing you will notice that what you deploy (even though it picks up \`.env\` file) is only the recipe from \`docker-compose.yml\` file. It is evident if you see the service log of django, it shows uWSGI running and not Django debug server.
+
+![](/images/uploads/screen-shot-2020-11-22-at-19.02.44.png)
+
+So, edit the PyCharm configuration. You can do it from the deployment context menu then Edit Configuration, or deployment configuration bar on the top menu. Basically add the file \`docker-compose.override.yml\` in the Compose files field. So you will have something like this:
+
+![](/images/uploads/screen-shot-2020-11-22-at-19.06.45.png)
+
+Now you can spin up/down your deployment stack with just a button click from your Services tab. By clicking deploy, you can update your stack deployment and recreate a fresh service. It is now running using Django Debug Server.
+
+It's quite convenient now to edit your docker-compose file and apply the changes to the deployment.
+
+In a typical development session, you mostly run the deployment once, do some coding, and then validate it and maybe do some debugging. So we are going to set up that workflow too.
+
+We first setup the Python Interpreter.
+
+Open PyCharm Project settings, then navigate to Project Interpreter. Click the gear icon and click Add. You will be given several options to select the source of your interpreter. Choose docker-compose. Fill in the settings, which consists of Configuration file(s) (Put \`docker-compose.yml\` and \`docker-compose.override.yml\` in that order), and the service (Pick \`django\`). It should looks like in the image below. Click OK.
+
+![](/images/uploads/screen-shot-2020-11-22-at-19.15.30.png)
+
+It might take some times for PyCharm to build it's custom images (with pycharm helpers inside the containers).
+
+Next, you want to set project path mappings. The location of codes in your repo in your host computer are different with the locations **inside** the container. That's why PyCharm needs to know it. Specify this project path mappings. In our case we map `django_project` into `/home/web/django_project` inside the container. This is as reflected in the volume declarations of our `docker-compose.override.yml`. In your own project, you need decide by yourself what are the paths that needed to be mapped out, because it can be more than one.
+
+Screenshot below can be used as visual guide:
+
+![](/images/uploads/screen-shot-2020-11-22-at-19.19.28.png)
+
+Once you are done, click OK. Wait a bit for PyCharm to build the helper skeletons. Once it's finish rebuilding, you can click **Python Console** tab to load the python console in PyCharm. This is the same Python interpreter that Django will use. You can also check that the variables from `.env` file carried over nicely as seen in the screenshots:
+
+![](/images/uploads/screen-shot-2020-11-22-at-19.27.32.png)
+
+Note that this is a Python interpreter, not Django shell. To use Django, you need to enable Django integration.
+
+Open Project Settings again, type **Django** in the search bar**.** In the **Language and Frameworks** menu, select Django. Enable Django Support. Fill in all relevant information for your project. In our example, the Django project root is in `django_project` directory, and the settings module is in `mysite.settings`. See screenshot below for reference:
+
+![](/images/uploads/screen-shot-2020-11-22-at-19.33.05.png)
+
+After setting this up, whenever you navigate to the **Python Console**, you will get **Django Console** instead:
+
+![](/images/uploads/screen-shot-2020-11-22-at-19.36.22.png)
+
+It's the same thing you get from running `docker-compose exec django python manage.py shell`. Isn't that sweet? As you can see, the settings file and environment variables from `.env` are properly loaded and evaluated as Django settings.
+
+Now, let's step up further and create a Django server run configuration.
+
+Mark `django_project` directory as a **Source Directory** by right clicking the directory and select **Mark Directory as** > ** Sources Root** . If it's not detected already, mark the `django_project/mysite/templates` directory as **Templates Folder**. You will now be able to activate code completions in that folder.
+
+# Reference
