@@ -8,11 +8,11 @@ date: 2020-11-20T09:57:03.865Z
 
 I was involved with different kinds of Django project in the past. Back then the standard approach of attaching your debug interpreter is by creating a virtual environment in your python project. We debug using PyCharm at that time. JetBrains has generously gave us free open source license to use the whole suite of JetBrains tools.
 
-However, back then the notion of developing a Django project from inside a container is not so common. We already manage some of our projects as microservices described by a (or several) docker-compose file. To debug with this kind of setup, we are using SSH daemon inside our container. Then we setup PyCharm so that it treats the docker container as a **remote interpreter**. This is working for quite a long time. Then finally JetBrains released some supports to allow interpreters inside a docker-compose configuration.
+However, back then the notion of developing a Django project from inside a container is not so common. We already manage some of our projects as microservices described by a (or several) docker-compose file. To debug with this kind of setup, we are using SSH daemon inside our container. Then we setup PyCharm so that it treats the docker container as a **remote interpreter**. This is working for quite a long time (almost 5 years). Then finally JetBrains released some supports to allow interpreters inside a docker-compose configuration.
 
-Things didn't transition smoothly back then. First issue that I remember is that the interpreter forgets all of the environment variable declared in the docker-compose file. Since Django used environment variable to override it's settings file, this setup were unusable. So we keep doing the old ways, using remote interpreter.
+Things didn't transition smoothly back then. First issue that I remember is that the interpreter forgets all of the environment variables declared in the docker-compose file. Since Django used environment variable to override it's settings file, this setup were unusable. So we keep doing the old ways, using remote interpreter.
 
-Recent PyCharm version is making it more difficult to set up a remote interpreter. As of now, in version 2020.2, when we set up a remote interpreter, we implicitly defined deployment configuration. This is not needed if you are using a container, because the files were already mounted there, you don't need to copy it again using sftp, etc. However the new interface is quite confusing because you can't disable the setting at first. You are only allowed to delete the deployment configuration after you've made the configuration (funny, eh?). I've also tried different approach, such as creating the SSH configuration first, then set it as remote interpreter, but still it generate the deployment configuration.
+Recent PyCharm version is making it more difficult to set up a remote interpreter. As of now, in version 2020.2, when we set up a remote interpreter, PyCharm implicitly defined deployment configuration. This is not needed if you are using a container, because the files were already mounted there, you don't need to copy it again using sftp, etc. However the new interface is quite confusing because you can't disable the setting at first. You are only allowed to delete the deployment configuration after you've made the configuration (funny, eh?). I've also tried different approach, such as creating the SSH configuration first, then set it as remote interpreter, but still it generate the deployment configuration.
 
 So, fed up with this, I decided to try the docker-compose-based interpreter again. I noticed several improvements:
 
@@ -21,5 +21,102 @@ So, fed up with this, I decided to try the docker-compose-based interpreter agai
 3. You can map local directory with the directory inside container (so that PyCharm knew it was the same thing)
 4. When you create a Run Configuration, the environment the interpreter use is the one coming from docker-compose. So, you won't need to redeclare your environment variables again. Hurray!
 
+# Requirements
 
-# 
+This articles are going to be some sort of hands on labs/workshop. You can skim thru, but it is best if you do it at your own pace.
+
+We are going to assume this basic understanding of technical skills:
+
+1. Git and how to use it to clone project from Github
+2. Docker, Docker-compose, and how to use their CLI
+3. Linux based environment, or MacOS, or WSL.
+4. Python and Django basic understanding
+5. Debugging methods/terminologies
+
+In addition to that, since we are using PyCharm, you need PyCharm Pro Edition to use it's debugging features.
+
+# Usual setup without IDE
+
+In order to demonstrate how PyCharm enhance our development workflow -- and not ruining it or conflicting with the current workflow --. I create a small sample repo here so you can see our basic [Django setup](https://github.com/lucernae/django-ide-setup). My explanations will refer to that repo. Clone the repo to start experimenting on it.
+
+We are going to setup a small microservice based django server. The repo contains two folder `django_project` and `deployment`. The `deployment` folder contains orchestration script to run the project. The `django_project` is where the actual Django app is located.
+
+To run the project, we (by we, I mean my colleague and myself) usually go into the deployment folder and run `make` scripts to spin up the server. We don't have those now since we want to be a bit more technical and dive in. We are going to run docker-compose directly.
+
+```bash
+docker-compose up --build -d
+```
+
+This is just to warm up docker. We want to build our initial images and see it running. One of good rule of thumbs to help you later setup production build: Prepare one initial docker-compose that can be run immediately without having to do further customization so developers can easily check the code out.
+
+If you open your browser and navigate to http://localhost/ . You will see the default welcome screen. It will only says `Welcome in localhost`.
+
+Since using an IDE is a choice, I want to believe that running the project immediately should not depend heavily on the choice of IDE. The developer should be able to run this out of the box. 
+
+However, this is a minimal setup. When doing some custom development works, or deployment, you will have to change some deployment configuration. To illustrate this, I've prepared a simple template `.template.env` and `docker-compose.override.template.yml`.
+
+But before we proceed, shutdown the current stack first, since we are going to change the compose config.
+
+```bash
+docker-compose down
+```
+
+Copy the file `.template.env` as just `.env`. This is docker compose environment config file. When interpolating variables in the docker-compose files, generally the precedence will be:
+
+default value --> env file --> shell environment variables
+
+This means if a variable are defined in the env file but not in the shell, then docker-compose will use whatever value defined in the env file. This is very flexible and support declarative deployment. For example, in the previous docker-compose command, if you look at the basic recipe `docker-compose.yml` You will see that we have defined environment variable inside django container to take value from the shell with some default value:
+
+```yaml
+services:
+  django:
+    environment:
+      DJANGO_SETTINGS_MODULE: mysite.settings
+      DEBUG: ${DEBUG:-False}
+      SITENAME: ${SITENAME:-localhost}
+```
+
+With this kind of variable passing, we can expect that the environment variables are accessible from within Django settings so we can make a fully config based deployment.
+
+Now look at the `.env` file you just copied.
+
+```ini
+COMPOSE_PROJECT_NAME=mysite
+COMPOSE_FILE=docker-compose.yml
+
+DEBUG=True
+SITENAME=myothersite.test
+
+DJANGO_HTTP_PORT=8080
+HTTP_PORT=80
+```
+
+We override some settings. Notably `DEBUG` variable to become `True` because we want to enable Django debug mode. You can experiment by changing other variables too. For the top two variables: `COMPOSE_PROJECT_NAME` and `COMPOSE_FILE` were docker-compose internal variables. Changing `COMPOSE_PROJECT_NAME` will change your docker-compose stack namespace (useful to quickly associate which stack with which project). Meanwhile, `COMPOSE_FILE` can control which docker-compose file are going to be included by `docker-compose` command.
+
+We are going to create an extra compose file to override some deployment config. Change value into `COMPOSE_FILE=docker-compose.yml:docker-compose.override.yml`. A useful note worth knowing, if you omit `COMPOSE_FILE` variable entirely (make it empty value), then `docker-compose` default behaviour is to look for `docker-compose.yml` and `docker-compose.override.yml` if it exists. By the way, the precedence matter. Rightmost file mentioned in the variable will override files on the left.
+
+Now, create `docker-compose.override.yml` from the template `docker-compose.override.template.yml`.
+
+You can see the content like this:
+
+```yaml
+version: '3'
+services:
+  django:
+    command: python manage.py runserver 0.0.0.0:8080
+    volumes:
+    - ../django_project:/home/web/django_project
+
+  nginx:
+    volumes:
+    - ./sites-enabled:/etc/nginx/conf.d
+```
+
+Since we are going to be in 'development mode', we use django manage.py server. We also mount our local directory so the container will always have latest changes in our files. We also mount nginx config in case we are dealing with production mode settings. You can even add more overrides like `environments` or `ports` depending on the need.
+
+Now that we're ready, spin up the stack (without rebuilding)
+
+```bash
+docker-compose up -d
+```
+
