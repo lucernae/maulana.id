@@ -142,6 +142,8 @@ docker-compose down
 
 To see how much PyCharm improve our workflow, using the same repo, open the folder in PyCharm.
 
+## Docker-compose setup
+
 PyCharm bundled the docker-compose plugin integration by default. If for some reason you can't use it, refer to [official doc](https://www.jetbrains.com/help/pycharm/docker-compose.html).
 
 Open the `docker-compose.yml` file in the `deployment` directory. You will see that the lines are annotated by arrows like this:
@@ -167,6 +169,8 @@ Now you can spin up/down your deployment stack with just a button click from you
 It's quite convenient now to edit your docker-compose file and apply the changes to the deployment.
 
 In a typical development session, you mostly run the deployment once, do some coding, and then validate it and maybe do some debugging. So we are going to set up that workflow too.
+
+## Python interpreter setup
 
 We first setup the Python Interpreter.
 
@@ -198,6 +202,8 @@ After setting this up, whenever you navigate to the **Python Console**, you will
 
 It's the same thing you get from running `docker-compose exec django python manage.py shell`. Isn't that sweet? As you can see, the settings file and environment variables from `.env` are properly loaded and evaluated as Django settings.
 
+## Django debug server setup
+
 Now, let's step up further and create a Django server run configuration.
 
 Mark `django_project` directory as a **Source Directory** by right clicking the directory and select **Mark Directory as** >  **Sources Root** . If it's not detected already, mark the `django_project/mysite/templates` directory as **Templates Folder**. You will now be able to activate code completions in that folder.
@@ -218,6 +224,8 @@ As with any debugging session, you can attach breakpoint to any of your python c
 
 You can do many things in this mode, such as inspecting variables and so on. If for some reason this template debugger doesn't work for you, check out the [documentation](https://www.jetbrains.com/help/pycharm/templates.html) and make sure that you set the current template language to be Django instead of Jinja. 
 
+## Test runner setup
+
 Then, the next tips that I would like to add is about running Django test.
 
 One of the way is to click your test file or test folders, or even the whole Django app module then right click, then click Run test from the context menu. It will create a Run test configuration and run it. Since all of our config are declarative in the `.env` file, we don't need to edit the config, unless you need to modify specific settings. Here's what it looks like when we do that.
@@ -225,6 +233,8 @@ One of the way is to click your test file or test folders, or even the whole Dja
 ![](/images/uploads/screen-shot-2020-11-22-at-20.17.56.png)
 
 Other way of running the test, if you need just to run a single specific test, you can click the arrow button (also can be seen in the screenshot) in the line where the specific test method are declared in the test file. Then PyCharm will only run that.
+
+## Some (optional) beta setup
 
 Finally, my last tips here is something that I really waiting for in PyCharm. From my conversation with @gamesbrainiac in twitter: https://twitter.com/gamesbrainiac/status/1320793098658762753 . It seems you can store Run configuration as a file now. So, if your project is complex and you have crafted specific run configuration. You can share it to your other dev in the team as well. Especially if the deployment is the exact same (because we are using declarative docker-based deploy). You can use it to allow developer to deploy latest changes to staging server with just a click. However this is more of a devops related topic. So, in general you can share run config to allow your colleague to run unittest or local deployment the exact same way. Just make sure that you don't store sensitive data in it.
 
@@ -243,3 +253,9 @@ Proceed to fix the problem by following the wizard. Typically what you need to d
 I have somewhat conflicting opinion on this share run configuration thing. This kind of workflow seems pretty promising, but at the moment it feels like a beta feature and not solid enough. What it lacks at the moment is to store the interpreter information in a modular way, so it can be imported easily. This feature also not easily discoverable. If you store your run config as a file and persisted in a git repo, then your colleague can only discover it by opening the file and noticing that PyCharm gave warning that it is a run configuration file, which then you can proceed on clicking the warning and making it available in your local PyCharm installations. So take this last tips as optional beta.
 
 When this feature are going to be solid enough, I think it is going to make PyCharm to be a very ideal Python IDE to collaborate. I imagine we can just put the config inside the repo and then your colleague can just do first setup with relative ease to run the project. Totally incredible.
+
+# Conclusions
+
+I have demonstrated some amazing PyCharm capabilities for microservice based python debugging setup. It also has a potential to be one stop shop for creating a unified IDE setup for a team of developers, which can be productive for projects where the developer come and go. This will enable new developer to get in the workflow much easily, as everything has already been prepared from the start.
+
+It's also important to notice that this seamless integration were only possible if your project setup is declarative from the start. It's also ok for developer who are not using PyCharm to start the project, but the developer who uses PyCharm is also using the same exact configuration. So that means, even though they have different method when they do their own development, they share the same, repeatable project config. It will allow them to use the same config and tailor it for their own specific IDE.
