@@ -1,0 +1,28 @@
+---
+layout: blog-posts
+title: Recovering from boot loop crash in Windows 10
+description: Don't be like me. Have a backup system in place.
+date: 2020-12-25T11:45:18.825Z
+---
+Honestly, this event nearly gave me mental breakdown.
+
+# The story
+
+It all began after finally I got myself two weeks of leave. As a gamer, normally I want to play something in the meantime. All those game backlogs that I have lying in my Windows, finally I will have time to finish some of it. Like every normal person, I press F11 in boot phase to switch to Windows (I set my Linux boot entry on default for work), set it as a default then I boot into Windows. In Windows, I update Steam and let Windows do it's update thingy. I don't want it to do it's famous **Windows Update** while I'm playing my games, so I want it to be updated overnight and ready to be used tomorrow.
+
+What happens after that is a nightmare. When I came back, I saw my monitor shows Windows recovery mode screen. I hit **Boot normally** then the PC reboot. To my surprises it's checking disks with automatic repair. It decided that it can't boot, so it presents me the recovery mode screen again. I let out a scream in my head. "WHAT THE HELL IS HAPPENING!???"
+
+Early, guess it's probably the following:
+
+1. Power failures happens while the PC is updating.
+2. SSD is faulty
+
+I explored the first possibility. Power Failures. I have a UPS and my PC is connected to the said UPS. However, I just recently moved to a new place. For some reason, the power link inside my house is pretty dodgy. There are some occasion where the power went down and up very quickly, less than a second. Lights went blinking for a bit. Normally my UPS can handle the surge and my PC will be fine. However, in all 3 occasion, my PC just dies. So maybe my UPS had failed to do the job, or it needs a battery replacement. I don't know. I had to check later. However the point is, my PC did have some power failures. In all those failures, normally I was using my Linux. So I will never expects that it will affect my Windows disk, after all they were on a different disk. It could be that power failures happen while the Windows were updating.
+
+The second possibility which is not likely, is that my SSD had fails. I already said that Windows and Linux are on a separate disk and power failures happens while I'm using Linux. So is it possible that it also damage other SSD? I don't know. I have no knowledge in that area, so I can't rule it out either.
+
+Regardless, I am pretty sad. It means that I will waste a couple of days to fix this in my leave days. Days that I were supposed to be having fun of. I also just realized, how unfamiliar I am with the Windows 10. If this happens to my Linux, I probably chill, bought a new harddisk, copy the partition over, etc. Anyway, I will know what I need to do to get it working the same way again (most of my work related settings are persisted in a private Git repo). The most troublesome things were probably to reinstall all the apps in my Linux as I go along. However, all the settings were mostly safe.
+
+With Windows, I have no idea. Ideally I want to use the same partition because all the apps and settings usually tightly coupled in the OS partition. Even if I have data partition somewhere else. Fixing this OS partition usually means doing a fresh install or reset to factory default. All apps and settings will be lost. I don't want that. If only there is an option to just reinstall the OS folder (Windows folder). Kind of like what we usually do in Linux for the root partition.
+
+# Checking the Disk
