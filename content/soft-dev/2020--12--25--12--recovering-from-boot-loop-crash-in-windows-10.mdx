@@ -4,6 +4,8 @@ title: Recovering from boot loop crash in Windows 10
 description: Don't be like me. Have a backup system in place.
 date: 2020-12-25T11:45:18.825Z
 ---
+![]()
+
 Honestly, this event nearly gave me mental breakdown.
 
 # The story
@@ -25,4 +27,80 @@ Regardless, I am pretty sad. It means that I will waste a couple of days to fix 
 
 With Windows, I have no idea. Ideally I want to use the same partition because all the apps and settings usually tightly coupled in the OS partition. Even if I have data partition somewhere else. Fixing this OS partition usually means doing a fresh install or reset to factory default. All apps and settings will be lost. I don't want that. If only there is an option to just reinstall the OS folder (Windows folder). Kind of like what we usually do in Linux for the root partition.
 
-# Checking the Disk
+# Checking the Boot
+
+First things, check that you are able to boot.
+
+I use UEFI, because it's very resilient and can be re-added whenever you need. If the boot process is working, your PC will boot to the Windows Boot Manager firmware, then boot to the windows loader firmware (normal boot). In the case of failure, it will attempt automatic startup repair (which you can't control), then if it fails, it will remember the state. In next boot, it will boot up to Windows Boot Manager, then Windows OS Recovery firmware, instead of Windows Loader firmware. We should at least be able to go into Windows OS Recovery.
+
+In the case that you can't go into Windows OS Recovery, then let's assume boot process failed. The following process is needed:
+
+## Requirements
+
+* Another working PC, I prefer to use Linux/Ubuntu as it is easier to deal with raw disk using Linux.
+* 8GB/16GB USB flash disk to flash Windows 10 Installation ISO image
+
+## Procedures
+
+1. Prepare/use another PC (I prefer to use Linux)
+2. Download [Windows 10 ISO](https://www.microsoft.com/en-us/software-download/windows10ISO)
+3. Flash Windows 10 ISO to USB. In Windows, use [Rufus](https://rufus.ie/), in Linux use [WoeUSB](https://github.com/WoeUSB/WoeUSB)
+4. Plug your USB to your broken PC. Boot to your USB using UEFI
+5. Try Troubleshoot > Advanced Option > Startup Repair. If failed, use Command Prompt
+
+   ![](/images/uploads/screen-shot-2020-12-27-at-20.04.56.png)
+6. If previously you were not able to boot at all, recreate your boot entry.
+
+   1. Check if your OS partition are recognized using diskpart
+
+      ```
+      diskpart
+      ```
+   2. From inside diskpart prompt, list the volumes
+
+      ```
+      list volume
+      ```
+   3. Check if the drive letter exists. For example:
+
+      ![](/images/uploads/screen-shot-2020-12-27-at-20.16.03.png)
+   4. If the drive letter don't exists. You have a greater problem. That means the hardware (the disk) were disconnected or unreadable and there's nothing you can do beside checking the socket.
+   5. In the case the drive letter exists, create a boot entry to the windows location, normally in C:\Windows. Don't forget to exit diskpart first.
+
+      ```
+      bcdboot C:\Windows
+      ```
+
+   6. Check the entry created using `bcdedit` command
+
+      ![](/images/uploads/screen-shot-2020-12-27-at-20.36.52.png)
+
+7. Now check that you are able to boot into Windows without using the USB recovery disk
+
+# Checking disk corruptions
+
+After you are sure that you can boot, you can then check the file integrity. If the boot entry exists but you can't boot (always bootloop to the recovery screen), then you need to perform file check.
+
+## Requirements
+
+- Your broken PC, but now with recovery mode booted (either via USB flash disk or your PC disk)
+- Choose from recovery menu: Troubleshoot > Advanced Options > Command Prompt
+
+## Procedures
+
+1. Given that your OS partition is in `C:`, do `chkdsk` command
+
+   ```
+   chkdsk /f /r C:
+   ```
+
+2. Check other partition/volume as well as you see fit (`D:` or `E:`)
+
+3. Try a reboot. If failed, do a System File Checker scan from command prompt again.
+
+   ```
+   sfc /scannow
+   ```
+
+4. See the output if the process failed. We have to do it from Windows Safe Mode
+
