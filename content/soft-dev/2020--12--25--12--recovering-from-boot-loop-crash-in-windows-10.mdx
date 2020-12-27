@@ -6,6 +6,8 @@ date: 2020-12-25T11:45:18.825Z
 ---
 ![]()
 
+![]()
+
 Honestly, this event nearly gave me mental breakdown.
 
 # The story
@@ -70,11 +72,9 @@ In the case that you can't go into Windows OS Recovery, then let's assume boot p
       ```
       bcdboot C:\Windows
       ```
-
    6. Check the entry created using `bcdedit` command
 
       ![](/images/uploads/screen-shot-2020-12-27-at-20.36.52.png)
-
 7. Now check that you are able to boot into Windows without using the USB recovery disk
 
 # Checking disk corruptions
@@ -83,8 +83,8 @@ After you are sure that you can boot, you can then check the file integrity. If 
 
 ## Requirements
 
-- Your broken PC, but now with recovery mode booted (either via USB flash disk or your PC disk)
-- Choose from recovery menu: Troubleshoot > Advanced Options > Command Prompt
+* Your broken PC, but now with recovery mode booted (either via USB flash disk or your PC disk)
+* Choose from recovery menu: Troubleshoot > Advanced Options > Command Prompt
 
 ## Procedures
 
@@ -93,14 +93,21 @@ After you are sure that you can boot, you can then check the file integrity. If 
    ```
    chkdsk /f /r C:
    ```
-
 2. Check other partition/volume as well as you see fit (`D:` or `E:`)
-
 3. Try a reboot. If failed, do a System File Checker scan from command prompt again.
 
    ```
    sfc /scannow
    ```
+4. See the output if the process failed. We have to do it from Windows Safe Mode. Exit Command Prompt. From Advanced Options, pick Startup Settings, then Restart.
+5. In the next boot like below, pick Safe Mode
 
-4. See the output if the process failed. We have to do it from Windows Safe Mode
+   ![](/images/uploads/screen-shot-2020-12-27-at-21.02.05.png)
 
+6. In the Safe Mode. Run Powershell as Administrator (Right click Windows Logo to open the context menu).
+
+7. Do System File Checker scan again
+
+   ```
+   sfc /scannow
+   ```
