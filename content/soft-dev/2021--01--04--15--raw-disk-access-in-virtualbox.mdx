@@ -138,6 +138,7 @@ Crazy use case, but possible. Let's suppose you have Windows installed using UEF
 2. Modify guest OS bootloader to include Raw Disk's UEFI partition (Windows in my case).
 
    a. In windows guest OS, we can just use `bcdboot D:\Windows` if your Windows Raw partition are mounted as `D:`. Windows will then add new boot entry to boot using this disk, and it will not affect the raw bootloader of the disk since it's on a separate partition.
+
    b. In Linux guest OS, it's more straight forward. You typically use GRUB and add new entry to your Windows UEFI firmware. This also will not change the raw bootloader of the disk if you use UEFI. This setup is very similar with how you dualboot Linux + Windows in a typical generic/real PC setup.
 3. To my surprise the raw disk's Windows loads just fine with small hiccups, because the hardware's are different. It's like moving Windows disk to a new PC, so naturally the graphical driver revert to default. But applications loads just fine so far. One thing to note is if you have hardware-based Windows license, then it's going to be deactivated because Windows thinks you are on a different computer now. Here's some screenshot to let you know that I'm not lying. I swear. I mean, I can expect that if I boot raw Linux, it will work, but I never expect Windows to be booted up this smoothly this way.
 
