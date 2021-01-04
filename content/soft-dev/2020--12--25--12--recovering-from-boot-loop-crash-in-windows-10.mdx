@@ -12,7 +12,7 @@ It all began after finally I got myself two weeks of leave. As a gamer, normally
 
 What happens after that is a nightmare. When I came back, I saw my monitor shows Windows recovery mode screen. I hit **Boot normally** then the PC reboot. To my surprises it's checking disks with automatic repair. It decided that it can't boot, so it presents me the recovery mode screen again. I let out a scream in my head. "WHAT THE HELL IS HAPPENING!???"
 
-Early, guess it's probably the following:
+Early guess, it's probably the following:
 
 1. Power failures happens while the PC is updating.
 2. SSD is faulty
@@ -115,6 +115,6 @@ After you are sure that you can boot, you can then check the file integrity. If 
     sfc /scannow /offbootdir=d:\ /offwindir=d:\
     ```
 
-# What to do if that still doesn't solve the problems
+# What to do if that still doesn't solve the problem
 
 If doing SFC still not allows you to boot, like in my case (sadly). Then all hope is lost. You now focus on figuring out if your disk is faulty or not. If you have any important data, buy a second harddisk and do disk imaging, or just copy the data directly. It is possible that windows can't do SFC because the disk are badly damaged. You can attempt to image your partition and then restore the image to a new disk, then perform the SFC again to recover all your Windows OS + application + settings + data. If you only care about the data, simply just extract the data you need in a separate computer.
