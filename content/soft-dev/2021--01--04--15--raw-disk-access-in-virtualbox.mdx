@@ -73,7 +73,7 @@ We are going to create a virtual drive file that points to the whole disk device
 
    * You can check the device list using `diskutil list` command, or open Disk Utility GUI tools, select the disk and click Get Info from the context menu.
    * As I understand, normally a Mac device uses it's own SSD/brand. So it's very unlikely that you attach your own separate SSD inside your MBP or iMac. In conclusions, your disk probably an external one attached via USB or SD Card. In that case, consider provides a raw disk node instead of the usual disk node. For example use `devicepath` `/dev/rdisk0` instead of `/dev/disk0`.
-5. Now that you have your raw disk VMDK file, attach it to your guest OS via the VirtualBox Configuration GUI. It's important that the guest OS uses the same boot mechanism if the mounted disk is a bootable disk. If the raw disk is a UEFI bootabe disk, the guest OS should also use UEFI. Unless you know what you are doing.
+5. Now that you have your raw disk VMDK file, attach it to your guest OS via the VirtualBox Configuration GUI. It's important that the guest OS uses the same boot mechanism if the mounted disk is a bootable disk. If the raw disk is a UEFI bootable disk, the guest OS should also use UEFI. Unless you know what you are doing.
 
    * Of course, with the VM powered off at first. Open your guest VM settings. Go into Storage menu, add a new storage controller (typically the same controller with your real disk). Add a new storage attachment and choose your previously created VMDK file. Typically you have two device attached in your VM like the screenshot below (`physical.vmdk` is my physical disk definition).
 
