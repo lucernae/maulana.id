@@ -4,10 +4,6 @@ title: Recovering from boot loop crash in Windows 10
 description: Don't be like me. Have a backup system in place.
 date: 2020-12-25T11:45:18.825Z
 ---
-![]()
-
-![]()
-
 Honestly, this event nearly gave me mental breakdown.
 
 # The story
@@ -99,15 +95,26 @@ After you are sure that you can boot, you can then check the file integrity. If 
    ```
    sfc /scannow
    ```
-4. See the output if the process failed. We have to do it from Windows Safe Mode. Exit Command Prompt. From Advanced Options, pick Startup Settings, then Restart.
+4. See the output. If the process failed, we have to do it from Windows Safe Mode. Exit Command Prompt. From Advanced Options, pick Startup Settings, then Restart.
 5. In the next boot like below, pick Safe Mode
 
    ![](/images/uploads/screen-shot-2020-12-27-at-21.02.05.png)
-
 6. In the Safe Mode. Run Powershell as Administrator (Right click Windows Logo to open the context menu).
-
 7. Do System File Checker scan again
 
    ```
    sfc /scannow
    ```
+8. Verify that SFC success. Note that 100% Verification complete
+
+   ![](/images/uploads/screen-shot-2021-01-04-at-16.12.12.png)
+9. In the case that you can't boot into safe mode. Then the last resort will be to mount your disk into another working Windows PC. The easiest way would be to get your disk out of your PC and attach it into your friend's PC. In the case that you don't have friends (I mean PC), alternatively you can mount the disk as VirtualBox Raw Disk and mount it to Windows PC running inside virtualbox. Then we do the offline SFC.
+10. Run offline SFC (with parameter to specify Windows location to check). Same as before, open Powershell with admin privileges. Your host PC normally has Windows installed in `C:`. Then, your mounted disk will be on another drive letter. Check that. For this example, assume the volume is in `D:`. Then the command becomes:
+
+    ```
+    sfc /scannow /offbootdir=d:\ /offwindir=d:\
+    ```
+
+# What to do if that still doesn't solve the problems
+
+If doing SFC still not allows you to boot, like in my case (sadly). Then all hope is lost. You now focus on figuring out if your disk is faulty or not. If you have any important data, buy a second harddisk and do disk imaging, or just copy the data directly. It is possible that windows can't do SFC because the disk are badly damaged. You can attempt to image your partition and then restore the image to a new disk, then perform the SFC again to recover all your Windows OS + application + settings + data. If you only care about the data, simply just extract the data you need in a separate computer.
