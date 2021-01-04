@@ -108,7 +108,7 @@ After you are sure that you can boot, you can then check the file integrity. If 
 8. Verify that SFC success. Note that 100% Verification complete
 
    ![](/images/uploads/screen-shot-2021-01-04-at-16.12.12.png)
-9. In the case that you can't boot into safe mode. Then the last resort will be to mount your disk into another working Windows PC. The easiest way would be to get your disk out of your PC and attach it into your friend's PC. In the case that you don't have friends (I mean PC), alternatively you can mount the disk as VirtualBox Raw Disk and mount it to Windows PC running inside virtualbox. Then we do the offline SFC.
+9. In the case that you can't boot into safe mode. Then the last resort will be to mount your disk into another working Windows PC. The easiest way would be to get your disk out of your PC and attach it into your friend's PC. In the case that you don't have friends (I mean PC), alternatively you can mount the disk as VirtualBox Raw Disk and mount it to Windows PC running inside virtualbox. Then we do the offline SFC. You can see how to mount raw disk in VirtualBox [here](/2021--01--04--15--raw-disk-access-in-virtualbox)
 10. Run offline SFC (with parameter to specify Windows location to check). Same as before, open Powershell with admin privileges. Your host PC normally has Windows installed in `C:`. Then, your mounted disk will be on another drive letter. Check that. For this example, assume the volume is in `D:`. Then the command becomes:
 
     ```
