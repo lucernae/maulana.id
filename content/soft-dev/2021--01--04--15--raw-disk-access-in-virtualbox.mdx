@@ -78,7 +78,7 @@ We are going to create a virtual drive file that points to the whole disk device
    * Of course, with the VM powered off at first. Open your guest VM settings. Go into Storage menu, add a new storage controller (typically the same controller with your real disk). Add a new storage attachment and choose your previously created VMDK file. Typically you have two device attached in your VM like the screenshot below (`physical.vmdk` is my physical disk definition).
 
    ![](/images/uploads/screen-shot-2021-01-04-at-20.44.32.png)
-6. Boot up your VM and then see if you can access/mount the disk from inside your VM. Also, make extra special care that you don't double mount the disk/partition in the host OS and guest OS **at the same time**. Which is why I recommend testing against different disk. This is some screenshot of the raw disk (containing Windows) that is mounted in my Windows guest OS. As you can see, the Drive Letter \`D:\` and \`E:\` comes from a physical disk.
+6. Boot up your VM and then see if you can access/mount the disk from inside your VM. Also, make extra special care that you don't double mount the disk/partition in the host OS and guest OS **at the same time**. Which is why I recommend testing against different disk. This is some screenshot of the raw disk (containing Windows) that is mounted in my Windows guest OS. As you can see, the Drive Letter `D:` and `E:` comes from a physical disk.
 
    ![](/images/uploads/screen-shot-2021-01-04-at-21.05.40.png)
 
