@@ -1,0 +1,74 @@
+---
+layout: blog-posts
+title: Installing Pi-Hole as internal resolver for development
+description: You can install Pi-Hole in non-RaspberryPi machine
+date: 2021-01-14T19:58:43.408Z
+---
+While I'm dumping over my Pi-Hole configuration from my RasPi (Raspberry Pi) to Github, I was thinking that there is an obvious use case for people to use Pi-Hole in non-RasPi machine.
+
+I was talking about internal resolver for web development.
+
+I was already using dnsmasq inside a container since ages ago. It allows me to have uniform configuration over in all my different devices for development. It was enough for most cases. Since I may have several web development projects lying around, I usually assign a DNS name for each of them. So, instead of accessing the app using obscure name like `http://localhost:36600`, I used `http://mycurrent-project.test`.
+
+This is not needed when you do frontend development, but things get really murky if you are a microservice/full-stack engineer. You may have frontend and backend in a separate containers brought up by docker-compose. In this case, you can refer to each service by it's docker-compose service name `frontend` or `backend`. This is possible due to docker-compose have it's own internal resolver that translates sevice name into a docker subnet IP Address. But what happen if you run two docker-compose recipes and want them to talk to each other?
+
+The standard docker way is to create a docker network beforehand and attach two stack of docker-compose in the same docker network. I don't like this because it's too ad-hoc. I want to `docker-compose up -d` and then all the services are magically reachable.
+
+The other way is to bind the the service interface/bridged to the host network. I don't like this either because I need to change the recipes. Additionally it's not guaranteed to work in Mac or Windows when the bridge network is not native because the kernel is not Linux.
+
+So, for quite sometime, my comforting solutions is to let dnsmasq run as internal resolver or mini local DNS in my machine, and then let my entire computer use my own interface IP as DNS resolver. This was supposed to work ok. However, my crappy ISP is sh*t. Whenever a name resolve failed, my ISP's DNS didn't fall back to the second DNS and instead redirect me to their blackhole of **ADS**. If my DNS name don't resolve they redirect me to their ad page. Pretty annoying. It allows weird issues such as the service inside the container can't reach certain URL due to docker excluding my custom resolver, if it is in the same machine. Understandable to avoid address loop.
+
+The most elegant thing to do is to install the DNS resolver as outside machine, so it didn't get affected but whatever things my local machine did to the network. Thus, I bought a RasPi. Now the reason I brought up [Pi-Hole](https://pi-hole.net/) is because Pi-Hole is essentially a dnsmasq with a very nice UI to use. You can set a wildcard DNS local TLD like `.test` via dnsmasq config, or just define each full DNS name like `myproject.test` using Pi-Hole UI.
+
+Also, because you can run it on top of docker, you don't actually need RasPi just to use the resolver. You can install it on your machine, given that it can run docker.
+
+# Installation
+
+I shared my config in Github and you can use it as a base: [pi-hole](https://github.com/lucernae/nixos-pi/tree/main/nixos/pihole)
+
+Check the Readme there as it will be more up to date than this article
+
+# Adding custom local DNS entries
+
+With the default configuration given above, you can start using it right away for internal resolver.
+
+Set your default DNS address first. This can be different by OS. In my Linux machine, here's the step:
+
+1. In my LAN (Local Network), I assign a static IP for my machine from my main router. I set it as 192.168.100.6 over my ethernet cable interface.
+2. That IP Address is then used as the Pi-Hole's IP address.
+3. Set the DNS address in the interface settings. In my case, it was done via Network Manager, then I restart my interface (disconnect then reconnect).
+
+   ![](/images/uploads/screenshot_20210115_033800.png)
+4. Check that you are using your Pi-Hole as resolver by default
+
+Run nslookup:
+
+```
+nslookup google.com
+nslookup pi.hole
+```
+
+Should say that it comes from your IP Address
+
+![](/images/uploads/screenshot_20210115_034010.png)
+
+Try from inside a container:
+
+```
+docker run --rm -it busybox nslookup google.com
+docker run --rm -it busybox nslookup pi.hole
+```
+
+It should return an IP address, even though it uses docker internal IP DNS.
+
+5. Register some domain name by going thru Pi-Hole's DNS page: \[DNS Records](http://pi.hole/admin/dns_records.php)
+
+You can even pass your own custom domain name in nslookup, if you already register it using Pi-Hole UI. As you can see in the screenshot below, the first one resolved even though it returns an error message, while the second one doesn't resolves because it didn't exists/not registered.
+
+![](/images/uploads/screenshot_20210115_043756.png)
+
+# What's next?
+
+See how neat it is to have internal resolver? If you manage multiple projects. It is easier for you to remember it by name or bookmarked it or register the password in your password manager. You can combine it with a reverse proxy such as nginx, to forward all the different ports to your services then you have a clean URL in your browser.
+
+There's even a web UI for that: https://nginxproxymanager.com/, although I haven't personally tried it. 
