@@ -6,7 +6,7 @@ date: 2021-01-20T15:07:12.512Z
 ---
 # The Problem
 
-I encountered a rather specific problem. I have a tile caching container that produces lots of lots of tile cache using [Mapproxy](https://mapproxy.org/). It uses 64k inodes while only using around 300 MB size of 1GB volume allocation. So, 70% space are wasted just because the inodes ran out. I tried to double the size and it seems the inodes were doubled. The problem still scale linearly. With 16GB volume size, we only have around 1 million inodes, consumed, while only using around 5 GB size, again linear scale.
+I encountered a rather specific problem. I have a tile caching container that produces lots of tile caches using [Mapproxy](https://mapproxy.org/). It uses 64k inodes while only using around 300 MB size of 1GB volume allocation. So, 70% space are wasted just because the inodes ran out. I tried to double the size and it seems the inodes were doubled. The problem still scale linearly. With 16GB volume size, we only have around 1 million inodes, consumed, while only using around 5 GB size, again linear scale.
 
 **Note**
 If you are not familiar with what a tile cache is, it is basically a small patch of tile, square in shape, of PNG image type. But we have lots of them in order to serve a GIS layer efficiently without recomputing the layer.
