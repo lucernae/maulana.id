@@ -87,13 +87,13 @@ Once you let the storage container engine runs, your block device of the volume 
 You can do whatever you want with the block device, like mount it to your node. However what I want to do is to format the device. So I was planning to do a reformat (existing data will be empty).
 
 ```bash
-sudo mkfs.extf -T <template> <device>
+sudo mkfs.ext4 -T <template> <device>
 ```
 
 To look at possible ext4 filesystem template, see `/etc/mke2fs.conf`. I opt to use `small` template, which is 128 inode block size,  and 1024 block size. This will give approximately 4MB per one inode ratio. The command example is like this:
 
 ```bash
-sudo mkfs.extf -T small /dev/longhorn/pvc-06b4a8a8-b51d-42c6-a8cc-d8c8d6bc65bc-d890efb2
+sudo mkfs.ext4 -T small /dev/longhorn/pvc-06b4a8a8-b51d-42c6-a8cc-d8c8d6bc65bc-d890efb2
 ```
 
 8. Cleanup
