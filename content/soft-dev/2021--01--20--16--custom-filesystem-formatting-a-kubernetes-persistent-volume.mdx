@@ -23,7 +23,7 @@ Finding how to allocate inodes is easy enough. All you had to do is format the d
 
 The not so obvious part of the problem is how to format the device if the device is a k8s volume mounted to the container?
 
-I'm just a k8s user and not too deeply understand about the foundation behind k8s mechanism. But I tried to to some experiments using some simple logic.
+I'm just a k8s user and not too deeply understand about the foundation behind k8s mechanism. So, I tried some experiments using a simple logic.
 
 Basically, we can't format the volume if the volume itself is already a file system, since `mkfs` input is a Linux raw device. Luckily my volume provisioner in my cluster is [longhorn.io](longhorn.io), which is a block storage volume. My reasoning is, longhorn creates a block device out of existing filesystem, then mount it to k8s container as a volume filesystem. There is a chance for me to format that block storage before it is being used by the container.
 
