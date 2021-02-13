@@ -1,0 +1,14 @@
+---
+layout: blog-posts
+title: Lesson learned on deploying Minio with CIFS backend. Part 2
+description: Not a success.  Mount is too unreliable.
+date: 2021-02-12T10:20:21.083Z
+---
+Continuation of [Part 1](2021--02--12--10--lesson-learned-on-deploying-minio-with-cifs-backend-part-1), we are going to revise the architecture a bit.
+
+# Problem
+
+Previously, overlay mounts doesn't work. So, the simple solution is to just separate the minio instance and let each one of them holds a group of bucket. Since we are able to run MinIO bucket with Longhorn storage just fine, we are going to focus again on the MinIO instance with CIFS storage backend.
+
+# Architecture
+
