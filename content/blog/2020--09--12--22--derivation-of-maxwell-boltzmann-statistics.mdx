@@ -1,0 +1,98 @@
+---
+layout: blog-posts
+title: Derivation of Maxwell-Boltzmann statistics
+description: We are going to derive it using Shannon/Gibbs entropy
+date: 2020-09-12T22:05:13.758Z
+---
+> Disclaimer:
+>
+> I don't have any theoritical physic degree. The posts below are purely my personal opinion and does not reflect any contemporary academic view. Read it for your own amusement.
+
+import { Link } from "gatsby"
+import Plot from 'react-plotly.js'
+
+
+Well, to be honest I'm going to write this article because I want to test plotly.js integration with MDX in this gatsby blog. It was supposed to be making me easier to embed react components in MDX article format.
+
+This is a follow up article from my previous article <Link to="/2020--09--05--08--do-information-entropy-closely-related-with-physical-thermodynamics">here</Link>.
+
+In the previous article we derive an important definition that average information is equivalent to what entropy means in Physics. We arrived at the conclusion that Boltzmann's entropy:
+
+$$
+S=k \ln W
+$$
+
+Can be derived from Shannon's average information or Gibbs entropy (same thing, just different name).
+
+We then figure out that for a specific macroscopic value of energy level $$E$$ and temperature $$T$$, there is a corresponding quantity $$p$$. The quantity $$p$$ in essence is a probability distribution function, because we derive it from Shannon't information. Since $$p$$ is a function of $$E$$ and $$T$$, this is a proability of how the data or state are arranged in such a way that it will represent information equivalent with the said $$E$$ and $$T$$ value that we observed directly.
+
+To interpret what this means, let's consider a classical case of ideal gas.
+
+Originally, in classical mechanics, Maxwell create a heuristical theory to explain why ideal gas contained in a box have a specific temperature. We already know the formula $PV=nRT$ that relates pressure, volumes, and temperature of ideal gas. Maxwell here tried to find connections between the temperature and individual energy of the gas molecules.
+
+We are not going to derive it the same way as Maxwell, though. He started with a heuristic approach by *imagining* the kinematics or how each molecules moves, then make some statistical assumptions. Boltzmann then propose a more fundamental theory (that entropy definition) and from there he is able to reproduce the same result as Maxwell. This is why the probability function is often called Maxwell-Boltzmann statistics.
+
+Since we already have the entropy value, or rather the average information, we are starting from there. We know what is the probability of **one molecule** which is the result we found in the previous article:
+
+$$
+p=\frac{1}{Z}e^{-\frac{E}{kT}}
+$$
+
+Where $Z$ is supposedly the normalizing value that will make the total probability to 1, because, well, that's what probability is.
+
+Because my intention now is to demonstrate using plotly in this article, let's try to plot this function. Using x axis to represent energy level $E$ and y axis to represent $p$, we got:
+
+
+export const prop = {
+    E: [...Array(1000)].map( (_,idx) => idx*0.1)
+}
+
+export const generateEnergyLevel = (event) => console.log(event.target.value)
+
+export const Alert = () => {
+    class _alert extends React.Component {
+
+    }
+    return _alert;
+  }
+
+<input type='number'
+    onChange={generateEnergyLevel}
+/>
+
+
+<Plot
+    data={
+        [
+            {
+                x: [1,2,3],
+                y: [1,2,3],
+                type: 'scatter',
+            }
+        ]
+    }
+    layout={
+        {
+            xaxis: {
+                autotick: false,
+                ticks: 'outside',
+                tick0: 0,
+                dtick: 0.25,
+                ticklen: 8,
+                tickwidth: 4,
+                tickcolor: '#000'
+            },
+            yaxis: {
+                autotick: false,
+                ticks: 'outside',
+                tick0: 0,
+                dtick: 0.25,
+                ticklen: 8,
+                tickwidth: 4,
+                tickcolor: '#000'
+            }
+        }
+    }
+    >
+
+</Plot>
