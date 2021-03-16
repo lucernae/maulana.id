@@ -86,15 +86,15 @@ In the above Javascript snippets, you can try the following:
 
 1. Run the function using $a=0$, it will return $L=0$ but delta is greater than epsilon. Which means, it doesn't converge
 
-It's make sense because $a$ is the basis of the exponent. If it is 0, any power of it will return 1. It will never converge.
+It's make sense because $a$ is the basis of the exponent. If it is 0, any power of it will return 0. It will never converge.
 
-2. Run the function using $a=1$, it will return $L=1$. Converging but not interesting, because any power of 1 is 1 indeed.
+2. Run the function using $a=1$, it will return $L=1$. Converging, but not interesting. Any power of 1 is 1 indeed.
 
-3. Run the function using $a=1.4$ it will converge
+3. Run the function using $a=1.4$, it will converge
 
-4. Run the function using $a=1.5$ it doesn't converge!
+4. Run the function using $a=1.5$, now it doesn't converge!
 
-Specifically $L$ goes unbounded towards infinity. It keeps increasing as the number of iteration goes.
+Specifically for #4, $L$ goes unbounded towards infinity. It keeps increasing as the number of iteration goes.
 
 
 From the result of #3 and #4, we know that there is an upper bound of possible value of $a$. We want to know the upper bound.
@@ -113,7 +113,7 @@ F(1,x)=F(0,F(0,x))=a^{(a^x)} \\
 F(2,x)=F(0,F(1,x))=a^{(a^{(a^x)})}
 $$
 
-Let's say, for huge number of $n$, $F(n,x)$ converge to a finite value $L$. However for a really big number, $n$ and $n+1$ will converge to the same thing,
+Let's say, for huge number of $n$, $F(n,x)$ converge to a finite value $L$. However for a really big number of $n$ and $n+1$, both of them will converge to the same thing,
 which is $L$. If this value really exists, then we can say:
 
 $$
@@ -121,27 +121,27 @@ F(n+1,x)=L=F(n,x) \\
 a^L=L
 $$
 
-Then if $L$ does exists, we conclude that it's value are only determined solely by $a$. Regardless of the number of iteration.
+Then if $L$ does exists, we conclude that it's value are only determined solely by number $a$. Regardless of the number of iteration.
 
 Solving this is a little bit difficult, however. To do that, you had to group $L$ into one side of the equation. Let's put this off for now, because
-we are just interested in finding the upper bound of $a$ for now. So, we go to the second part of the statement.
+we are just interested in finding the upper bound of $a$. So, we go to the second part of the statement.
 
 We know that at first $F(0,x)$ won't be equal to $L$. It's value depend on both $a$ and $x$.
 In the javascript code above, we set initial value of $x$ to be $a$. The output of that function were feed back, over and over again.
 
 Let's say, we can freely choose the value of $x$, then we "measure" how close the result would be to our convergent value $L$, which is the final value.
-Let's define the range of $x$ first. We know it had to be greater than 0, since $x$ is divergent. It's also less than 1.5, since greater than that is 
+Let's define the range of $x$ first. We know it had to be greater than 0, since $x$ is divergent if less than 0. It's also less than 1.5, since greater than that is 
 divergent too. So, hey, the range of values is actually small!
 
 We can explore a little bit more. Let's say we can "variate" $x$ around these range, in small increment. $x$ has to be close to our convergent value $L$, right?
-We can then define the "difference" between the function output from the convergent output $a^L$, $D(x)=F(0,x)-a^L$.
-We also define the "difference" between the function input from the input wher function is convergent $d(x)=x-L$.
-We want to measure these differences and see how "far" $x$ is from the value $L$ that we want to find. So, we divide it to have a more "normalized" value:
-$O(x)=\frac{D(x)}{d(x)}$, and call this our measured quantity, the objective function. Objective function can have arbitrary value, but it should tell us 
+We can then define the "difference" between the function's output from the convergent output $a^L$: $D(x)=F(0,x)-a^L$.
+We also define the "difference" between the function's input from where it is convergent: $d(x)=x-L$.
+We want to measure these differences and see how "far" $x$ is from the value $L$ that we want to find. So, we divide it to have a more "normalized" value or ratio:
+$O(x)=\frac{D(x)}{d(x)}$. We call this our measured quantity, the objective function. Objective function can have arbitrary output, but it should tell us 
 how close it is to our target objective value. In our case, our objective is to get as close as possible to $O(L)$.
 
-You might be thinking what good this will be? Well, now, the magic happens. If we look at our objective function, it looks really similar to a derivative. Wow, surprising.
-Let's make it a derivative. To justify it, we say that we variate $x$ as close to $L$ as possible, but not pass it (because if we pass it, we get divergent output). 
+You might be thinking what good this will be? Well, now, I can show you where the magic happens. If we look at our objective function, it looks really similar to a derivative! Surprising!
+Let's make it a derivative. To justify it, we say that we variate $x$ as close to $L$ as possible, but not get passed it (because if we pass it, we get divergent output). 
 So the limit is increasing from the left.
 
 $$
@@ -167,16 +167,20 @@ It conveniently reduce to 1 because nominator and denominator have equal value.
 
 You might not be satisfied with this intuition. Unfortunately I'm weak at formal proof, hahaha. But another reasoning can be derived if you think that the derivative of $F(0,x)$ can vary.
 First hint, we know that if $x<L$ the tangent line has to keep increasing, so that the function can recursively get closer to $L$, by logic alone. This means, in the entire range of $x$, 
-the derivative has to always increase, but somewhat stop increasing in $x=L$. However, due to the nature of the function, for $x>L$, it have to have a drastic steep tangent/slope so that the function can't converge (it always increase in rapid stride). This is the second hint.
+the derivative has to always increase, but somewhat stop increasing in $x=L$. However, due to the nature of the function, for $x>L$, it has to have a drastic steep tangent/slope so that the function can't converge (it always increase in rapid stride). This is the second hint.
 
-You might be thinking that: "Meh, it's a tangent, so let's just divide function output by input, we get $\frac{a^L}{L}=1$. The tangent is 1". While we got the same result, but the logic 
-has flaw because it's just an average tangent from 0 to $L$ and we only got lucky because the function $a^x$ doesn't have any constant in it.
+You might be thinking that: 
+
+> "Meh, it's a tangent, so let's just divide function output by input, we get $\frac{a^L}{L}=1$. The tangent is 1".
+
+While we got the same result, the logic 
+has a flaw because it's just an average tangent from 0 to $L$ and we only got lucky because the function $a^x$ doesn't have any constant in it.
 
 The correct reasoning, is to understand **why** the function decided to suddenly increase the slope when $x$ gets past $L$. Something is happening at $L$. For the function to drastically increase, 
 that means the first derivative has to drastically increase. But, for the first derivative to drastically increase, the second derivative has to drastically increase too. We can keep this going, 
-until the $n$-th derivative, even to infinity. But wait, before it got past $L$, it converges, it just means a simple fact that at the $n$-th derivative, the derivative is simply *ZERO*.
+until the $n$-th derivative, even to infinity. But wait, before it got past $L$, it converges, it just means a simple fact that at the $n$-th derivative, that derivative is simply *ZERO*.
 
-The $n$-th derivative of $F(0,x)=a^x$ is just (conveniently) $F'_n(0,x)=\ln{(a)}^n a^x$. The deciding factor is to understand that for it to be 0, $\ln{(a)}<1$. Because, if it's greater than zero, the compounding effect will make sure that $\ln{(a)}^n$ goes to infinity. We then deduce a very simple result, the very first derivative itself must be less than one. Which is the same with what we found earlier.
+The $n$-th derivative of $F(0,x)=a^x$ is just (conveniently) $F'^n(0,x)=\ln{(a)}^n a^x$. The deciding factor is to understand that for it to be 0, it must be that $\ln{(a)}<1$. Because, otherwise if $\ln{(a)}$ greater than 1, the compounding effect will make sure that $\ln{(a)}^n$ goes to infinity. We then deduce a very simple result, the very first derivative itself must be less than one. Which is the same with what we found earlier.
 
 So, back on track. We got the upper bound here (completely making $L$ term irrelevant, yay!). Focus on finding the $x$ value:
 
@@ -207,8 +211,8 @@ $$
 L \leq -\frac{\ln{(\ln{(a)})}}{\ln{(a)}}
 $$
 
-Wow! This really looks complicated, man. Very different from what conjectured by the tweet above.
-This is because we relate $L$ with $a$. So this is in fact the upper bound of $L$. We can't say yet
+Wow! This really looks complicated, man. Very different from what is conjectured by the tweet above.
+We relate $L$ with $a$. So this is in fact the upper bound of $L$. We can't say yet
 that this value is the convergent value, because it might be something lower.
 
 To eliminate any trace of $L$, combine with the fact that $a^L=L$
@@ -219,7 +223,7 @@ L \ln{(a)} = \ln{(L)} \\
 L = \frac{\ln{(L)}}{\ln{(a)}}
 $$
 
-Now, we have all what it takes to reduce the equality/inequality! Substitute this equality to the previous inequality. We got:
+Now, we have everything that makes it possible to reduce the equality/inequality! Substitute this equality to the previous inequality. We got:
 
 $$
 \frac{\ln{(L)}}{\ln{(a)}} \leq -\frac{\ln{(\ln{(a)})}}{\ln{(a)}} \\
@@ -247,8 +251,8 @@ $$
 
 Oh boy, now we found the more strict version of the upper bound, which is $e^{\frac{1}{e}}$, or more conveniently written in the tweet as $\exp({\frac{1}{e}})$.
 
-If we trace back the steps, it seems to consists of several magic tricks. How can we even know the solution exists (and elegant) from the beginning? This doesn't seems to be a reliable 
-problem solving method. Hahaha. I get it that math are beautiful poetry, but in practicality, we want a reliable and generic way to solve problem, and not relying of 
+If we trace back the steps, they seems to consists of several magic tricks. How can we even know that the solution exists (and elegant) from the beginning? This doesn't seems to be a reliable 
+problem solving method. Hahaha. I get it that math are beautiful poetry, but in practice, we want a reliable and generic way to solve problem, and not relying of 
 any "genious" trick that math plebs can't figure out from their own. I mean, not everyone of us is Gauss.
 
 This begs the second part of the article, which explore how even a mere mortal like me can even glimpse at the final solution.
@@ -274,7 +278,7 @@ Next, as I said before, solving for $x$ will be possible, although difficult. We
 2. Variate $x$ and see what happens around $x=L$
 3. Guess at the substitution, usually by doing numerical analysis or plotting the graph.
 
-No #3, is a big no, because I don't have that much time to guess at it. Ain't have time to do full-time math job.
+No #3, is a big no, because I don't have that much time to guess at it. Ain't got time to do full-time math job.
 
 No #1 will provide a better way of understanding the problem, because it will have a clear picture of why does it converges. But again, let's leave that for the pro mathlete. We just 
 want to poke around.
@@ -339,7 +343,7 @@ Our original equation is a product+exponent or product logarithm and we want to 
 $$
 a^L=L \\
 \ln{a} \ e^{L \ln{a}} = L \ln{a} \\
-- \ln{a} = (e^{-L \ln{a}}) \cdot (-L \ln{a}) \\
+- \ln{a} = (-L \ln{a}) \cdot (e^{-L \ln{a}}) \\
 z = we^w
 $$
 
@@ -358,20 +362,45 @@ can returns multiple output depending on the $k$ argument. But because $L$ has t
 
 Since Lambert-W have some special properties. We get some of the facts for free because of the already established theorems.
 
-First fact, since we are dealing with only real positive values of both $a$ and $L$, the input of $W(z)$ is always positive. We know that $a$ has to be less than $e$, making $-\ln{a}$ 
-always positive. If the input of $W(z)$ is positive, we are using Lambert-W with $k=0$. $W_0(z)$ have radius of convergence $\frac{1}{e}$. From this information alone, we can derive
+First fact, since we are dealing with only real positive values of both $a$ and $L$, the input of $W(z)$ 
+can be guessed to come from the domain that made the principal branch of $W(z)$ to be available. 
+If the input of $W(z)$ greater than $-\frac{1}{e}$, we are using Lambert-W with $k=0$. 
+$W_0(z)$ have radius of convergence $\frac{1}{e}$. From this information alone, we can derive
 the fact that the upper bound of $a$ has to be $\exp{(\frac{1}{e})}$. Pretty quick, eh?
 
 $$
--\frac{1}{e} \leq -\ln{a} -  \leq \frac{1}{e} \\
+-\frac{1}{e} \leq -\ln{a} \leq \frac{1}{e} \\
 \frac{1}{e} \geq \ln{a} \geq -\frac{1}{e} \\
 \exp{(\frac{1}{e})} \geq a \geq \exp{(-\frac{1}{e})}
 $$
 
-Look, we even got more specific lower bound: $\exp{(-\frac{1}{e})}$. You can check back with the widget about, if we put $a\leq\exp{(-\frac{1}{e})}$, the function will not converge.
+Look, we even got more specific lower bound: $\exp{(-\frac{1}{e})}$. You can check back with the widget above, if we put $a\leq\exp{(-\frac{1}{e})}$, the function will not converge.
 
 To test it, try $a=0.6922$ (very close to the lower bound), with small enough epsilon $\epsilon=0.0000000000000001$ It will not converge.
 But flip the value of $a$ a little bit higher to $0.6923$ it converges. This is because the delta is delicate enough.
+
+Now, let's try $a=0.1$. What? We got convergent result?
+
+So, our lower bound of $a$ here must be wrong. We need to investigate further. If we are careful, our arguments are making sure that the lower bound of $z$ is clearly $-\frac{1}{e}$, but the upper bound here is just an assumptions. Technically, as long as $z$ is positive, $W(z)$ will also returns positive real value. We need to be more strict.
+
+For $z \geq 0$ the deciding factor would be the value $\ln{a}$ here. Specifically, we have to make the following inequality
+because we want $L$ to be positive. Note that it is not possible to have $L=0$ because then $a^L=L$ cannot be satisfied.
+In summary, we have:
+
+--> need edit
+
+$$
+L = - \frac{W(-\ln{a})}{\ln{a}} \ge 0 \\
+\frac{W(-\ln{a})}{-\ln{a}} \ge 0 \\
+\frac{W(-\ln{a})} \ge 0
+$$
+
+For the second line, note that the sign in the left side now depends on the sign of $-\ln{a}$. $W(z)$ switch signs the same way as $z$. Thus, grouping it like that making sure the inequality doesn't change sign.
+
+You probably need to do some mental gymnastic for the last part if you're not familiar. We basically have to say:
+pick $z$ such as the $W(z)$ greater than 0. Since $W(0)=0$ and the function increases. That means the lower bound of $z$ is 0. The lower bound of $a$ thus becomes 
+
+<-- need edit
 
 Now that we have the bound for $a$, it is possible for us to directly calculate the convergent value $L$, as long as we keep $a$ within the bounds.
 To calculate $W_0(z)$ numerically, we can use Taylor series to arbitrary precisions. I'm not going to write down the implementation details, but here's the second widget:
