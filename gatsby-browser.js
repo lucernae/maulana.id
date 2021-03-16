@@ -3,7 +3,7 @@ import "typeface-montserrat"
 import "typeface-merriweather"
 
 import "prismjs/themes/prism.css"
-import "tailwindcss/dist/base.min.css"
+import "./src/styles/global.css"
 
 
 const addScript = (url) => {
