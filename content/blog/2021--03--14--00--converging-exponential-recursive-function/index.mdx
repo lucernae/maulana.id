@@ -387,8 +387,6 @@ For $z \geq 0$ the deciding factor would be the value $\ln{a}$ here. Specificall
 because we want $L$ to be positive. Note that it is not possible to have $L=0$ because then $a^L=L$ cannot be satisfied.
 In summary, we have:
 
---> need edit
-
 $$
 L = - \frac{W(-\ln{a})}{\ln{a}} \ge 0 \\
 \frac{W(-\ln{a})}{-\ln{a}} \ge 0 \\
@@ -398,9 +396,23 @@ $$
 For the second line, note that the sign in the left side now depends on the sign of $-\ln{a}$. $W(z)$ switch signs the same way as $z$. Thus, grouping it like that making sure the inequality doesn't change sign.
 
 You probably need to do some mental gymnastic for the last part if you're not familiar. We basically have to say:
-pick $z$ such as the $W(z)$ greater than 0. Since $W(0)=0$ and the function increases. That means the lower bound of $z$ is 0. The lower bound of $a$ thus becomes 
+pick $z$ such that the $W(z)$ greater than 0. Since $W(0)=0$ and the function increases. That means the lower bound of $z$ is 0. The upper bound of $a$ thus becomes 1, 
+i.e $a \le 1$.
 
-<-- need edit
+Let's stop again for a moment and digest it. We are a little bit confused. We already described that the upper bound of $a$ is $\exp{(\frac{1}{e})}$,
+but now we have a result that the upper bound $a$ is $1$. Something is wrong here and I don't know what it is :p.
+
+I can only guess that there is a branching point (because $W(z)$ can have multiple output) when $a=1$. At that point the value of $L$ trivially becomes $1$ by definition. 
+But it's not possible to calculate it directly using above closed form, since $L$ becomes zero by zero division. You had to take the limit.
+
+Consequently, when $0 \le a \le 1$, $L$ has to be some small value and decrease as $a$ decrease, then becomes undefined when $a=0$. At this moment, the $z$ interval
+becomes $0 \le z \le \infty$, which can be quite big. The closed form says it converging to a small value of $L$, but if we take the value procedurally using 
+recursive definition at the beginning, any base $a$ exponentiated into a small value of $L \approx 0$, will cause the output to approach $1$. In the next
+iteration, a small base of $a$ exponentiated into a value of $L \approx 1$, will cause the output to approach the base again. So we have an alternating value
+of nearly $1$ and nearly $0$ that made it not possible for $L$ to converge, recursively. But, the closed form function will only consider the smaller one.
+
+In conclusion, I am guessing that within the interval $0 \le a \le 1$, the function recursively jumps between branches.
+You can check this using the previous widget. For $a=0.0001$, calculate the value between odd and even max iteration to see that the output alternates.
 
 Now that we have the bound for $a$, it is possible for us to directly calculate the convergent value $L$, as long as we keep $a$ within the bounds.
 To calculate $W_0(z)$ numerically, we can use Taylor series to arbitrary precisions. I'm not going to write down the implementation details, but here's the second widget:
@@ -408,6 +420,9 @@ To calculate $W_0(z)$ numerically, we can use Taylor series to arbitrary precisi
 ## Calculating L directly
 
 FYI, I didn't test all edge cases in the following widget. Basically, we expect to get a result as long as $a$ is within bounds.
+
+The bounds that I refer to is the bounds that applies to the principal branch of Lambert-W. I only implement that one, so the bounds 
+are $\exp{(\frac{1}{e})} \geq a \geq \exp{(-\frac{1}{e})}$. Other than that, it's not guaranteed that the Taylor series I implemented can converge.
 
 The widget below works by calculating L directly using Lambert-W function. The Lambert-W function is calculated using Taylor series.
 
