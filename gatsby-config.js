@@ -22,22 +22,8 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        path: `${__dirname}/content/blog`,
+        path: `${__dirname}/content`,
         name: `blog`,
-      },
-    },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        path: `${__dirname}/content/sandbox`,
-        name: `sandbox`,
-      },
-    },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        path: `${__dirname}/content/soft-dev`,
-        name: `soft-dev`,
       },
     },
     {
@@ -64,16 +50,21 @@ module.exports = {
               wrapperStyle: `margin-bottom: 1.0725rem`,
             },
           },
-          {
-            resolve: `gatsby-remark-katex`,
-            options: {
-              strict: `ignore`
-            }
-          },
+          // Ignored because the plugin doesn't work
+          // {
+          //   resolve: `gatsby-remark-katex`,
+          //   options: {
+          //     strict: `ignore`
+          //   }
+          // },
           `gatsby-remark-autolink-headers`,
           `gatsby-remark-prismjs`,
           `gatsby-remark-copy-linked-files`,
           `gatsby-remark-smartypants`,
+        ],
+        remarkPlugins: [
+          require(`remark-math`),
+          [require(`remark-html-katex`), {strict: "ignore"}],
         ],
       },
     },
@@ -85,7 +76,7 @@ module.exports = {
         trackingId: `UA-173947917-1`,
       },
     },
-    `gatsby-plugin-feed-mdx`,
+    // `gatsby-plugin-feed-mdx`,
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
@@ -105,6 +96,7 @@ module.exports = {
         pathToConfigModule: `src/utils/typography`,
       },
     },
+    `gatsby-plugin-postcss`,
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,

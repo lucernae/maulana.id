@@ -59,7 +59,7 @@ Just follow the README to set it up.
 I created `dnsmasq.conf` in `~/dnsmasq.conf`
 With content:
 
-```conf
+```ini
 #log all dns queries
 log-queries
 #use cloudflare as default nameservers, prefer 1^4
@@ -133,7 +133,7 @@ Sample of index.html
 
 Now, we want to serve this file. Hopefully you have python3, or else, you can use your favorite webserver.
 
-```python3
+```python
 python3 -m http.server --bind 0.0.0.0 80
 # Or, since we are going to use lower port 80, you might need to prepend with sudo
 # sudo python3 -m http.server --bind 0.0.0.0 80

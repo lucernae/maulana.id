@@ -1,4 +1,4 @@
-const path = require(`path`)
+const path = require(`path-browserify`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
 
 exports.createPages = async ({ graphql, actions }) => {
@@ -62,3 +62,19 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
     })
   }
 }
+
+// exports.onCreateWebpackConfig = ({
+//   stage,
+//   rules,
+//   loaders,
+//   plugins,
+//   actions,
+// }) => {
+//   actions.setWebpackConfig({
+//     resolve: {
+//       fallback: {
+//         path: require.resolve(`path-browserify`)
+//       },
+//     }
+//   })
+// }
