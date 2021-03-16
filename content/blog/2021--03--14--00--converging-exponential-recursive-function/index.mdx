@@ -1,0 +1,434 @@
+---
+layout: blog-posts
+title: Converging exponential recursive function
+description: Interesting problem from twitterland about recursive function.
+date: 2021-03-14T00:00:00.000Z
+---
+> Disclaimer:
+>
+> I don't have any formal mathematics degree.
+> I found the following problem/puzzle very interesting and tried to solve it.
+
+First things first, I don't even know what type of class the problem is, so I will just show you the problem.
+
+It all began from an interesting tweet [here](https://twitter.com/SamuelGWalters/status/1368886676861243394?s=20)
+
+
+<blockquote class="twitter-tweet">
+    <p lang="en" dir="ltr">
+    Let a &gt; 0 and consider the exponential function
+    <br/>F(x) = aˣ = a^x
+    <br/>where x ≥ 0. Show that the sequence of iterations
+    <br/>a, F(a), F(F(a)), F(F(F(a))), ...
+    <br/>converges iff
+    <br/>a ≤ exp(1/e) = 1.4446...
+    <br/>In particular, it converges for Dillon&#39;s <a href="https://twitter.com/InertialObservr?ref_src=twsrc%5Etfw">@InertialObservr</a> example a = √2. 
+    <a href="https://twitter.com/hashtag/math?src=hash&amp;ref_src=twsrc%5Etfw">#math</a> 
+    <a href="https://twitter.com/hashtag/calculus?src=hash&amp;ref_src=twsrc%5Etfw">#calculus</a>
+    </p>&mdash; Sam Walters ☕️ (@SamuelGWalters) 
+    <a href="https://twitter.com/SamuelGWalters/status/1368886676861243394?ref_src=twsrc%5Etfw">March 8, 2021</a>
+</blockquote>
+
+The question is: "Why such things happens?"
+
+In order to appreciate the question more, let's reiterate the question itself, but now with more layman's terms.
+
+Let's say, you have a function $F(x)$. Then you have a number $a$. Substituting $x$ with $a$, you will get the function output $F(a)$.
+
+If you feed the output to the function again, you will get $F(F(a))$ for the second iteration. Do it for multiple times, you will eventually get a converging number $L$.
+
+This is very procedural (or rather, recursive?), in fact you can make the function and code it, let's say, using Javascript.
+
+## Sample Recursive Runner
+
+import { RecursiveFunctionForm } from "./index.js"
+
+<RecursiveFunctionForm>
+
+<div aslabel="input">
+
+Input $a$
+
+</div>
+<div aslabel="maxIteration">
+Recursion limit
+</div>
+<div aslabel="epsilon">
+
+Subsequent value difference, the $\epsilon$
+
+</div>
+
+<div aslabel="iteration">
+
+Iteration number
+
+</div>
+
+<div aslabel="finalDelta">
+
+Final $\Delta$ . Difference between current output and previous iteration's output.
+
+</div>
+
+<div aslabel="output">
+
+Converging output $L$
+
+</div>
+
+<div aslabel="converge">Is it converging?</div>
+
+</RecursiveFunctionForm>
+
+
+In the above Javascript snippets, you can try the following:
+
+1. Run the function using $a=0$, it will return $L=0$ but delta is greater than epsilon. Which means, it doesn't converge
+
+It's make sense because $a$ is the basis of the exponent. If it is 0, any power of it will return 1. It will never converge.
+
+2. Run the function using $a=1$, it will return $L=1$. Converging but not interesting, because any power of 1 is 1 indeed.
+
+3. Run the function using $a=1.4$ it will converge
+
+4. Run the function using $a=1.5$ it doesn't converge!
+
+Specifically $L$ goes unbounded towards infinity. It keeps increasing as the number of iteration goes.
+
+
+From the result of #3 and #4, we know that there is an upper bound of possible value of $a$. We want to know the upper bound.
+
+
+# Solving the problem using limit
+
+We begin backwards, by saying that some upperbound of $a$ exists that causes $L$ to converges. If $L$ converges, then surely
+it is within a limit, for a huge number of iteration $n$.
+
+We define a recursive function first. The function is an input of two variables, the input value $x$ and the iteration number $n$.
+
+$$
+F(0,x)=a^x \\
+F(1,x)=F(0,F(0,x))=a^{(a^x)} \\
+F(2,x)=F(0,F(1,x))=a^{(a^{(a^x)})}
+$$
+
+Let's say, for huge number of $n$, $F(n,x)$ converge to a finite value $L$. However for a really big number, $n$ and $n+1$ will converge to the same thing,
+which is $L$. If this value really exists, then we can say:
+
+$$
+F(n+1,x)=L=F(n,x) \\
+a^L=L
+$$
+
+Then if $L$ does exists, we conclude that it's value are only determined solely by $a$. Regardless of the number of iteration.
+
+Solving this is a little bit difficult, however. To do that, you had to group $L$ into one side of the equation. Let's put this off for now, because
+we are just interested in finding the upper bound of $a$ for now. So, we go to the second part of the statement.
+
+We know that at first $F(0,x)$ won't be equal to $L$. It's value depend on both $a$ and $x$.
+In the javascript code above, we set initial value of $x$ to be $a$. The output of that function were feed back, over and over again.
+
+Let's say, we can freely choose the value of $x$, then we "measure" how close the result would be to our convergent value $L$, which is the final value.
+Let's define the range of $x$ first. We know it had to be greater than 0, since $x$ is divergent. It's also less than 1.5, since greater than that is 
+divergent too. So, hey, the range of values is actually small!
+
+We can explore a little bit more. Let's say we can "variate" $x$ around these range, in small increment. $x$ has to be close to our convergent value $L$, right?
+We can then define the "difference" between the function output from the convergent output $a^L$, $D(x)=F(0,x)-a^L$.
+We also define the "difference" between the function input from the input wher function is convergent $d(x)=x-L$.
+We want to measure these differences and see how "far" $x$ is from the value $L$ that we want to find. So, we divide it to have a more "normalized" value:
+$O(x)=\frac{D(x)}{d(x)}$, and call this our measured quantity, the objective function. Objective function can have arbitrary value, but it should tell us 
+how close it is to our target objective value. In our case, our objective is to get as close as possible to $O(L)$.
+
+You might be thinking what good this will be? Well, now, the magic happens. If we look at our objective function, it looks really similar to a derivative. Wow, surprising.
+Let's make it a derivative. To justify it, we say that we variate $x$ as close to $L$ as possible, but not pass it (because if we pass it, we get divergent output). 
+So the limit is increasing from the left.
+
+$$
+\lim_{x \to L^{-}}\frac{D(x)}{d(x)}=F'(0,x) \\
+\lim_{x \to L^{-}}\frac{a^x-a^L}{x-L}=F'(0,x) \\
+\ln{(a)} a^x = F'(0,x)
+$$
+
+Now, mind you, this equation only valid around $x=L$. This is not useful unless we made a connection to something else. 
+The great news is, we do happen to know the value of the derivative when $x=L$! How lucky are we? A derivative of $F(0,x)$, which is $F'(0,x)$ is a function that 
+corresponds to the tangent of $F(0,x)$ graph. Our function have a special property, no matter what $a$ we choose, it will converge to a value $L$. 
+When it converges, no matter how many times $L$ are given as input to the function, it will always produce $L$ again. Which is the equality that we have before,
+$a^L=L$. If we have 2D graph, the function converges to a point $(L,a^L)=(L,L)$.
+
+Something special happens when it converges. By intuition alone, our objective function will say "perfect match" if the $x$ value we choose is actually $L$, the value when it converge.
+Perfect match means the ratio between $D(x)$ and $d(x)$ should be the target/optimum value of the objective function, which is:
+
+$$
+\frac{D(x)}{d(x)}=\frac{a^L}{L}=1
+$$
+
+It conveniently reduce to 1 because nominator and denominator have equal value.
+
+You might not be satisfied with this intuition. Unfortunately I'm weak at formal proof, hahaha. But another reasoning can be derived if you think that the derivative of $F(0,x)$ can vary.
+First hint, we know that if $x<L$ the tangent line has to keep increasing, so that the function can recursively get closer to $L$, by logic alone. This means, in the entire range of $x$, 
+the derivative has to always increase, but somewhat stop increasing in $x=L$. However, due to the nature of the function, for $x>L$, it have to have a drastic steep tangent/slope so that the function can't converge (it always increase in rapid stride). This is the second hint.
+
+You might be thinking that: "Meh, it's a tangent, so let's just divide function output by input, we get $\frac{a^L}{L}=1$. The tangent is 1". While we got the same result, but the logic 
+has flaw because it's just an average tangent from 0 to $L$ and we only got lucky because the function $a^x$ doesn't have any constant in it.
+
+The correct reasoning, is to understand **why** the function decided to suddenly increase the slope when $x$ gets past $L$. Something is happening at $L$. For the function to drastically increase, 
+that means the first derivative has to drastically increase. But, for the first derivative to drastically increase, the second derivative has to drastically increase too. We can keep this going, 
+until the $n$-th derivative, even to infinity. But wait, before it got past $L$, it converges, it just means a simple fact that at the $n$-th derivative, the derivative is simply *ZERO*.
+
+The $n$-th derivative of $F(0,x)=a^x$ is just (conveniently) $F'_n(0,x)=\ln{(a)}^n a^x$. The deciding factor is to understand that for it to be 0, $\ln{(a)}<1$. Because, if it's greater than zero, the compounding effect will make sure that $\ln{(a)}^n$ goes to infinity. We then deduce a very simple result, the very first derivative itself must be less than one. Which is the same with what we found earlier.
+
+So, back on track. We got the upper bound here (completely making $L$ term irrelevant, yay!). Focus on finding the $x$ value:
+
+$$
+\ln{(a)} a^x \leq 1 \\
+\ln{(a)} \leq a^{-x} \\
+$$
+
+Stop here for a moment. Notice that the left hand side can be a negative number, but we want to retrieve $x$ by using logarithm. Input of logarithm can't be negative or even zero. So we have
+the second part of the inequality, the lower bound. This means:
+
+$$
+\ln{(a)} \ge 0 \\
+a \ge 1
+$$
+
+Now moving on, assuming that $a\ge 1$.
+
+$$
+\ln{(a)} a^x \leq 1 \\
+\ln{(\ln{(a)})} \leq -x \ln{(a)} \\
+x \leq -\frac{\ln{(\ln{(a)})}}{\ln{(a)}}
+$$
+
+This only works when $x=L$, so the upper bound is:
+
+$$
+L \leq -\frac{\ln{(\ln{(a)})}}{\ln{(a)}}
+$$
+
+Wow! This really looks complicated, man. Very different from what conjectured by the tweet above.
+This is because we relate $L$ with $a$. So this is in fact the upper bound of $L$. We can't say yet
+that this value is the convergent value, because it might be something lower.
+
+To eliminate any trace of $L$, combine with the fact that $a^L=L$
+
+$$
+a^L=L \\
+L \ln{(a)} = \ln{(L)} \\
+L = \frac{\ln{(L)}}{\ln{(a)}}
+$$
+
+Now, we have all what it takes to reduce the equality/inequality! Substitute this equality to the previous inequality. We got:
+
+$$
+\frac{\ln{(L)}}{\ln{(a)}} \leq -\frac{\ln{(\ln{(a)})}}{\ln{(a)}} \\
+\ln{(L)} \leq -\ln{(\ln{(a)})} \\
+L \leq \frac{1}{\ln{(a)}}
+$$
+
+Simpler. But wait.... We can reduce it some more :D. Just replace $L$ with the previous equality.
+
+$$
+\frac{\ln{(L)}}{\ln{(a)}} \leq \frac{1}{\ln{(a)}} \\
+L \leq e
+$$
+
+Interesting, we have two inequality now with clear value and free of $L$. 
+Combine this and reorder. With the fact that $1 \le a \le e$, it just means that $\frac{1}{\ln{(a)}}$ has to be the upper bound of $L$
+if we want all of these to actually makes sense and consistent. The combined equality becomes (we can then later kick $L$ out of the inequality):
+
+
+$$
+L \leq e \leq \frac{1}{\ln{(a)}} \\
+\ln{(a)} \leq \frac{1}{e} \\
+1 \le a \leq e^{\frac{1}{e}}
+$$
+
+Oh boy, now we found the more strict version of the upper bound, which is $e^{\frac{1}{e}}$, or more conveniently written in the tweet as $\exp({\frac{1}{e}})$.
+
+If we trace back the steps, it seems to consists of several magic tricks. How can we even know the solution exists (and elegant) from the beginning? This doesn't seems to be a reliable 
+problem solving method. Hahaha. I get it that math are beautiful poetry, but in practicality, we want a reliable and generic way to solve problem, and not relying of 
+any "genious" trick that math plebs can't figure out from their own. I mean, not everyone of us is Gauss.
+
+This begs the second part of the article, which explore how even a mere mortal like me can even glimpse at the final solution.
+
+# What did I do to guess the solution?
+
+I began by poking around at the problem. Trying to see what happens if I look at it at certain way. At first, you don't know what the proof is, so you kind of assume that it's true.
+If it's true, then what happens? We should be able to derive another conclusion that don't contradict with the assumptions. If it contradicts, then we actually proof it otherwise.
+
+So, let's start by again assuming that it resembles a recursive function, and it has a base. Meaning, the limit converges. If it converges, at the very end of the iteration the value $L$ will be exact same. Whatever $x$ value we put on $a^x$, it is **the** $L$ and this happens by that definition alone:
+
+$$
+a^x = a^{a^x} \\
+x = a^x
+$$
+
+
+We got the above result by comparing the exponent, because we are using the same base $a$.
+
+Next, as I said before, solving for $x$ will be possible, although difficult. We then weigh several options. I listed it here (it can become your source of inspiration for other approach):
+
+1. Expand $a^x$ as power series, then look at the the resulting equation, then fold it back as some kind of closure function from the series.
+2. Variate $x$ and see what happens around $x=L$
+3. Guess at the substitution, usually by doing numerical analysis or plotting the graph.
+
+No #3, is a big no, because I don't have that much time to guess at it. Ain't have time to do full-time math job.
+
+No #1 will provide a better way of understanding the problem, because it will have a clear picture of why does it converges. But again, let's leave that for the pro mathlete. We just 
+want to poke around.
+
+No #2 seems to be a good candidate because we can quickly check it if it is valid.
+
+So, in conclusion, left side and right side comes from a successive iteration. We can think of it as coming from a different original function. We want to variate left and right side to quickly
+check **when** exactly the equality holds and how. Because we variate it, we make a derivative wrt $x$ both in left and right hand side. We got:
+
+$$
+x = a^x \\
+1 = \ln{(a)} a^x
+$$
+
+Hold up, these seems dodgy because the left hand side's derivative is simply 1. Which means we are comparing $a^x$ function with a straight line! What does that even mean? Anyway, we have no 
+time (yet) to provide the justifications. Just assume the universe let this be true. What happens now, is we can substitute (conveniently, strange) $a^x$ from both equation. We immediately got
+$x=\frac{1}{\ln{(a)}}$. Then continue substituting $x$ with the second equation $1 = \ln{(a)} a^x$ will lead us to:
+
+$$
+1 = \ln{(a)} a^x \\
+- \ln{(\ln{(a)})} = x \ln{(a)} = 1 \\
+a = \exp({\frac{1}{e}})
+$$
+
+Now that I knew the solution exists. I just have to trace back and justify the proof. I'm quite surprised myself that the upper bound of $a$ doesn't depend on any variable.
+As long as $a$ is within that range, the recursive function **will** converges eventually. Very interesting.
+
+
+# So, now how to compute the convergent value?
+
+We already established the fact that the final convergent value $L$ is only depends on $a$ from this equation $a^L=L$. Knowing what the value **is**, however, is entirely different problem.
+
+First, just to emphasizes, even though we have relation $x=\frac{1}{\ln{(a)}}$, that doesn't mean $L=\frac{1}{\ln{(a)}}$. The equation above is for calculating the upper bound of $a$. But $a$ 
+itself can be less than that, consequently making $L$ different. That equation above only valid for $a=\exp({\frac{1}{e}})$, which in turns make $L=e$.
+
+To find the value $L$ for any $a$ within convergence radius, currently we only have one equation. To be honest, I was happen to know about the [Lambert-W function](https://en.wikipedia.org/wiki/Lambert_W_function), so I can figure out a hint. We can use this to solve this equation. The catch is, Lambert-W is not an elementary function.
+
+Let's do a quick intro of Lambert-W for those who don't know. Otherwise, just [skip](#solve-using-lambert-w) this.
+
+## Lambert-W function intro
+
+We call Lambert-W function as simply $W_k(z)$. The $k$ is not important for now, so let's just call it $W(z)$. The function's input is a $z$, meaning it's on a complex domain.
+Lambert-W is defined as:
+
+$$
+W(z)=w
+$$
+
+For the inverse equation:
+
+$$
+we^w=z
+$$
+
+Using this definition, we are going to move backwards. We pretend that we can calculate $W(z)$ then manipulate the inverse equation so that we can substitute $W(z)$. 
+That's basically the plan.
+
+## Solve using Lambert-W
+
+Our original equation is a product+exponent or product logarithm and we want to manipulate it in such a way that it resembles the inverse of $W(z)$.
+
+$$
+a^L=L \\
+\ln{a} \ e^{L \ln{a}} = L \ln{a} \\
+- \ln{a} = (e^{-L \ln{a}}) \cdot (-L \ln{a}) \\
+z = we^w
+$$
+
+We now get that $z=-\ln{a}$ and $w=-L\ln{a}$. We are now going to assume that $\ln{a}$ is in a complex domain. Meaning that our equation will also cover 
+the values of $a \leq 0$ for complex logarithm function. Using Lambert-W we separate the variable:
+
+$$
+W(-\ln{a})=-L\ln{a} \\
+L = - \frac{W(-\ln{a})}{\ln{a}}
+$$
+
+We now have the closed form of $L$ for any arbitrary $a$. But what good will it be if $W(z)$ is not an elementary function? We can't calculate it. Also, Lambert-W
+can returns multiple output depending on the $k$ argument. But because $L$ has to strictly a real number, then $k=0$ and $k=-1$ will suffice.
+
+## What to do when we have Lambert-W function representation of $L$ ?
+
+Since Lambert-W have some special properties. We get some of the facts for free because of the already established theorems.
+
+First fact, since we are dealing with only real positive values of both $a$ and $L$, the input of $W(z)$ is always positive. We know that $a$ has to be less than $e$, making $-\ln{a}$ 
+always positive. If the input of $W(z)$ is positive, we are using Lambert-W with $k=0$. $W_0(z)$ have radius of convergence $\frac{1}{e}$. From this information alone, we can derive
+the fact that the upper bound of $a$ has to be $\exp{(\frac{1}{e})}$. Pretty quick, eh?
+
+$$
+-\frac{1}{e} \leq -\ln{a} -  \leq \frac{1}{e} \\
+\frac{1}{e} \geq \ln{a} \geq -\frac{1}{e} \\
+\exp{(\frac{1}{e})} \geq a \geq \exp{(-\frac{1}{e})}
+$$
+
+Look, we even got more specific lower bound: $\exp{(-\frac{1}{e})}$. You can check back with the widget about, if we put $a\leq\exp{(-\frac{1}{e})}$, the function will not converge.
+
+To test it, try $a=0.6922$ (very close to the lower bound), with small enough epsilon $\epsilon=0.0000000000000001$ It will not converge.
+But flip the value of $a$ a little bit higher to $0.6923$ it converges. This is because the delta is delicate enough.
+
+Now that we have the bound for $a$, it is possible for us to directly calculate the convergent value $L$, as long as we keep $a$ within the bounds.
+To calculate $W_0(z)$ numerically, we can use Taylor series to arbitrary precisions. I'm not going to write down the implementation details, but here's the second widget:
+
+## Calculating L directly
+
+FYI, I didn't test all edge cases in the following widget. Basically, we expect to get a result as long as $a$ is within bounds.
+
+The widget below works by calculating L directly using Lambert-W function. The Lambert-W function is calculated using Taylor series.
+
+Because Lambert-W works in complex domain, we convert it's input into a complex number. We limit our implementation by truncating the 
+terms when the real part of term is lower then accepted epsilon, which means further terms will not significantly adds up. 
+Due to how complex number behaves, it will always have real and imaginary part for each terms. The imaginary parts will rotate 
+for each term. However we want to make sure the final sum of the imaginary parts gets as close to 0 as possible to consider 
+the output to be real. When the final sum has significant imaginary unit, more than epsilon, then we consider it to "diverge".
+Diverge here is in the sense the $L$ value is not pure real number. It actually has value (converge) in the sense of complex domain (analytical).
+
+import { LConvergenceForm } from "./index.js"
+
+<LConvergenceForm>
+
+<div aslabel="input">
+
+Input $a$
+
+</div>
+<div aslabel="maxIteration">
+Taylor series iteration limit for Lambert-W
+</div>
+<div aslabel="epsilon">
+
+Taylor series minimum term values for Lambert-W, the $\epsilon$
+
+</div>
+
+<div aslabel="iteration">
+
+Iteration number
+
+</div>
+
+<div aslabel="output">
+
+Direct calculation of output $L$
+
+</div>
+
+<div aslabel="converge">Is it converging?</div>
+
+</LConvergenceForm>
+
+
+# Wrapping Up and Conclusion
+
+This article is getting long now. I want to explore more using a more graphic approach but I don't have time to create the widget.
+
+Anyway, I hope you enjoy the article. If you are interested in the source code of the widgets (react code),
+you can download the source code [here](./index.js).
+
+Alternatively, you can also check it in [Github](https://github.com/lucernae/maulana.id/tree/main/content/blog/2021--03--14--00--converging-exponential-recursive-function/index.js)
