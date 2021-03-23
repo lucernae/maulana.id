@@ -1,0 +1,21 @@
+---
+layout: blog-posts
+title: Small Review of Hetzner Support Experience
+description: In case you are wondering if their technical support is good or not
+date: 2021-03-23T13:12:49.868Z
+---
+Last week I have a little problem.
+
+I have a dedicated server running on Hetzner. They called the service Hetzner Robot. I’m running k8s cluster in their other service called Hetzner Cloud. My boss asked me to migrate old legacy server in Hetzner Robot into Hetzner Cloud on top of our k8s cluster. The old server itself is pretty powerful, but no one manages it. It was down. I checked it and see that the server is running out of space.
+
+After a closer look (ssh’ing into the machine), it seems our docker volume backup is filling up spaces. So what I did to resolve the issue was to delete old backups to clear out space. After that, I reboot the server.
+
+But oops, the server won’t restart...
+
+I have no idea what is wrong. Or even how to access the machine because I can’t ssh. If I were using Hetzner Cloud, they have a virtual console for me to see. In Hetzner Robot, I have 3 options: Force power off, Automatic Restart, or Ask the technician to restart the server for you. The last option seems bothersome. I don’t want to bother people if I don’t have to. So I tried the first two options. But still, the server was not up.
+
+Ok, before we are going deep down into the details. Let’s start with basic introduction
+
+# Why use Hetzner?
+
+[Hetzner](https://www.hetzner.com)
