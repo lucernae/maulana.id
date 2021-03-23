@@ -18,4 +18,73 @@ Ok, before we are going deep down into the details. Let’s start with basic int
 
 # Why use Hetzner?
 
-[Hetzner](https://www.hetzner.com)
+[Hetzner](https://www.hetzner.com) is a company based in Germany. They provide bussiness like web hosting, VPS hosting, or cloud instance. Our company, Kartoza, uses Hetzner because they run [100% on green energy](https://www.hetzner.com/unternehmen/umweltschutz/) and very cheap at the same time.
+
+In the past, we don’t have that many client. We hosted our own services in a dedicated server. We store our backups and data in Hetzner’s storage boxes. Nowadays we have several clients and recommended Hetzner as the hosting platform. We typically uses Hetzner Cloud because it’s easier to manage. However, our old services run in Hetzner Robot, somewhat their legacy products.
+
+# Is Hetzner Technical Support Good?
+
+You can judge yourself. But I think it’s pretty good and fast response. Depending on your trouble, by the way.
+
+I didn’t contact Hetzner support, but they have some kind of indicator that tells you if the server is running or not. So, when I click the button: **Order a manual hardware reset**, I imagine some technician walk into my server to push a physical button to restart my server. Then at the same time, they will know that my server can’t reboot.
+
+So I wait and wait... after maybe less than an hour (how stupid of me to not track it). The indicator goes green, finally. However, I can’t ssh. So, I imagine something is not right, still.
+
+Since I am working from UTC+7, and it’s already late in my timezone. I send a message to my boss to forward all Hetzner’s emails sent to his email address. There is no option in Hetzner Robot to share notification or alert to a different email address other than the owner of the account. I’m using my boss’s account to access the legacy server. So, notification will go to his account.
+
+I know you are going to tell me how messed up for me to use my boss account. But hey, we are a small company. My boss usually manage these server by himself but he is trying to retire to focus more on the bussiness side. So he let me take it over with the infra. In Hetzner Cloud, I never have to do this, because I can create Hetzner project then assign my own work account to that project. After that, I’m working with the infra using my work account, not my boss’s account.
+
+In the next morning, I read the messages forwarded to me, by my boss, from Hetzner Support.
+
+The technician told me that my server goes into a kernel panic and won’t reboot. So, they attached a rescue system instead and send me the credentials (the root password).
+
+I used that credentials and logged in.
+
+Hetzner also provides documentation on working in a “rescue mode”. I’m happy that it is simple. It might depends on which server you purchased from Hetzner. But basically, I want to mount my server’s disk to check things.
+
+# What to do in rescue mode
+
+First thing that I do is check `lsblk -l`. My disk were marked as `/dev/md` something. So I’m guessing it’s a RAID disk. By checking the size, I know my rootfs is `/dev/md2`. So, I mount `/dev/md2` to `/mnt`. Then perform chroot.
+
+```bash
+chroot-prepare /mnt
+chroot /mnt
+```
+
+In the `chroot-prepare` command there, the command complained that `/run/lock` is already present. Which is weird. I tried to delete `/mnt/run/lock`, but I was not able to do that because linux said `device is busy`.
+
+I ignore the warning and continue with `chroot /mnt`.
+
+I assume you understand what `chroot` does, though.
+
+I checked my filesystem. Everything seems fine. Size is good. I leave some empty spaces. So, I check `/var/log`. No log for today... which is weird because I just rebooted. If there are errors, it should log something.
+
+Anyway, I still check `/var/log/syslog`. No meaningfull messages, only some issues with docker. To take the safe side, I attempt to disable docker `systemctl disable docker`, but then the error message made me realized that I can’t do that in a chroot session.
+
+I proceed to delete the systemd symlink in `/etc/systemd/system/` multi-user targets. Basically find a `docker.service` symlink and deleted it. This disables docker on startup, manually.
+
+Then I exit chroot, reboot, and wait for the server to be up.
+
+It still doesn’t boot. AAAAAARGH
+
+# Contacting Hetzner Support Using My Personal Email
+
+My server won’t reboot and it will be useless to **Order hardware restart** again and ask my boss to forward the email. I am in UTC+7 zone and usually worked from home since 7:00 AM. My boss is in UTC+2, so 2:00 AM. He will be asleep around this time. I don’t want to wait more hours just to reboot the server and get my credentials.
+
+Fortunately, since the previous email mentions about **Rescue System**, I tried to activate it manually. So it seems I was able do that and received my credentials right from the website without contacting support.
+
+I get back into the server, rescue mode, checking back the logs on mounted `/dev/md2`, but still no logs. I’m scratching my head here.
+
+There’s no other way, except asking the technician for more info about the logs **in the screen** of the server when it reboots.
+
+I can create a support ticket request, but that would mean the reply will be sent to my boss’s email address. So I scrambled around the Account Settings. I found that I can add additional email address in the Hetzner notification. So I added mine (I know, it’s not supposed to be like this). This will make sure I will get the reply. Now how to send the notice?
+
+I should be able to send the support ticket now, but I decided to do a little experiment. I got the previous forwarded mail from my boss. In the subject of the email, there was a ticket number and the server number. What if, I replied to that email, using the same subject, with a personal email address. Do they replied back?
+
+So I send the question asking about how to retrieve the kernel logs. To my surprise, they replied back in under 8 minutes!
+
+This is great and scary at the same time. Human response in 8 minutes in an email is considered fast. But I wonder if they did some validations beforehand. Mind you that I was trying to get access to a server using my personal mail account! My email was not registered elsewhere. If they replied, then the only token credentials is the ticket number. Keep your ticket number safe!
+
+Anyway, let’s skip the conversations back and forth explaining the problem to the technician. They offered a KVM console, attached for up to 3 hours. I used that. The domain and HTTPS certificate were mismatched, strangely. But I used the website anyway. Fill in my credentials and get into a HTML5 version of the KVM console.
+
+The error message in the screen shows that it indeed a boot problem. So the server doesn’t even reach the kernel. It says **
