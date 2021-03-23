@@ -87,4 +87,53 @@ This is great and scary at the same time. Human response in 8 minutes in an emai
 
 Anyway, let’s skip the conversations back and forth explaining the problem to the technician. They offered a KVM console, attached for up to 3 hours. I used that. The domain and HTTPS certificate were mismatched, strangely. But I used the website anyway. Fill in my credentials and get into a HTML5 version of the KVM console.
 
-The error message in the screen shows that it indeed a boot problem. So the server doesn’t even reach the kernel. It says **
+The error message in the screen shows that it indeed a boot problem. So the server doesn’t even reach the kernel. It says **Kernel Panic: Unable to mount rootfs on an unknown block**. Kind of like [this one](https://askubuntu.com/questions/41930/kernel-panic-not-syncing-vfs-unable-to-mount-root-fs-on-unknown-block0-0).
+
+I’m really surprised that this is the problem. This machine has been running since Ubuntu 16.04, and now we have Ubuntu 20.04. It’s more than 4 years since, so why a simple reboot now made a kernel panic? Are there any hardware changes while the machine itself is running? I’m not familiar with how people running server. Is it even possible to hotswap the entire component while the process is running? I’m not sure.
+
+# Solving the problem, Upgrading the kernel in Rescue Mode
+
+The solution is straightforward. Go into rescue mode again. chroot to my `/dev/md2`, then run `apt dist-upgrade`.
+
+It also offerred me to delete old kernels, yes please delete them. After that, `update-initramfs -u` then `update-grub` then we are good to go and reboot.
+
+Voila!
+
+It still doesn’t boot!!! Ugh Why!
+
+Looking at KVM console again, the same kernel panic. Also, it doesn’t recognize my new kernel version, because it shows the wrong linux version. What???
+
+After thinking it out a bit, I‘m guessing that the server uses a separate `/boot` partition. That’s probably why my rootfs is named `/dev/md2`. Now, go back into rescue mode. Chroot into `/dev/md2`. Check `/etc/fstab` and making sure it expects the boot partition in separate partition. I got the partition name `/dev/md1`.
+
+I mount `/dev/md1` to `/boot`. Now I run `apt install --reinstall linux-image-<bla bla the version>-generic`.
+
+Oops, I got disk space insufficient warning.
+
+So, probably. Someone does a dist-upgrade in the past, but the boot partition is not cleaned up, so the initramfs is faulty. Or probably there were some auto mainentance going on, I don’t know.
+
+Anyway, I copy the whole `/boot` to other directory to backup. I emptied `/boot` then rebuild the grub config and everything
+
+```bash
+apt install —-reinstall linux-image-<version>-generic
+update-initramfs -u
+update-grub
+update-grub2
+```
+
+If you are wondering how I got the linux version, check from `dpkg --list | grep linux-image` then pick latest stable version.
+
+After unmounting and rebooting, my problem is solved.
+
+# My Review on Hetzner Support
+
+My own personal review. For the Hetzner Robot product, unfortunately for me, the management interface is not that good. There should be some mechanism for my boss to safely allow grunt workers like me to access the management interface. I know there’s an admin panel console, but I was talking about how to easily contact Support Ticket with my own work email address, not my bossess. Or maybe forwarding the support ticket is the canonical way, perhaps?
+
+That was all about the Hetzner Robot interface.
+
+For the technical support, I consider it very fast response. However I didn’t manage to try contact the support in my morning, which is their midnight. If they even respond very fast around that hour, that is insane support, I must say. For these kind of services, I expect 24/7 availability from their technician.
+
+They are also quick to provide solution. For example, instead of directing me to a KVM menu in the Hetzner Robot interface, they just directly setup KVM access and pass on the credentials to me so I can quickly try it. I’m just a little bit complaining because the time limit is around 3 hours, and the credentials are given around 16:00 PM in my timezone, around the time I want to be off from work. Hahaha.
+
+Well, fortunately I was able to try the console quickly and solve the issues around that time. So all is well. To be fair, this is excellent responses from them. They probably didn’t expect the user to be in Indonesia, not Germany.
+
+Overall, excellent support from Hetzner. I give 4/5 rating for their support. 
