@@ -1,7 +1,7 @@
 ---
 layout: blog-posts
 title: Calculating the difficulty level of fish-catching toys
-description: Why this game is so difficult though....
+description: Why this toy is so difficult, though....
 date: 2021-04-11T16:09:28.242Z
 ---
 # A brief look at the toy
@@ -12,17 +12,17 @@ It looks like this:
 
 ![](/images/uploads/4ba79869-b91d-4ea0-8b48-28aac4bc5094.jpeg)
 
-It’s just a spinning disc with little fish in it. These fishes sometimes open their mouth, during which you can put bait from the given fishing rod. If the timing is right, you can hook them out of the disc.
+It’s just a spinning disc with little fishes in it. These fishes sometimes open their mouth, during which you can put hook from the given fishing rod. If the timing is right, you can hook them out of the disc.
 
-The rule is pretty simple, but to actually do it is surprisingly difficult. I began to wonder if the fish location relative to the center of the disc corresponds to the difficulty to hook them out. It took me a couple of attempt to try to hook out the fish at the edges.
+The rule is pretty simple, but to actually do it is surprisingly difficult. I began to wonder if the fish location relative to the center of the disc corresponds to the difficulty to hook them out. It took me a couple of attempts to try to hook out the fish at the edges.
 
 Once my daughter and I fished them all out, we reveal the mechanism behind the contraption:
 
 ![](/images/uploads/2f8ccbe8-73e0-43a4-826e-e8764a2b973b.jpeg)
 
-If you look closely, there were radial lane behind the rotating disc. In the lane, there were ramp. These fish will eventually “walk” the ramp, like a train. When they walk the ramp, the fish protrude slightly up, so the mouth opens and you can hook them out. That’s the secret behind this device.
+If you look closely, there were circular/angular lanes behind the rotating disc. In the lane, there were ramps. These fish will eventually “walk” the ramp, like a train. When they walk the ramp, the fish protrude slightly up, so the mouth opens and you can hook them out. That’s the secret behind this device.
 
-It turns out the ramp have almost similar length regardless of the distance from the center. This could be the factor that leads to different difficulties of fishing them out.
+It turns out the ramp have almost similar circular/angular/arc length regardless of the distance from the center. This could be the factor that leads to different difficulties of fishing them out.
 
 # Information we have so far
 
@@ -30,7 +30,7 @@ The disc is spinning with constant angular velocity $\omega$.
 
 There are multiple lanes, characterized by it’s distance from the center. $L(r)$. With $r$ being the distance from the center.
 
-However, in each lane, we assume that the ramp radial distance is all equal to $d$. 
+However, in each lane, we assume that the ramp circular/arc distance is all equal to $d$. 
 
 We define the difficulty to be $H$. The difficulty possibly relates with how much time the mouth stays open while walking the ramp $t$. So, $H(t)$ is some function of $t$. More difficult to hook out fish with bigger $H(t)$ value.
 
@@ -51,7 +51,7 @@ v = \frac{d}{t} = \omega r \\
 t = \frac{d}{\omega r}
 $
 
-By our definition about, the difficulty of hooking out a fish in particular lane $L(r)$ is inversely proportional to $t$. That means:
+By our definition above, the difficulty of hooking out a fish in particular lane $L(r)$ is inversely proportional to $t$. That means:
 
 $
 H = \frac{\omega r}{d}
