@@ -77,4 +77,17 @@ Of course, I suspect that the air inside the balloon has partly escaped. But I w
 
 Since now the balloon is definitely not a pure Helium. We can’t estimate it with numbers easily. But we can predict and models it’s behaviour or dynamics, then kind of match it with the equation.
 
-We are going to use the same set of assumptions as before. But now, we add another weight force with regards to the string. I call it ”variable mass” because the amount of weight force it caused is dependent on how long the strings is currently stretched. If we use starting position in the floor, the whole strings are rested in the floor. It’s weights are canceled by the normal force. When it began to float, part of the strings with length $y$ (equal to the height of the balloon), will contribute to the balloon’s mass.
+We are going to use the same set of assumptions as before. But now, we add another weight force with regards to the string. I call it ”variable mass” because the amount of weight force it caused is dependent on how long the strings is currently stretched. If we use starting position in the floor, the whole strings are rested in the floor. It’s weights are canceled by the normal force. When it began to float, part of the strings with length $y$ (equal to the height of the balloon), will contribute to the balloon’s mass. Check out my ugly diagram again for clarity.
+
+![](/images/uploads/c7cb0f88-4982-4539-8c58-e082b763cd4b.jpeg)
+
+Basically, one extra thing to worry about is the weight of the threads. Since only hanging threads contribute to the weight, and it was based on the height, we define the length density of strings to be $\sigma$. The weight of the strings becomes $W_s=\sigma g y$.
+
+Same Newton’s equation, we now amend it to become:
+
+$
+\sum \boldsymbol{F} = m \boldsymbol{a} \
+F_b — W_r - W_s - W_b = ma \
+\rho g V - m_r g - \sigma g y - \rho_b g V = \rho_b V a \
+a = g (\frac{\rho}{\rho_b} - \frac{m_r}{\rho_b V} - \frac{\sigma y}{\rho_b V} - 1)
+$
