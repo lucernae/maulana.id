@@ -69,7 +69,7 @@ To compare it, imagine if you fill the balloon with water completely, and then p
 
 # Balloon that floats with attached strings...
 
-The previous case seems to be very generic and apply to most generic situations.
+The previous case seems to be very specific and uninteresting.
 
 My daughter’s balloon, is a little bit special. It has strings/threads attached in it. I observed this balloon day by day. At the first day, we let it touch the ceiling. Then at some point it actually stays midair with part of the strings resting in the floor, even if it was not anchored. Kind of like standing balloon.
 
@@ -114,7 +114,7 @@ With same reasoning, we can rearrange original equation to have the same form wi
 
 $
 x = y - A \\
-A = \frac{(\rho-\rho_b) V}{\sigma} - \frac{m_r}{\sigma} \\
+A = \frac{(\rho-\rho_b) V - m_r}{\sigma} \\
 \omega^2 = \frac{k}{m} = \frac{g\sigma}{\rho_b V} \\
 \phi = -\frac{\pi}{2}
 $
@@ -135,7 +135,28 @@ $
 f=\frac{\omega}{2\pi} = \frac{1}{2\pi}\sqrt{\frac{g\sigma}{\rho_b V}} \\
 $
 
+If you observe, we can eliminate $\sigma$ from $\omega^2$. This means, understanding the oscillation does not really depends on the value of $\sigma$. If we make an experiment, it is much easier to predict the experiment outcome from the frequency and amplitude of the experiment.
 
+$
+\omega^2=\frac{g}{A}(\frac{\rho}{\rho_b} - 1) - \frac{m_r g}{A \rho_b V}
+$
 
+It turns out that we have bounded values. If no oscillations happens, it means $\omega^2 \leq 0$. Because then there is no frequency or it becomes an imaginary value.
 
+$
+\frac{g}{A}(\frac{\rho}{\rho_b} - 1) \leq \frac{m_r g}{A \rho_b V} \\
+\frac{\rho}{\rho_b} - 1 \leq \frac{m_r}{\rho_b V} \\
+(\rho - \rho_b) V \leq m_r
+$
 
+Obviously enough, if it doesn’t have enough volumes, it can’t float. But with controlled balloon volume, and known value of the un-inflated balloon, we can estimate the range of the air density inside the balloon, if it does oscillates.
+
+One interesting result from this prediction, is that the criteria is not related with amplitude and gravity at all.
+
+We can then try to validate an experiment. If for example, the balloon oscillates with $A=1 m$ and $f=0.1 Hz$, then we can guess that the air density inside the balloon to be close to 0.76 from this formula:
+
+$
+\rho_b = \frac{g}{V} \frac{\rho V - m_r}{A\omega^2 + g}
+$
+
+We can also guess that making an oscillations with amplitude 1 meter and frequency 1 Hz is not possible or difficult because then the air density has to be less than Helium.
