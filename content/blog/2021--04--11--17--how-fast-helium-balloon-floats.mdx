@@ -29,23 +29,26 @@ Naturally, we usually think that air density is different by height from the sur
 
 # Slow free-floating balloon in a room
 
-Let’s observe a simple case of free-floating balloon in a room. We identify there exists macroscopic force, i.e: buoyant force $F_b$ and gravitational force $W$. We are going to ignore drag force by saying that the balloon is slow moving (making the drag force negligible). Since usually the weight of the rubber balloon and the weight of the air inside is not significantly different, we can’t ignore the rubber weight, so we include it in the equation as $W_r$, meanwhile the weight of the air inside the balloon is called $W_b$.
+Let’s observe a simple case of free-floating balloon in a room. We identify there exists macroscopic force, i.e: buoyant force $F_b$ and gravitational force $W$. We are going to ignore drag force by saying that the balloon is slow moving (making the drag force negligible). Since usually the weight of the rubber balloon and the weight of the air inside is not significantly different, we can’t ignore the rubber weight, so we include it in the equation as $W_r$, meanwhile the weight of the air inside the balloon is called $W_b$. Check out my ugly force diagram for clarity.
+
+![](/images/uploads/e807a5d6-5931-4155-aa8a-723f2f5db13a.jpeg)
 
 Using Newton’s Second Law:
 
 $
-\sum \boldsymbol{F} = m \boldsymbol{a} \\
-F_b — W_r - W_b = ma \\
-\rho g V - m_r g - \rho_b g V = \rho_b V a \\
+\sum \boldsymbol{F} = m \boldsymbol{a} \
+F_b — W_r - W_b = ma \
+\rho g V - m_r g - \rho_b g V = \rho_b V a \
 a = g (\frac{\rho}{\rho_b} - \frac{m_r}{\rho_b V} - 1)
 $
 
 The equation above uses these implicit assumptions:
-- Balloon’s shape was not going to be deformed and stable
-- No turbulent
-- Balloon strictly only floats in y direction
-- Air pressure and density inside the room is uniform and constant
-- Drag force is ignored because the balloon travels slowly and relatively negligible compared with the other force
+
+* Balloon’s shape was not going to be deformed and stable
+* No turbulent
+* Balloon strictly only floats in y direction
+* Air pressure and density inside the room is uniform and constant
+* Drag force is ignored because the balloon travels slowly and relatively negligible compared with the other force
 
 If we observe the final equation, it turns out that the acceleration is constant! We predict that the velocity will increase to infinity, but of course that is incorrect because in the real situation, the air density will decrease in high-altitude. Moreover, when the drag force becomes significant, the velocity will be limited into a terminal velocity. However, in our case with short distance inside a room (from the floor to the ceiling) this will suffice.
 
@@ -64,3 +67,14 @@ s content will be heavier than the surrounding air and falls down.
 
 To compare it, imagine if you fill the balloon with water completely, and then put inside a pool. The balloon will floats below the surface, but doesn’t touch the ground. This is because water’s pressure is significantly stronger and water is less compressible than air, so you can’t pack more water inside a balloon denser than the surrounding water.
 
+# Balloon that floats with attached strings...
+
+The previous case seems to be very generic and apply to most generic situations.
+
+My daughter’s balloon, is a little bit special. It has strings/threads attached in it. I observed this balloon day by day. At the first day, we let it touch the ceiling. Then at some point it actually stays midair with part of the strings resting in the floor, even if it was not anchored. Kind of like standing balloon.
+
+Of course, I suspect that the air inside the balloon has partly escaped. But I was more interested in understanding why it floats without anchored. I suspect because the strings can behave as a variable mass.
+
+Since now the balloon is definitely not a pure Helium. We can’t estimate it with numbers easily. But we can predict and models it’s behaviour or dynamics, then kind of match it with the equation.
+
+We are going to use the same set of assumptions as before. But now, we add another weight force with regards to the string. I call it ”variable mass” because the amount of weight force it caused is dependent on how long the strings is currently stretched. If we use starting position in the floor, the whole strings are rested in the floor. It’s weights are canceled by the normal force. When it began to float, part of the strings with length $y$ (equal to the height of the balloon), will contribute to the balloon’s mass.
