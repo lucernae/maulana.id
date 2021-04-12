@@ -1,13 +1,41 @@
 ---
 layout: blog-posts
-title: How fast helium balloon floats?
-description: Did you expect that it will contain trigonometric function?
+title: How fast a balloon floats?
+description: The dynamic of a simple floating balloon. Did you expect that it
+  will contain trigonometric function?
 date: 2021-04-11T17:20:51.587Z
 ---
 # Balloon that floats...
 
-My daughter recently got two helium balloon that floats, gifted. While she played with it, at some point, both balloons touched the ceiling at almost the same time. The balloons are attached to a light string so we can pull the balloon down again.
+My daughter recently got two helium balloon that floats, it was gifted. While she played with it, at some point, both balloons touched the ceiling at almost the same time. The balloons are attached to a light string so we can pull the balloon down again.
 
 I don’t know exactly what gas they used to fill the balloon, but I’m guessing it’s Helium. Helium is a light noble gas, lighter than air. But, what does it mean by saying **lighter than air**? It is more accurate to say that Helium gas were less dense than air density in room temperature.
 
-The concept of air density, is similar with fluid density or liquid density. You divide the mass with the volume that the mass occupies. However, gas can be compressed. So, normally if you compare air density, you declare that the pressure and temperature is the same between them.
+The concept of air density, is similar with fluid density or liquid density. You divide the mass with the volume that the mass occupies. However, gas can be compressed. So, normally if you compare air density, you declare the the pressure and temperature between them.
+
+To understand how balloon floats, we will talk a little bit about the physics behind it. Simply speaking, in the surface of the earth, any object will be affected by gravity. This includes air. Air contains groups of molecules. If they were located in the same gravitational potential, they will contain the same potential energy.                  These group of air will need to have a matching internal energy that is “bound” by the gravity. If their internal energy is higher, they will naturally floats higher, where the potential energy is higher than the surface (less gravity). By “migrating” into area which have higher potential energy, they converted their internal energy into potential energy.
+
+In the case of air, since a volume of air is compressible. Sometimes we associate internal energy of volumes of air (macroscopic quanity) with it’s pressure. This is why we have the equation $PV=nRT$ where the right hand side basically contains information about the energy (albeit with some modification, depending on the gas). Back with the balloon, we can say, denser/heavier air will try to settle down because it was affected by gravity. This will cause the denser air below to push (by the pressure difference) lesser dense air to float, until it settles in their preferred height.
+
+The *somewhat* invisible force that moved the balloon up is most commonly called **Buoyant** force. People also called it **Archimedes Principle** in honoring Archimedes, the greek philosopher that rediscover this principles. The buoyant force is defined like this:
+
+$
+F_b=\rho g V
+$
+
+Where: $\rho$ is the density of the surrounding fluid, $V$ is the displaced volumes and $g$ is the average gravity in that position.
+
+Naturally, we usually think that air density is different by height from the surface of the earth, due to gravitational potential I described earlier. To simplify things, we limit ourselves to only observe floating balloon in uniform air density, such as inside a room. We are talking about my daughter’s balloon here, not atmospheric balloon. :p
+
+# Slow free-floating balloon in a room
+
+Let’s observe a simple case of free-floating balloon in a room. We identify there exists macroscopic force, i.e: buoyant force $F_b$ and gravitational force $W$. We are going to ignore drag force by saying that the balloon is slow moving (making the drag force negligible). Since usually the weight of the rubber balloon and the weight of the air inside is not significantly different, we can’t ignore the rubber weight, so we include it in the equation as $W_r$, meanwhile the weight of the air inside the balloon is called $W_b$.
+
+Using Newton’s Second Law:
+
+$
+\sum \boldsymbol{F} = m \boldsymbol{a} \\
+F_b — W_r - W_b = ma \\
+\rho g V - m_r g - \rho_b g V = \rho_b V a
+a = g (\frac{\rho}{\rho_b} - 1 - \frac{m_r}{\rho_b V} )
+$
