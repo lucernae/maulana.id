@@ -179,8 +179,22 @@ The acceleration is just $\ddot y=a_{max}$ because if it doesn’t oscillate, th
 
 We can’t do the same trick directly with $\dot y$ and $y$ function because it will become an undefined $\frac{0}{0}$ form because of the $\sigma$ value. But I believe it will reduce to the basic linear velocity increment form if we take the limit.
 
+# Floating balloons, attached with strings, with drag force
 
+We are going to up the difficulty a bit. Let’s suppose that we don’t ignore the drag force. How far the model be with the previous model above? Does the previous model sufficiently accurate?
 
+Since usually involving drag force made the whole equation complicated, we are going to take step by step approach. One thing that we can guess from the energy equation, the drag force is a non-conservative force, and dissipative. So it will reduce total energy of the system. If the system without this force is oscillating, then if we include it, it will eventually stop oscillating because it don’t have any energy. But it should still have some characteristic of oscillation, regardless.
 
+Luckily for us, the direction of drag force is predictable. It is always negating the current direction of the velocity. So we can keep the equation in just one axis with Newton’s Law.
+
+There are many definition of drag force. But it will be dependent on the velocity $\dot y = v$, the surface area of contact $S$, the surrounding air density (in average) $\rho$, and then a shape coefficient $C_d$. Historically, for a given shape, people do experiment to determine the drag coefficient and the final form of the formula. I don’t have time for that, so we will going to assume the standard definition of power series:
+
+$
+F_d=\sum-b_n\dot y^n
+$
+
+We reduce all those coefficient/factors into just one coefficient called $b$, which should be determined when the experiment is running.
+
+Usually, drag force only have significant power up to the second power. The definition becomes $F_d=-b_2 \dot{y}^2$. However, I have to say, it will be difficult to solve for me. So, we are going to approximate it into the linear order, $F_d=-b_1 \dot y$. If the speed is slow enough, we can define a range of speed that this assumptions will be valid (to some degree). If you want some justification, think like this, between 0.9 and 1, the value of $\ddot{y}^2$ and $\dot y$ is not so different. So, our assumptions can only work in those range if $b_1=b_2=1$. If the coefficient is different, that makes our range becomes different as well.
 
 
