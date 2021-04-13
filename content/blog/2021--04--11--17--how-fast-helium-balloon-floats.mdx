@@ -195,12 +195,12 @@ $
 
 We reduce all those coefficient/factors into just one coefficient called $b$, which should be determined when the experiment is running.
 
-Usually, drag force only have significant power up to the second power. The definition becomes $F_d=-b_2 \dot{y}^2$. However, I have to say, it will be difficult to solve for me. So, we are going to approximate it into the linear order, $F_d=-b_1 \dot y$. If the speed is slow enough, we can define a range of speed that this assumptions will be valid (to some degree). If you want some justification, think like this, between 0.9 and 1, the value of $\ddot{y}^2$ and $\dot y$ is not so different. So, our assumptions can only work in those range if $b_1=b_2=1$. If the coefficient is different, that makes our range becomes different as well.
+Usually, drag force only have significant power up to the second power. The definition becomes $F_d=-b_2 \dot{y}^2$. However, I have to say, it will be difficult to solve for me. So, we are going to approximate it into the linear order, $F_d=-b_1 \dot y$. If the speed is slow enough, we can define a range of speed that this assumptions will be valid (to some degree). If you want some justification, think like this, between 0.9 and 1, the value of $\dot{y}^2$ and $\dot y$ is not so different. So, our assumptions can only work in those range if $b_1=b_2=1$. If the coefficient is different, that makes our range becomes different as well.
 
 We now write down the updated Newton’s Second Law, by also incorporating the drag force and constants that we defined in the previous answer.
 
 $
-\ddot y=a_max - \omega^2 y - \frac{b_1}{\rho_b V} \dot y
+\ddot y=a_{max} - \omega^2 y - \frac{b_1}{\rho_b V} \dot y
 $
 
 The above equation is still a second order linear differential equation. It has a standard way to solve it. So we have an easy analytical solutions from that equation. I’m going to skip the derivation to focus more on the final solutions. I will introduce another set of new constant so that we have a more compact form.
@@ -211,7 +211,7 @@ D = \frac{b_1}{2 \rho_b V} \\
 y =A(1 - e^{-Dt} \cos(\Omega t)) \\
 \dot y = -D(y-A) + \Omega A e^{-Dt} \sin(\Omega t) \\
 \dot y = Ae^{-Dt}(D \cos(\Omega t) + \Omega \sin(\Omega t)) \\
-\ddot y = a_max - \omega^2 y - 2D \dot y \\
+\ddot y = a_{max} - \omega^2 y - 2D \dot y \\
 \ddot y = -A\Omega^2 e^{-Dt} \cos(\Omega t)  - 2D\Omega Ae^{-Dt} \sin(\Omega t)
 $
 
@@ -238,7 +238,7 @@ $A_{max}$ can be measured directly from the experiment by letting the balloon se
 From $\rho_b$ and $\sigma$ we can retrieve $\omega$. Previously we can measure this, but if we take into account the drag force, then the frequency we measure is actually $\Omega$ (Big O) not $\omega$ (little O). From the previous definition of $\omega$, we retrieve the value.
 
 $
-\omega^2 = \frac{k}{m} = \frac{g\sigma}{\rho_b V}
+\rho_b = \frac{g\sigma}{\omega^2 V}
 $
 
 From the measured frequency $\Omega$ (with drag force assumed). We now are able to calculate the dampening factor.
@@ -255,3 +255,4 @@ $
 
 As you can see, we can design a fun but simple experiments from this balloon.
 
+Last thing for the curious mind. The solution for $\ddot y$, $\dot y$, $y$ as function of $t$, all can be degenerated into our previous solution if we treat $D=0$ (ignoring drag force) and causing $\Omega=\omega$. Try that for yourself.
