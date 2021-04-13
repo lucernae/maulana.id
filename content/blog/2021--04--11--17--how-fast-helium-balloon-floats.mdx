@@ -212,7 +212,7 @@ y =A(1 - e^{-Dt} \cos(\Omega t)) \\
 \dot y = -D(y-A) + \Omega A e^{-Dt} \sin(\Omega t) \\
 \dot y = Ae^{-Dt}(D \cos(\Omega t) + \Omega \sin(\Omega t)) \\
 \ddot y = a_{max} - \omega^2 y - 2D \dot y \\
-\ddot y = -A\Omega^2 e^{-Dt} \cos(\Omega t)  - 2D\Omega Ae^{-Dt} \sin(\Omega t)
+\ddot y = -A(\Omega^2-D^2) e^{-Dt} \cos(\Omega t)  - 2D\Omega Ae^{-Dt} \sin(\Omega t)
 $
 
 By looking at the final solution of $y(t)$ we have a more understanding of the kinematics of the balloon. 
@@ -256,3 +256,36 @@ $
 As you can see, we can design a fun but simple experiments from this balloon.
 
 Last thing for the curious mind. The solution for $\ddot y$, $\dot y$, $y$ as function of $t$, all can be degenerated into our previous solution if we treat $D=0$ (ignoring drag force) and causing $\Omega=\omega$. Try that for yourself.
+
+# Extra Challenge: Solve for quadratic drag force
+
+As I’ve said before, I couldn’t solve the equation if we use $F_d=-b_2 \dot{y}^2$. It’s just currently beyond my knowledge. However we can still try to find some insights.
+
+Like before, we hoped that the final solution will degenerate to the solution we got from linear drag force, if the velocity is slow enough.
+
+Additionally, we also hoped that the previous constant we defined does not change and can be reused to construct the new constants.
+
+The main problem is, however, the motion equation is not a linear ODE (Ordinary differential equation).
+
+$
+\ddot y = a_{max} - \omega^2 y-\frac{b_2}{\rho_b V} \dot{y}^2
+$
+
+Honestly, I’ve no idea on how to solve this directly. Usually we convert the equation of motion into an energy equation and then integrate wrt to $t$ from there. But, if you try that, you have 3 different function $\dot y$, $y$, and $t$. So, you can’t separate the variable.
+
+What I’m doing instead of integrating, is actually to take derivative once more, on both sides.
+
+(Also, let’s use the constant $D_2$, analogous to $D$ but for the quadratic drag force)
+
+$
+\dddot y = - \omega^2 \dot y - 2 D_2 \dot y \ddot y
+$
+
+It now becomes linear in power, but third order, oops.
+
+Well, we can cheat a little bit by thinking that $\dot y=x$, $\ddot y= \dot x$, and finally $\dddot y=\ddot x$. Then it become second order again. But still, this is not the familiar ordinary differential equation, because you have the term $2 D_2 \dot y \ddot y$ where there exists two functions in one term.
+
+I will put in a separate article on the way I’m trying to solve it. This article is getting long, so I will just put the solution that I got here:
+
+
+
