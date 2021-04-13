@@ -200,13 +200,13 @@ Usually, drag force only have significant power up to the second power. The defi
 We now write down the updated Newton’s Second Law, by also incorporating the drag force and constants that we defined in the previous answer.
 
 $
-\ddot y=a_max - \omega^2 y - \frac{b}{\rho_b V} \dot y
+\ddot y=a_max - \omega^2 y - \frac{b_1}{\rho_b V} \dot y
 $
 
 The above equation is still a second order linear differential equation. It has a standard way to solve it. So we have an easy analytical solutions from that equation. I’m going to skip the derivation to focus more on the final solutions. I will introduce another set of new constant so that we have a more compact form.
 
 $
-D = \frac{b}{2 \rho_b V} \\
+D = \frac{b_1}{2 \rho_b V} \\
 \Omega^2 = \omega^2 - D^2 \\
 y =A(1 - e^{-Dt} \cos(\Omega t)) \\
 \dot y = -D(y-A) + \Omega A e^{-Dt} \sin(\Omega t) \\
@@ -215,8 +215,43 @@ y =A(1 - e^{-Dt} \cos(\Omega t)) \\
 \ddot y = -A\Omega^2 e^{-Dt} \cos(\Omega t)  - 2D\Omega Ae^{-Dt} \sin(\Omega t)
 $
 
+By looking at the final solution of $y(t)$ we have a more understanding of the kinematics of the balloon. 
 
+Just like before, the height $y(t)$ is oscillating. However, instead of fixed amplitude $A$, it now becomes $Ae^{-Dt}$. That means the maximum amplitude will diminish over time. Over time, the balloon will stays at height $A$ from the ground.
 
+The ballon still oscillates. Although, instead of using the angular speed $\omega$, it now oscillate with slightly less frequency, $\Omega$. It needs more time to complete a period.
 
+Both the original amplitude $A$ and original frequency/angular speed $\omega$, gets reduced by the factor $D$. Since this is analoguous to a dampening vibration, we’ll just call this new constant the dampening constant. The dampening constant is affected by the drag factor $b_1$, balloon air density $\rho_b$, and it’s volume $V$.
 
+Doing experiment for this kind of situation is a little bit more difficult, but probably more realistic. You can let the balloon float from the ground and then let it oscillates. It will settle down eventually (you can count it’s frequency/period) to a certain height, in which the height must be $A$. From the frequency, you will have $\Omega$. This time, I would prefer to measure directly (using weight scale) the linear density of the strings $\sigma$, so that I can have the value of $\omega$ and then calculate the drag coefficient $b_1$.
+
+It’s quite interesting that even though the motion equation changes to be more detail and accurate with the inclusion of drag force. The previous constant we defined still usable.
+
+$A$ becomes the maximum amplitude possible:
+
+$
+A_{max}=A = \frac{(\rho-\rho_b) V - m_r}{\sigma}
+$
+
+$A_{max}$ can be measured directly from the experiment by letting the balloon settle down, then measure the height from the ground. $\sigma$ can be measured directly, by putting the lump of the strings into a weight scale, then divide by it’s total length. From this constant, we retrieve the air density inside the balloon $\rho_b$.
+
+From $\rho_b$ and $\sigma$ we can retrieve $\omega$. Previously we can measure this, but if we take into account the drag force, then the frequency we measure is actually $\Omega$ (Big O) not $\omega$ (little O). From the previous definition of $\omega$, we retrieve the value.
+
+$
+\omega^2 = \frac{k}{m} = \frac{g\sigma}{\rho_b V}
+$
+
+From the measured frequency $\Omega$ (with drag force assumed). We now are able to calculate the dampening factor.
+
+$
+D^2=\omega^2-\Omega^2
+$
+
+From the dampening factor, we could retrieve the drag coefficient, $b_1$
+
+$
+b_1=2D\rho_b V
+$
+
+As you can see, we can design a fun but simple experiments from this balloon.
 
