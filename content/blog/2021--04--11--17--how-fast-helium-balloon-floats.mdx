@@ -197,4 +197,26 @@ We reduce all those coefficient/factors into just one coefficient called $b$, wh
 
 Usually, drag force only have significant power up to the second power. The definition becomes $F_d=-b_2 \dot{y}^2$. However, I have to say, it will be difficult to solve for me. So, we are going to approximate it into the linear order, $F_d=-b_1 \dot y$. If the speed is slow enough, we can define a range of speed that this assumptions will be valid (to some degree). If you want some justification, think like this, between 0.9 and 1, the value of $\ddot{y}^2$ and $\dot y$ is not so different. So, our assumptions can only work in those range if $b_1=b_2=1$. If the coefficient is different, that makes our range becomes different as well.
 
+We now write down the updated Newton’s Second Law, by also incorporating the drag force and constants that we defined in the previous answer.
+
+$
+\ddot y=a_max - \omega^2 y - \frac{b}{\rho_b V} \dot y
+$
+
+The above equation is still a second order linear differential equation. It has a standard way to solve it. So we have an easy analytical solutions from that equation. I’m going to skip the derivation to focus more on the final solutions. I will introduce another set of new constant so that we have a more compact form.
+
+$
+D = \frac{b}{2 \rho_b V} \\
+\Omega^2 = \omega^2 - D^2 \\
+y =A(1 - e^{-Dt} \cos(\Omega t)) \\
+\dot y = -D(y-A) + \Omega A e^{-Dt} \sin(\Omega t) \\
+\dot y = Ae^{-Dt}(D \cos(\Omega t) + \Omega \sin(\Omega t)) \\
+\ddot y = a_max - \omega^2 y - 2D \dot y \\
+\ddot y = -A\Omega^2 e^{-Dt} \cos(\Omega t)  - 2D\Omega Ae^{-Dt} \sin(\Omega t)
+$
+
+
+
+
+
 
