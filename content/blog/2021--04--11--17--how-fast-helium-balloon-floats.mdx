@@ -278,27 +278,25 @@ What I’m doing instead of integrating, is actually to take derivative once mor
 (Also, let’s use the constant $D_2$, analogous to $D$ but for the quadratic drag force)
 
 $
-D_2 = \frac{b_2}{\rho_b V}
-\dddot y = - \omega^2 \dot y - 2 D_2 \dot y \ddot y
+D_2 = \frac{b_2}{\rho_b V} \\
+\frac{d \ddot{y}}{dt} = - \omega^2 \dot y - 2 D_2 \dot y \ddot y
 $
 
 It now becomes linear in power, but third order, oops.
 
-Well, we can cheat a little bit by thinking that $\dot y=x$, $\ddot y= \dot x$, and finally $\dddot y=\ddot x$. Then it become second order again. But still, this is not the familiar ordinary differential equation, because you have the term $2 D_2 \dot y \ddot y$ where there exists two functions in one term.
-
 I will put in a separate article on the way I’m trying to solve it. This article is getting long, so I will just put the solution that I got here. For me, it is quite surprising,
 
 $
-K=\omega^2+2D a_{max} \\
-y=\frac{1}{2D}\ln\left|\frac{K}{\omega^2+2D\ddot y}\right|
+K=\omega^2+2 D_2 a_{max} \\
+y=\frac{1}{2 D_2}\ln\left|\frac{K}{\omega^2+2 D_2\ddot y}\right|
 $
 
-Due to the logarithmic function and absolute values, the mapping goes backwards, a certain acceleration values will entirely define the height of the balloon. Since initial position is $y=0$, then initial acceleration is $\ddot y = a_max$ as expected. However, due to the function, the balloon will floats and eventually stop because the acceleration can‘t have negative values that will divide the logarithm input to zero.
+Due to the logarithmic function and absolute values, the mapping goes backwards, a certain acceleration values will entirely define the height of the balloon. Since initial position is $y=0$, then initial acceleration is $\ddot y = a_{max}$ as expected. However, due to the function, the balloon will floats and eventually stop because the acceleration can‘t have negative values that will divide the logarithm input to zero.
 
 The negative acceleration limit would be:
 
 $
-\ddot y=-\frac{\omega^2}{2D}
+\ddot y=-\frac{\omega^2}{2D_2}
 $
 
 It can’t be any lower than that.
@@ -306,7 +304,7 @@ It can’t be any lower than that.
 Meanwhile, it’s possible that the balloon will oscillate, just like in the previous case. It will oscillate when the acceleration changes sign, which is $\ddot y=0$. Since the value of the acceleration completely maps the height of the balloon, that means the height at that point will be:
 
 $
-y = \frac{1}{2D}\ln\left|1+2DA\right|
+y = \frac{1}{2D_2}\ln\left|1+2D_2A\right|
 $
 
 Which might be different with the previous point $A$.
@@ -316,19 +314,30 @@ If we invert the function $y(\ddot y)$, we will have function $\ddot y$ again, b
 (assuming that the logarithm input is always positive, due to the balloon position)
 
 $
-\ddot y = \frac{1}{2D}(Ke^{-2Dy}-\omega^2)
+\ddot y = \frac{1}{2D_2}(Ke^{-2D_2y}-\omega^2)
 $
 
 What’s more interesting to me is if we substitute this expression, into the original equation of motion, so we got velocity as a function of height $\dot{y}(y)$.
 
 $
-\dot{y}^2=\frac{K}{2D}(1-e^{-2Dy})-\omega^2 y
+\dot{y}^2=\frac{K}{2D_2^2}(1-e^{-2D_2y})-\frac{\omega^2}{D_2} y
 $
 
-I am guessing that it will have at maximum of two zeroes. That means, there are only 2 possible $y$ values that caused $\dot y=0$. One of them is $y=0$, of course, because the initial velocity must be zero. The other one is when it stops moving. I intuitively guess this, because $\dot{y}^2$ needs to be positive, $\omega^2 y$ is linear, and the first terms will curve asymptotically to a constant value, so both will eventually intersects.
+I am guessing that it will have at maximum of two zeroes. That means, there are only 2 possible $y$ values that caused $\dot y=0$. One of them is $y=0$, of course, because the initial velocity must be zero. The other one is when it stops moving. I intuitively guess this, because $\dot{y}^2$ needs to be positive, $\frac{\omega^2}{D_2}y$ is linear, and the first terms will curve asymptotically to a constant value, so both will eventually intersects.
 
-It might be difficult to solve exactly when the second zero of $y$ happens. But we are *really really sure* that it won’t oscillate. Because, if it oscillates, there should be more zeroes due to diminishing internal energy, like in the previous case.
+It might be difficult to solve exactly when the second zero of $y$ happens. But I am *really really sure* that it won’t oscillate. Because, if it oscillates, there should be more zeroes due to diminishing internal energy, like in the previous case.
+
+To try to validate this, let's check the acceleration when $\dot y=0$ from the equation of motions
+
+$
+\ddot y= -\omega^2 (y-A) - D_2 \dot y \\
+\ddot y = - \omega^2 (y-A)
+$
+
+We have some discrepancies here. The last acceleration should be asymptotically $\ddot y=-\frac{\omega^2}{2D_2}$, so it implies
+
+$
+y=A + \frac{1}{2D_2}
+$
 
 Hence, we can conclude (please tell me if I’m wrong otherwise), if the drag force is quadratic, the balloon won’t oscillate and just stops at $\dot y=0$.
-
-
