@@ -267,13 +267,21 @@ Additionally, we also hoped that the previous constant we defined does not chang
 
 The main problem is, however, the motion equation is not a linear ODE (Ordinary differential equation).
 
+When the balloon travels upwards, it’s drag force pointing downwards, so during this phase, the equation is:
+
 $
 \ddot y = a_{max} - \omega^2 y-\frac{b_2}{\rho_b V} \dot{y}^2
 $
 
+After it reaches the peak, the balloon should go downwards, so drag force is pointing upwards. During this phase, the equation is:
+
+$
+\ddot y = a_{max} - \omega^2 y+\frac{b_2}{\rho_b V} \dot{y}^2
+$
+
 Honestly, I’ve no idea on how to solve this directly. Usually we convert the equation of motion into an energy equation and then integrate wrt to $t$ from there. But, if you try that, you have 3 different function $\dot y$, $y$, and $t$. So, you can’t separate the variable.
 
-What I’m doing instead of integrating, is actually to take derivative once more, on both sides.
+What I’m doing instead of integrating, is actually to take derivative once more, on both sides. We are going to do that for upward motion only, for reasons I will state later.
 
 (Also, let’s use the constant $D_2$, analogous to $D$ but for the quadratic drag force)
 
@@ -293,51 +301,38 @@ $
 
 Due to the logarithmic function and absolute values, the mapping goes backwards, a certain acceleration values will entirely define the height of the balloon. Since initial position is $y=0$, then initial acceleration is $\ddot y = a_{max}$ as expected. However, due to the function, the balloon will floats and eventually stop because the acceleration can‘t have negative values that will divide the logarithm input to zero.
 
-The negative acceleration limit would be:
-
-$
-\ddot y=-\frac{\omega^2}{2D_2}
-$
-
-It can’t be any lower than that.
-
-Meanwhile, it’s possible that the balloon will oscillate, just like in the previous case. It will oscillate when the acceleration changes sign, which is $\ddot y=0$. Since the value of the acceleration completely maps the height of the balloon, that means the height at that point will be:
-
-$
-y = \frac{1}{2D_2}\ln\left|1+2D_2A\right|
-$
-
-Which might be different with the previous point $A$.
-
-If we invert the function $y(\ddot y)$, we will have function $\ddot y$ again, but different expressions than the previous equation of motion.
-
-(assuming that the logarithm input is always positive, due to the balloon position)
+Interestingly, if we invert the function, we have acceleration as a function of height.
 
 $
 \ddot y = \frac{1}{2D_2}(Ke^{-2D_2y}-\omega^2)
 $
 
-What’s more interesting to me is if we substitute this expression, into the original equation of motion, so we got velocity as a function of height $\dot{y}(y)$.
+The function is horizontally asymptotic. It’s very quick to reach the limit too, depending on $D_2$. The negative acceleration limit would be:
+
+$
+a_{min}=\ddot y=-\frac{\omega^2}{2D_2}
+$
+
+Whatever happens during upward motion, the acceleration can’t be any lower than that (pointing downwards when the drag force is significant).
+
+Meanwhile, it’s possible that the balloon will oscillate, just like in the previous case. It will oscillate when the velocity becomes zero $\dot y=0$. In which, it will try to go downwards. However, the key insight was that this downward acceleration can’t be less than $a_{min}$, and the $\ddot y$ function says it’s asymptotically horizontal approaching this limit.
+
+Remember that I said whatever the solution is, it should degenerate to the previous condition if drag force is negligible. When the drag force is zero. It should match the equation where we don’t have drag force at all. Using the same equation of motion with $\ddot y=a_{min}$, we can retrieve $y_{max}$, the apex of the height. Which turns out to be very simple.
+
+$
+y = A + \frac{1}{2D_2}
+$
+
+As you can see that it is just slightly above $A$. As you already notice, $A$ is the final equilibrium position, which you can also get by using Newton’s First Law for the final condition only (net force from weight and buoyant force is zero).
+
+We can now make an educated guess, since from the apex we have zero velocity but non-zero acceleration, after that point the balloon will undergoes dampening oscillation like before with almost linear drag force. This is because the speed is not significant enough. Then it will eventually stop at $y=A$ due to the missing energy of the system. So, we actually don’t have to deeply analyze the downward equation of motions :p.
+
+Another one that’s interesting to me is if we substitute upwards $\ddot{y}(y)$, into the original equation of motion, so we got velocity as a function of height $\dot{y}(y)$.
 
 $
 \dot{y}^2=\frac{K}{2D_2^2}(1-e^{-2D_2y})-\frac{\omega^2}{D_2} y
 $
 
-I am guessing that it will have at maximum of two zeroes. That means, there are only 2 possible $y$ values that caused $\dot y=0$. One of them is $y=0$, of course, because the initial velocity must be zero. The other one is when it stops moving. I intuitively guess this, because $\dot{y}^2$ needs to be positive, $\frac{\omega^2}{D_2}y$ is linear, and the first terms will curve asymptotically to a constant value, so both will eventually intersects.
+I am guessing that it will have at maximum of two zeroes. That means, there are only 2 possible $y$ values that caused $\dot y=0$. One of them is $y=0$, of course, because the initial velocity must be zero. The other one is when it stops moving. I intuitively guess this, because $\dot{y}^2$ needs to be positive, $\frac{\omega^2}{D_2}y$ is linear, and the first terms will curve asymptotically to a constant value, so both will eventually intersects. The second solution of $y$ has to be approximately $y_{min}$.
 
-It might be difficult to solve exactly when the second zero of $y$ happens. But I am *really really sure* that it won’t oscillate. Because, if it oscillates, there should be more zeroes due to diminishing internal energy, like in the previous case.
-
-To try to validate this, let's check the acceleration when $\dot y=0$ from the equation of motions
-
-$
-\ddot y= -\omega^2 (y-A) - D_2 \dot y \\
-\ddot y = - \omega^2 (y-A)
-$
-
-We have some discrepancies here. The last acceleration should be asymptotically $\ddot y=-\frac{\omega^2}{2D_2}$, so it implies
-
-$
-y=A + \frac{1}{2D_2}
-$
-
-Hence, we can conclude (please tell me if I’m wrong otherwise), if the drag force is quadratic, the balloon won’t oscillate and just stops at $\dot y=0$.
+It would be good if someone can make a real experiment out of this or make some dynamic modelling to validate this.
