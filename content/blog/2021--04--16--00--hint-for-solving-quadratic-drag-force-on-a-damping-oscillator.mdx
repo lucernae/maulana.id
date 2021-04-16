@@ -158,4 +158,17 @@ Note that, due to the origin shift froom coordinate $x$ to $y$, the original equ
 
 However, because of these coordinate shift it's easier to imagine that the end result is the same, regardless if there is a drag force or not. From the Newton's First Law, we can immediately calculate $A$. Instead of relying from the equation to derive initial condition.
 
- 
+You can also see that if the equation we got from Newton’s Law is non-homogenous (it has constant term), we can convert it into a homogenous equation with just coordinate shift. For example, one might start with equation:
+
+$
+\ddot y = C-\omega^2 y -D_2 \dot{y}^2
+$
+
+We can translate the origin point such that $C=\omega^2 A$, and convert the equation into:
+
+$
+x=y-A \\
+\ddot x = -\omega^2 x - D_2 \dot{x}^2
+$
+
+As you can see, just by doing coordinate transform, we are back to the initial equation we discuss above.
