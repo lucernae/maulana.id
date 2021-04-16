@@ -66,23 +66,27 @@ $
 I couldn’t find a way to express triple dot in Katex, so the above notation will do. Notice that the right hand side has common $\dot{x}$ and it could also be “chain-rule”’d so that we eliminate $dt$. Here’s the differential form.
 
 $
-d\ddot{x}=(-\omega^2-2D_2\ddot{x})\cdot dx
+d\ddot{x}=(-\omega^2-2D_2\ddot{x})dx
 $
 
 The above form is integrable and separable if we move the right hand terms with $\ddot{x}$ to left hand side. The above expression is for $\dot{x}>0$. For $\dot{x}<0$, it’s similar with following the same reasoning.
 
 $
-d\ddot{x}=(-\omega^2+2D_2\ddot{x})\cdot dx
+d\ddot{x}=(-\omega^2+2D_2\ddot{x})dx
 $
 
-By integration we have the following relations
+# Inferring the phase space diagram
+
+From the previous differential form, by integration we have the following relations.
 
 $
 \dot{x} > 0; k_+=e^{2D_2x}(\omega^2+2D_2\ddot{x}) \\
 \dot{x} < 0; k_-=e^{-2D_2x}(\omega^2-2D_2\ddot{x})
 $
 
-A constant $K_+$ is used when the object oscillates with positive velocity, up to a half cycle. After that the velocity is zero and it will return back with negative velocity, in which we use $K_-$ for the remaining half cycle. To get these constants, we can use initial condition. But since each initial condition is calculated from the start of the half cycles, we can infer that each constants will have different values and probably have a pattern for even-half-cycles and odd-half cycles.
+I put the constant in the left hand side intentionally to emphasize more that the equation looks like a contour diagram. For example in the equation of circle. But, in this case, the amplitude of the contour (distance from the origin), is controlled by the ratio $e^{2D_2x}$.
+
+A constant $k_+$ is used when the object oscillates with positive velocity, up to a half cycle. After that the velocity is zero and it will return back with negative velocity, in which we use $k_-$ for the remaining half cycle. To get these constants, we can use initial condition. But since each initial condition is calculated from the start of the half cycles, we can infer that each constants will have different values and probably have a pattern for even-half-cycles and odd-half cycles.
 
 We can retrieve relations between (only) $x$ and $\dot{x}$ by substituting it back into the previous equation of motions.
 
@@ -128,4 +132,30 @@ By knowing $K_+$, we can proceed to know what the maximum acceleration at the in
 Next, in the quarter cycle, the acceleration must be 0, so that velocity is at maximum. We got $X=\ln\left|\frac{2}{e}\right|$ . 
 Then $\dot{x}=\frac{\omega}{D_2}\sqrt{\frac{\ln{frac{e}{2}}}{2}}$.
 
-Continuing to the end at the half cycle. This one is a little bit tricky. We have to know when the $K_+$ relation intersects the X axis again. From the relation formula, we intuitively know that it must cross X axis twice at maximum. So you had to solve $K_+e^{-X}+X-1=0$
+Continuing to the end at the half cycle. This one is a little bit tricky. We have to know when the $K_+$ relation intersects the X axis again. From the relation formula, we intuitively know that it must cross X axis twice at maximum. So you had to solve $K_+e^{-X}+X-1=0$, probably numerically. From this, you will have the next $X$ for using the next half cycle phase. Let's just call our initial $X$ for the previous cycle to be $X_0$ and $X_1$ for the next cycle.
+
+After this, you just have to repeat the process. This time, using $X_1$ to get the value for $K_-$. Once you got both $K_+$ and $K_-$, you can reuse the constant for every corresponding half cycle. So what I imagine the phase diagram will be is a similar shape for the corresponding half cycle with the same parity (odd with odd, even with even), but very different between odd and even half cycles.
+
+# Using a different set of coordinate origin
+
+In the case of my original problem, the floating balloon. I am using a different reference coordinate. Instead of using the final equilibrium position as coordinate $x=0$, I'm using the initial displacement as $x=0$. This can tremendously help to guess the trajectory. 
+
+Let's say that the distance between the initial position $x=0$ and the equilibrium is it's maximum displacement $A$. Then by using Newton's Law, when the damping is finished, whatever form of $\ddot{y}(t)$  it has to corresponds with the Newton's Law.
+
+Equation of motion without drag force:
+
+$
+\ddot y =-\omega^2 (y - A)
+$
+
+Equation of motion with drag force:
+
+$
+\ddot y = -\omega^2 (y-A) -D_2 \dot{y}^2
+$
+
+Note that, due to the origin shift froom coordinate $x$ to $y$, the original equation $\ddot x=-\omega^2 x$ were translated according to the $x=y-A$. It's a simple translation so the derivative stays the same.
+
+However, because of these coordinate shift it's easier to imagine that the end result is the same, regardless if there is a drag force or not. From the Newton's First Law, we can immediately calculate $A$. Instead of relying from the equation to derive initial condition.
+
+ 
