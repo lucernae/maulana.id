@@ -28,4 +28,56 @@ $
 \ddot x=-\omega^2 x - D_2\dot{x}^2
 $
 
-All the second terms corresponds to the drag force, with each drag constant ($D_1$ and $D_2$) so that we remember that the dimension is different between each equations. However, we should be careful because in the case of linear damping, the information about the direction of the drag force is conveyed entirely in the expression. Meanwhile for the quadratic damping above, it is only valid if the direction of the movement is $\dot{x}\ge0$
+All the second terms corresponds to the drag force, with each drag constant ($D_1$ and $D_2$) so that we remember that the dimension is different between each equations. However, we should be careful because in the case of linear damping, the information about the direction of the drag force is conveyed entirely in the expression. Meanwhile for the quadratic damping above, it is only valid if the direction of the movement is $\dot{x}\ge0$ or into the positive axis.
+
+It is not complete. We should also observe the equation when the velocity is pointing to the opposite direction.
+
+$
+\ddot x= -\omega^2 x + D_2 \dot{x}^2
+$
+
+As you can see, the sign alternates. More compactly it can be written:
+
+$
+\ddot x = -\omega^2 x - D_2 \dot{x} \left| \dot{x} \right|
+$
+
+But we still need to solve both separately.
+
+# Separating the variables
+
+Both quadratic damping equation is difficult to solve directly.
+
+Usually, from the equation of motion we convert it into an energy equation like this:
+
+$
+\ddot x=-\omega^2 x - D_2\dot{x}^2 \\
+\dot x \cdot d\dot x=-\omega^2 x \cdot dx - D_2 \dot{x}^2 dx
+$
+
+But the second term in the right hand side is difficult to integrate. Even if we can, we still need to separate the variables to further integrate it to retrieve the time function of x $t(x)$.
+
+Instead of that, I offer an alternative approach. We know that the derivative of $\dot{x}^2$ will be somewhat linear in power (not quadratic). So instead of integrating the equation of motions, we took a derivative instead.
+
+$
+\frac{d\ddot{x}}{dt} = -\omega^2 \dot x - 2D_2 \dot{x} \ddot{x}
+$
+
+I couldn’t find a way to express triple dot in Katex, so the above notation will do. Notice that the right hand side has common $\dot{x}$ and it could also be “chain-rule”’d so that we eliminate $dt$. Here’s the differential form.
+
+$
+d\ddot{x}=(-\omega^2-2D_2\ddot{x})\cdot dx
+$
+
+The above form is integrable and separable if we move the right hand terms with $\ddot{x}$ to left hand side. The above expression is for $\dot{x}>0$. For $\dot{x}<0$, it’s similar with following the same reasoning.
+
+$
+d\ddot{x}=(-\omega^2+2D_2\ddot{x})\cdot dx
+$
+
+By integration we have the following relations
+
+$
+K_+=e^{2D_2x}(\omega^2+2D_2\ddot{x}), \dot{x} > 0 \\
+K_-=e^{-2D_2x}(\omega^2-2D_2\ddot{x}), \dot{x} < 0
+$
