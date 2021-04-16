@@ -78,8 +78,8 @@ $
 By integration we have the following relations
 
 $
-k_+=e^{2D_2x}(\omega^2+2D_2\ddot{x}), \dot{x} > 0 \\
-k_-=e^{-2D_2x}(\omega^2-2D_2\ddot{x}), \dot{x} < 0
+\dot{x} > 0; k_+=e^{2D_2x}(\omega^2+2D_2\ddot{x}) \\
+\dot{x} < 0; k_-=e^{-2D_2x}(\omega^2-2D_2\ddot{x})
 $
 
 A constant $K_+$ is used when the object oscillates with positive velocity, up to a half cycle. After that the velocity is zero and it will return back with negative velocity, in which we use $K_-$ for the remaining half cycle. To get these constants, we can use initial condition. But since each initial condition is calculated from the start of the half cycles, we can infer that each constants will have different values and probably have a pattern for even-half-cycles and odd-half cycles.
@@ -87,8 +87,8 @@ A constant $K_+$ is used when the object oscillates with positive velocity, up t
 We can retrieve relations between (only) $x$ and $\dot{x}$ by substituting it back into the previous equation of motions.
 
 $
-k_+=e^{2D_2x}(\omega^2 - 2D_2 \omega^2 x-2 D_2^2 \dot{x}^2), \dot{x} > 0 \\
-k_-=e^{-2D_2x}(\omega^2 +2D_2 \omega^2 x-2 D_2^2 \dot{x}^2), \dot{x} < 0
+\dot{x} > 0; k_+=e^{2D_2x}(\omega^2 - 2D_2 \omega^2 x-2 D_2^2 \dot{x}^2)\\
+\dot{x} < 0; k_-=e^{-2D_2x}(\omega^2 +2D_2 \omega^2 x-2 D_2^2 \dot{x}^2)
 $
 
 Because we have relations between $x$ and $\dot{x}$, we might understand more if we create a phase space diagram. By drawing a phase diagram, you can understand more about the cycles of the oscillator.
@@ -111,6 +111,6 @@ $
 The phase space relations conveniently becomes:
 
 $
-K_+=e^X(1-X-V^2), V > 0\\
-K_-=e^{-X}(1+X-V^2), V<0
+V > 0; K_+=e^X(1-X-V^2) \\
+V < 0; K_-=e^{-X}(1+X-V^2)
 $
