@@ -171,4 +171,16 @@ x=y-A \\
 \ddot x = -\omega^2 x - D_2 \dot{x}^2
 $
 
-As you can see, just by doing coordinate transform, we are back to the initial equation we discuss above.
+As you can see, just by doing coordinate transform, we are back to the initial equation we discuss above. 
+
+# Solving the trajectory of the motion
+
+From the phase space relations between $X$ and $V$ we can solve for $t$ because the form is integrable and separable.
+
+$
+\dot{X}=\frac{V}{\sqrt{2}\omega} \\
+V>0; \omega \Delta t=\int{\frac{1}{sqrt{2(1-X-K_+e^{-X})}}} \\
+V<0; \omega \Delta t=\int{\frac{1}{sqrt{2(1+X-K_+e^{X})}}}
+$
+
+The left hand side is analog to an angular phase from a given angular speed. Just like in the case of harmonic oscillator. For each upward/downward equation, $\Delta t$ corresponds to the time it took to reach half of that cycle.
