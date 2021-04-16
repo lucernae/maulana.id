@@ -1,0 +1,31 @@
+---
+layout: blog-posts
+title: Hint for solving quadratic drag force on a damping oscillator
+description: My thought process on trying to solve the differential equation
+date: 2021-04-15T23:45:27.301Z
+---
+As an appendix promised for the article [How fast helium balloon floats...](https://maulana.id/blog/2021--04--11--17--how-fast-helium-balloon-floats/), I’m going to explain the hint on how to derive the insights behind the quadratic drag force presents in the damped harmonic oscillations found in the previous articles.
+
+Solving the usual damped oscillations is simple enough because it’s linear. Meanwhile, the quadratic force is not so straight-forward. Originally, I didn’t find any open literature that discuss this. There are several articles found online with the keyword “Quadratic Drag Force Damping Oscillator”, but most of it is behind a paygate, so I can’t access it. Some of the article I found, only discuss a falling object under drag force. That one is also simple, but way different from the case of quadratic damping found in the oscillator.
+
+So, at that time, I have no choice but to try to solve it myself. Perhaps there is a better way? In that case, let me know.
+
+# Looking at the equation of motions
+
+The equation of motions can be found from a simple Newton’s Law. But there is a tricky catch.
+
+We first introduce an oscillator with position $x(t)$ measured from it’s equilibrium position.
+
+This is a damping oscillation with all linear order of position $x(t)$:
+
+$
+\ddot x=-\omega^2 x - D_1\dot x
+$
+
+Meanwhile, this is a quadratic damping of the same oscillation:
+
+$
+\ddot x=-\omega^2 x - D_2\dot{x}^2
+$
+
+All the second terms corresponds to the drag force, with each drag constant ($D_1$ and $D_2$) so that we remember that the dimension is different between each equations. However, we should be careful because in the case of linear damping, the information about the direction of the drag force is conveyed entirely in the expression. Meanwhile for the quadratic damping above, it is only valid if the direction of the movement is $\dot{x}\ge0$
