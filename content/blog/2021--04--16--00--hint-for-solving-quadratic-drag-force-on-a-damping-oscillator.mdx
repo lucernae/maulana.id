@@ -108,7 +108,7 @@ We substitute this:
 $
 X=2D_2x \\
 V^2=\frac{2D_2^2}{\omega^2}\dot{x}^2 \\
-A=\frac{2D_2}{\omega^2}\ddot{x} \\
+\alpha =\frac{2D_2}{\omega^2}\ddot{x} \\
 K_+=\frac{k_+}{\omega^2} \\
 K_-=\frac{k_-}{\omega^2}
 $
@@ -116,8 +116,8 @@ $
 The phase space relations conveniently becomes:
 
 $
-V > 0; K_+=e^X(1+A) \\
-V < 0; K_-=e^{-X}(1-A) \\
+V > 0; K_+=e^X(1+\alpha) \\
+V < 0; K_-=e^{-X}(1-\alpha) \\
 V > 0; K_+=e^X(1-X-V^2) \\
 V < 0; K_-=e^{-X}(1+X-V^2)
 $
@@ -128,7 +128,7 @@ So, to proceed with understanding the cycles. We first start with initial positi
 
 By knowing $K_+$, we can proceed to know what the maximum acceleration at the initial position. The maximum acceleration is $\frac{\omega^2}{2D_2}$. We infer that for each initial half cycles, the initial acceleration magnitude will be less than that. I have to say that I’m surprised the value entirely determined by $\omega^2$ and $D_2$, since we set that the maximum initial displacement in the phase space to be $\left|X\right|=1$.
 
-Next, in the quarter cycle, the acceleration must be 0, so that velocity is at maximum. We got $X=\ln\left|\frac{2}{e}\right|$ . 
+Next, in the quarter cycle, the acceleration must be $\alpha=0$, so that velocity is at maximum. We got $X=\ln\left|\frac{2}{e}\right|$ . 
 Then $\dot{x}=\frac{\omega}{D_2}\sqrt{\frac{1}{2}\ln{\frac{e}{2}}}$.
 
 Continuing to the end at the half cycle. This one is a little bit tricky. We have to know when the $K_+$ relation intersects the X axis again. From the relation formula, we intuitively know that it must cross X axis twice at maximum. So you had to solve $K_+e^{-X}+X-1=0$, probably numerically. From this, you will have the next $X$ for using the next half cycle phase. Let's just call our initial $X$ for the previous cycle to be $X_0$ and $X_1$ for the next cycle.
