@@ -6,6 +6,11 @@ date: 2021-05-07T10:20:21.083Z
 ---
 Continuation of [Part 1](2021--05--07--10--lesson-learned-on-deploying-minio-with-cifs-backend-part-1), we are going to revise the architecture a bit.
 
+# Edit Notes
+
+I made the draft article in February, at that time, the approach didn't work because object upload always fails in the middle for big files.
+But, for the recent MinIO version, this is now works.
+
 # Problem
 
 Previously, overlay mounts doesn't work. So, the simple solution is to just separate the minio instance and let each one of them holds a group of buckets.
@@ -85,9 +90,14 @@ Now it works!
 Keep in mind, that even though it works, it relies on node volume plugin. One of the drawback from this approach is that you have to install the 
 flex volume plugin (fstab/cifs) manually to each and every node. This can be troublesome because your setup is not resilient to disruption
 since you have to target the node that runs your MinIO instance. We already have network mounted FS backend via CIFS, so it will be nice if we 
-can mount the FS **regardless** of where the node is.
+can mount the FS **regardless** of where the node is. 
 
 We are going to try to tackle this by using a CSI (Container Storage Interface) plugin from OpenShift for Samba, called [CSI Driver SMB](https://github.com/kubernetes-csi/csi-driver-smb).
 CIFS is using a similar protocol with Samba, so if we are lucky, the plugin might work.
 
 We are going to try this in the next article, the [part 3](soft-dev/2021--05--07--10--lesson-learned-on-deploying-minio-with-cifs-backend-part-3/)
+
+# Conclusion
+
+ - ~~Mounting works but sending big objects randomly fails~~ Now works with the recent MinIO version
+ - FlexVolume requires that every nodes has volume plugin installed and is not quite **flexible** in terms of scale.
