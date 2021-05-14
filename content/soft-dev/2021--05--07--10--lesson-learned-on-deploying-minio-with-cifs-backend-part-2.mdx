@@ -4,7 +4,7 @@ title: Lesson learned on deploying Minio with CIFS backend. Part 2
 description: Separating the buckets to use different FS backend.
 date: 2021-05-07T10:20:21.083Z
 ---
-Continuation of [Part 1](2021--05--07--10--lesson-learned-on-deploying-minio-with-cifs-backend-part-1), we are going to revise the architecture a bit.
+Continuation of [Part 1](/soft-dev/2021--05--07--10--lesson-learned-on-deploying-minio-with-cifs-backend-part-1), we are going to revise the architecture a bit.
 
 # Edit Notes
 
@@ -95,7 +95,7 @@ can mount the FS **regardless** of where the node is.
 We are going to try to tackle this by using a CSI (Container Storage Interface) plugin from OpenShift for Samba, called [CSI Driver SMB](https://github.com/kubernetes-csi/csi-driver-smb).
 CIFS is using a similar protocol with Samba, so if we are lucky, the plugin might work.
 
-We are going to try this in the next article, the [part 3](soft-dev/2021--05--07--10--lesson-learned-on-deploying-minio-with-cifs-backend-part-3/)
+We are going to try this in the next article, the [part 3](/soft-dev/2021--05--14--10--lesson-learned-on-deploying-minio-with-cifs-backend-part-3/)
 
 # Conclusion
 
