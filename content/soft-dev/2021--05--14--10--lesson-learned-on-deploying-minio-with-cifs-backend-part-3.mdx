@@ -145,7 +145,7 @@ Of course, with the above concepts, there are several ways to accomplish that. F
 
 1. I want to schedule MinIO pods only in the set of nodes I labeled
 2. I provision one Hetzner Storage Box for one server pool (different disks in a pool mount to the same Storage Box)
-3. I manage these pods using ReplicaSet
+3. I manage these pods using StatefulSet
 4. I install each MinIO pools using Helm Charts or Kubernetes Operator
 5. I arrange internal MinIO names using Kubernetes Services
 
@@ -165,13 +165,13 @@ with small downtime because no live services is using the buckets. For a differe
 Because one Storage Box is used for one server pool, in this setup there will be 4 PVCs that point to the same CIFS endpoint in the Storage Box, but at 
 different directory. If we want to expand the capacity, we purchase new Storage Box and use it to create the second server pool, etc.
 
-For requirement 3, It is better to use ReplicaSet because the pod name and PVC name are predictable. If you have a ReplicaSet called `minio`, the 
+For requirement 3, It is better to use StatefulSet because the pod name and PVC name are predictable. If you have a StatefulSet called `minio`, the 
 first pod is going to be named `minio-0` and the PVC template will create PVC called `data-0`. Next replica will have pod name `minio-1` and PVC name `data-1`.
 Since every PVC will mount to a CIFS-backed PV, it is okay to delete/recreate the PVC because the data itself will be stored in the CIFS endpoint.
 So, we have plenty of option to create the PV. We can use StorageClass to generate 4 PVs (EC set per pool) for the same Storage Box. Or, 
-alternatively, we can create each PV manually. We are using ReplicaSet so that new PV are going to be created automatically using the provided StorageClass.
+alternatively, we can create each PV manually. We are using StatefulSet so that new PV are going to be created automatically using the provided StorageClass.
 
-For requirement 4, It is a lot easier to install a MinIO pool using Helm Chart. This is because for each pool you have to create ReplicaSet with defined 
+For requirement 4, It is a lot easier to install a MinIO pool using Helm Chart. This is because for each pool you have to create StatefulSet with defined 
 index. Combining two pools means we have to coordinate setup between two different pools of pods. It's a lot easier to scale the configuration and setup
 if we use community available Helm Chart or Operator. However, in this setup, I'm going to use Helm Chart instead of Operator pattern.
 The reasoning is just we want to make sure we have a room of flexibility to set up the StorageClass. If we are going to use the Operator pattern, we are 
@@ -179,8 +179,8 @@ using a more Cloud Native approach where it's easier to set up a MinIO instance,
 I need this because we want to set up a backup endpoint, not highly available object storage buckets. Operator works best if you want to create
 multiple different MinIO endpoint/tenant for multiple projects. Like a dedicated project's object storage endpoint.
 
-For requirement 5, Internal service discovery is a natural feature of Kubernetes. A pod in a replicaset can have internal names like this: 
-`minio-0.minio.svc.cluster.local`. If we have service called `minio` that selects pods in a ReplicaSet, we can refer to a specific pod 
+For requirement 5, Internal service discovery is a natural feature of Kubernetes. A pod in a StatefulSet can have internal names like this: 
+`minio-0.minio.svc.cluster.local`. If we have service called `minio` that selects pods in a StatefulSet, we can refer to a specific pod 
 just by using `<pod-name>.minio`. In other words, if we use Kubernetes service resource, we can easily assign MinIO node index without having 
 to hack `/etc/hosts` of each MinIO node.
 
@@ -214,7 +214,7 @@ Now, we should be able to use CIFS-backed PVs
 
 ## Creating SMB StorageClass
 
-Since we are going to use ReplicaSet, we hope we can create a StorageClass that can dynamically provision multiple PVC template and assign them 
+Since we are going to use StatefulSet, we hope we can create a StorageClass that can dynamically provision multiple PVC template and assign them 
 PV with directory in our Hetzner Storage Box. From the docs [here](https://github.com/kubernetes-csi/csi-driver-smb/blob/master/deploy/example/e2e_usage.md)
 it seems this is the common usage. A sample of StorageClass can be like this:
 
@@ -263,7 +263,7 @@ uses uid/gid 1001/1001 to run `minio` command. So we have to grant the filesyste
 
 ## Installing MinIO chart in distributed mode
 
-Bitnami chart I mentioned above made it super simple to setup distributed MinIO. They already uses ReplicaSet and customizeable StorageClass.
+Bitnami chart I mentioned above made it super simple to setup distributed MinIO. They already uses StatefulSet and customizeable StorageClass.
 
 Installation guide can be seen [here](https://docs.bitnami.com/kubernetes/infrastructure/minio/get-started/install/), I present it here for convenience.
 
@@ -290,14 +290,14 @@ secretKey:
 
 Let's review the values declared here.
 
-You need to specify `mode: distributed` so that Bitnami chart create scalable ReplicaSet-based deployment with Erasure Code.
+You need to specify `mode: distributed` so that Bitnami chart create scalable StatefulSet-based deployment with Erasure Code.
 
 Because we want to use EC set of 4 disks, we specify `statefulset.replicaCount: 4`. There's actually another options called `statefulset.drivesPerNode`.
 But I don't think it's useful in this case. The number specified in `drivesPerNode` will determine the number of disks for each replica. So if you are using 
 EC set of 4 disks, but you are using `replicaCount: 2` then you have to set `drivesPerNode: 2`. 
 
 The option `statefulset.zones` is analog to the server pool in the official documentation. Initially we set `zones: 1`. If the storage is full, 
-we expand the capacity by incrementing the zones (analog of adding a new homogenous pool) to `zones: 2`. ReplicaSet will increment the replicas from 
+we expand the capacity by incrementing the zones (analog of adding a new homogenous pool) to `zones: 2`. StatefulSet will increment the replicas from 
 4 to 8 in this case. Then the StorageClass will create the new missing PVs based on currently set parameters (it should point to the new Storage Box).
 
 For the `persistence.storageClass` we are going to always set it to `hetzner-storage-box-minio`, as we scale up. However, before every scale up process, 
@@ -367,23 +367,23 @@ Job that iterates all the buckets and copy over the content to the new instance 
 
 This trick can also be applied if you wish to change the underlying EC set to a different more redundant set config.
 
-## The final architecture diagram of ReplicaSet-based distributed MinIO instance
+## The final architecture diagram of StatefulSet-based distributed MinIO instance
 
 ![](/images/uploads/backup-architecture.part-3-3.png)
 
 The final diagram is not so different with the previous one, but now it is annotated with some Kubernetes resources.
 
-The noticeable difference is that the two server pool (two sets of Storage Boxes) is now managed by one single ReplicaSet.
-So actually, one ReplicaSet manages the whole pods from pod 0 to pod 7. Each pod serving one MinIO node from one disk. 
+The noticeable difference is that the two server pool (two sets of Storage Boxes) is now managed by one single StatefulSet.
+So actually, one StatefulSet manages the whole pods from pod 0 to pod 7. Each pod serving one MinIO node from one disk. 
 The `minio` command line recognize it as two pools of EC set 4 with the help of Bitnami Helm Charts. Without Bitnami 
-Helm chart, we have to create two ReplicaSet, one for each server pool (or EC set).
+Helm chart, we have to create two StatefulSet, one for each server pool (or EC set).
 
 Bitnami helm chart also makes it easy to expand the size, because the `minio` server command is adjusted from the parameters.
-If we were to deploy it manually using ReplicaSet, then we have to delete and recreate the ReplicaSet to adjust the `minio` command
+If we were to deploy it manually using StatefulSet, then we have to delete and recreate the StatefulSet to adjust the `minio` command
 to add the new pool.
 
 This means the orange boundaries in the diagram above is only virtual. We have logically two server pools, each using it's own Storage Box 
-scattered over 4 PVs. But actually each of the pods is handled by just one ReplicaSet. New PVCs/PVs are created with the parameters from the 
+scattered over 4 PVs. But actually each of the pods is handled by just one StatefulSet. New PVCs/PVs are created with the parameters from the 
 new StorageClass. Old PVs will stay the same.
 
 One disadvantage of this setup is that if one of the pool is down, for example the backing Storage Box is down, then it is possible that the MinIO 
@@ -454,14 +454,14 @@ However, the MinIO instance is still up and running for read requests. It's just
 
 3. Expanding the pool
 
-By increasing the `zones` parameters, we increase the number of replicase. Since I'm using the same Storage Box, I don't have to change 
+By increasing the `zones` parameters, we increase the number of replicas. Since I'm using the same Storage Box, I don't have to change 
 the StorageClass. Longhorn backup job doesn't restart automatically, so I have to run backup again. This time it succeeds.
 Note that I can't test further more by just increasing the zones, because then the Storage Box is accessed by more than 10 concurrent 
 network connections. To test bigger backups, I have to recreate the instance and use bigger disk size per replicas.
 
 4. Testing pod/disk downtime
 
-We can simulate disk downtime by manually downscaling the ReplicaSet. In the initial setup, we used 4 replicas. We can downscale
+We can simulate disk downtime by manually downscaling the StatefulSet. In the initial setup, we used 4 replicas. We can downscale
 to two replicas, and expect GET requests to still be working. It indeed works. However if we downscale to one replica, we can still access the web 
 browser but it says it has insufficient healthy nodes. This is because at most it can tolerate N/2 disks failures.
 
