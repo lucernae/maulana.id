@@ -454,7 +454,7 @@ However, the MinIO instance is still up and running for read requests. It's just
 
 3. Expanding the pool
 
-By increasing the `zones` parameters, we increase the number of replicase. Since I'm using the same Storage Box, I don't have to change 
+By increasing the `zones` parameters, we increase the number of replicas. Since I'm using the same Storage Box, I don't have to change 
 the StorageClass. Longhorn backup job doesn't restart automatically, so I have to run backup again. This time it succeeds.
 Note that I can't test further more by just increasing the zones, because then the Storage Box is accessed by more than 10 concurrent 
 network connections. To test bigger backups, I have to recreate the instance and use bigger disk size per replicas.
