@@ -1,30 +1,37 @@
 import React from "react"
-import { Link, graphql } from "gatsby"
+import Link from "next/link"
 
 import Bio from "../components/bio"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
+import { getAllPosts } from "../lib/blog"
 import { rhythm } from "../utils/typography"
 
-const BlogIndex = ({ data, location }) => {
-  const siteTitle = data.site.siteMetadata.title
-  const posts = data.allMdx.edges
+export async function getStaticProps() {
+  const posts = getAllPosts()
+  return {
+    props: {
+      posts,
+    },
+  }
+}
 
+const BlogIndex = ({ posts }) => {
   return (
-    <Layout location={location} title={siteTitle}>
+    <Layout>
       <SEO title="All posts" />
       <Bio />
       {posts.map(({ node }) => {
-        const title = node.frontmatter.title || node.fields.slug
+        const title = node.frontmatter.title || node.slug
         return (
-          <article key={node.fields.slug}>
+          <article key={node.slug}>
             <header>
               <h3
                 style={{
                   marginBottom: rhythm(1 / 4),
                 }}
               >
-                <Link style={{ boxShadow: `none` }} to={node.fields.slug}>
+                <Link style={{ boxShadow: `none` }} href={node.slug}>
                   {title}
                 </Link>
               </h3>
@@ -45,28 +52,3 @@ const BlogIndex = ({ data, location }) => {
 }
 
 export default BlogIndex
-
-export const pageQuery = graphql`
-  query {
-    site {
-      siteMetadata {
-        title
-      }
-    }
-    allMdx(sort: { fields: [frontmatter___date], order: DESC }) {
-      edges {
-        node {
-          excerpt
-          fields {
-            slug
-          }
-          frontmatter {
-            date(formatString: "DD MMMM YYYY")
-            title
-            description
-          }
-        }
-      }
-    }
-  }
-`

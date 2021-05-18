@@ -1,11 +1,15 @@
 import React from "react"
-import { Link } from "gatsby"
+import { useRouter } from "next/router"
+import Link from "next/link"
+import config from "../config"
 
 import { rhythm, scale } from "../utils/typography"
 import "katex/dist/katex.min.css"
 
-const Layout = ({ location, title, children }) => {
-  const rootPath = `${__PATH_PREFIX__}/`
+const Layout = ({ children }) => {
+  const router = useRouter()
+  const isRootPath = router.asPath === "/"
+  const title = config.title
   let header
 
   if (location.pathname === rootPath) {
@@ -22,7 +26,7 @@ const Layout = ({ location, title, children }) => {
             boxShadow: `none`,
             color: `inherit`,
           }}
-          to={`/`}
+          href={`/`}
         >
           {title}
         </Link>
@@ -62,7 +66,7 @@ const Layout = ({ location, title, children }) => {
       <footer>
         © {new Date().getFullYear()}, Built with
         {` `}
-        <a href="https://www.gatsbyjs.org">Gatsby</a>
+        <a href="https://nextjs.org">Next.js</a>
       </footer>
     </div>
   )
