@@ -36,7 +36,7 @@ You can share easily a staging instance or feature branch you already built, for
 The GitHub Codespaces, however, is still expensive IMO. It's unreachable for students or people who just started
 coding. The barrier of entry is especially important if you come from unprivileged background.
 In the past, in my college years, I don't have any laptop/computers so I have to join college lab to use them.
-I compile a project source code it in their machine, probably leave it overnight if it is as big as a Linux Kernel.
+I compile a project source code in their machine, probably leave it overnight if it is as big as a Linux Kernel.
 This allows me to learn how to code before I even got any laptop (good laptop is expensive).
 
 Nowadays, I'm privileged enough to have my own PC and laptop and try more heavy stuff, 
@@ -47,7 +47,7 @@ I was kind of hoping that GitHub Codespaces can lower the barrier of entry for t
 
 Let's check the [pricing page](https://docs.github.com/en/billing/managing-billing-for-github-codespaces/about-billing-for-codespaces#codespaces-pricing).
 
-It was written that for a compute with 2 cores, the price is 0.18 USD/hour. Let's say you work normally, 8 hour a day, 21 days,
+It was written that for a compute with 2 cores, the price is 0.18 USD/hour. Let's say you work normally, 8 hours a day, 21 days,
 with a total of 176 hour. That means 31.68 USD a month. In Indonesia, with 4 or 5 USD you can buy a fancy Starbucks coffee.
 Surely if you can afford buying coffee, you can probably spend this much (31.68 USD) in a month.
 In my college days, it is not possible to jump start your software development carreer this cheap (unless you can compile in your head, lol).
@@ -85,7 +85,7 @@ for remote development lab like this, especially in this pandemic situation.
 
 # So what about this Web Editor?
 
-I didn't realize the significance of this new Web Editor shortcut until I realized that the Web Editor is free for everyone.
+I didn't realize the significance of this new Web Editor shortcut until I realized that **the Web Editor is free for everyone**.
 
 Originally, I thought the shortcut was to instantiate a Codespace. 
 Codespace has pricing and it is only available for at least a Team/Organization account.
@@ -117,19 +117,25 @@ be synced in your cluster. This make it easy for a team to quickly deploy or upg
 
 I'm imagining this kind of conversation:
 
-A: Bro, I need you to upgrade my apps in the cloud to v1.2.1
-B: Bro, just go to your repo, hit '.' (dot), change the version yourself in the deployment directory, then it will go live...
+> A: Bro, I need you to upgrade my apps in the cloud to v1.2.1
+
+> B: Bro, just go to your repo, hit '.' (dot), change the version yourself in the deployment directory, then it will go live...
 
 Or these kind of things:
-A: Bro, please change the version number and do a python package patch release ASAP
-B: Man, you can just change it yourself using the GitHub web-editor. The rest was already setup to do auto packaging and deploy with that new version.
+
+> A: Bro, please change the version number and do a python package patch release ASAP
+
+> B: Man, you can just change it yourself using the GitHub web-editor. The rest was already setup to do auto packaging and deploy with that new version.
 
 Or...
-A: Hi team, to prepare for the upcoming hit to our server, we need to upscale the deployment and provision new servers.
-A: Infra team, please make the necessary adjustment
-B: Guys, just change the terraform code yourself using the web editor. We can then review it in a PR. If it pass the lint, then just merge it away.
 
-Normally, the barrier to adopt GitOps is not the technology, but the people using it. Because mostly the team is not yet familiar with git. 
+> A: Hi team, to prepare for the upcoming hit to our server, we need to upscale the deployment and provision new servers.
+
+> A: Infra team, please make the necessary adjustment
+
+> B: Guys, just change the terraform code yourself using the web editor. We can then review it in a PR. If it pass the lint, then just merge it away.
+
+Often times, the barrier to adopt GitOps is not the technology, but the people using it. Because mostly the team is not yet familiar with git. 
 They had to checkout the code in their machine, making changes, commits, make PR, etc. Too many steps.
 You can do it with previous GitHub interface (directly editing a file and it turns into a commit), but what if you have multiple files?
 With the new Web Editor, this process is just seamless and easy to understand, even for non git-savvy friend.
@@ -138,7 +144,8 @@ Just hit dot. Use the file explorer in the web editor or search to find the file
 glowing blue in the side panel. You can't miss it. Then be done with it. 
 There's no need for a special team called DevOps to do your daily deployment if GitOps were already set up.
 
-Well I guess, that's it. If you happen to have a GitHub Team or Organization access, I recommend you to check out GitHub Codespaces immediately.
+Well I guess, that's it. If you happen to have a GitHub Team or Organization access, 
+I recommend you to check out GitHub Codespaces immediately.
 
 **It is free until 10th September 2021**
 
