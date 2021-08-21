@@ -18,7 +18,7 @@ A week back, I just saw a casual tweet from [GitHub](https://twitter.com/github/
 Basically, when you press '.' (dot) in your keyboard from any GitHub repo, the web interface
 seamlessly transition into a web editor. More on the details [here in the GitHub product docs](https://docs.github.com/en/codespaces/developing-in-codespaces/web-based-editor)
 
-This is doesn't take me as a surprise. The web-editor is based on Visual Studio Code. 
+This doesn't take me as a surprise. The web-based editor is based on Visual Studio Code. 
 For quite some time, I already have GitHub Codespaces beta invite.
 GitHub Codespaces is simply a Visual Studio Code, remote in the cloud, that automatically be provisioned
 from the GitHub repo you want to checkout.
@@ -48,15 +48,19 @@ I was kind of hoping that GitHub Codespaces can lower the barrier of entry for t
 Let's check the [pricing page](https://docs.github.com/en/billing/managing-billing-for-github-codespaces/about-billing-for-codespaces#codespaces-pricing).
 
 It was written that for a compute with 2 cores, the price is 0.18 USD/hour. Let's say you work normally, 8 hour a day, 21 days,
-with a total of 176 hour. That means 3.168 USD a month. In Indonesia, with 4 or 5 USD you can buy a fancy Starbucks coffee.
-Surely if you can afford buying coffee, you can probably spend this much in a month.
+with a total of 176 hour. That means 31.68 USD a month. In Indonesia, with 4 or 5 USD you can buy a fancy Starbucks coffee.
+Surely if you can afford buying coffee, you can probably spend this much (31.68 USD) in a month.
 In my college days, it is not possible to jump start your software development carreer this cheap (unless you can compile in your head, lol).
 You can just buy a cheap chromebook and then start building your microservices.
 
 For 2 cores, it is more than enough to just build one microservice or doing some frontend web development (which is very lightweight).
 If you are a system engineer, or platform engineer, or fullstack engineer, you probably need more compute. Fortunately,
 the pricing page is pretty simple. If you want 4 times the cores, you multiply the monthly cost by 4. 
-So, it can be as expensive as 50 USD. In my country, this is almost the same with the cost of having a fancy reliable internet connection for a month.
+So, it can be as expensive as 500 USD (32 cores). In my country, the cost of having 2 cores codespace is 
+almost the same with the cost of having a fancy reliable internet connection for a month.
+Realistically, for students you can only afford the internet and 2 cores of codespace.
+This is why I still think GitHub codespaces is reasonably priced for full time developers, but not for students
+in developing countries. With that kind of pricing you could save up 12 months to help you buy a laptop.
 
 We still have to calculate the storage cost. But I don't think it's significant enough. 
 I don't know how they calculate it, but let's say your usage is 32GB month. Then your cost would be like 3 USD flat per month. Still cheap.
@@ -64,17 +68,20 @@ I don't know how they calculate it, but let's say your usage is 32GB month. Then
 GitHub also explained that they use the very same Codespaces for their own github code repo [here](https://github.blog/2021-08-11-githubs-engineering-team-moved-codespaces/).
 The story was quite inspirational.
 
-It's also worth noting that implementing this for a Team is totally makes sense. You can enable your time with direct access to fast computer,
+It's also worth noting that implementing this for a Team is totally makes sense. You can enable your team with direct access to fast computer,
 regardless of their current machine. It's easy to calculate the cost if you have client-based project. You can also have streamlined workflow 
 where all of your team uses the same setup, regardless of what computers they are using, chromebook, macos, windows, etc. The devcontainer setup 
 allows this. It's also possible to set the Visual Studio Code interface to use the same recommended extensions, so that your team doesn't have to ask 
 which extension they need to enable to improve their workflow.
 
 In a developing country like Indonesia, there is also an extra issue about the reliable internet connection. It might be more expensive to provide 
-the internet connectivity to use GitHub Codespaces compared with the codespace cost itself. But we can't control that factor. It's just necessary. 
+the internet connectivity to use GitHub Codespaces in addition to the codespace cost itself. But we can't control that factor. It's just necessary. 
 You have to think about it in different perspectives. If you are going to build containers anyway, you need the bandwidth to pull those images
 into your own local machine. So it is even better if you use codespaces because you pull those images in the cloud. Your bandwidth is just used 
 to transfer the SSH interaction, and API requests, not the images itself.
+
+I just hope that some collaboration with universities exists. For example, University labs can just create a team and then allocate funding 
+for remote development lab like this, especially in this pandemic situation.
 
 # So what about this Web Editor?
 
