@@ -1,0 +1,260 @@
+---
+layout: blog-posts
+title: Getting Started with Nix Package Manager project dependencies
+description: Reproducible software development environment with Nix
+date: 2021-09-01T14:00:00.000Z
+---
+
+In the beginning... there was a software development project...
+
+As with other software development project, we start with defining project dependencies that is required to run the project.
+Let's say, for a typical Python project, you defined a `REQUIREMENTS.txt` file that contains all the Python packages needed 
+to run your project. This is in itself fine and all, problem solved. However, things began to change when you 
+want to hand the project over to someone unfamiliar with Python.
+
+For Python beginner who doesn't know yet about Python (or any language, but now we just assume it is Python), you don't know
+how to start the project itself. You usually need a `README.md` file in the project repo that describes how to setup such 
+project. But things don't usually work well because you don't know how to start.
+
+Let's just say that the project needs Python and Pip. So you Google'd a way to install this dependencies. You found an 
+article to install Python in Linux. So you try it. But it doesn't work, because you are on MacOS. So you find another article
+that describes how to install Python using brew. But it doesn't work, because you are on MacOS M1 chip, and you needed 
+a specific version of Python, which is Python 3.7 because Python 3.8 can't run Tensorflow, for example. In which case,
+you needed Pyenv... The lists can goes on until finally you resolved the issues... in your own machine. You finally 
+able to install the required Python until you realized that running `pip install -r REQUIREMENTS.txt` failed because 
+it needs some Linux shared library that is not available unless you build it yourself.
+
+Imagine that if you have a team of 5 people, each of them have different machine. They had to resolve it by themselves. Well, tough luck.
+
+The above scenario is my real example in the past projects and my main motivation to learn Nix Package Manager.
+
+# What is Nix Package Manager?
+
+One thing that I regret is that Nix's name is so generic that if you Google'd it, you will found dozens of article that 
+refers to Unix/Linux instead of *the* package manager called Nix. I can probably rambling around behind the motivation 
+on why people eventually make Nix. However, for now I will just introduce it.
+
+Nix is:
+- A package manager
+- A build system
+- Designed to be used in Functional Programming paradigm
+- Declarative
+- Intended to be used as a pure function
+
+If you are not familiar with functional programming, this can be a daunting concept to understand. Your mind will constantly 
+fighting to understand why people need this. I understand and I can symphatize. Good news is that you can use it without 
+having to be completely understand the mechanics behind the scene. But do try to understand it bit by bit, because the concept 
+behind it is universal and not strictly restricted for any such domain language.
+
+Now that I've said it, you just need to understand these vision that Nix want to achieve/solve:
+
+*Reproducible*
+
+Running Nix against a nix recipe (input) will produce the same result (output), wherever and whenever it was run.
+
+*Declarative*
+
+When you want to have a setup works in other machine, you only need to share the nix recipe and the input of your build.
+The input can be a source code, binary, another nix recipe, etc. Whatever the source code you are using, the language, 
+and the build input, you only need nix to completely generate the output from the recipe. So, it's very portable.
+
+*Reliable*
+
+Nix is designed to not break your existing system. If you install `Python` from Nix, it's not going to delete or mess 
+up your system packaged Python installed from MacOS or debian. You can have multiple Python instance and it will not 
+tamper each other.
+
+# How it can be used in a project?
+
+Before I learned about Nix, I am using Docker to build my project dependencies, and then use containers to run my project. 
+This guarantees project isolation too. Nix does the same thing but with a different (radical) approach. Any dependencies 
+that you declare with Nix is going to be cached and isolated in a certain directory. It then be composed so that you can use it.
+When you rerun a Nix build, if it uses the same input, the output is going to be the same, so it will only get the result 
+from the cache. If you change the input, it will intelligently process it and determine if the components need to be rebuilt or not.
+
+Nix cache are universal. The package manager ecosystem even relies on this. The nixos.org maintains binary caches that nix 
+ever built for it's packages. Whenever you use the same the package, it will fetch the result from this cache over the internet.
+This cache can even be packaged and transferred to your friend's machine, so that when your friend build the same recipe, it will 
+use their local cache.
+
+In summary, these are the benefit of using Nix compared with a container based approach.
+
+- More reproducible from a Docker recipe
+- It can rebuild the dependency tree from source code if you want to
+- Recipes can be generic. You can customize build parameters (like source version) with the same recipe
+- Lightweight, because it doesn't need a VM
+
+It is also important to understand that both Nix and Containers based approach is intended to solve a different thing.
+Nix wants to solve dependency management and build system, while Containers are used for process isolations.
+One doesn't have to replace the other. However one is more suitable than the other. Using Dockerfile recipe to declare 
+package dependency is almost an overkill to some extent, while sometimes poorly addresses the issue.
+
+That being said, since Nix is also a build system, it is also possible to create an OCI image from a Nix recipe, and then 
+run it in a container runtime such as Docker. So it complements each other.
+
+# Tutorial on setting up Nix the first time
+
+There should be no issue on running this setup in Linux, be it using x86_64 architecture or ARM (if it is supported).
+For demonstration purposes, we are going to demonstrate the setup in MacOS.
+
+## The Goal
+
+We are going to setup a Nix-based environment setup for an ops based repo to achieve this:
+
+- Repo can be checked out easily or copied over anywhere
+- Any executable binary needed for the repo to run the script inside the repo has to be the same for anyone who have the repo.
+- It should ease up beginners to quickly setup their development environment
+- It can be used in an automation tools to quickly fetch the dependencies to run the scripts inside the repo
+
+Due to how reproducible it is, this project setup can only be used for GitOps. They even have a specific terms for it called NixOps.
+But, of course the main motivation for us is to setup development environment in a specific programming language.
+
+## Installing Nix
+
+The system wide binary we need is Nix itself. It can be installed by following the guide [here](https://nixos.org/manual/nix/stable/#chap-installationhttps://nixos.org/manual/nix/stable/#chap-installation)
+
+There are two based flavors of installing Nix. Single user install and Multi User install. The main difference is that 
+for security reasons, multi-user install is recommended if your system have several users working in the machine. Otherwise, 
+just go with the single user install.
+
+For MacOS, there are certain quirks due to how the root filesystem is readonly even for the administrator, so you have to 
+create a separate volume for the Nix caches. Just follow the instruction [here](https://nixos.org/manual/nix/stable/#sect-macos-installation)
+
+For Linux, you just need to execute this (single user install):
+
+```bash
+curl -L https://nixos.org/nix/install | sh -s
+```
+
+In the case of MacOS above, the options is tweaked a little bit.
+
+```bash
+curl -L https://nixos.org/nix/install | sh -s -- --darwin-use-unencrypted-nix-store-volume
+```
+
+To verify that it is running, you need to reexecute your shell initialization script, because nix needs to be hooked into 
+your shell. I'm using zsh so I'm doing something like this:
+
+```bash
+# ZSH
+source ~/.zshrc
+# BASH
+source ~/.bashrc
+```
+
+Then run a version checked
+
+```bash
+nix-env --version
+```
+
+## Installing Nox
+
+While Nix itself is a build system and package manager, it might be difficult for you to straight using it. Especially 
+if you usually do something like `apt -y update; apt -y install <packagename>`. This is because not only the package 
+name convention might be different, how to search it is different too. Most nix packages are described as modules. 
+When installing a specific modules you are actually evaluating a Nix recipe/expression in Nix distribution channel.
+
+You can search available Nix packages in [NixOS search URL](https://search.nixos.org/packages). However, there is this 
+little helper tools that allows you to search right from the command line called **Nox**.
+
+We install Nox like this:
+
+```bash
+nix-env -iA nixpkgs.nox
+```
+
+Once you have nox, you can simply search any packages like this
+
+```bash
+nox <regular expression query>
+```
+
+Using nox is optional, but might help first-timer to search for packages. To demonstrate the case, installing 
+**GDAL** library in debian usually will results in only one possible candidate. If you need GDAL 3 while your debian 
+OS only supports GDAL 2 binaries, then you need to compile GDAL 3 yourself.
+
+In Nix, it's quite common that the distribution channel stores multiples recipes for libraries with different major version.
+If you search for GDAL using Nox
+
+```bash
+nox GDAL
+```
+
+You will be presented several options available in the channel:
+
+```bash
+1 gdal-3.2.2 (nixpkgs.gdal)
+    Translator library for raster geospatial data formats
+2 gdal-2.4.4 (nixpkgs.gdal_2)
+    Translator library for raster geospatial data formats
+3 pdal-2.2.0 (nixpkgs.pdal)
+    PDAL is Point Data Abstraction Library. GDAL for point cloud data
+4 gdal-3.2.2 (nixpkgs.python38Packages.gdal)
+    Translator library for raster geospatial data formats
+5 gdal-3.2.2 (nixpkgs.python39Packages.gdal)
+    Translator library for raster geospatial data formats
+```
+
+Notice that option 1 and 2 refer to the C/C++ based native libraries. While option 4 and 5, is for GDAL library used as 
+Python libraries, each corresponds for Python 3.8 and Python 3.9.
+
+You don't see what you want here? No worries, you can always customized the module/build with your intended version.
+But this is a separate topic later. For now, you just want to familiar yourself on how to use Nix.
+
+## Installing packages using Nix (optionally with Nox)
+
+After you find your package name you can install it using:
+
+```bash
+nix-env -i <package name>
+```
+
+The above command will try to find the package name first. A slightly faster command, since you know the exact module name:
+
+```bash
+nix-env -iA <channel-name>.<package-name>
+```
+
+For example, if you want to install `gdal` package, you do it like this (nixpkgs is the default channel):
+
+```bash
+nix-env -iA nixpkgs.gdal
+```
+
+If you search the package using Nox, it also offer you to install it by specifying the number from the list.
+
+## Installing Direnv
+
+[Direnv](https://direnv.net) is a powerful tools to setup a context in a directory. It's a directory-based profile.
+When you change directory in your shell, it will execute the profile associated in that directory.
+
+A "profile" can be used for many things. A simple thing is to set environment variable whenever your shell is inside 
+that directory. A more sophisticated thing is to combine it with Nix to set up a developer environment for any shell 
+that enters that directory.
+
+Imagine that you have 3 separate Git repo in your local machine that all uses different Python version needed by 
+the project. With Direnv and nix, you can set that whenever your shell enters a repo, it will use the correct Python 
+version.
+
+This concept is not limited to just the Python version (which is what usually Pyenv is used for), but for any packages. 
+If you have two project that uses GDAL 3 and GDAL 2 (different binary dependencies), you can easily switch between profile 
+just as easy as you `cd` into that directory.
+
+To install direnv using Nix:
+
+```bash
+nix-env -iA nixpkgs.direnv
+```
+
+Direnv also needs to be hooked to your favorite shell. Just follow it's [guide for your respective shell](https://direnv.net/docs/hook.html)
+
+Reload your shell and make sure direnv works:
+
+```bash
+direnv version
+```
+
+## Installing Niv
+
+
