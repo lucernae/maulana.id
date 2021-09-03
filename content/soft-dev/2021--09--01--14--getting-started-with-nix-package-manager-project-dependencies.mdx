@@ -241,7 +241,7 @@ This concept is not limited to just the Python version (which is what usually Py
 If you have two project that uses GDAL 3 and GDAL 2 (different binary dependencies), you can easily switch between profile 
 just as easy as you `cd` into that directory.
 
-To install direnv using Nix:
+To install Direnv using Nix:
 
 ```bash
 nix-env -iA nixpkgs.direnv
@@ -257,4 +257,175 @@ direnv version
 
 ## Installing Niv
 
+[Niv](https://hackage.haskell.org/package/niv) is a tool used to pin Nix-based dependencies. If we are to make comparison, it is analoguous with why yarn.lock, Python's REQUIREMENTS.txt, 
+or Ruby's Gemfile. The difference is that, Nix is also a build system. Thus, Niv also need to pin the source code used to produce the build.
+It is achieved by also making a hash of the input.
 
+To install Niv using Nix:
+
+```bash
+nix-env -iA nixpkgs.niv
+```
+
+## Wrapping it up together
+
+Let us compose a small demo.
+
+We are creating a directory called `project`. The goal is to have a working shell with several CLI tools.
+
+```bash
+mkdir -p /tmp/project
+cd /tmp/project
+```
+
+First, we initialize Niv, to make sure we have a reproducible dependencies.
+
+```bash
+niv init
+```
+
+It will create a directory called `nix` with `sources.json` and `sources.nix` inside of it. 
+
+Now, let's say that I know this setup works only if we are using Nixpkgs recipes from release 21.05 distribution channel. I want this 
+to work on your machine too, so I explicitly said that we need Nixpkgs 21.05.
+
+```bash
+niv update nixpkgs -b release-21.05
+```
+
+Where `release-21.05` corresponds to the name of the git branch of [Nixpkgs](https://github.com/NixOS/nixpkgs/tree/release-21.05).
+For practical purposes, most likely you don't have time to completely build the dependencies from source. In 6 months time or the 
+next couple of years, most of the caches probably been purged. Because our dependencies are not too strict, let's switch the channel 
+to the `nixpkgs-unstable` branch where the current public caches are tracked. If you want to switch back to `release-21.05` branch and try
+to completely build it, you can reexecute the previous command.
+
+```bash
+niv update nixpkgs -b nixpkgs-unstable
+```
+
+The next step is to define a file called `shell.nix`. This file is used to instantiate a shell where our dependencies is going to be used.
+
+Create this file with initial content like this:
+
+```nix
+{ }:
+let
+  sources = import ./nix/sources.nix ;
+  pkgs = import sources.nixpkgs { };
+in
+pkgs.mkShell {
+  buildInputs = [
+    pkgs.python37
+  ];
+}
+```
+
+In line 8, in `buildInputs` array, we declared that we want `python37` provided by `nixpkgs`.
+
+Run `nix-shell` and wait for it to complete. After that, check the python version. It will output Python 3.7. To exit nix-shell, 
+go back by typing `exit`.
+
+Most programming language have Nix packages for different major version. Let's try to change from Python 3.7 to 
+Python 3.8.
+
+```bash 
+...
+buildInputs = [
+    pkgs.python38
+  ];
+...
+```
+
+You will notice that if you use `nix-shell` and execute `python --version`, it will output Python 3.8.
+
+Most probably you know about Python before you even know about Nix. In this situation, a Python project usually have a file 
+called `requirements.txt` to store it's **Python dependencies**. In normal situation, you would use pip to build and/or fetch 
+these python packages from python package registry.
+
+However, let's just say upfront that the way Nix build a package is often philosophically different on how packages are built 
+in a specific programming language. There's usually a guide on how to adapt and let Nix build from existing language builder 
+such as pip and setuptools in Python. We're not going to cover this now (it's quite advanced topic). Instead, we are going to 
+use Nix to make some CLI tools available (which is usually lightweight and prebuilt).
+
+We want to include a couple of CLI:
+- Kubectl, to operate against a kubernetes cluster
+- Docker CLI, (only the client) to operate against a Docker daemon
+- jq, to operate on a JSON output, right from the CLI
+- curl, a CLI to interact with URL
+- Helm, a CLI to install Helm Apps into a kubernetes cluster
+
+We can search each package using Nox, just to check if it is indeed supported in Nix. Then we can put the package name in the `buildInputs` 
+declaration.
+
+```bash 
+...
+buildInputs = with pkgs; [
+    python38
+    kubectl
+    docker-client
+    jq
+    curl
+    kubernetes-helm
+  ];
+...
+```
+
+Now, in addition to the previous Python 3.8, you now have these CLI installed and available in `nix-shell`.
+
+This seems to be trivial and unimportant. However, what Nix does right here is providing a "meta" way to manage your native dependencies, 
+so that you can work on top of them. You don't need to include a specific instruction to tell your collaborator that you need Kubectl and 
+told them to download the binaries. You just told them to install Nix and run nix-shell, and these CLI tools will be ready.
+
+Imagine if all the repo in your organization works like this. There's no need to ask or confirm if a certain repo needs `make` or `cmake`
+or any combination of build tools. You just need to declare that such build tools or CLI exists by describing it in Nix. It is saving 
+them time to setup their projects.
+
+I personally use this approach to handle cloud-based deployment. I put the Nix recipes so that any devops or developer can immediately 
+interact with a cloud instance, because the CLI is available right after they `cd` into the repo directory. This is where `direnv` comes 
+into play.
+
+Create a `.envrc` file containing just this line (in `/tmp/project`):
+
+```bash
+use_nix
+```
+
+If you press enter in the current directory `/tmp/project`, you will get a notice that Direnv recognize a setup script and asked you 
+to approve it if you want to, using `direnv allow`. Simply execute that. Direnv now will make your current shell becomes a nix-shell.
+You will have all the above tools ready (kubectl, helm, jq).
+
+You can check the version of above CLI. The magic is that when you `cd` out of the directory, Direnv will unload the setup and your shell 
+becomes your regular shell again, where those CLI is not available anymore.
+
+```bash
+cd /
+# check those CLI, you will get error if you don't have the tools in system-wide
+# or, if you have it system-wide, note the version
+kubectl version
+helm version
+jq --version
+cd /tmp/project
+# Direnv is activated again
+# You can check now if the version is different
+kubectl version
+helm version
+jq --version
+```
+
+# Possible usage beyond setting up development environment
+
+Due to it's portability, this approach works beyond setting up local development environment. Basically any work that needs a first 
+time setup might benefit from this approach:
+
+- Setting up build agent in CI
+- Setting up a cloud server 
+- Setting up an on-prem deployment
+- Setting up an environment for a tutorial
+- Creating a sandboxed dependencies
+
+Despite it's promise, the huge problem of adopting Nix is it's far departure from conventional package manager. Running an existing 
+recipes is straight-forward. However, **creating those recipes** is a huge investment because Nix is in itself a programming language.
+This is unavoidable if you are learning a new build system. 
+
+I think the analogy works the same. When you first use a `Makefile`, you only need to learn commands to run a `Make`
+target. You don't have to understand how to create the Makefile itself. Unless you actually compose the Make project from scratch.
