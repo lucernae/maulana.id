@@ -24,13 +24,13 @@ you needed Pyenv... The lists can goes on until finally you resolved the issues.
 able to install the required Python until you realized that running `pip install -r REQUIREMENTS.txt` failed because 
 it needs some Linux shared library that is not available unless you build it yourself.
 
-Imagine that if you have a team of 5 people, each of them have different machine. They had to resolve it by themselves. Well, tough luck.
+Imagine that if you have a team of 5 people, each of them have different machines. They had to resolve it by themselves. Well, tough luck.
 
 The above scenario is my real example in the past projects and my main motivation to learn Nix Package Manager.
 
 # What is Nix Package Manager?
 
-One thing that I regret is that Nix's name is so generic that if you Google'd it, you will found dozens of article that 
+One thing that I regret is that Nix's name is so generic that if you Google'd it, you will found dozens of articles that 
 refers to Unix/Linux instead of *the* package manager called Nix. I can probably rambling around behind the motivation 
 on why people eventually make Nix. However, for now I will just introduce it.
 
@@ -72,25 +72,25 @@ that you declare with Nix is going to be cached and isolated in a certain direct
 When you rerun a Nix build, if it uses the same input, the output is going to be the same, so it will only get the result 
 from the cache. If you change the input, it will intelligently process it and determine if the components need to be rebuilt or not.
 
-Nix cache are universal. The package manager ecosystem even relies on this. The nixos.org maintains binary caches that nix 
-ever built for it's packages. Whenever you use the same the package, it will fetch the result from this cache over the internet.
+Nix caches are universal. The package manager ecosystem of Nix even relies on this. The [nixos.org](https://nixos.org) maintains binary caches that nix 
+ever built for it's packages. Whenever you use the same package, it will fetch the result from this cache over the internet.
 This cache can even be packaged and transferred to your friend's machine, so that when your friend build the same recipe, it will 
 use their local cache.
 
-In summary, these are the benefit of using Nix compared with a container based approach.
+In summary, these are the benefit of using Nix compared with a container based approach for dependency management.
 
-- More reproducible from a Docker recipe
+- More reproducible than Docker recipe
 - It can rebuild the dependency tree from source code if you want to
 - Recipes can be generic. You can customize build parameters (like source version) with the same recipe
 - Lightweight, because it doesn't need a VM
 
 It is also important to understand that both Nix and Containers based approach is intended to solve a different thing.
 Nix wants to solve dependency management and build system, while Containers are used for process isolations.
-One doesn't have to replace the other. However one is more suitable than the other. Using Dockerfile recipe to declare 
+One doesn't have to replace the other. However one is more suitable than the other in a certain tasks. Using Dockerfile recipe to declare 
 package dependency is almost an overkill to some extent, while sometimes poorly addresses the issue.
 
-That being said, since Nix is also a build system, it is also possible to create an OCI image from a Nix recipe, and then 
-run it in a container runtime such as Docker. So it complements each other.
+That being said, since Nix is also a build system, it is possible to create an OCI image from a Nix recipe, and then 
+run it in a container runtime such as Docker. So both can complements each other.
 
 # Tutorial on setting up Nix the first time
 
@@ -99,21 +99,21 @@ For demonstration purposes, we are going to demonstrate the setup in MacOS.
 
 ## The Goal
 
-We are going to setup a Nix-based environment setup for an ops based repo to achieve this:
+We are going to setup a Nix-based environment for an ops based repo. We want to achieve these:
 
 - Repo can be checked out easily or copied over anywhere
-- Any executable binary needed for the repo to run the script inside the repo has to be the same for anyone who have the repo.
+- Any executable binary needed to run the script inside the repo has to be the same for anyone who have the repo.
 - It should ease up beginners to quickly setup their development environment
 - It can be used in an automation tools to quickly fetch the dependencies to run the scripts inside the repo
 
-Due to how reproducible it is, this project setup can only be used for GitOps. They even have a specific terms for it called NixOps.
-But, of course the main motivation for us is to setup development environment in a specific programming language.
+Due to how reproducible it is, this project setup can be used for GitOps. They even have a specific terms for it called NixOps.
+But, of course the main motivation for us right now is to setup development environment in a specific programming language.
 
 ## Installing Nix
 
-The system wide binary we need is Nix itself. It can be installed by following the guide [here](https://nixos.org/manual/nix/stable/#chap-installationhttps://nixos.org/manual/nix/stable/#chap-installation)
+The system-wide binary we need is Nix itself. It can be installed by following the guide [here](https://nixos.org/manual/nix/stable/#chap-installationhttps://nixos.org/manual/nix/stable/#chap-installation)
 
-There are two based flavors of installing Nix. Single user install and Multi User install. The main difference is that 
+There are two flavors of installing Nix. Single user install and Multi User install. The main difference is that 
 for security reasons, multi-user install is recommended if your system have several users working in the machine. Otherwise, 
 just go with the single user install.
 
@@ -152,7 +152,7 @@ nix-env --version
 
 While Nix itself is a build system and package manager, it might be difficult for you to straight using it. Especially 
 if you usually do something like `apt -y update; apt -y install <packagename>`. This is because not only the package 
-name convention might be different, how to search it is different too. Most nix packages are described as modules. 
+name convention might be different, how to search the package is different too. Most nix packages are described as modules. 
 When installing a specific modules you are actually evaluating a Nix recipe/expression in Nix distribution channel.
 
 You can search available Nix packages in [NixOS search URL](https://search.nixos.org/packages). However, there is this 
@@ -257,7 +257,7 @@ direnv version
 
 ## Installing Niv
 
-[Niv](https://hackage.haskell.org/package/niv) is a tool used to pin Nix-based dependencies. If we are to make comparison, it is analoguous with why yarn.lock, Python's REQUIREMENTS.txt, 
+[Niv](https://hackage.haskell.org/package/niv) is a tool used to pin Nix-based dependencies. If we are to make comparison, it is analoguous with Javascript's yarn.lock, Python's REQUIREMENTS.txt, 
 or Ruby's Gemfile. The difference is that, Nix is also a build system. Thus, Niv also need to pin the source code used to produce the build.
 It is achieved by also making a hash of the input.
 
@@ -328,7 +328,7 @@ go back by typing `exit`.
 Most programming language have Nix packages for different major version. Let's try to change from Python 3.7 to 
 Python 3.8.
 
-```bash 
+```nix 
 ...
 buildInputs = [
     pkgs.python38
@@ -357,7 +357,7 @@ We want to include a couple of CLI:
 We can search each package using Nox, just to check if it is indeed supported in Nix. Then we can put the package name in the `buildInputs` 
 declaration.
 
-```bash 
+```nix 
 ...
 buildInputs = with pkgs; [
     python38
