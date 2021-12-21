@@ -217,7 +217,7 @@ We are forwarding the port using `netsh` Windows CLI tools.
 
 For each port we want to forward, do:
 
-```bash
+```powershell
 netsh interface portproxy add v4tov4 listenport=<port in host> connectport=<port in VM> connectaddress=<VM_IP> listenaddress=<host IP>
 ```
 
@@ -225,7 +225,7 @@ For some reason, the forwarding rules doesn't work after machine restart. Even t
 To avoid this problem, we add some hacky things. Create a powershell script. If the connectaddres is `192.168.100.2` and listenaddress is `192.168.1.2`,
 then we make a powershell script like this:
 
-```bash
+```powershell
 # in a file called `port-proxy.ps1`
 netsh interface portproxy reset
 # For http
