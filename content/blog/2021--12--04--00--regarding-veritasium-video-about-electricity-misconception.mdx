@@ -1,0 +1,64 @@
+---
+layout: blog-posts
+title: Regarding Veritasium video about electricity misconception
+description: This is my own personal take on the video. While what he said is true, being EM waves is the energy carrier, but the initial question and answer is a bit misleading
+date: 2021-12-04T00:00:00.00Z
+---
+
+Before we go further, please take a look at the original video and questions from Veritasium [here](https://www.youtube.com/watch?v=bHIhgxav9LY).
+He raises an initial question which I paraphrase here for convenience:
+
+> Imagine you have a giant circuit, consisting of a battery, a switch, light bulb, and two wires spanning 300,000 km long.
+
+(Note that, the comma in 300,000 is a thousand separator and not a decimal separator).
+
+The circuit is drawn like this:
+
+![Veritasium Giant Circuit](/images/uploads/veritasium-giant-circuit.png)
+
+Important points to note at:
+
+1. If you trace out the wires from the battery to the lightbulb, it will take around 150,000 km in the direction from the earth to the moon, then 150,000 km
+   in the direction from the moon to earth to reach the lightbulb (a total of 300,000 km). Then you trace the other side the same way, a total of 300,000 km.
+2. Immediate distance between the battery and the lightbulb is just 1 m.
+3. It is using a battery, meaning it will be a DC circuit.
+4. Assume that wire resistance is negligible. I know, this is a stretch, especially since the wire spans hundreds thousands km, but let's pretend resistance
+   is negligible.
+
+The question is, once we flip the switch (circuit connected), how much time it takes for the light bulb to turn on?
+
+The available options:
+
+1. 0.5s
+2. 1s
+3. 2s
+4. $\frac{1}{c}$ s
+5. None of the above
+
+You can guess right now, but I just want to make clear about option 4. It is a little bit misleading for Veritasium to put it as $\frac{1}{c}$ s. If you give the second unit,
+then you also need to say it 1 meter over c second. Because $c$ in this case is the speed of light constant, and it has unit m/s. 
+I guess I'm just being nitpicky, but if we wrote it as 1 meter over $c$, then it is clear that it is calculated that way because 1 meter is the distance 
+between the battery and the lightbulb.
+
+Long story short, Veritasium said the answer is 4.
+
+...Which is not surprising for me...
+
+But the way he explains it is kind of misleading in my opinion since the circuit itself is DC.
+
+Before we proceed even further, let me explain that I'm not a physicist nor an electrical engineer. I'm just a computer science bachelor graduate that also
+took mandatory (basic) electrical engineering course. I could be wrong. But the spirit that I want to convey here is how we are going to try to find the truth.
+
+# The difference between AC and DC
+
+Quick recap: AC = Alternating Current, DC = Direct Current.
+
+They are both describing current flows or electrical charge flows. The main difference is that in AC, the current is always changing direction and magnitude.
+While in DC, it is always constant and one directional.
+
+Both types of current follows Maxwell Equations and Poynting vector theory. However, DC is kind of special in our case here. When someone flips a switch in 
+a closed DC circuit, the current doesn't behave immediately as DC. It only works as DC when the current is steady (constant). When the switch flips, the current 
+change from zero to the steady DC value. The interval between 0 to this certain value must obey the same Maxwell laws, so it can't immediately jump. 
+Which is why this interval is called a transient "event".
+
+
