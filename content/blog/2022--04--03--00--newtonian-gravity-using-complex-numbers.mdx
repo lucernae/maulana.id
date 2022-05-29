@@ -69,15 +69,15 @@ As you can see, we can choose arbitrary scalar $k_1$ for body 1, then there will
 If we use Newton's Second Law for one of the body, and utilizes complex numbers, we can describe that the gravity is always in the negative radial direction (point inwards into the axis/barycenter).
 If we use complex numbers with arbitrary angle argument:
 
-$
+$$
 F_1 = - \frac{G m_1 m_2}{k_1^2 r_1^2} e^{i\theta_1}
-$
+$$
 
 For body 2
 
-$
+$$
 F_2 = - \frac{G m_1 m_2}{k_2^2 r_2^2} e^{i\theta_2}
-$
+$$
 
 As you can see the equation is identical. Let's simplify by calling $G m_1 m_2$ as a constant $\mu$. Because it is the same value in both of the equation.
 
@@ -98,9 +98,9 @@ We can divide by the angle argumen $e^{i\theta_1}$ because the acceleration comp
 Due to they are always at the same phase.
 Lastly, since $m_1$ is also constant. Let's define $\frac{\mu}{m_1}=M$. 
 
-$
+$$
 (\ddot{r}-r\dot{\theta}^2)+i(2\dot{r}\dot{\theta}+\ddot{\theta}r) = - \frac{M}{k^2 r^2}
-$
+$$
 
 We have an interesting conclusion. Notice that the right hand side doesn't have any imaginary component. This means, the imaginary part in the left hand side must also equal to zero.
 We can try and solve it.
@@ -122,16 +122,16 @@ We found a constant of motion. At any point in the trajectory, the quantity $\do
 
 From the real part of the original Newton's equation, we got.
 
-$
+$$
 \ddot{r}-r\dot{\theta}^2 = -\frac{M}{k^2 r^2}
-$
+$$
 
 This time, it is not so easy to solve because we have many variables. At a glance it seems to be easier to substitute $\dot{\theta}$ into $r$ so we have less variables to work with.
 Using the previous angular momentum constants, we replace $\dot{\theta}$.
 
-$
+$$
 \ddot{r}-\frac{L^2}{r^3} = -\frac{M}{k^2 r^2}
-$
+$$
 
 We have a second order differential equation. There are two distinct ways to approach the problem.
 
@@ -183,9 +183,9 @@ $
 The final form of the equation is a second order linear differential equation. We can easily solve it using complex numbers.
 If we use a complex number $w=u-\frac{M}{L^2k^2}$ and the equation becomes:
 
-$
+$$
 \frac{d^2w}{d\theta^2}= -w \\
-$
+$$
 
 Using a general solutions of this differential equation, the complex number $w$, conveniently, is in the form $w= Ae^{i\theta}$. Then we do back substitution.
 
@@ -207,15 +207,15 @@ then it's linear combination must also satisfy it.
 
 In other words, since $w=A^{i\theta}= A \cos{\theta} + iA\sin{\theta}$, then $A\cos{\theta}$ (the real part) is also a solution of the equation. The final form of $r$ can then be simplified as:
 
-$
+$$
 r = \frac{L^2 k^2}{M (1+\epsilon \cos{\theta})}
-$
+$$
 
 Since the above form is actually a radius of elliptic shape, people usually just wrote it in generic form like this:
 
-$
+$$
 r = \frac{p}{(1+\epsilon \cos{\theta})}
-$
+$$
 
 Because the closest radius (when $\theta=0$) is called the perigee, the distance is just $p$ at that angular position. The value itself follows from the value of $L$, $M$, and $k$.
 
@@ -233,21 +233,21 @@ We can derive alternative approach using some kind of "abuse" of the fact that e
 
 Our starting point is the same, the Newton's equation of motion:
 
-$
+$$
 \ddot{r}-\frac{L^2}{r^3} = -\frac{M}{k^2 r^2}
-$
+$$
 
 However, this time, instead of solving the real part. We solve both the real and imaginary part, together. So back to our complex equations with $z$:
 
-$
+$$
 \ddot{z} = -\frac{M}{k^2 r^2}e^{i\theta}
-$
+$$
 
 Use the fact again, that the imaginary terms in the right hand side doesn't exists if everything is in the same phase $\theta$. We got $L=\dot{\theta}r^2$. Substitute this to replace $r$.
 
-$
+$$
 \ddot{z} = -\frac{M}{k^2 L}\dot{\theta} e^{i\theta}
-$
+$$
 
 This is actually a nice equation because:
 1. The variables are already separable, $z$ in the left and $\theta$ in the right
@@ -264,9 +264,9 @@ Since the derivative wrt to time is zero, the terms above is a conservation Law 
 
 You can either "abuse" the notation again to integrate it, or use calculus fact. If the derivative is zero, that means the terms inside the derivative is constanst (complex number).
 
-$
+$$
 \dot{z} - i\frac{M}{k^2L}e^{i\theta} = S
-$
+$$
 
 What we understand at the moment is that $\dot{z}$ is the complex representations of the velocity of our body (it contains both tangential and radial velocity). If we substitute that again:
 
@@ -280,15 +280,15 @@ But the imaginary terms is very interesting. It contains no derivative of $r$, b
 That means, if we substitute $\dot{\theta}$ we will have a direct relationship between $r$ and $\theta$.
 We already know that $L=\dot{\theta}r^2$. So the equation becomes:
 
-$
+$$
 \dot{r} + i (\frac{L}{r} - \frac{M}{k^2L}) = S e^{-i\theta} \\
-$
+$$
 
 Taking only the imaginary part of the left side, we got:
 
-$
+$$
 \frac{L}{r} - \frac{M}{k^2L} = \Im(S e^{-i\theta}) \\
-$
+$$
 
 (Note that $\Im$ operator means, only take the imaginary part, just as $\Re$ operator means only take the real part).
 Remember that $S$ is a complex number, however if we choose an initial condition, such that $\dot{r}=0$, then $S$ is a pure imaginary number. In other words, it can be expressed as $S=Te^{i\frac{\pi}{2}}$, where $T$ is a real constant.
