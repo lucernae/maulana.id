@@ -1,0 +1,99 @@
+---
+layout: blog-posts
+title: Why Newton's Laws works in inertial coordinate systems?
+description: |-
+    Trying to obtain non-geometrical reasoning on why Force equation is correct regardless of which axis to choose from.
+date: 2022-03-07T00:00:00.00Z
+---
+
+To be honest, I don't know yet what is the outcome of this article. But I figured it will help me keep busy in the long run. 
+We will try to address it step by step, trial and error, rinse and repeat until I have my own satisfying answers.
+
+This is the beginning of the story...
+
+
+# Newton's First Law
+
+Let's look back at the [Newton's famous First Law of mechanic](https://en.wikipedia.org/wiki/Newton%27s_laws_of_motion). 
+The Law begins by declaring three important concepts:
+
+1. What are vectors?
+2. What are forces?
+3. What are inertial reference frames?
+
+This statement served as the foundation on why the other Newton's Law (second and third) becomes valid. One big misconception I've had in the past 
+was to recognize that the first Law is just the second Law but with acceleration zero. Mathematically speaking, yes, the second Law reduce to 
+the first law, as you can see here:
+
+$
+\sum{\bold{F}}=\frac{\mathrm{d}\bold{p}}{\mathrm{d}t} \\
+\sum{\bold{F}}=\bold{0}
+$
+
+But after a more exploration of the ideas, I'm now come to understand that the reason the first Law is stated first, is because it is some kind of axiom for 
+the second Law to be logically true. By logically true, I mean if you use first order logic to apply the reasoning.
+
+For some of you that are still wondering, what's the difference between the two, I shall take you to a journey of self discovery. So we can marvel at this
+revelation together.
+
+Suppose we are starting directly to declare Newton's second Law to be true, then there will be question regarding "In which condition do we know that we have acceleration?"
+You might reply: "Well, if you measure an acceleration, surely we have a net force?".
+"Yeah, but how do we know that we are really measuring an acceleration? What if the speedometer accelerates with the same rate? We then have a faulty measurement."
+
+To address this concern, like all usual length and time measurement, we define a starting point called the zeroes position of our measurement.
+If you use a ruler to measure the height of something, you would place the zero sign at the initial position, then you start measuring the length from there.
+It is the same with measuring a lap speed of your marathon. You start running by ticking the first 00:00 seconds, and start measuring your lap time from there.
+
+The same holds true for the mechanical law proposed by Newton. Before we begin measuring anything, we have to define what the zeroes, and where is it located.
+For objects that moved, of course this would be difficult. If you place your zero marker, does the measurement behave the same way if the marker itself moved?
+Will the measurement be the same if one of the marker is accelerating?
+
+The role of the first Law is to set the zero marker of **momentum changes**. The condition that tells us that the momentum doesn't change.
+Newton used this condition to define inertial reference frame, which is the frame (or ruler, if you use the meter analogy) where we can validly do observation and it
+guarantees the same results, regardless of who, when, and where the measurement takes place.
+
+So, it is now clear that this is not the case of chicken-egg questions. It is really clear that before you even measure something, you need to define the calibrations.
+The first Law is the calibration rules. The second Law only means something because we can measure the deviation from our initial calibrations.
+
+# Inertial Reference Frame
+
+Despite the fancy name, inertial reference frame can be summarized as our "calibration zeroes for motions". Any coordinate systems or measurements done in an 
+inertial frame means you can use the other two Laws (second and third). Does, when we say that we are measuring something, we actually always use Newton's first Law. 
+It is not an optional Law. Any measurements done outside the inertial frame are meaningless because you can't objectively compare the result, since the calibrations are wrong.
+
+How do we recognize such frame? This is where the first Law come into play. Any reference frame that cause the first Law to become true is an inertial reference frame.
+Basically, we used the first Law as test condition for our calibrations.
+
+If we look at the first Law, we have two sides of an equality. We either measure the net force, or we measure the relative motions.
+
+We can create a simple contraption, or tool, to measure net force. Place an object marker on top of your table. If it doesn't move, then it is an inertial frame. If it is inertial frame, 
+you can do measurement to any object moving as long as the distance between the measurement tools and the object marker doesn't change.
+It doesn't matter if the object you are measuring is moving or not. As long as your measurement tools and the object marker stays within the same distance from each other, 
+measurement will be correctly conducted within applicable Newton's Law.
+
+Because this is an equality, the other direction is also true. Once you found an inertial reference frame, any objects or locations that is not moving relative to the first frame
+can also be used as the same inertial reference frame. What this means is that:
+
+> Once you found inertial frame, any Newton's Law will be valid there. If you found several other inertial frames, that means Newton's Law MUST WORK in all of that frames, indiscriminately.
+
+How do Newton's know that? I believe, with Newton's genius mind, he is doing a deduction (rather than induction). He observed countless motions of objects, and then he simplified
+it in a series of deduction like this:
+
+1. I want to know what caused an object to move
+2. To be able to know that, I must define what is considered as "not moving"
+3. So far, I observed objects falls the same way with respect to the ground
+4. That means, if the universe is relatively simple and can be described by logic, I propose that "things that made objects moved" behaves the same way everywhere
+
+There are a couple of reasons why we want no. 4 to be true. I often described this feelings as more of a "Leap of Faith" because there are no logical foundation to believe,
+that it is true. It is just empirically proven. People consider it to be true because they never observed it otherwise.
+
+If you want me to sound more of a religious arguments, if God truly exists and govern things by predictable logic, then the same God's Law must have been applicable 
+everywhere, everywhen, to any objects. This is the foundation on why we believed that any physical Law must works until the end of time. Because if there is no 
+order to it, or patterns, or predictability, then the whole physics things are meaningless to theorizes after all.
+
+Since, that doesn't seem to be case, then agreeing that the Law will works everytime is a nice/next-best simplification and guess.
+
+However, to avoid future problem, Newton added a little thing. My motion Law, will only be valid in a condition where the First Law is valid. In fact, we use the 
+first Law to decide if we can apply the second or third Law.
+
+So that's where the Inertial Reference Frame came on about.
