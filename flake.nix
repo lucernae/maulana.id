@@ -39,7 +39,7 @@
               package = customNodejs;
             }
           ];
-          packages = [ pkgs.openssl_1_1 ];
+          packages = [ pkgs.openssl_1_1 pkgs.utillinux ];
           env = [];
         };
     });
