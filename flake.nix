@@ -17,6 +17,9 @@
             inherit system;
             overlays = [ devshell.overlay ];
           };
+          customNodejs = pkgs.nodejs-14_x.override {
+            openssl = pkgs.openssl_1_1;
+          };
         in
         pkgs.devshell.mkShell {
           name = "maulana.id";
@@ -24,9 +27,7 @@
             {
               name = "yarn";
               package = pkgs.yarn.override {
-                nodejs = pkgs.nodejs-14_x.override {
-                  openssl = pkgs.openssl_1_1;
-                };
+                nodejs = customNodejs;
               };
             }
             {
@@ -35,16 +36,11 @@
             }
             {
               name = "node";
-              package = pkgs.nodejs-14_x;
+              package = customNodejs;
             }
           ];
           packages = [ pkgs.openssl_1_1 ];
-          env = [
-            # {
-            #   name = "NODE_OPTIONS";
-            #   value = "--openssl-legacy-provider";
-            # }
-          ];
+          env = [];
         };
     });
 }
