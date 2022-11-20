@@ -17,8 +17,8 @@
             inherit system;
             overlays = [ devshell.overlay ];
           };
-          customNodejs = pkgs.nodejs-14_x.override {
-            openssl = pkgs.openssl_1_1;
+          customNodejs = pkgs.nodejs.override {
+            # openssl = pkgs.openssl_1_1;
           };
         in
         pkgs.devshell.mkShell {

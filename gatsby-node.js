@@ -63,18 +63,21 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
   }
 }
 
-// exports.onCreateWebpackConfig = ({
-//   stage,
-//   rules,
-//   loaders,
-//   plugins,
-//   actions,
-// }) => {
-//   actions.setWebpackConfig({
-//     resolve: {
-//       fallback: {
-//         path: require.resolve(`path-browserify`)
-//       },
-//     }
-//   })
-// }
+exports.onCreateWebpackConfig = ({
+  stage,
+  rules,
+  loaders,
+  plugins,
+  actions,
+}) => {
+  actions.setWebpackConfig({
+    resolve: {
+      alias: {
+        path: require.resolve(`path-browserify`)
+      },
+      fallback: {
+        fs: false
+      },
+    }
+  })
+}
