@@ -1,6 +1,12 @@
-// custom typefaces
-import "typeface-montserrat"
-import "typeface-merriweather"
+/**
+ * Implement Gatsby's SSR (Server Side Rendering) APIs in this file.
+ *
+ * See: https://www.gatsbyjs.com/docs/reference/config-files/gatsby-ssr/
+ */
 
-import "prismjs/themes/prism.css"
-import "./src/styles/global.css"
+/**
+ * @type {import('gatsby').GatsbySSR['onRenderBody']}
+ */
+exports.onRenderBody = ({ setHtmlAttributes }) => {
+  setHtmlAttributes({ lang: `en` })
+}

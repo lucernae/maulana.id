@@ -17,7 +17,7 @@
             inherit system;
             overlays = [ devshell.overlay ];
           };
-          customNodejs = pkgs.nodejs-14_x.override {
+          customNodejs = pkgs.nodejs-_x.override {
             openssl = pkgs.openssl_1_1;
           };
         in
@@ -27,7 +27,7 @@
             {
               name = "yarn";
               package = pkgs.yarn.override {
-                nodejs = customNodejs;
+                nodejs = pkgs.nodejs;
               };
             }
             {
@@ -36,10 +36,10 @@
             }
             {
               name = "node";
-              package = customNodejs;
+              package = pkgs.nodejs;
             }
           ];
-          packages = [ pkgs.openssl_1_1 pkgs.utillinux ];
+          packages = [  ];
           env = [];
         };
     });
