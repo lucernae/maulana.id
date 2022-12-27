@@ -4,7 +4,7 @@ Content repo of [Maulana.id](https://maulana.id)
 
 Currently built using GatsbyJS + Netlify
 
-[![Open the repo in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=282851403)
+[![Open the repo in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=282851403&machine=standardLinux32gb)
 
 [![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/lucernae/maulana.id)
 
