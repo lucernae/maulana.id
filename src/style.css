@@ -313,6 +313,14 @@ a:focus {
   margin: var(--spacing-0);
 }
 
+.blog-post p {
+  text-align: justify;
+}
+
+.blog-post p div:has(> code) {
+  display: inline;
+}
+
 .gatsby-highlight {
   margin-bottom: var(--spacing-8);
 }
