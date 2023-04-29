@@ -1,0 +1,34 @@
+---
+layout: blog-posts
+title: Connecting private subnet with Tailscale
+description: Using Tailscale node as a router to access your NAT or LAN subnets
+date: 2023-02-14T00:00:00.00Z
+---
+
+Following along with my previous post [Using Tailscale with Nix](./2023--01--30--00--using-tailscale-with-nix).
+
+I already expressed that my original intention was to use my Raspberry Pi as a router to connect to my home LAN and access PS Remote Play.
+However, it turns out that my Pi suddenly bricked. I was unable to send keyboard input, although the display was working normally. 
+So, my plan had changed slightly.
+
+Since I don't have any other device, I put my experimentation on hold. Meanwhile, the company where I worked requires me to upgrade my work
+laptop from MacBook Pro 16 inch 2019 to MacBook Pro 16 inch 2020 M1. I appreciate my company's good intention, but honestly MBP 16 inch M1
+is so big, heavy, and bulky. Since I usually travels from place to place (family issues), I requested to change the laptop to the 14 inch model.
+My request were rejected. I can understand why, since I've been an IT sysadmin before. Obviously they want to use device fragmentation on commpany-wide level.
+So, here I am with MBP 16 inch 2020 M1 that weighs around 2.1 kg.
+
+Now, my idea to resolves this issue is to just leave the laptop at home, then to access it via other lightweight devices like iPad. 
+That way, I can access company's VPN while still able to bring a light devices to travel. No performance or security compromise!
+Seems like a win-win to me!
+
+# List of challenges and how it is resolved
+
+We are going to tackle the issues one by one, but as a Summary, I list it here:
+
+1. Installing __nix configured__ Tailscale in Apple M1 silicon devices
+2. Network architecture and security issues
+3. Making sure MBP doesn't sleep
+4. Setting up a **subnet router**
+5. Joining and accepting **subnet routes**
+6. Configuring custom DNS resolution order
+7. Tailscale network Access Control List
