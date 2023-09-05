@@ -2,5 +2,5 @@
     "useFlake": "true",
     "useDirenv": "true",
     "prebuildNixShell": "shell.nix",
-    "imageVariant": "flake"
+    "imageVariant": "flake---latest"
 }
