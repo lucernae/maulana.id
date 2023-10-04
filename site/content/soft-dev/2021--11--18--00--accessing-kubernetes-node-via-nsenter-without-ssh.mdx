@@ -1,0 +1,131 @@
+---
+layout: blog-posts
+title: Accessing Kubernetes Node via nsenter without SSH
+description: Gaining root access in Node if you have cluster Administrator role
+date: 2021-11-18T00:00:00.00Z
+---
+
+I've been operating our small company's kubernetes cluster for more or less two years by now. I usually construct the
+cluster using Rancher Kubernetes Engine in Hetzner Cloud. Hetzner itself doesn't have managed Kubernetes offering, so
+we assembled nodes by ourselves using the Hetzner Cloud instances.
+
+In some rare cases, we need to access the nodes. We can do that with some of the options here:
+- Old fashioned public key ssh login
+- Hetzner CLI `hcloud server ssh` command
+- Rancher CLI `rancher ssh` command
+- Using Kubernetes pods via Kubernetes controlplane or kubectl access
+
+I've been preparing myself to get CKA (Certified Kubernetes Administrator) and using [Kodekloud](https://kodekloud.com/) as
+the lab/course provider. In a specific section, the lab has task puzzle. The lab prepares a Static Pods in one of the node,
+then we are tasked to delete that static pods permanently.
+
+In case you are wondering, [Static Pods](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/) is a mechanism
+available for Kubelet to spawn pods by themselves without using Kubernetes controlplane. You specify Pod manifests and
+store it in a specific directory in the node. Kubelet will watch the manifests directory and deploy the pods, and even
+recreate it if the spec changes. This provides a way for Kubelet agent to bootstrap Kubernetes controlplane or main
+component before the controlplane even exists.
+
+Long story short, the lab provides access only to the controlplane node. The static pods is in a node called `node01`.
+If you want to delete the pods, you need to get inside `node01` and then delete the static pods manifests yaml file yourself.
+You can't delete the pods via controlplane because kubelet agent in `node01` will recreate the pods again as long as the
+pod spec is inside the manifests directory.
+
+So, how we do get inside the node?
+
+Well, obvious answer is via SSH. The lab conveniently prepared such that controlplane public key are stored in `node01`.
+That means you can just `kubectl get nodes -o wide` and get the IP address of `node01` then SSH there.
+
+But... What if the node was prepared via cloud provider or third party in such a way that controlplane doesn't have direct
+SSH access to these nodes? For example, when we construct k3s cluster, the node only needs controlplane address and join
+token. Controlplane doesn't have to access the nodes via SSH, which is safer. This way, bootstrap script can run without
+having to be run from inside controlplane. I imagine it's useful to create new clusters via GitOps, like terraform.
+
+If you have Cluster Admin role, or at least able to modify Pod security policies, then you can access the nodes using
+host namespace. Note that namespace in this context is the Linux kernel namespace and not Kubernetes namespace resource object.
+
+# Using `nsenter` command
+
+The logic are fairly simple. Use Kubernetes controlplane/api-server to create a pod that shares namespace with the root
+process in the node itself. Then we use `kubectl exec` to get access to the shell inside the container. The shell then
+acts as if it was the root process of the node.
+
+Create a pod or deployment spec that uses nsenter
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: root-shell
+  namespace: kube-system
+spec:
+  containers:
+    - name: shell
+      image: alpine
+      command:
+        - nsenter
+      args:
+        - '-t'
+        - '1'
+        - '-m'
+        - '-u'
+        - '-i'
+        - '-n'
+        - tail
+        - '-f'
+        - /dev/null
+      securityContext:
+        privileged: true
+  hostNetwork: true
+  hostPID: true
+  hostIPC: true
+  nodeName: node01
+```
+
+These are some explanations of what we are trying to do.
+
+From the key `metadata` it means, we create a pod with a name `root-shell` (names are arbitrary). We create it in `kube-system`
+k8s namespace, because usually only cluster-admin are allowed to access this namespace.
+
+From the key `spec.containers[]` we create a container with name `shell` (names are arbitrary too). We uses `image: alpine`
+because it is lightweight and quick to pull. We then execute program `nsenter`, which is a program to execute another *program*
+using the specified Linux namespace.
+
+The arguments used are fairly straightforward:
+
+We use PID 1, which is a root PID using argument `-t 1`.
+We use argument `-m -u -i -n` which basically means: recognize resources owned by the target PID such as all the mount
+(for file system and device access), UTS (for host identifier/identity), IPC (resources in `/proc`),
+and network (interfaces, routes, ip command, etc).
+
+The next argument is just the program we want to run. In this case, I just use `tail -f /dev/null` so that the process
+hangs and stays indefinitely without being terminated, so that the pod stays up.
+
+The other keys are used to allow security policies/features.
+
+The key `spec.containers[].securityContext.privileged: true` is specified so we can execute `nsenter` with target PID 1,
+which is basically a privilege escalation.
+The keys `spec.hostNetwork`, `spec.hostPID`, `spec.hostIPC` are used so that the Pod Admission Controller can check these
+pod spec request against the role the Kubernetes user is allowed to. It is set to false by default, so the pod will not
+get scheduled to the node. We set it to true now. Also this is assuming that your kubectl user role does have this
+kind of permission.
+
+Lastly, the key `spec.nodeName` is just to specify where you want this pod to be placed. If you want to access `node01`
+then you use this node name.
+
+Once the pod is running in the node, you can proceed to the next step.
+
+# Use kubectl exec to attach shell
+
+Simply uses `kubectl exec -it -n kube-system root-shell -- sh` to attach to the shell. You now gain access to root process.
+Any command you execute in this shell is as if it was executed by root themselves, so you need to be careful.
+
+# Wrapping up
+
+After you are doing what you must, for example ad-hoc security patches, installing packages, etc, do not forget to delete
+your pods. Leaving this kind of pod running is a security hole. In some cases, it is probably better to use `sleep` command
+as some kind of session timer. For example if you use `nsenter` like this:
+
+`nsenter -t 1 -m -u -i -n sleep 3600`
+
+This means the pod will stays up for 3600 seconds (an hour). Then you can make sure that the pod will not restart once
+the time runs out by specifying `spec.restartPolicy: Never` in the pod spec.

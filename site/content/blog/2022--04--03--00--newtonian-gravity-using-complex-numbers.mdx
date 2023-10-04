@@ -1,0 +1,321 @@
+---
+layout: blog-posts
+title: Newtonian gravity using complex numbers
+description: Exploring celestial orbit and trajectories using complex numbers
+date: 2022-04-03T00:00:00.00Z
+---
+
+# A brief refresher about complex numbers under rotational mechanic
+
+I put a brief derivation in the previous article [here](../2022--04--02--00--newtonian-mechanic-using-complex-numbers/).
+Do check it out if you are interested.
+
+Let's do a quick recap about velocity and acceleration as a complex numbers in a complex plane:
+
+$
+z = r e^{i\theta} \\
+\dot{z} = (\dot{r} + i \dot{\theta} r )e^{i\theta} \\
+\ddot{z} = [(\ddot{r}-r\dot{\theta}^2)+i(2\dot{r}\dot{\theta}+\ddot{\theta}r)]e^{i\theta}
+$
+
+We are going to use the above definition a lot. A dot over a variable means first derivative wrt time. Two dots means second derivative wrt time.
+
+# Orbit equation using complex numbers
+
+Let us start with something simple. A classic two body problem. Two celestial bodies in a plane is interacting via gravity.
+
+A full Newton's Second Law applied to the system will yield two nearly identical equation for each bodies. 
+Usually we solve by defining the inertial reference frame first, in which case a point where Newton's First Law is true.
+This is usually called the barycenter.
+
+For a two body problem, the barycenter is very simple and contains symmetry. So you can further simplify it.
+You can look up at [wiki](https://en.wikipedia.org/wiki/Barycenter) to have some hints at the idea.
+
+Since the equation of each bodies contains symmetry, solving one will solve the other. So we are just going to look at one of the bodies.
+
+Let us define some variables first.
+
+The two bodies have respective mass, $m_1$ and $m_2$.
+
+Gravitational constant is $G$.
+
+Distance between $m_1$ to the barycenter is $r_1$.
+
+Distance between $m_1$ and $m_2$ is a scalar multiple of the distance between $m_1$ to the barycenter, $k_1 r_1$.
+
+## Why we need a barycenter
+
+The barycenter is going to be used as the *center* (pun intended) of our derivation. If we want to use Newton's Second Law. There has to be an inertial reference frame where Newton's First Law holds true.
+We just need to find it. In a rotation, the criteria is even more strict (which makes it very easy). The axis of the rotation has to be an inertial reference frame, because the point doesn't rotate.
+If it doesn't rotate, it has zero angular speed which made most acceleration in a rotation becomes zero. The axis also means it becomes the center in which we measure the radial position. By definition, the axis has no radial position changes.
+Thus we can conclude the net force and torque in that position has to be zero.
+
+So if the axis exists, that means the distance between two bodies doesn't necessarily equal to the distance between each body to the axis. Because it is possible that the other body is rotating against this axis.
+
+The usefulness of a barycenter is that we define a single axis in which these two bodies rotate against a common axis.
+
+Use Newton's First Law in the axis (barycenter). In the case of two body problem, the barycenter can be described as scalars or additions. But I prefer to describe it as scalars, because gravity deals an inverse square law which is not pretty if described as additions.
+
+$
+\sum{F}=0 \\
+\frac{G m_1 m_2}{k_1^2 r_1^2} = \frac{G m_1 m_2}{k_2^2 r_2^2} \\
+k_1 r_1 = k_2 r_2
+$
+
+As you can see, we can choose arbitrary scalar $k_1$ for body 1, then there will be corresponding $k_2$ for body 2. So it is not contradictory. You can have the same conclusion when you use addition. But it made the equation of motion becomes unnecessarily complicated.
+
+## Equation of motion for one of the body
+
+If we use Newton's Second Law for one of the body, and utilizes complex numbers, we can describe that the gravity is always in the negative radial direction (point inwards into the axis/barycenter).
+If we use complex numbers with arbitrary angle argument:
+
+$$
+F_1 = - \frac{G m_1 m_2}{k_1^2 r_1^2} e^{i\theta_1}
+$$
+
+For body 2
+
+$$
+F_2 = - \frac{G m_1 m_2}{k_2^2 r_2^2} e^{i\theta_2}
+$$
+
+As you can see the equation is identical. Let's simplify by calling $G m_1 m_2$ as a constant $\mu$. Because it is the same value in both of the equation.
+
+From the barycenter equation (a requirement if we want to use Newton's Second Law), we knew that both force is an action reaction pairs and both have to cancel each other. That means $\theta_1-\theta_2 = n \pi$. In summary they are both opposite of each other in order for this to works.
+
+We have now establish the relationship between bodies. Now we want to see the relations betweeen the acceleration.
+
+Lets just look at the body 1
+
+$
+\sum{F} = m \ddot{z} \\
+m_1 \ddot{z} = F_1 = - \frac{\mu}{k_1^2 r_1^2} e^{i\theta_1} \\
+m_1 [(\ddot{r_1}-r\dot{\theta_1}^2)+i(2\dot{r_1}\dot{\theta_1}+\ddot{\theta_1}r_1)]e^{i\theta_1)} = - \frac{\mu}{k_1^2 r_1^2} e^{i\theta_1}
+$
+
+Let's simplify it a bit. Index 1 doesn't matter because every variables in the above equation are owned by body 1. So we can just remove the index.
+We can divide by the angle argumen $e^{i\theta_1}$ because the acceleration complex number and the force complex number has the same argument.
+Due to they are always at the same phase.
+Lastly, since $m_1$ is also constant. Let's define $\frac{\mu}{m_1}=M$. 
+
+$$
+(\ddot{r}-r\dot{\theta}^2)+i(2\dot{r}\dot{\theta}+\ddot{\theta}r) = - \frac{M}{k^2 r^2}
+$$
+
+We have an interesting conclusion. Notice that the right hand side doesn't have any imaginary component. This means, the imaginary part in the left hand side must also equal to zero.
+We can try and solve it.
+
+$
+i(2\dot{r}\dot{\theta}+\ddot{\theta}r) = 0 \\ 
+\ddot{\theta}r =-2\dot{r}\dot{\theta} \\
+\frac{\ddot{\theta}}{\dot{\theta}}=-2\frac{\dot{r}}{r} 
+$
+
+It is a simple differential equation and separable. We can integrate both side.
+
+$
+\ln{|\dot{\theta}|}=-2 \ln{|r|}+C \\
+\dot{\theta}r^2=L
+$
+
+We found a constant of motion. At any point in the trajectory, the quantity $\dot{\theta}r^2$ is constant. Usually, we call it angular momentum $L$.
+
+From the real part of the original Newton's equation, we got.
+
+$$
+\ddot{r}-r\dot{\theta}^2 = -\frac{M}{k^2 r^2}
+$$
+
+This time, it is not so easy to solve because we have many variables. At a glance it seems to be easier to substitute $\dot{\theta}$ into $r$ so we have less variables to work with.
+Using the previous angular momentum constants, we replace $\dot{\theta}$.
+
+$$
+\ddot{r}-\frac{L^2}{r^3} = -\frac{M}{k^2 r^2}
+$$
+
+We have a second order differential equation. There are two distinct ways to approach the problem.
+
+1. [Using energy equation](#using-energy-equation)
+2. [Using substitution](#using-substitution)
+
+# Using energy equation
+
+Let's rewrite the equation into an energy equation. Usually we replace $\int\ddot{r}dr=\int \dot{r}d\dot{r}$. In other words, we integrate the equation along $dr$.
+
+$
+\ddot{r}-\frac{L^2}{r^3} = -\frac{M}{k^2 r^2} \\
+\int\ddot{r}dr=\int \dot{r}d\dot{r}=\int(\frac{L^2}{r^3}-\frac{M}{k^2 r^2})dr \\
+\frac{\dot{r}^2}{2} =-\frac{L^2}{2r^2}+\frac{M}{k^2 r}+C
+$
+
+We want to make things more simple, so we try to substitute $r=\frac{1}{u}$, in the hope that the right hand side can be easily operated.
+
+$
+\frac{\dot{r}^2}{2} =-\frac{L^2}{2r^2}+\frac{M}{k^2 r}+C \\
+\frac{\dot{u}^2}{2u^4}=\frac{Mu}{k^2}-\frac{L^2u^2}{2} + C
+$
+
+The equation seems to be difficult to integrate. So we change variable again. Instead of involving variable $t$, we now want to use $\theta$.
+From the angular momentum:
+
+$
+\dot{\theta}= L u^2 \\
+\frac{d\theta}{dt}= L u^2 \\
+\frac{d\theta}{du}\frac{du}{dt}= L u^2 \\
+\frac{d\theta}{du}\dot{u}= L u^2 \\
+\dot{u}= L u^2 \frac{du}{d\theta}\\
+$
+
+Substitute this back to the energy equation.
+
+$
+\frac{\dot{u}^2}{2u^4}=\frac{Mu}{k^2}-\frac{L^2u^2}{2} + C \\
+(\frac{du}{d\theta})^2 =\frac{2Mu}{L^2k^2}-u^2 + \frac{2C}{L^2} \\
+$
+
+Now, if we take derivative wrt to $\theta$ instead, we can make most squares linears.
+
+$
+2\frac{du}{d\theta} \frac{d^2u}{d\theta^2}=\frac{2M}{L^2k^2}\frac{du}{d\theta}-2u\frac{du}{d\theta} \\
+\frac{d^2u}{d\theta^2}=\frac{M}{L^2k^2}-u
+$
+
+The final form of the equation is a second order linear differential equation. We can easily solve it using complex numbers.
+If we use a complex number $w=u-\frac{M}{L^2k^2}$ and the equation becomes:
+
+$$
+\frac{d^2w}{d\theta^2}= -w \\
+$$
+
+Using a general solutions of this differential equation, the complex number $w$, conveniently, is in the form $w= Ae^{i\theta}$. Then we do back substitution.
+
+$
+w= Ae^{i\theta}\\
+u-\frac{M}{L^2k^2}=Ae^{i\theta}\\
+\frac{1}{r}=Ae^{i\theta}+\frac{M}{L^2k^2} \\
+r = \frac{1}{Ae^{i\theta}+\frac{M}{L^2k^2}}
+$
+
+In order for this to become our solution, it must satisfy our requirements:
+
+1. $r$ is a real number (not complex)
+2. At $\theta=0$ we want the distance of the body to the barycenter to be minimum (usually called perigee)
+
+Now, here's the catch if we use complex numbers. There is a simplifying property about complex numbers in second order linear differential equation. Due to the linearity of the equation, 
+if we want to have a more strictly real solution for $r$, we can just take real part of $w$ to become the solution. This is because for linear differential equation, if a solution satisfy the equation,
+then it's linear combination must also satisfy it.
+
+In other words, since $w=A^{i\theta}= A \cos{\theta} + iA\sin{\theta}$, then $A\cos{\theta}$ (the real part) is also a solution of the equation. The final form of $r$ can then be simplified as:
+
+$$
+r = \frac{L^2 k^2}{M (1+\epsilon \cos{\theta})}
+$$
+
+Since the above form is actually a radius of elliptic shape, people usually just wrote it in generic form like this:
+
+$$
+r = \frac{p}{(1+\epsilon \cos{\theta})}
+$$
+
+Because the closest radius (when $\theta=0$) is called the perigee, the distance is just $p$ at that angular position. The value itself follows from the value of $L$, $M$, and $k$.
+
+To summarize, because we uses complex numbers, some relationships becomes "obvious" in this approach:
+
+1. Angular momentum conservation is just a consequence of no imaginary terms from the Newton's Law (ends up being $L=\dot{\theta}r^2$)
+2. Immediately obvious that $r=\frac{1}{u}$ is needed in energy equation to linearize the equation
+3. Directly follows that we can replace parameter $t$ with $\theta$ because we are dealing with complex numbers. Naturally, it will involves angles.
+4. The final second order differential equation has complex numbers as the generic solution. We can then infer that we only need the real part. We got the solution for free.
+
+# Using substitution
+
+Although the energy equation is straightforward, it feels cumbersome because we take several steps just to arrive at the final second order differential equation.
+We can derive alternative approach using some kind of "abuse" of the fact that equation of motion itself, can be a complex equations. So why not just solve it in the complex plane entirely, then take only the real solution at the end?
+
+Our starting point is the same, the Newton's equation of motion:
+
+$$
+\ddot{r}-\frac{L^2}{r^3} = -\frac{M}{k^2 r^2}
+$$
+
+However, this time, instead of solving the real part. We solve both the real and imaginary part, together. So back to our complex equations with $z$:
+
+$$
+\ddot{z} = -\frac{M}{k^2 r^2}e^{i\theta}
+$$
+
+Use the fact again, that the imaginary terms in the right hand side doesn't exists if everything is in the same phase $\theta$. We got $L=\dot{\theta}r^2$. Substitute this to replace $r$.
+
+$$
+\ddot{z} = -\frac{M}{k^2 L}\dot{\theta} e^{i\theta}
+$$
+
+This is actually a nice equation because:
+1. The variables are already separable, $z$ in the left and $\theta$ in the right
+2. Both $z$ and $\theta$ are linear
+
+To illustrate the second point, we can rewrite the equation as follows:
+
+$
+\frac{d}{dt}(\dot{z})= i\frac{M}{k^2L}\frac{d}{dt}(e^{i\theta}) \\
+\frac{d}{dt}(\dot{z} - i\frac{M}{k^2L}e^{i\theta}) = 0 \\
+$
+
+Since the derivative wrt to time is zero, the terms above is a conservation Law too. But, in the complex domains.
+
+You can either "abuse" the notation again to integrate it, or use calculus fact. If the derivative is zero, that means the terms inside the derivative is constanst (complex number).
+
+$$
+\dot{z} - i\frac{M}{k^2L}e^{i\theta} = S
+$$
+
+What we understand at the moment is that $\dot{z}$ is the complex representations of the velocity of our body (it contains both tangential and radial velocity). If we substitute that again:
+
+$
+\dot{r}e^{i\theta} + i \dot{\theta}re^{i\theta} - i\frac{M}{k^2L}e^{i\theta} = S \\
+\dot{r} + i (\dot{\theta}r - \frac{M}{k^2L}) = S e^{-i\theta} \\
+$
+
+This time, we use the fact about complex numbers again. The left side is separated by real and imaginary terms. The real term is not so interesting (it is the radial velocity $\dot{r}$ ).
+But the imaginary terms is very interesting. It contains no derivative of $r$, but it contains derivative of $\theta$. The right hand side, doesn't contains derivative but it contains $\theta$.
+That means, if we substitute $\dot{\theta}$ we will have a direct relationship between $r$ and $\theta$.
+We already know that $L=\dot{\theta}r^2$. So the equation becomes:
+
+$$
+\dot{r} + i (\frac{L}{r} - \frac{M}{k^2L}) = S e^{-i\theta} \\
+$$
+
+Taking only the imaginary part of the left side, we got:
+
+$$
+\frac{L}{r} - \frac{M}{k^2L} = \Im(S e^{-i\theta}) \\
+$$
+
+(Note that $\Im$ operator means, only take the imaginary part, just as $\Re$ operator means only take the real part).
+Remember that $S$ is a complex number, however if we choose an initial condition, such that $\dot{r}=0$, then $S$ is a pure imaginary number. In other words, it can be expressed as $S=Te^{i\frac{\pi}{2}}$, where $T$ is a real constant.
+
+$
+\frac{L}{r} - \frac{M}{k^2L} = \Im(S e^{-i\theta}) \\
+\frac{L}{r} - \frac{M}{k^2L} = T \sin(\frac{\pi}{2}-\theta) =  T\cos{\theta} \\
+\frac{L}{r} - \frac{M}{k^2L} = T\cos{\theta} \\
+\frac{1}{r} = \frac{M}{k^2L^2} + \frac{T}{L}\cos{\theta} \\
+r = \frac{k^2L^2}{M}\frac{1}{1+\epsilon \cos{\theta}}
+$
+
+It is the same result like before, but much simpler derivation.
+
+
+# Remark
+
+As you can see, complex representations can be proven useful for some cases. In our particular cases, it was because an object rotation can be naturally represented as complex numbers. So, no wonder if it can be solved and understood easier this way.
+Complex numbers are basically a rotation (mathematical) group, so the solution fits neatly.
+
+If we compare both approach (energy equation or substitution), each of them has their own merits. The energy equation teaches us about the fundamental physical principle (conservation of energy and momentum) via usage of complex numbers representations.
+This implies that for solving planar orbital equation (in 2D), the complex numbers, and 2D vectors of Newton's Law, are actually working principle in the same spaces. So a method in complex numbers can be applied to the equation of motion, because they are the same domain.
+
+As opposed to that, the substitution approach, relies on "pure" math. It doesn't need any physical assumptions. It's just happened that way. It's like solving an analytical complex equation problem, and it turns out to be representing a real orbital trajectories of two body system.
+
+I like the substitution approach because it is more fundamental and elegant. It doesn't need a physical intuition. However, it is not a physical method. If you are using the substitution method, it doesn't guarantee that the same approach can be applied to other physical systems.
+The energy equation is more methodical. You doesn't need to be a math genius to arrive at the conclusions.
+
+If I were to make an analogy, the substitution approach feels like an expert seamen traveling from a port to port. He is already an expert. He can read winds, climate, stars, etc. The energy equation approach feels like seamen using map and compass. He trusts the map and compass, 
+and then make methodical judgement on where they need to go. Both goes hand in hand in which an expert/genius seamen can make charts and compass so that it can help regular seamen to navigate dangerous unfamiliar seas.

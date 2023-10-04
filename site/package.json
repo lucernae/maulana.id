@@ -1,0 +1,39 @@
+{
+  "name": "site",
+  "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "Rizky Maulana Nugraha <lana.pcfre@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/lucernae/maulana.id/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "gatsby": "^5.3.3",
+    "gatsby-theme": "*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.0"
+  },
+  "homepage": "https://github.com/lucernae/maulana.id#readme",
+  "keywords": [
+    "gatsby"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucernae/maulana.id.git"
+  },
+  "scripts": {
+    "build": "gatsby build",
+    "develop": "gatsby develop",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
+    "start": "gatsby develop",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
+  }
+}

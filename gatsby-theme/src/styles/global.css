@@ -1,0 +1,7 @@
+/* 
+Commented out to prevent conflicts with Typography
+@tailwind base;
+*/
+
+@tailwind components; 
+@tailwind utilities;

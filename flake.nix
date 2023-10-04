@@ -7,15 +7,19 @@
       flake = false;
     };
     devshell.url = "github:numtide/devshell";
+    
+    # flake location for the gatsby theme
+    gatsby-theme.url = "github:lucernae/gatsby-starter-lucernae";
   };
 
-  outputs = { self, nixpkgs, flake-utils, devshell, ... }:
+  outputs = { self, nixpkgs, flake-utils, devshell, gatsby-theme, ... }:
     flake-utils.lib.eachDefaultSystem (system: {
+      apps.devshell = self.outputs.devShell.${system}.flakeApp;
       devShell =
         let
           pkgs = import nixpkgs {
             inherit system;
-            overlays = [ devshell.overlay ];
+            overlays = [ devshell.overlays.default ];
           };
           customNodejs = pkgs.nodejs-_x.override {
             openssl = pkgs.openssl_1_1;
@@ -65,6 +69,14 @@
             {
               name = "bun";
               package = bunV1;
+            }
+            {
+              name = "theme-update";
+              command = ''
+                echo "copying gatsby-theme"
+                cp -Hrf ${gatsby-theme.outPath}/gatsby-theme .
+                chmod -R +w gatsby-theme
+                '';
             }
           ];
           packages = [  ];
