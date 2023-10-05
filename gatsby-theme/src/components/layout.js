@@ -9,7 +9,6 @@ const Layout = ({ location, title, children }) => {
   const rootPath = `${__PATH_PREFIX__}/`
   const isRootPath = location.pathname === rootPath
   const shortcodes = { GeoGebra }
-  console.log('hi')
 
   return (
 <MDXProvider

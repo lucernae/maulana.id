@@ -1,6 +1,7 @@
 {
     "private": true,
     "scripts": {
+        "gatsby-build": "yarn workspace site build",
         "build": "yarn workspace site build",
         "develop": "yarn workspace site develop",
         "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",

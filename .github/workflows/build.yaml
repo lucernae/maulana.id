@@ -1,0 +1,32 @@
+name: Gatsby Build
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        nix_channel:
+          - "nixos-unstable"
+        run_time:
+        # Bun doesn't work now due to "sharp" package failed to build
+        #   - bun
+          - yarn
+    steps:
+      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
+      - uses: cachix/install-nix-action@6a9a9e84a173d90b3ffb42c5ddaf9ea033fad011 # v23
+        with:
+          nix_path: nixpkgs=channel:${{matrix.nix_channel}}
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Build Gatsby
+        run: |
+          nix develop --command ${{matrix.run_time}} install
+          nix develop --command ${{matrix.run_time}} gatsby-build
