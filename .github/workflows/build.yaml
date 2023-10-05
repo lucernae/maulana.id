@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - main
+      - theme
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,6 +28,8 @@ jobs:
             experimental-features = nix-command flakes
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Build Gatsby
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
         run: |
           nix develop --command ${{matrix.run_time}} install
           nix develop --command ${{matrix.run_time}} gatsby-build
