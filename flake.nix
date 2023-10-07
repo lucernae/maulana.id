@@ -80,7 +80,12 @@
             }
           ];
           packages = [  ];
-          env = [];
+          env = [
+            {
+              name = "NODE_OPTIONS";
+              value = "--max-old-space-size=4096";
+            }
+          ];
         };
     });
 }

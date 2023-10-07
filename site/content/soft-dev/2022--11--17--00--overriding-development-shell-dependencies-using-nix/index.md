@@ -1,5 +1,5 @@
 ---
-layout: blog-posts
+layout: blog-post
 title: Overriding development shell's dependencies using Nix
 description: A short walkthrough on troubleshooting Nix dependencies for devshell
 date: 2022-11-17T00:00:00.00Z
