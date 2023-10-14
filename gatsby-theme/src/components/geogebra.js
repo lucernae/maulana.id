@@ -1,7 +1,7 @@
 import React from "react"
 
 const GeoGebra = ({title, src, width, height}) => {
-    width = width || "800"
+    width = width || "100%"
     height = height || "600"
     return (
         <iframe 

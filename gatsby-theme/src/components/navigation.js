@@ -85,7 +85,7 @@ const NavigationPanel = ({ navigationLinks, children, location }) => {
               }}
             >
               {navigationLinks.map(page => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page.link} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
                     <Link to={page.link}>{page.title}</Link>
                   </Typography>
@@ -128,6 +128,7 @@ const NavigationPanel = ({ navigationLinks, children, location }) => {
             >
               {navigationLinks.map(page => (
                 <Tab
+                  key={page.link}
                   label={page.title}
                   value={page.link}
                   component={Link}
@@ -185,16 +186,12 @@ export const GetNavigationLinks = () => {
   `)
   const site = data.site
   return data.categories.nodes.map(value => {
-    let category = value.frontmatter.category
-    if (category?.name === null) {
-      category = {
-        name: "",
-      }
+    let category = value.frontmatter?.category
+    let linkParent = ""
+    if(category?.name != null && category?.name != site.siteMetadata.config.categoryNameForAll) {
+      linkParent = category.name
     }
-    if (category.name === site.siteMetadata.config.categoryNameForAll) {
-      category.name = ""
-    }
-    let linkPath = PathJoin("/", category.name, "/")
+    let linkPath = PathJoin("/", linkParent, "/")
     return {
       title: value.frontmatter.title,
       link: linkPath,

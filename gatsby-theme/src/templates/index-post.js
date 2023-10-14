@@ -60,7 +60,7 @@ const IndexPostTemplate = ({
             hideNextButton={!posts.pageInfo.hasNextPage}
             count={posts.pageInfo.pageCount}
             onChange={handlePageChange}
-            />
+          />
           <ol style={{ listStyle: `none` }}>
             {posts.nodes.map(post => {
               const title = post.frontmatter.title || post.fields.slug

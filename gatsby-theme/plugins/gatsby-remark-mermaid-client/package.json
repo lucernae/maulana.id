@@ -1,0 +1,13 @@
+{
+    "name": "gatsby-remark-mermaid-client",
+    "version": "1.0.0",
+    "description": "Convert mermaid code block into SVG on client side",
+    "main": "index.mjs",
+    "type": "module",
+    "keywords": [
+      "gatsby",
+      "gatsby-plugin"
+    ],
+    "author": "Rizky Maulana Nugraha <lana.pcfre@gmail.com>",
+    "license": "MIT"
+  }

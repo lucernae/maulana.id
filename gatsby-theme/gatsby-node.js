@@ -8,7 +8,7 @@ const path = require(`path`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const slugify = require(`@sindresorhus/slugify`)
 const { compileMDXWithCustomOptions } = require(`gatsby-plugin-mdx`)
-const { remarkHeadingsPlugin } = require(`${__dirname}/remark-headings-plugin`)
+const { remarkHeadingsPlugin } = require(`./remark-headings-plugin`)
 const { node } = require("prop-types")
 
 const createIndexPage = async (
@@ -136,6 +136,7 @@ exports.createPages = async ({ graphql, actions, reporter }, options) => {
           context: {
             id: post.id,
             slug: post.fields.slug,
+            title: post.frontmatter.title,
             previousPostId,
             nextPostId,
           },

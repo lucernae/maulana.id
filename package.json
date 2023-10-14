@@ -1,6 +1,7 @@
 {
     "private": true,
     "scripts": {
+        "clean-node-modules": "rm -rf node_modules gatsby-theme/node_modules site/node_modules",
         "gatsby-build": "yarn workspace site build",
         "build": "yarn workspace site build",
         "develop": "yarn workspace site develop",

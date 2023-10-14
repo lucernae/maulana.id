@@ -41,6 +41,7 @@ module.exports = ({
     },
   },
   plugins: [
+    `gatsby-plugin-mdx-embed`,
     `gatsby-plugin-image`,
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
@@ -49,6 +50,9 @@ module.exports = ({
       options: {
         extensions: [`.mdx`, `.md`],
         gatsbyRemarkPlugins: [
+          {
+            resolve: require.resolve(`${__dirname}/plugins/gatsby-remark-mermaid-client`)
+          },
           {
             resolve: `gatsby-remark-images`,
             options: {
