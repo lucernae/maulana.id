@@ -20,6 +20,23 @@ const wrapESMPlugin = name =>
 module.exports = ({
   contentPath = `${__dirname}/content`,
   assetPath = `${__dirname}/content/assets`,
+  categoryNameForAll = "all",
+  paginationPageSize = 10,
+  commentsEnabled = true,
+  commentsProps = {
+    // repo="lucernae/gatsby-starter-lucernae",
+    // repoId="R_kgDOKRTVcw",
+    // category="Announcements",
+    // categoryId="DIC_kwDOKRTVc84CaVF-",
+    // mapping="pathname",
+    // strict="0",
+    // reactionsEnabled="1",
+    // emitMetadata="1",
+    // inputPosition="top",
+    // theme="preferred_color_scheme",
+    // lang="en",
+    // loading="lazy",
+  },
 }) => ({
   siteMetadata: {
     title: `Maulana's Gatsby Theme`,
@@ -34,10 +51,12 @@ module.exports = ({
       github: `lucernae`,
     },
     config: {
-      categoryNameForAll: "all",
-      paginationPageSize: 10,
+      categoryNameForAll: categoryNameForAll,
+      paginationPageSize: paginationPageSize,
       contentPath: contentPath,
       assetPath: assetPath,
+      commentsEnabled: commentsEnabled || true,
+      commentsProps: commentsProps || {},
     },
   },
   plugins: [

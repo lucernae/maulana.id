@@ -42,7 +42,12 @@ const IndexPostTemplate = ({
       <NavigationPanel location={location} navigationLinks={navigationLinks}>
         {siteTitle}
       </NavigationPanel>
-      <Layout location={location} title={siteTitle}>
+      <Layout 
+        location={location} 
+        title={siteTitle} 
+        commentsEnabled={post.frontmatter.comments}
+        commentsProps={site.siteMetadata?.config?.commentsProps}
+      >
         <Bio />
         <article
           className="blog-post"
@@ -130,6 +135,20 @@ export const pageQuery = graphql`
         title
         config {
           categoryNameForAll
+          commentsProps {
+            repo
+            repoId
+            category
+            categoryId
+            mapping
+            strict
+            reactionsEnabled
+            emitMetadata
+            inputPosition
+            theme
+            lang
+            loading
+          }
         }
       }
     }
@@ -147,6 +166,7 @@ export const pageQuery = graphql`
           depth
         }
         tags
+        comments
         description
       }
     }

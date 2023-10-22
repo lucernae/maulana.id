@@ -23,7 +23,12 @@ const BlogPostTemplate = ({
       <NavigationPanel location={location} navigationLinks={navigationLinks}>
         {siteTitle}
       </NavigationPanel>
-      <Layout location={location} title={siteTitle}>
+      <Layout 
+        location={location} 
+        title={siteTitle} 
+        commentsEnabled={post.frontmatter.comments}
+        commentsProps={site.siteMetadata?.config?.commentsProps}
+      >
         <article
           className="blog-post"
           itemScope
@@ -92,6 +97,20 @@ export const pageQuery = graphql`
         title
         config {
           categoryNameForAll
+          commentsProps {
+            repo
+            repoId
+            category
+            categoryId
+            mapping
+            strict
+            reactionsEnabled
+            emitMetadata
+            inputPosition
+            theme
+            lang
+            loading
+          }
         }
       }
     }
@@ -111,6 +130,7 @@ export const pageQuery = graphql`
           depth
         }
         tags
+        comments
       }
     }
     previous: mdx(id: { eq: $previousPostId }) {

@@ -96,13 +96,18 @@ exports.createPages = async ({ graphql, actions, reporter }, options) => {
     // aggregate posts by categories
     const postsByCategory = posts.reduce((total, value) => {
       const category =
-        value.frontmatter.category?.name || options.categoryNameForAll
+        value.frontmatter.category.name || options.categoryNameForAll
       if (total[category] === undefined) {
         total[category] = []
       }
       total[category].push(value)
+      if(category != options.categoryNameForAll) {
+        total[options.categoryNameForAll].push(value)
+      }
       return total
-    }, {})
+    }, {
+      [options.categoryNameForAll]: []
+    })
     const categoriesList = Object.keys(postsByCategory)
     categoriesList.forEach(key => {
       const post = postsByCategory[key].find(value => {
@@ -258,14 +263,14 @@ exports.createSchemaCustomization = (
         type: "Category",
         resolve(source, args, context, info) {
           const { category } = source
-          if (category == null) {
+          if (source.category === null) {
             return {
               name: options.categoryNameForAll,
               index: 0,
               depth: 0,
             }
           }
-          if (source.category?.name == null) {
+          if (source.category.name === null) {
             category.name = options.categoryNameForAll
           }
           return category
@@ -283,6 +288,18 @@ exports.createSchemaCustomization = (
           return tags
         },
       },
+      comments: {
+        type: "Boolean",
+        resolve(source, args, context, info) {
+          // For a more generic solution, you could pick the field value from
+          // `source[info.fieldName]`
+          const { comments } = source
+          if (source.comments == null || comments == null) {
+            return options.commentsEnabled
+          }
+          return comments
+        },
+      }
     },
   })
   createTypes(frontmatterResolvers)
@@ -337,6 +354,7 @@ exports.createSchemaCustomization = (
       index: Boolean
       category: Category
       tags: [String]
+      comments: Boolean
     }
 
     type Category {

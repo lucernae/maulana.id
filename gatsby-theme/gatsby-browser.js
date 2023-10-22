@@ -12,7 +12,7 @@ import "./src/styles/global.css"
 import { Script } from "gatsby"
 import React from "react"
 
-export const wrapPageElement = ({ element }) => {
+export const wrapPageElement = ({ element, props }) => {
   return (
     <>
       {element}
@@ -21,7 +21,7 @@ export const wrapPageElement = ({ element }) => {
   )
 }
 
-export const wrapRootElement = ({element}) => {
+export const wrapRootElement = ({element, props}) => {
   return (
     <>
       {element}

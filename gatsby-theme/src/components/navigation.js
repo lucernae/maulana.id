@@ -29,7 +29,9 @@ const NavigationPanel = ({ navigationLinks, children, location }) => {
 
   const currentLink = navigationLinks.find(value => {
     if (value.link === "/") {
-      return false
+      return (
+        location.pathname.startsWith("/index-page/")
+      )
     }
     return (
       value.link === location.pathname ||

@@ -4,6 +4,7 @@
         "clean-node-modules": "rm -rf node_modules gatsby-theme/node_modules site/node_modules",
         "gatsby-build": "yarn workspace site build",
         "build": "yarn workspace site build",
+        "clean-develop": "yarn workspace site clean && yarn workspace site develop",
         "develop": "yarn workspace site develop",
         "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
         "start": "yarn workspace site develop",
