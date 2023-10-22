@@ -42,7 +42,7 @@
     "gatsby-transformer-remark": "^6.3.2",
     "gatsby-transformer-sharp": "^5.3.1",
     "mathjs": "^11.5.0",
-    "mdast-util-to-string": "^2",
+    "mdast-util-to-string": "^4.0.0",
     "mdx-embed": "^1.1.2",
     "path-browserify": "^1.0.1",
     "postcss": "^8.4.20",
