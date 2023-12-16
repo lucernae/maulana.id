@@ -72,6 +72,10 @@ yarn-error.log
 # Yarn Integrity file
 .yarn-integrity
 
+# IDEA
+.idea
+
 # Nix related
 .direnv
 result
+.venv
