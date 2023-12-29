@@ -1,0 +1,254 @@
+---
+layout: blog-posts
+title: Uncertainty Principle
+description: Short notes collection of Uncertainty Principle
+date: 2023-05-13T00:00:00.00Z
+---
+
+The following blog post is just an attempt to sort my thought regarding Heisenber's Uncertainty Principle
+and its more fundamental relation to Fourier Uncertainty Principle.
+
+# Definition
+
+[Wikipedia Link](https://en.wikipedia.org/wiki/Fourier_transform#Uncertainty_principle)
+
+For the mathematical and more generic expressions of this uncertainty principle, we refer to a function 
+$f(x)$. It's fourier transform is $\hat{f}(\xi)$. With $\sigma$ as the variance operator, then
+
+$$
+\sigma^2_f \sigma^2_{\hat{f}} \geq \frac{1}{16\pi^2}
+$$
+
+For Heisenberg Uncertainty principle, it was known that momentum $p$ and position $x$ is a conjugate pair.
+The form then takes:
+
+$$
+\sigma_x \sigma_p \geq \frac{h}{4\pi}
+$$
+
+# Sketch of derivation
+
+## Fourier Uncertainty Principle
+
+I think it was called Fourier uncertainty principle because it is basically rises because of Fourier transform.
+However, personally I would like to think that it was apparent due to an orthogonality of the observables.
+
+### Foundation from Euclidean Geometry and Pythagorean Theorem
+
+Suppose we are using Euclidean Geometry, so [Pythagorean Theorem](https://en.wikipedia.org/wiki/Pythagorean_theorem) is applicable
+
+$$
+r^2 = x^2 + y^2
+$$
+
+In this case, $x$ and $y$ are orthogonal (due to right triangle).
+
+We then have [triangle inequality](https://en.wikipedia.org/wiki/Triangle_inequality)
+
+$$
+x + y \geq r
+$$
+
+We then introduce something called "norm", which we can thought of as length. The symbol is $\|x\|$ for norm of $x$.
+Triangle inequality can then be re-expressed as these, in order to make sure that we are talking about length, and not coordinates.
+
+$$
+\|x\| + \|y\| \geq \|r\|
+$$
+
+If we re-express this inequality, we can also say that there are separation coefficient (next we will call it angle)
+that will determine "length" of these products. Later we will call these products as "inner product" or dot product.
+
+For above triangle $\|x\|$ or $\|y\|$ is always less or equal than $\|r\|$. We can introduce this separation coefficient as angle $\theta$.
+Also $\cos{\theta}$ measures how far it is from the bigger length.
+
+That means using above triangle, we can express.
+
+$$
+\|r\| \cos{\theta_{rx}} = \|x\| \\[8pt]
+\|y\| \|r\| \cos{\theta} = \|x\| \|y\| \\[8pt]
+$$
+
+Since the coefficient (the $\cos{\theta}$ function) is always less than 1, it was guaranteed that:
+
+$$
+\|y\| \|r\| > \|x\| \|y\| \\[8pt]
+\|r\| \|r\| > \|x\| \|y\| \\[8pt]
+\|r\|^2 > \|x\| \|y\| \\[8pt]
+$$
+
+This illustrate the ideas of the relationship between each sides of the right triangle and its hypothenuse.
+Meaning, the square of the hypothenuse bounded the product of length between the other two sides.
+
+We can generalize the ideas further by just expressing the inequality by using only two sides, and for any triangle.
+
+If we express $x$ and $y$ as vectors $\bf{x}$ and $\bf{y}$, any two vectors can be made triangle.
+Any triangle can then be decomposed as two right triangles. Then, with any right triangle we can use the "angle" separation to derive the inequalities.
+
+In short, we can declare/generalize/deduce something like this:
+
+$$
+|\langle \mathbf {x} ,\mathbf {y} \rangle |\leq \|\mathbf {x} \|\|\mathbf {y} \|
+$$
+
+With term $\langle \mathbf {x} ,\mathbf {y} \rangle$ means the inner product between $\mathbf {x}$ and $\mathbf {y}$.
+
+The inequality above is called [Cauchy–Schwarz inequality](https://en.wikipedia.org/wiki/Cauchy–Schwarz_inequality)
+
+In my understanding, inner product just really means that you can multiply 2 objects while making sure that the product will not exceed certain limit.
+In this case, the limit is the separation angle between two vectors, which can be defined like this.
+
+$$
+\cos{\theta_{xy}} = \frac{|\langle \mathbf {x} ,\mathbf {y} \rangle |}{\|\mathbf {x} \|\|\mathbf {y} \|}
+$$
+
+From Cauchy-Schwarz inequality, we can proof that it is a more general form of triangle inequality and can be used to derive it
+
+### Deriving Triangle inequality using Cauchy–Schwarz inequality
+
+Express the triangle as vectors and you got $\mathbf{r} = \mathbf{x} +\mathbf{y}$.
+So,
+
+$$
+{\displaystyle 
+{\begin{alignedat}{4}
+    \|\mathbf {x} +\mathbf {y} \|^{2} &= \langle \mathbf {x} +\mathbf {y} ,\mathbf {x} +\mathbf {y} \rangle && 
+        \\ &= \|\mathbf {x} \|^{2}+\langle \mathbf {x} ,\mathbf {y} \rangle +\langle \mathbf {y} ,\mathbf {x} \rangle +\|\mathbf {y} \|^{2} ~&&~ {\text{ where }} \langle \mathbf {y} ,\mathbf {x} \rangle ={\overline {\langle \mathbf {x} ,\mathbf {y} \rangle }}
+        \\ &= \|\mathbf {x} \|^{2}+2\operatorname {Re} \langle \mathbf {x} ,\mathbf {y} \rangle +\|\mathbf {y} \|^{2} &&
+        \\ &\leq \|\mathbf {x} \|^{2}+2|\langle \mathbf {x} ,\mathbf {y} \rangle |+\|\mathbf {y} \|^{2}&&\\&\leq \|\mathbf {x} \|^{2}+2\|\mathbf {x} \|\|\mathbf {y} \|+\|\mathbf {y} \|^{2}~&&~{\text{ using Cauchy-Schwarz}} 
+        \\ &=(\|\mathbf {x} \|+\|\mathbf {y} \|)^{2} &&
+\end{alignedat}}
+} \\[8pt]
+
+{\displaystyle 
+{\begin{alignedat}{4}
+    \|\mathbf {r}\|^{2} &\leq (\|\mathbf {x} \|+\|\mathbf {y} \|)^{2} &&
+    \\ \|\mathbf {r} \| &\leq \|\mathbf {x} \|+\|\mathbf {y} \| &&
+\end{alignedat}}
+} \\[8pt]
+$$
+
+In the notation above ${\overline {\langle \mathbf {x} ,\mathbf {y} \rangle }}$, the overline is called a conjugate sign.
+It changed the vector into its conjugate.
+
+The operator $\operatorname{Re}$ is a special bilinear function, generalized from complex space to real spaces.
+If you represent the vectors as complex numbers, you can think of the operator as a function that only take the real part of the complex number.
+
+### Complex space and numbers operations
+
+We generalize the ideas of vectors and complex numbers to have some rules on how to operate on complex numbers and its identities.
+
+Any triangle then can be represented by using two complex numbers. This is because two complex numbers will have two length (norm), 
+one notion of separation called "angle" between two of them. The remaining triangle side is taken from the operation of complex numbers,
+which can be addition or multiplication, depending on the context.
+
+It is more convenient to work with complex numbers because it can be prooved the other way around.
+When you work with complex numbers, then it is equivalent to some operations in vector spaces as well.
+So complex numbers, in a sense, is more "complete", because you have lots of operation possible.
+
+I'm just going to assume we understand complex numbers by attaching this [wikipedia article](https://en.wikipedia.org/wiki/Complex_number)
+
+### Fourier transform
+
+We previously work with numbers. But when we define a function, we can work with a set of numbers all at once.
+Then, there is "function transform", which is a way to manipulate a function to another function with a specific transform rules.
+
+If I where to make an analogy, think of numbers as balls. We can pick and move one ball.
+If we want to move many many balls, we need a container. A function can be thought of as this container where we put our balls, before we move it.
+We can just move the container to move all the balls. Lastly, a function transform can be thought of the shape of container.
+If we want to move the balls from one place to the other, it is easier to use box container.
+But, some operations are easier to do using different container shape. For example to roll all these balls 
+all at once, it is easier to use a sphere container instead of boxes.
+
+[Fourier transform](https://en.wikipedia.org/wiki/Fourier_transform) is "function transform" with very specific rules. This transform applies for function that maps complex numbers to complex numbers.
+Since real numbers is a subset of complex numbers, then Fourier transform can be applied to real function as well.
+
+There are several definition to choose from, they are all equivalent, the difference is just wether the function becomes normalized or not.
+By "**norm**alized", I mean it can have norms but the maximum length the norm can have is 1.
+
+$$
+{\displaystyle {\hat {f}}(\xi )=\int _{-\infty }^{\infty }f(x)\ e^{-i2\pi \xi x}\,dx.}
+$$
+
+What the transform is doing, is map **all** numbers in the set of complex numbers $x$ into an entirely 
+different set of complex numbers $\xi$. We have a change of variables by applying the transform, which is 
+a product of the function value with a complex rotation $e^{-i2\pi \xi}$, in which the value $\xi$ is the target map of the result of the integral over all $x$.
+
+So we get an entirely different function called "f-hat" $\hat{f}(\xi)$, in which it uses this "xi" $\xi$ as the parameter.
+
+Now, since $\hat{f}(\xi)$ is also a complex function, we can do another Fourier transform. In fact we can do it in the reverse rotation direction, by
+multiplying it with $e^{i2\pi x}$ and we will get the original function.
+
+$$
+{\displaystyle f(x)=\int _{-\infty }^{\infty }{\hat {f}}(\xi )\ e^{i2\pi \xi x}\,d\xi }
+$$
+
+There are several proof and identities helping this Fourier transform definition. 
+The insights that we have using these rules is that:
+
+- A function $f$ and its Fourier transform $\hat{f}$ is basically the same thing but in a different form and domain.
+- Any operation that you do to an $\hat{f}$ has a corresponding operation in $f$
+- Any operation that you do to $\hat{f}$ will have the operation be appliead as well to $f$, and you can recover 
+  the applied operation by inverting the Fourier transform
+- Some operation is easier to do as $\hat{f}$ and some in $f$
+- Identities or rules in $\hat{f}$ means it also applies to $f$, even though it seems to be counter intuitive or bizarre.
+  This is entirely due to the mathematical relation between Fourier tranform and its inverse.
+
+### Deriving uncertainty principle
+
+Start with a function that maps from complex to complex called $f(z)$
+
+Fourier transform of $f(z)$ is $\hat{f}(\xi)$.
+
+Let the function $f$ be "square-integrable" then $\hat{f}$ be "square-integrable" as well due to fourier transform
+
+Using [Parseval-Plancherel identity](https://en.wikipedia.org/wiki/Plancherel_theorem), we know:
+
+$$
+{\displaystyle \int _{-\infty }^{\infty }|f(z)|^{2}\,dz=\int _{-\infty }^{\infty }|{\widehat {f}}(\xi )|^{2}\,d\xi }
+$$
+
+This will then imply/hinting that Pythagorean theorem in general works in this space.
+
+Since it was proven to be correct, then there is a corresponding triangle with orthonormal basis in that space.
+The space is also equivalent with Euclidean geometry.
+
+Within triangles in Euclidean geometry, it was hinted that there exists Triangle inequality.
+
+The triangle inequality relationship that we can use is [Cauchy–Schwarz Inequality](https://en.wikipedia.org/wiki/Cauchy–Schwarz_inequality).
+
+Now we define the space or plane to put our triangle in. An interesting intuition is the question:
+
+"Since a function and its Fourier transform essentially refer to the same **thing** but using different perspectives. What happens if we apply Cauchy-Scharwz Inequality to function and its own Fourier transform?"
+
+Intuitively we can guess that the results is somewhat fundamental and a characteristic of the function itself.
+It will entirely defined by the "function" itself, and not by its domain or units.
+In other words, it was invariant of units or domain.
+
+To proceed, recall that a function maps to a unique Fourier transform, and the other way around as well.
+It is possible to imagine or visualize how a function maps to another function, but I'm having trouble explaining it with drawings.
+
+However if we inspect further, what we are actually trying to manipulate is the $L_2$ norm. This is an absolute positive values without imaginary part.
+If we also only cares about the modulus $|z|$ and $|\xi|$, then we can reduce the number of axis we want to map from 8 to 4.
+
+The triangle then can be placed in the two plane. 
+One plane that plots a graph of $(|z|,|f(z)|)$.
+One plane that plots a graph of $(|\xi|,|\hat{f}(x)|)$. 
+It will span a range of values possible values for both $f$ and $\hat{f}$. 
+
+Square integrability ensure that the area under the curve is finite for both graph.
+
+Pancherel-Parseval identity make sure that the area from both graph has to be the same.
+
+However, range of possible values for $|f|$ and $|\hat{f}|$ has to be reciprocal or inverted, because Fourier transform can be inverted.
+Same argument applies for the range of $|z|$ and $|\xi|$.
+
+We can now intuitively understands where the triangle is. 
+Since $f$ and $\hat{f}$ is unique mapping, referring to one of them is enough by just describing the range.
+Since the curve itself won't change under domain translations, then it is easier for us to first define the "mean" or "center point" for 
+each $f$ and $\hat{f}$. Let's just say it was centered at $z_0$ and $\xi_0$.
+
+Now consider arbitrary triangle in $f$. The base of the triangle is the length from $z$ to $z_0$, which is $|z-z_0|$.
+At $z_0$, it will have vertical height of $|f(z_0)|$, which is the average value of $f$. You can then draw a straight line from $z$ to $|f(z)|$, lets call it $|r|$ and form a right triangle.
+Notice that at any point $z$, we can draw a triangle. If we multiply the sides that are not $r$, it will satisfy Cauchy–Schwarz inequality.
+

@@ -1,0 +1,277 @@
+---
+layout: blog-posts
+title: Deriving probability distribution from entropy
+description: Probability distribution can be inferred/generated from entropy principle
+date: 2023-07-22T00:00:00.00Z
+---
+
+The main motivation is to show that from a general principle, we can recover an already known probability distribution.
+This is useful to understand the reason why a formula has to be that way.
+
+# Uniform distribution
+
+Before information theory was established, it was already declared by statistician that there should be no prior bias 
+when defining probability of event. In other words, each possibility has to be fair, unless you include a bias.
+Any random variable that follows this principle is called uniformly distributed.
+
+For any N possible discrete states, then the probability of each state happens is exactly $\frac{1}{N}$.
+An example would be a coin toss or a die toss. Each sides must have equal chance to happens.
+
+This is usually accepted as fact, without questioning the reason.
+
+In the perspective of information theory, an observation can be measured with information entropy.
+[Differential Information entropy](https://en.wikipedia.org/wiki/Differential_entropy) can be used 
+to measure continuous probability distribution, and is defined as.
+
+$$
+\begin{align}
+H(p)=-\int_X p(x) \ln(p(x)) dx
+\end{align}
+$$
+
+With $p(x)$ is the probability of the event at $X=x$.
+
+By perceiving this as an optimization problem (min-max), we can reason that since entropy has to be always increasing in an observation, 
+the probability distribution when all the information are gained needs to be stabilizing when entropy is at maximum.
+
+From a physical perspectives, an alternative analogy was that when two heat contact touching each other, the final temperature
+has to happen when the entropy is maximized.
+
+If we treat $H(p)$ as a functional using variational calculus, we can then use [Lagrangian multiplier](https://en.wikipedia.org/wiki/Lagrange_multiplier) method to 
+derive the probability distribution.
+
+The Lagrangian (function) can be constructed by using the entropy with an added linear constraints. 
+Then if we set the constraint to 0, we should find the optimum points when the partial derivatives are 0.
+
+The most fundamental constraint of probability distribution was that if you added all the chances, then it has to sum up to 1.
+In other words, $\int_X p(x)dx = 1$. The constraint function $g(x)=1-\int_X p(x)dx$, is basically a rearrangement
+of previous statement in such a way that $g(x)=0$
+
+Our Lagrangian function $F(x,p)$ then becomes:
+
+$$
+\begin{align}
+F(x,p)&=H(p) + \lambda_0 g(x) \\
+F(x,p)&=-\int_X p(x) \ln(p(x)) dx + \lambda_0 (1-\int_X p(x)dx) \\
+\end{align}
+$$
+
+Now, since the Lagrangian includes integrals, technically we should integrate it first to obtain the correct function.
+But the expression of $F(x,p)$ is neatly an integral along $dx$. 
+Usually in physics, by [stationary action principle](https://en.wikipedia.org/wiki/Stationary-action_principle) (or historically known as least-action principle),
+we can define the action $S$ of the Lagrangian as $S=\int L(x,p)dx$.
+
+$$
+\begin{align}
+F(x,p)&=H(p) + \lambda_0 g(x) \\
+F'(x,p)&=\frac{d}{dx} F(x,p)=-p(x) \ln(p(x)) - \lambda_0 p(x) \\
+S &= \int_X \left( -p(x) \ln(p(x)) - \lambda_0 p(x) \right) dx
+\end{align}
+$$
+
+By matching it with the action expression, it would mean that we can also use the derivative of our previous Lagrangian $F$, as our new Lagrangian $L$.
+
+$$
+\begin{align}
+L(x,p)&=F'(x,p) \\
+L(x,p)&= -p(x) \ln(p(x)) - \lambda_0 p(x)
+\end{align}
+$$
+
+Applying Lagrangian multiplier method, we take the partial derivative wrt $p$ and set it to zero.
+
+$$
+\begin{align}
+\frac{\partial}{\partial p}L(x,p)&=0 \\
+-\ln(p(x)) - 1 - \lambda_0 &= 0 \\
+\ln(p(x)) &=-1-\lambda_0 \\
+p(x) &=e^{-1-\lambda_0} \\
+p(x) &=A \\
+\end{align}
+$$
+
+Note that since $1+\lambda_0$ is basically a constant, then $e^{-1-\lambda_0}$ is a constant as well. We just rename it as $A$.
+Using the constraint $g(x)$ we can then find $p(x)$
+
+$$
+\begin{align}
+\int_X p(x)dx &= 1 \\
+\int_X A dx &= 1 \\
+\Delta x &= \frac{1}{A} \\
+\end{align}
+$$
+
+The explanation was that $\Delta x$ is the range of the integral, since $A$ is constant. If $X$ is a continuous random variable, then $\Delta x$
+is just a segment from $x=a$ to $x=b$, which is $\Delta x= b-a$. So $p(x)$ is essentially the uniform distribution we are familiar with.
+
+$$
+p(x)=\frac{1}{b-a}
+$$
+
+# Normal distribution
+
+The article would not be complete if we didn't derive normal distribution. 
+Normal distribution is the simplest continuous probability distribution with a standard mean and variance to perform statistical analysis.
+It also exists in most cases in nature.
+From information theory perspectives, it was a consequence of nature that tends to maximize information entropy,
+such as heat exchange, or energy distribution.
+
+The constraint is the same with uniform distribution. The integral over all $X$ must sum to 1. So, $\int_X p(x)dx=1$.
+Thus $g_0(x)=1-\int_X p(x)dx$.
+
+The second constraint is that we include additional assumptions that "not every chances are equal", but "the average has to be at the center".
+
+This is just coming from a naive assumptions about the notion of "average". For example, suppose you have datasets of person heights, 
+You imagine that more people exists with the height around the center of the height range.
+For a distribution function, this would mean that $\int_X x\, p(x)dx=c_1$. 
+In a concept of physics (typically mass distribution), it just means that the first moment (center of mass) of the distribution exists.
+In this case, the first moment we are going to be set to a constant $c_1$.
+To summarize, $g_1(x)=c_1-\int_X x \, p(x)dx$
+
+The third constraint is that we assume the distribution is symmetric around the mean. 
+In the concept of moment distribution, this would imply that $\int_X x^2 \,p(x)dx=c_2$.
+It will have a constant value $c_2$.
+So, $g_2(x)=c_2-\int_X x^2 \,p(x)dx$.
+
+Note that the interesting things about these constraints is that they are all constants subtracted with an integral over $p(x)dx$.
+We can use the same approach to get a new Lagrangian $L(x,p)$.
+Because we apply derivative over $dx$ and then over $\partial p$, then these constants doesn't matter at all in the end, whatever value that was.
+Using the same approach, the Lagrangian $L(x,p)$
+
+$$
+\begin{align}
+L(x,p)&=-p(x) \ln(p(x)) -\lambda_0 p(x) - \lambda_1 x\,p(x) - \lambda_2 x^2\,p(x) \\
+\frac{\partial}{\partial p}L(x,p)&= -\ln(p(x)) - 1 - \lambda_0 -\lambda_1 x -\lambda_2 x^2 \\
+0&= -\ln(p(x)) - 1 - \lambda_0 -\lambda_1 x -\lambda_2 x^2 \\
+p &= e^{-1-\lambda_0 -\lambda_1 x - \lambda_2 x^2} \\ 
+p(x) &= A e^{-\lambda_1 x - \lambda_2 x^2}
+\end{align}
+$$
+
+Again, step (20) to (21) happens because $e^{-1-\lambda_0}$ is a constant, so we just renamed it as $A$.
+
+To find the values of these $\lambda_n$, "normally" you integrate and then match it with the constant being used $c_n$.
+But using that kind of approach is like circular definition if we have a prior assumptions about the normal distribution.
+We won't be using that, and instead work on a more fundamental assumptions.
+
+We can't solve the first constraint yet, which is essentially a normalization, since there are 2 Lagrange multipliers needs to be solved first.
+
+We are going to solve the second constraint. Notice that if the distribution has average values, then the probability at the average 
+has to be the highest, since it is the most common. If it is the highest values, then the derivative of the distribution on that point is 0.
+Let us call this point an arbitrary name $\mu$, so $x=\mu$.
+
+$$
+\begin{align}
+p(x) &= A e^{-\lambda_1 x - \lambda_2 x^2} \\
+\frac{d}{dx}p(x) &= -(\lambda_1+2\lambda_2 x) p(x) \\
+p'(\mu) &= -(\lambda_1+2\lambda_2 \mu) p(\mu) \\
+0 &= -(\lambda_1+2\lambda_2 \mu) \\
+\lambda_1 &= - 2\lambda_2 \mu
+\end{align}
+$$
+
+We now have expression for $\lambda_1$
+
+We are going to solve the third constraint. Using the same principle, we put assumptions that the second derivative must have an inflection point in two places.
+This is because as we see in the first derivative above, the values changes. Because the shape of the distribution is symmetric with a center,
+then obviously the second derivative will have two zeroes, which is in the left and right of the center, within the same distance from the center.
+We already know the center will be in $x=\mu$. So these two particular position has to be in $x=\mu+\sigma$ and $x=\mu-\sigma$,
+where $\sigma$ is just arbitrary distance from $\mu$.
+
+$$
+\begin{align}
+p'(x) &= -2\lambda_2 (x - \mu) p(x) \\
+p''(x) &= -2\lambda_2 p(x) + 4 \lambda_2^2 (x-\mu)^2 p(x) \\
+p''(\mu+\sigma) = p''(\mu-\sigma) &= -2\lambda_2 p(\mu+\sigma) + 4 \lambda_2^2 \sigma^2 p(\mu+\sigma) \\
+0 &= - 1 + 2 \lambda_2 \sigma^2 \\
+\lambda_2 &=\frac{1}{2\sigma^2}
+\end{align}
+$$
+
+Plugging this back to $p(x)$
+
+$$
+\begin{align}
+p(x) &= A e^{-\lambda_1 x - \lambda_2 x^2} \\
+&= A e^{\frac{2\mu x}{2 \sigma^2} - \frac{x^2}{2\sigma^2}} \\
+&= A e^{\frac{\mu^2}{2\sigma^2}-\frac{\mu^2}{2\sigma^2}+\frac{2\mu x}{2 \sigma^2} - \frac{x^2}{2\sigma^2}} \\
+&= Ae^{\frac{\mu^2}{2\sigma^2}} e^{-\frac{1}{2}(\frac{x-\mu}{\sigma})^2} \\
+&= B e^{-\frac{1}{2}(\frac{x-\mu}{\sigma})^2} \\
+\end{align}
+$$
+
+An explanation, step (33) to (34) we added terms to complete the squares.
+Step (34) to (35) rearranging into a square expressions
+Step (35) to (36) we rename $Ae^{\frac{\mu^2}{2\sigma^2}}=B$ because it is just a constant.
+
+Finally, applying the first constraint
+
+$$
+\begin{align}
+\int_X p(x) dx &= \int_X B e^{-\frac{1}{2}(\frac{x-\mu}{\sigma})^2}dx \\
+1 &= \int_X B e^{-\frac{1}{2}(\frac{x-\mu}{\sigma})^2}dx \\
+&= B \sigma \sqrt{2} \int_Y e^{-y^2}dy \\
+&= B \sigma \sqrt{2 \pi}  \\
+B&= \frac{1}{ \sigma \sqrt{2 \pi} } \\
+\end{align}
+$$
+
+The explanation,
+Step (38) to (39) we made a change of variables $Y=\frac{X-\mu}{\sigma \sqrt{2}}$.
+Step (39) to (40) is because the definite integral of $\int_{-\infty}^\infty e^{-x^2}dx=\sqrt{\pi}$. This expression probably deserves its own articles.
+
+Thus we recovered the normal distribution:
+
+$$
+p(x)= \frac{1}{\sigma \sqrt{2 \pi}}e^{-\frac{1}{2}(\frac{x-\mu}{\sigma})^2}
+$$
+
+The interesting thing with this derivation is that it "predicts" the datasets, rather than deducing from a datasets.
+The formula rises because when the observation is in a saturated state, then the distribution **has to** use that function.
+
+No wonder a normal distribution is the most common we can see in nature. 
+This is because it is the next simplest distribution with minimal assumptions that can fit more data.
+
+To see what I really meant, let's use the recovered formula to calculate the differential entropy.
+
+$$
+\begin{align}
+H(p)&=-\int_X p(x) \ln(p(x))\,dx \\
+&=-\int_X p(x) \ln(\frac{1}{\sigma \sqrt{2 \pi}}e^{-\frac{1}{2}(\frac{x-\mu}{\sigma})^2})\,dx \\
+&=-\int_X p(x) \ln(\frac{1}{\sigma \sqrt{2 \pi}})\,dx + \int_X p(x) \frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2\,dx \\
+&=\ln(\sigma \sqrt{2 \pi})\int_X p(x)\,dx + \frac{1}{2} \int_X \left(\frac{x-\mu}{\sigma}\right)^2 p(x) \,dx \\
+&=\frac{1}{2}\ln( 2 \pi \sigma^2) + \frac{1}{2} \\
+&=\frac{1}{2}\ln( 2 \pi e \sigma^2)\\
+\end{align}
+$$
+
+As you can see above, the entropy only depends on the variance $\sigma$.
+This can only means from a different sets of data, they will tend to approach the same entropy and distribution if they have the same variance.
+
+# (Extra section) Poisson distribution
+
+Originally, I only planned to write up to Normal distribution. But just today I saw some question in twitter feeds
+regarding why atomic decay rate has to "randomly" decay by half in a given interval. Because it seems they "break causality"
+since they decay randomly without cause.
+
+Before we derive the distribution, let's talk about the characteristic of Poisson process.
+
+The atomic decay is actually the perfect example of that. Let's say a single nucleus decay with a certain probability $p$.
+We are now concern ourselves with the probability of a group of nuclei. What was the decay rate of the whole group?
+The probability is not the sum of each individual nucleus. As time goes on the normalization factor changes, because the total nucleus changes.
+So the distribution actually measures the probability of a given **size** of the total independent events, if a single probability of one event is known.
+
+Our first constraint is still the normalization axiom.
+
+Second constraint is taken from the context. A Poisson process is characterized by a "memoryless" property. 
+In the case of $k$ event occurence, each event doesn't care about the history of previous event.
+In the case of atomic decay above (that means $k=1$), a single decay event doesn't care if the current size of the atoms 
+is 1000 or just 2. It will decay with the same probability. 
+However, since what human observe is a time interval between each occurence, the distribution we recorded is "probability of the size of the nuclei to become half, given a specified interval $t$".
+So, the input of the distribution is **time** instead of **frequency**, thus it appears somewhat counter intuitive to apply entropy on it.
+
+From what the process describes, we know that the distribution is a function of two variables, $k$ and $t$. 
+But since occurence is a discrete variables, then $p(k,t)$ is a discrete probability distribution.
+Our entropy formula is the plain simple sum.
+
+

@@ -1,0 +1,217 @@
+---
+title: Understanding How Uncertainty Principle Appear in Quantum Physics
+description: Let's take a look on how a purely abstract mathematical theorem has consequences in the real physical world
+layout: blog-post
+date: 2023-04-29T00:00:00.00Z
+category:
+name: blog
+---
+
+This article is written because I found out that it would be an interesting journey to "demystify" Heisenberg's Uncertainty Principle (HUP)
+for general public understanding. In its entirety, I also believed that when you first learning about Uncertainty Principle -- particularly
+in the Quantum Mechanic context -- it feels like a mindblowing magic. How does a limit of observation be related with $\pi$?
+
+HUP is usually written like this:
+
+$
+\Delta x \Delta p \ge \frac{h}{4\pi}
+$
+
+Now the the thing that I want to discuss is Elon Musk's tweet:
+
+<blockquote class="twitter-tweet">
+    <p lang="en" dir="ltr">
+        Mind-blowing concept when you first hear it.
+        <br/>
+        <br/>
+        There is arguably a practical maximum to digits of pi, which is the number required to divide the universe into cubes of Planck length.
+    </p>
+    &mdash; Elon Musk (@elonmusk)
+    <a href="https://twitter.com/elonmusk/status/1650658418816950273?ref_src=twsrc%5Etfw">April 25, 2023</a>
+</blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+Elon's statement here is untrue and out of context. But suppose that we are trying to "guess" what he really meant, I think what he interprets
+is the rearrangement of HUP. If we algebraically rewritten HUP like this:
+
+$
+\pi \ge \frac{h}{4 \Delta x \Delta p}
+$
+
+Then it would seem that the exact number of $\pi$, meaning the details of its neverending digits, can be calculated from experimental observation
+of $\Delta x \Delta p$.
+One would argue that given sufficiently precise measurement, a range of errors in both position (x) and momentum (p), would imply a range of values of $\pi$
+into a sufficient numbers of digits after decimals.
+The reason why this is not true is because Quantum Physics follows wave properties, wave properties follows Fourier analysis, and then
+Fourier analysis will imply the existence of variables and its conjugates.
+In this case here, position and momentum are a conjugate pairs.
+If it is a conjugate pairs, you can't precisely localize both values because they are inversely proportional to construct the same description of function.
+This is not a physical observation, but rather a mathematical fact, built upon the underlying more abstract/fundamental axioms.
+As long as the axiom is true, the theorem will be true regardless of the universe we lived in.
+
+However there is indeed a connection between HUP and Planck Length. But this is nowhere suggesting that the universe itself has a limit of "granularity" in terms of Planck units.
+You can relate HUP with energy-mass equivalence principle $E=mc^2$ and then relate the mass to a Schwarzschild radius, a term used to
+describe the minimum radius needed for a collection of mass to become blackhole. This relation is best described by a series of tweet in a thread below, made by Will Kinney:
+
+<blockquote class="twitter-tweet">
+    <p lang="en" dir="ltr">So what exactly is the Planck length? A thread. 1/ <a href="https://t.co/YQO48XnmE7">https://t.co/YQO48XnmE7</a></p>
+    &mdash; Will Kinney (@WKCosmo)
+    <a href="https://twitter.com/WKCosmo/status/1651986002490138626?ref_src=twsrc%5Etfw">April 28, 2023</a>
+</blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+I've read the thread and it was an excellent and light explanation of how you can relate these with just basic algebra.
+
+So, what is the punchline?
+
+The punchline is that, if we observe a blackhole, any information coming from the blackhole is indistinguishable from the same blackhole with the same mass.
+You can't observe whatever inside the blackhole, because from the outside, the information that you get is only gravity/heat in the form of Hawking radiation.
+Since Planck Length is the smallest length possible with as precise as possible that will contain biggest blackhole possible with the contained mass/energy,
+we can't really know beyond that.
+There is no current theory of quantum gravity that describes that.
+There is no experimental observation that can detect that.
+After all, we detect particles by measuring its energy.
+
+Is it true that universe can be chopped out into chunks of Planck Lengths, and nowhere smaller? You can guess the answer. We don't know and there
+is no way to prove/disprove it.
+
+But, more importantly, Elon's tweet is kind of out of context (or probably misleading?). You didn't derive $\pi$ from observable universe.
+It was the other way around, the limit of Schwarzschild radius and (consequently) Planck Length, is because the value of $\pi$ is the best
+you can get to infinitely approximate continuous circular function. It is the theoritical numerical limit of how precise you can get in analytical function.
+Also, it was derived from independent axioms.
+
+# Tracing the connection between HUP and $\pi$
+
+In the following section, let's try tracing back a step-by-step connection to figure out how and why $\pi$ appears in HUP.
+By the way, I'm not trying to provide a rigorous mathematical approach, but rather inserting a "simplified" explanation in each step.
+I will try to link each new terms with a Wikipedia link, so you can at least know what I'm talking about and can google a more rigor
+reference yourself. Think of it like a glossary, rather than a bibliographical reference.
+
+The approach I'm going to take is to build up a basic mathematical intuition and understanding from the ground up. It will arrive
+into a more generic expressions of Uncertainty Principle. After that, we inject a physical assumption to somehow match physical
+experimentation/observation to build a physical theory. Basically, a simplified "rip-off" of the actual physical theory.
+
+The goal is to make the reader understand that Uncertainty Principle is an inherent theory and property of a wave equation.
+Anything that is described by a wave, will have this property. So it will be natural to think that Quantum Mechanics
+(with its matter/wave duality interpretation) will have this property as well.
+
+Let's go!
+
+## Drawing Shapes, the Geometry
+
+The fundamental building block of our mathematical foundation that we are going to use is "geometry". This is because in building
+a physical theory, physicist eventually has to "chart" the result of their experiment (set of numbers and observations) into
+a map or drawing. Normally, you build a graph. When building a graph, you are describing a function. A function is basically a
+mapping of values to another set of values. In physical context, usually we map a parameter called "time" into another "observables"
+(things that we can observe) like "position" or "momentum".
+
+In other words, using geometry is a must to describe reality. But geometry is built upon several independent axioms. Axioms are statement
+that we consider to be true without proof. I guess, this is because we have no way of proving it. Think about it as Lego blocks.
+Axioms is the smallest set of Lego block possible in order for us to build a chain of logical statement that is more bigger and complete.
+If you ever played Lego, you will know that there are different shapes of small blocks possible to build a bigger composition.
+
+We have something to note, though.
+There are two distinct class of geometry, which is
+[Euclidean](https://en.wikipedia.org/wiki/Euclidean_geometry) and [Non-Euclidean](https://en.wikipedia.org/wiki/Non-Euclidean_geometry).
+The sole difference between them is the inclusion (or rather negation) of the "parallel postulate".
+To limit our context, we want to use the simpler and rather intuitive one, the Euclidean geometry.
+
+Using Euclidean geometry is basically the same as saying that we are going to draw shapes in a flat 2D plane, equipped with [Pythagorean Theorem](https://en.wikipedia.org/wiki/Pythagorean_theorem).
+
+Using a Pythagorean theorem means we can decompose any shapes into several right angled triangle. If you are familiar with game development,
+you can recognize this concept as triangle tesselations. The reason why we need to break out shapes as combination of triangles will be explained later.
+But, right now, we just need to understand that for any shapes in an Euclidean plane, it is possible to break it apart the shapes as several triangles.
+Any triangles, even the non-right triangles, in turn can be decomposed as a combination of several right triangles. Which is why the Pythagorean theorem is important in our context.
+
+[(Drawing of rectangle decomposed as triangles)]
+
+## Triangle decomposition, the triangle inequality
+
+Now if we recap our finding, in a right triangle with hypothenuse $r$ and side $a$, $b$, it is a fact that by numbers alone, that Pythagorean theorem holds true:
+
+$
+r^2 = a^2 + b^2
+$
+
+From the expression of equality above, it is easy to understand (proofing it is another matter), that for any triangle, this inequality holds as well:
+
+$
+a + b \ge r
+$
+
+Any sums of two sides is always greater or equal than the remaining sides. Since it is also easy to intuitively imagine "length".
+Two lengths added is always larger than the remaining length. The extreme equality only happens if one of the side is small enough to approach zero.
+**However**, if one of the sizes are zero, this triangle will not form a shape!
+
+What it tells us is that in order for a set of 3 numbers to be constructed as a 2D plane, either (but not both) $a$ or $b$ should be small enough, but non-zero.
+It can be arbitrarily small, though.
+Then the other one must be as close as $r$ as possible.
+Now supposed that we stack up this infinite right triangles, it will form either a circle or, we can construct it as a rectangle.
+
+For illustration purposes, suppose that we choose a very small number $b$. Then the rectangle will end up having circumference of $2r+nb$ with $n$
+the total number of triangle. If we rearrange these triangles and stack it up like a snail pattern, it will eventually form a complete circle.
+To make a full circle, by intuition $nb$ needs to be also proportional with $2r$ (that we got from calculating sides of rectangle).
+This is because if we make a circumferences/lengths bigger $x$ times, then if we rearrange it, whatever shape we made must also bigger in circumference $x$ times.
+After all, the triangle itself has to be congruent.
+
+That means, whatever $n$ we choose, will compensate exactly with $b$, in such a way that $nb = 2 k r$, with $k$ being a special constant number.
+Fortunately, mathematician by convention already named $k$ as $\pi$. So this is why a number $\pi$ is related with triangle and circle. It's a constant
+number necessary in order for rearrangement of triangle to have the same dimensional length/unit from a circle to a rectangle, or the other way around.
+
+## Complex number, the method of analysis
+
+Besides describing a 2D coordinate as pair of real numbers, there is a neater way of equivalently describe the same thing using something that
+we call **complex numbers**. A coordinate pair of two real numbers $(a,b)$ can be represented by a **single** complex $z$. Since there might be not enough
+spaces to describe complex number, I'm just going to assume that you know them.
+
+Now, since a complex number can be broken down (hence, it was called *analysis*) into two elements (real part and imaginary part), there is a specific branch of mathematic
+that studies how function behaves on complex numbers, called complex analysis. There is something special about it.
+
+Let's talk about identities and notation usually mentioned to describe complex numbers.
+
+A "conjugate" is a reflection of a complex number $z$ along the x axis. The real part is the same, but the imaginary part is negative of the original.
+A "conjugate" of $z$ is usually written as $\bar{z}$ (called z-bar)
+
+Just like in Euclidean 2D plane, complex numbers has some notion of "length". It is more generally called "norm".
+In Euclidean geometry, you can calculate the norm by using the result of Pythagorean theorem, then square-root it.
+Like this:
+
+$
+\| r \| = \sqrt{a^2+b^2}
+$
+
+Norm is defined in such a way that it must satisfies the triangle inequality we discussed above. It is also always positive, because we don't want to have a "negative" length.
+
+Now, what's special in complex number, the norm can be calculated by multiplying that number with its conjugate, then square-root it.
+
+$
+\|z\| = \sqrt{z \bar{z}}
+$
+
+Since these norm is calculated by always doing a pair-wise operation, it is usually called $L^2$ norm. Simply because you need to square-root the result.
+
+The notation for an $L^2$ norm of a number $z$ is $\|z\|_2$. Most often, we just leave it squared, so the norm-squared is written like this $\|z\|_2^2$
+
+## Fourier Transform, the harmonic analysis
+
+Now that we understand that a 2D shape can be broken down as triangles. Higher dimensional shapes can be broken down by a composition of 2D shapes, which in turns can be broken down of triangles.
+What it tells us is that **any** length in higher dimension can in principle be broken down as a construction of triangles!
+This is made possible, because it turns out Pythagorean theorem holds for infinite number of terms, like this (as long as it follows Euclidean axioms):
+
+$
+r^2 = a^2 + b^2 + c^2 + ... + z^2
+$
+
+Now, let's put that aside and have a detour.
+
+If we have a function that maps a complex number to another complex number, called $f(x)$. Then by something called Fourier transform, it can be
+converted into an equivalent function that uses a different domain, called $\hat{f}(\xi)$ (called f-hat of xi). The domain of $\xi$ is called "frequency" domain
+because it is used so extensively in the study of harmonic analysis (breaking down harmonic frequency).
+
+Using Fourier transform, you can convert a function from its time domain to frequency domain, or the other way around. The reason why we do this
+in the first place is because it is possible to "break apart" a function in time domain into its frequency representation. Then work something out in
+frequency domain. Then combine them. Then convert it back to time domain. The result will be the same as if we do the same operation directly in the time domain function.
+
+Because a function and its Fourier transform basically describes the same thing (just using a different way), there are some unique relation between them.
+
+A Fourier transform can be defined several ways

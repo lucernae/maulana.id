@@ -1,0 +1,222 @@
+---
+layout: blog-posts
+title: "Beyond entropy and probability distribution: part 1"
+description: the intro
+date: 2023-07-17T00:00:00.00Z
+---
+
+I am a fan of [3Blue1Brown](https://www.youtube.com/@3blue1brown/featured) youtube channel.
+
+Just a couple of days ago, he released an epilogue video of a series that I'm hugely interested with.
+
+The series consists of several topic, witch each one become a basis of seemingly unrelated topic in the next video.
+But the next video reveals some hidden connections from the previous one.
+
+1. [Central Limit Theorem](https://www.youtube.com/watch?v=zeJD6dqJ5lo&t=0s)
+2. [$\pi$ in Normal Distribution](https://www.youtube.com/watch?v=cy8r7WSuT1I&t=0s)
+3. [Convolutions](https://www.youtube.com/watch?v=IaSGqQa5O-M&t=0s)
+4. [Why Central Limit Theorem a normal distribution](https://youtu.be/d_qvLDhkg00)
+
+In the fourth video, it seems 3B1B uses it as the closure of the series.
+Personally I was kind of hoping that the series continues by connecting entropy and Fourier transform into the mix.
+I was long fascinated by this relation. In fact this personal blog was made in pursuit of documenting my journey in finding this answer.
+The very first physics article in this blog is this one [Relation between information entropy and physical entropy](../2020--09--05--08--do-information-entropy-closely-related-with-physical-thermodynamics)
+
+So let's continue from the rests of the videos and connect CLT with information entropy.
+
+## CLT as a consequence of entropy
+
+Referring back to my previous article, we define information entropy like this:
+
+$$
+S(p)= -\int p \ln(p) dx
+$$
+
+With $p$ is a probability distribution with input $x$ such that $\int p(x)dx=1$.
+
+Note that this is a continuous probability distribution, and a smooth function. 
+In a real observation however, we usually deals with discrete probability distribution, and entropy gets updated 
+iteratively as experiments goes while observing this random variable.
+
+Our strong motivation at the moment is to find connection between this discrete probability distribution and relate 
+it with the continuous version of the probability distribution as observation went on.
+
+Recall that by observing, what really changes is informational value we obtained. 
+So this is like constructing a continuous function from a discrete datasets.
+The higher our information is, the smoother our function is.
+
+But our function should still be describing the same thing, fundamentally speaking.
+
+### Characteristic function of probability distribution
+
+We will then estimate the continuous distribution using a Fourier transform.
+
+As for why we uses the Fourier transform. It is intuitive to think that a discrete probability function 
+is a set of $n$ different frequencies $f_n$, for each $n$ is a state in random variable $X$. 
+No matter what the probability function ends up into, if we uses Fourier transform, we can approximate a continuous function using these discrete frequencies.
+If we have infinitely many states and frequencies, there is a one to one correspondence between a function and its Fourier transform.
+
+So, ultimately, figuring out these frequencies means we can identify a class of probability distribution. 
+The one to one correspondence means for many given discrete probability function, there is a single continuous probability distribution that can be used to identify a "kind of distribution".
+This is why it is called a ["characteristic function of probability distribution"](https://en.wikipedia.org/wiki/Characteristic_function_(probability_theory)).
+
+Back to our special case, we want to know a certain continuous probability function, if we transform arbitrary discrete distribution.
+
+The usual Fourier transform does a transform to a continuous function to give a set of frequencies constants.
+What we did is the other way around. From a set of frequencies constants, we want to construct a continuous function.
+So we define characteristic function as the "inverse" Fourier transform of sets of frequencies.
+
+To test out this ideas, consider a simple random variable of a "coin toss" event. The random variable $X$ has two states,
+$X=0$ and $X=1$. Let's say that the probability of getting a head is $p$, and tail is $q=1-p$. This distribution 
+is called Bernoulli distribution.
+
+A current observation will tell us that the frequency $f(X=1)=p$ and $f(X=0)=1-p$. 
+If we construct a fourier series $F(t)$ using this information, we have:
+
+$$
+F(t)=\sum_{n=0}^1f(x)e^{itx}=q+pe^{it}
+$$
+
+While $f(x)$ has $x$ as the input of the function, the characteristic function $F(t)$ has $t$ or "time" as the input.
+So, what does characteristic function even means/represents?
+
+Since $F(t)$ is a complex function, you can think of it as time evolution of a needle in a circle. It describes how 
+the needle moves and changes shape. Since at $t=0$ it denotes the sum of all frequencies, then $F(0)=1$ for all kinds 
+of distribution. Because probability distribution has to add up to 1.
+
+If we take an analogy with physics/mechanics, a time-evolution function will completely determine the dynamics of the objects.
+This coin-toss distribution for example, will have characteristic function like a needle that sways a certain way.
+It will look/move different with, let's say, uniform distribution.
+
+As observation goes, it is to be expected that we found more and more frequencies to be added into the series. 
+Suppose that observation uses so many sampling, then function $F(t)$ will tend to converge to retain its shape.
+In the case like this, it becomes intuitive to understand that a continuous $F(t)$ corresponds to both discrete and continuous $f(x)$.
+The generalization for the continuous probability distribution is like this:
+
+$$
+\begin{align}
+\varphi(t)&=F(t)=\int_{\mathbb R}e^{itx}f(x)dx \\
+\varphi(t)&=\operatorname{E}\left[e^{itx}\right] \\
+\end{align}
+$$
+
+In the above formula, a characteristic function is a smooth sum (integral) of the weighted frequency times $e^{it}$.
+Meanwhile, $\operatorname{E}$ is called expected value of a random variable, and basically a weighted sum of the probability distribution.
+
+### Entropic uncertainty principle
+
+Now that we established that a probability distribution and characteristic function is a Fourier dual, then it must satisfies
+an uncertainty principle from wave theory.
+
+Before we jump into the principle, let us specifies what kind of entropy we are talking about, since entropy is such an overloaded words.
+
+Shannon entropy is defined as:
+
+$$
+\begin{align}
+H(X) = - \sum_x p(x) \ln{p(x)}=\operatorname{E}\left[-\ln{p(X)}\right]
+\end{align}
+$$
+
+While our probability distribution might be a discrete function, the characteristic function has to be continuous. So, we can't use above definition of entropy.
+
+Rather, we uses the continuous version of entropy called [Differential Entropy](https://en.wikipedia.org/wiki/Differential_entropy)
+
+$$
+\begin{align}
+H(X) = - \int_X f(x) \ln{f(x)}dx=\operatorname{E}\left[-\ln{f(X)}\right]
+\end{align}
+$$
+
+Just like the name suggest, the quantity is some sort of measure of information **relative** to a certain base entropy.
+This is because the integral can have different bounds depending on the observed random variables, so what you really want to use is it's entropy relative to other distribution.
+
+The relative differential entropy, also known as [Kullback–Leibler divergence](https://en.wikipedia.org/wiki/Kullback–Leibler_divergence) or $D_{KL}$.
+
+Suppose that we have a reference or base or "true" probability distribution called $P$, then its relative entropy is written as $H(P(X))=H(P)$.
+Then suppose that we have another probability distribution that we currently observe or measures called $Q$.
+Then the entropy of the events, if encoded using the "wrong" or "incomplete" distribution Q, when actually it is using P, is called the cross entropy and 
+written as $H(P,Q)$.
+
+KL Divergence is then essentially the "excess/missing" information/entropy to measure the gap between information entropy of P and Q.
+
+To summarize what we have so far in terms of calculus:
+
+$$
+\begin{align}
+H(P) = H(P, 1) &= - \int_X p(x) \ln{p(x)}dx \\
+H(P, Q) &= - \int_X p(x) \ln{q(x)}dx \\
+D_{KL} &= H(P,Q)-H(P) \\
+D_{KL} &= \int_X p(x) \ln{\frac{p(x)}{q(x)}}dx \\
+\end{align}
+$$
+
+$D_{KL}$ has a nice property. Since it is a measure of "missing" information to fill the gap, then it is always a positive value.
+
+Now, we are ready to learn what is [Entropic Uncertainty Principle](https://en.wikipedia.org/wiki/Entropic_uncertainty).
+This will be very meta and mindblowing for some. At least for me.
+
+Suppose that we observed a "discrete" probability distribution $f$. We can't perfectly describe the distribution because sampling process is always finite.
+It is always less perfect than the "true" distribution we want to measure.
+However, from $f$ we can construct a characteristic function $g$. Then since $f$ and $g$ are Fourier dual, $g$ has one to one relation with the "perfect" 
+continuous probability distribution, the true distribution of $f$.
+
+Now, the catch is, we can obtain a measure of information entropy from $f$, because it is a distribution.
+But, $g$ is also a form of information. So, in a kind of meta sense, we should be able to calculate an entropy from it.
+
+The problem is, $g$ is a characteristic function, and a complex function, while probability distribution is a real valued function.
+
+Now that recall both $f$ and $g$ has maximum absolute value of 1. So the norm is bounded. For any complex number, it has $L_2$ norm such that it measures the squares of its absolute value, without the phase information.
+Also, any real function is a complex function (it just doesn't have a phase).
+
+Now, the insight was to realize that suppose that we have $|f|^2$ and $|g|^2$, both were also a kind of probability distribution.
+Thus, we can derive its entropy.
+But since both are a Fourier dual, both describes the same thing, so there must exists an identity relation between both entropies.
+
+What the Uncertainty Principle says, is that there is a certain lower bound for the sum of entropy of $|f|^2$ and $|g|^2$.
+Even if we obtained the "true" distribution, this sums can't be lower than this bound.
+This entropy bound is essentially the limit of how a probability distribution contains important information.
+
+$$
+H(\left|f \right|^2)+H(\left|g \right|^2)\ge \ln\frac{e}{2}
+$$
+
+This relation is fundamental in the sense that knowing $f$ will directly make you able to confirm the statement.
+I was using $\ln$ as the logarithm, but really any base works fine, as long as it is also the same base/unit used in $H$.
+For physical relation, it is usually in nats (base $e$), while in information theory, bits (base 2).
+
+Just as example, let's try calculating a single coin-toss distribution. To make it simpler, suppose that it is unbiased, meaning $p=q=\frac{1}{2}$.
+We will use base 2 for the logarithm.
+
+$$
+\begin{align}
+H(\left| f \right|^2) &= - p^2 \log_2 p^2- p^2 \log_2 p^2=-4p^2 \log_2 p=2 \\
+\end{align}
+$$
+
+Seeing that $H(\left| f \right|^2)$ already more than $\log_2(\frac{e}{2})$, and $H(\left| g \right|^2)$ will be a positive quantity, we can see that it satisifies Entropic Uncertainty Principle.
+
+So from this, how can we go back to Central Limit Theorem?
+
+### Maximizing entropy
+
+As we already described above, once we have "perfect" information of the sampled distribution, the "true" distribution $g$ must have maximum entropy. Because no information can be added again.
+
+Let's start by heuristically guessing this function.
+Our guess at the moment:
+
+1. This function is its own Fourier transform, because Entropic Uncertainty Principle implies that both $H(\left| f \right|^2)$ and $H(\left| g \right|^2)$ can be swapped (the equation parameter is symmetric).
+2. This function is even/symmetric along $x=0$
+3. This function has value 1 when evaluated at $x=0$ because this is what happens with the characteristic function
+
+As you may probably guess, the function $e^{-ax^2}$ fulfills this criteria, and it is known as a class of function called a Gaussian.
+For now, let's suppose we didn't know about this function and we want to recover it from above criteria.
+
+Since this is an optimization problem, we are going to use Lagrangian method of variational calculus.
+
+
+$$
+\begin{align}
+L=-p\ln p - \lambda_0(1-)
+\end{align}
+$$
