@@ -26,7 +26,7 @@
             openssl = pkgs.openssl_1_1;
           };
           bunV1 = pkgs.bun.overrideAttrs (final: prev: with pkgs; prev // rec {
-            version = "1.0.4";
+            version = "1.0.20";
             src = passthru.sources.${stdenvNoCC.hostPlatform.system} or (throw "Unsupported system: ${stdenvNoCC.hostPlatform.system}");
             passthru = prev.passthru // {
               sources = prev.passthru.sources // {
