@@ -352,16 +352,16 @@ $$
 C_n e^{int} &= C_2 e^{i2t} \\
 \int_T C_n e^{int}\, e^{-ikt} dt &= \int_T C_2 e^{i2t} \, e^{-it} dt \\
 &= \int_T C_2 e^{it} dt \\
-0 &= \frac{1}{i} C_2 e^{it} |_T = \frac{1}{i} C_2 e^{i(T_{final} - T_{initial})} \\
+0 &= \frac{1}{i} C_2 e^{it} |_T = \frac{1}{i} C_2 \left[ e^{i T_{final}} - e^{i T_{initial}} \right] \\
 \end{align*}
 $$
 
 We can be sure from the definition of Fourier Series we established before that $C_2$, or rather in general $C_n$, were all coefficient without $t$ parameter. So the only way possible for the left hand side to become 0,
-is if the right hand side uses interval where $e^{i(T_{final} - T_{initial})} = 0$. This interval can be $-\pi$ to $\pi$ or $0$ to $2\pi$.
+is if the right hand side uses interval where $e^{i T_{final}} - e^{i T_{initial}} = 0$. This interval can be $-\pi$ to $\pi$ or $0$ to $2\pi$.
 To attain symmetry around $0$, let's use interval $T_{initial}=-\pi$ to $T_{final}=\pi$.
 
 Now note that the integral above can be successfully evaluated to zero because $e^{i(n-k)t}=e^{it}$. But every possible $(n-k)$ will be an integer. Also, it just really convenient that
-$e^{i(n-k)(T_{final}-T_{initial})} = 0$ for any integer $(n-k)$, except when $n-k=0$.
+$e^{i (n-k) T_{final}} - e^{i (n-k) T_{initial}} = 0$ for any integer $(n-k)$. Except when $n-k=0$, something special with the integral happens.
 
 For our target component which is $n-k=0$, the integral becomes:
 
