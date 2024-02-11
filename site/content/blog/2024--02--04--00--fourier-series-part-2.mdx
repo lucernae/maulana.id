@@ -1,0 +1,547 @@
+---
+layout: blog-post
+title: 'Fourier Series: part 2'
+description: Fourier series for non-periodic function
+date: 2024-02-04T00:00:00.00Z
+category:
+    name: blog
+---
+
+# Periodicity of a Fourier Series
+
+As we already described in the [previous article of part 1](../2024--01--29--00--fourier-series-part-1/), if we consider
+a periodic function $g(t)$ in the span of its period $T$, we can decompose and break it down into its set of components
+$C_n$ in which we can use it and reconstruct it back as a Fourier Series to represent the function.
+
+Previously, we test it on a function $\cos(t)$ that has the same period as $e^{it}$. What if the period is different?
+Or rather, a more important question, how do we even detect the period?
+
+In the previous article, we found out the integral transform that lets us compute the coefficient (or component) for each basis
+in the Fourier Series.
+
+$$
+\begin{align*}
+\tag{E1}
+C_k = \frac{1}{T} \int_T g(t) \, e^{-ikt} \, dt
+\end{align*}
+$$
+
+As we can see, the span $T$ is directly tied with the unit of $t$ used by function $g(t)$. Suppose that we want to define
+a complete period $T$ by having a value of $1$, to denote its meaning as a **complete** cycle. Then we would have to
+redefine the parameter $t$, or the transform itself. Suppose we don't want to redefine $t$ because we want to have the function $g(t)$ unaltered.
+
+Then, if we want to keep the same **inner product rule** of Fourier basis, with symmetry around $t=0$, then the span has to become $T_{initial}=-\frac{1}{2}$ and $T_{final}=\frac{1}{2}$,
+such that the span $T=1$. Consequently, we need to change the basis from $e^{-ikt}$ into $e^{-i 2 \pi k t}$. This is from a
+simple changes of unit from $t' = \frac{t}{2\pi}$, with $t'$ the new parameter with ranges $[-\frac{1}{2},\frac{1}{2}]$.
+
+Writing $2\pi$ over and over again after this will be such a pain. So we introduce a corresponding constant called Tau $\tau = 2 \pi$.
+One Tau $\tau$, means one complete cycle.
+
+Then if we want to have the same and consistent coefficient value. We redefined the Fourier Series to use this following form.
+
+$$
+
+\begin{align*}
+\tag{E2}
+g(t) = \sum_n^N C_n \, e^{i \tau n t}
+\end{align*}
+$$
+
+Now that we defined a standard "period" or "cycle" using unit $\tau$. We can redefine the series for arbitrary period, relative to this $\tau$ unit.
+
+Suppose that a function $g(t)$ has period $T$ that is not $1$. It can be less or greater. We actually want to find this period value.
+
+The catch is, for any periodic function that has multiple harmonics, it will have multiple set of $C_n$ value. Probably, it is not symmetric as well.
+Each $C_n$ will have its corresponding period in this case. So let's say we want to figure out the **main** or **principal** period.
+This has to be the period of $C_0$.
+
+Fortunately, we have two ways of calculating $C_0$. One way, by setting the value $k=0$, before doing the integration.
+So we have our regular integral under the curve $g(t)$, for all $t$:
+
+$$
+\begin{align*}
+C_0 &= \int_T g(t) \, e^{-i \tau k t} \, dt \\
+&= \int_T g(t) \, dt \\
+\end{align*}
+$$
+
+The second way, is by doing the integration first, then setting $k=0$.
+
+$$
+\begin{align*}
+C_0 &= \int_T g(t) \, e^{-i \tau k t} \, dt \\
+&= G(k, T) \\
+&= G(0, T) \\
+\end{align*}
+$$
+
+From the integration, we will have an anti-derivative $G(k, T)$ as a function of $k$ and $T$, the span of the period.
+From the equality between the two results, we can calculate the principal period.
+
+Since this relies on having $C_0$ defined as the total integral of $g(t)$ over all values of $t$. It is important that
+the integral actually converges for any $t$.
+
+A classic example would be a damping oscillator that takes form of $g(t) = A e^{-\lambda t} e^{i\omega t}$.
+
+Let's calculate its principal coefficient $C_0$ using its total area integral under the curve, from $t=0$ to $t=\infty$.
+
+$$
+\begin{align*}
+C_0 &= \int_T g(t) \, e^{-i \tau k t} \, dt \\
+&= \int_T A e^{-\lambda t} e^{i\omega t}\, dt \\
+&= \left[ \frac{A}{i\omega - \lambda} e^{-\lambda t} e^{i\omega t} \right]_{0}^\infty \\
+&= \frac{A}{\lambda - i\omega}
+\end{align*}
+$$
+
+Then we calculate using the integral transform while keeping $k$ as variable. Then we use the period $T$, with initial value $t=0$.
+
+$$
+\begin{align*}
+C_0 &= \int_T g(t) \, e^{-i \tau k t} \, dt \\
+&= \int_T A e^{-\lambda t} e^{i\omega t}\, e^{-i \tau k t} dt \\
+&= \left[ \frac{A}{i(\omega-\tau k) - \lambda} e^{-\lambda t} e^{i(\omega - \tau k) t} \right]_{0}^T \\
+\frac{A}{\lambda - i\omega} &= \frac{A}{\lambda - i(\omega -\tau k)} + \frac{A}{i(\omega-\tau k) - \lambda} e^{-\lambda T} e^{i(\omega - \tau k) T}
+\end{align*}
+$$
+
+If we let any terms without $T$ be evaluated with $k=0$, we will have:
+
+$$
+\begin{align*}
+\frac{A}{\lambda - i\omega} &= \frac{A}{\lambda - i(\omega -\tau k)} + \frac{A}{i(\omega-\tau k) - \lambda} e^{-\lambda T} e^{i(\omega - \tau k) T} \\
+0 &= e^{-\lambda T} e^{i(\omega - \tau k) T}
+\end{align*}
+$$
+
+We are guessing that the above equation can be true for multiple of $T$.
+The easiest trivial one is at the limit of $T=\infty$, in which the expression $e^{-\lambda T}$ will be so small, it can be evaluated as zero.
+
+The other set is to solve the second expression: $e^{i(\omega - \tau k) T} = 0$, which is not possible. So the principal period when $k=0$ is actually $T=\infty$.
+
+It was unfortunate that we actually contradict our original assumptions. But hey, that is called progress.
+So, even though we can predict that the damping oscillator will have an oscillating frequency for $\omega$ it turns out the principal coefficient $C_0$
+from the function can only be found when we assume $T=\infty$, the period to be really big.
+
+# Relearning what it means for a Period and Frequency in a Fourier Series
+
+Since our assumption is wrong. We need to rethink what went wrong.
+
+If we take another simple example, such as $\cos(t)$, we already know that its non-zero coefficient is in fact $C_1$ and $C_{-1}$.
+The $C_0$ is zero. So what does it mean for this kind of case?
+
+From what we understand if we set $k=0$, the inner product transform has become integral under the curve
+
+$$
+\begin{align*}
+C_0 &= \int_T g(t) \, e^{-i \tau k t} \, dt \\
+&= \int_T \cos(t) \, dt \\
+&= \sin(t) |_T
+\end{align*}
+$$
+
+Although the values were convergent, it is very dependent on $T$. For example, if the ranges were $[-\frac{\pi}{2}, \frac{\pi}{2}]$, the integral value is 2.
+But the function $\sin(t)$ is clearly periodic on $T=2\pi$, so why we can't retrieve this value from the transform?
+
+If we look at the definition of "periodic function", it means any function that satisfies $g(t) = g(t+T)$ for a given $T$.
+Important point is that $T$ is only affected by the "length" of the span, it is not affected by the starting point of the function. Consequently, any integer multiple of $T$ will also work.
+So that: $g(t) = g(t+T) = g(t+mT)$, when $m$ is an integer.
+
+But, if we use the Fourier Series definition from E2, $T$ is a direct overlap from the period of the exponential function.
+
+$$
+\begin{align*}
+g(t) &= g(t+mT) \\
+\sum_n^N C_n \, e^{i \tau n t} &= \sum_n^N C_n \, e^{i \tau n \left(t + mT \right)}
+\end{align*}
+$$
+
+Since the coefficient $C_n$ will be the same between left hand side and right hand side, the only factor to make the equality is when:
+
+$$
+\begin{align*}
+1 &= e^{i \tau n m T }
+\end{align*}
+$$
+
+Above equality only happens when $nmT$ is an integer, because $\tau = 2 \pi$. If $nmT$ is not an integer, $e^{i \tau n m T }$ becomes a
+complex number with real and imaginary component, clearly not equal to $1$.
+
+Suppose that $T$ is the fundamental period we are trying to find. The smallest non-zero period possible. Then $mT$ is an integer multiple of the period.
+Let's call it $P = mT$. Then, we have a reciprocal relationship between $n$ and $P$.
+We also redefined connection between the index of the Fourier Series $n$ (as seen in E2),
+with the index of the integral transform $k$ (as seen in E1).
+
+Our motivation is of course to make $n=k$, so that we have a direct relationship between period used by the function $g(t)$ in $E2$, with the span of the integration in $E1$.
+
+In the case of $n=k$, the connection is from the relation of the integral under the curve to retrieve $C_0$ from both E2 and E1.
+
+Our problem is now the scaling for value $C_0$. If we use the transform and set $k=0$, we got integral under the curve.
+The range of the integration $P$ can be broken down into $m$ partition of integrals with range $T$ each.
+So, essentially $C_0$ for range $P$ now becomes $m$ times the $C_0$ for range $T$. It has different meaning, as illustrated below:
+
+$$
+\begin{align*}
+C_{P,0} &= \int_P g(t) \, e^{i\tau k t } \, dt \\
+&= \int_t^{t+T} g(t) \, e^{i\tau k t } \, dt + \int_{t+T}^{t+2T} g(t) \, e^{i\tau k t } \, dt + ... \\
+&= m \int_T g(t) \, e^{i\tau k t } \, dt \\
+&= m C_{T,0} \\
+\end{align*}
+$$
+
+Which is clearly inconsistent, since we have just defined that the Fourier Series representation will use the same coefficient $C_0$.
+To make it consistent for arbitrary period $P$, the form of the integral transform need to be patched with normalization factor $P$ again.
+
+$$
+\begin{align*}
+\tag{E3}
+C_k = \frac{1}{P} \int_P g(t) \, e^{-i\tau k t} \, dt
+\end{align*}
+$$
+
+This time, the meaning has slightly changed.
+
+- $T$ is the smallest non-zero period that served as the range of integration, the value can be arbitrary
+- $P$ is the span/length of the integration. It is like a test/window of evaluation to get the corresponding frequency $k$
+- $k$ is an integer that corresponds to the "frequency", and a reciprocal of set of values of $mT$.
+
+This time, regardless with the arbitrary ranges $P$, our Fourier series is now applicable for any linear combination of periodic function.
+If the coefficient exists for an integer frequency $k$, that means a corresponding period $T_k = m T$ exists.
+
+Note that for the above convention to work, the description of the relation can't be standalone.
+An integer $k$ would mean that $P$ is greater than $T$. For example, suppose that we have a function $\cos(2\pi t)$.
+Using a range of integration $P$ from $[-5,5]$ for parameter $t$, we will have $k=1$ results in $C_1=0$, if using formula $E3$.
+
+However, from constructing the Fourier series directly, $n=1$ means $C_1=\frac{1}{2}$ if using formula $E2$. The index now doesn't match.
+
+# Matching the index of Fourier Series with the index of the integral transform
+
+If we want to have some kind of "inverse transform" relationship, the index $n$ and $k$ need to actually match the scale.
+Not just when both are 0.
+
+Our new formula $E3$ now allows us to identify the smallest non-zero period $T$. From there, we can match the scale of "frequency" $k$ to the index of the Fourier series term $n$.
+
+The smallest non-zero period $T$ should be able to be found, if we let $k$ to be a real number, not just an integer.
+
+If a "cycle" in Fourier series term means $nT$, then a "cycle" in the integral transform corresponds to $kP$.
+This is because the following relation will be true for each basis used between formula $E2$ and $E3$
+
+$$
+e^{i \tau n T} = e^{i \tau k P}
+$$
+
+Naturally, if we let $n$ to be integers, then $k$ has to be between 0 and 1 (a real number, not integer), because $P$ is much bigger than $T$.
+The idea is that the right hand side uses integral transform as some kind of sampling process.
+So the data that going to be integrated has to be a much denser set than the smallest period the signal can have.
+
+Rearranging things, we will have:
+
+$$
+\frac{n}{P} = \frac{k}{T}
+$$
+
+Let us let the left hand side consists of only integers (both for $n$ and $P$), and let the right hand side corresponds to
+real numbers (both for $k$ and $T$). Since $\frac{k}{T}$ is also a real number, we can even rename it as just one real number variable.
+We can call this the "continuous" version of "frequency", and we can name it $f=\frac{k}{T}$.
+
+Also, to make life simpler, we call the integral transform, a "Fourier Transform". Which can take the following form in our current derivation:
+
+The integer ($n$ and $P$) parameter form:
+
+$$
+C_n = \frac{1}{P} \int_P g(t) \, e^{-i\tau \frac{n}{P} t} dt
+$$
+
+The real number ($k$ and $T$) parameter form:
+
+$$
+C_k = \frac{1}{P} \int_P g(t) \, e^{-i\tau \frac{k}{T} t} dt
+$$
+
+The real number "continuous frequency" form:
+
+$$
+C_f = \frac{1}{P} \int_P g(t) \, e^{-i \tau f t} dt
+$$
+
+We should be able to construct the corresponding Fourier Series, as long as we used the same span/length and index name for the terms.
+
+These two operations is shown to be inverse of each other (proof maybe later on).
+The "Fourier Transform" is known as the "analysis" process, because it breaks down signals/functions into its corresponding set of coefficient of frequencies.
+Meanwhile, the "Fourier Series" is known as the "synthesis" process, because it uses the frequency sets to construct back the original signals/functions.
+
+# Extending Fourier Transform/Series pairs into non-periodic function
+
+Previously, we had an accidental hint that Fourier Transform might work for non-periodic function, as long as the $C_0$ coefficient converges.
+If we think about it, the concept does make sense. $C_0$ means coefficient for the "Zero-th" frequency.
+So, the fundamental period/frequency is actually "no period/frequency applicable" for the previous decayed oscillation we discussed before.
+Meaning, as a whole, the function itself is not periodic, even though it oscillates (have other sets of frequencies).
+
+While the Fourier Transform itself is computable for this kind of function.
+The "synthesis" part, the Fourier Series, doesn't make any sense anymore.
+This is because there are no "fundamental frequency" to build the series.
+The $T$ just doesn't exist because for such function, it can be set to an arbitrarily large length, since we never found the periodicity using previous method.
+
+We will now try to understand what is the equivalent "synthesis" part of the duality for non-periodic function.
+
+In this case, let $P$ be an infinite span. For a specific reason, this has to be an integer for now, so bear with me.
+Also, in this case, it is necessary to declare that $T=P$, because the function is non-periodic (aperiodic).
+
+We will use the "continuous" version of the Fourier Transform. This is because due to the reciprocity between period and frequency,
+"infinite period" means "infinitely small frequency". So the frequency index can't be an integer anymore.
+
+$$
+\begin{align*}
+\tag{E4}
+C_f &= \frac{1}{P} \int_P g(t) \, e^{-i \tau f t} dt \\
+&= \lim_{T \to \infty} \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}} g(t) \, e^{-i \tau f t} dt \\
+\end{align*}
+$$
+
+To make sense of the above transform. First, imagine that the period $T$ is initially small. But we will gradually increase it.
+This, in turn will cause $C_f$ to be increasingly small, since the normalization factor $\frac{1}{T}$ gets huge.
+
+Now we want to construct the "synthesis" part. But first we began to construct it using integer for small value of $T$.
+For each term, using integer index means the spacing between each successive value of $n$ is equal to $\Delta n = 1$.
+If we now uses the "continuous" version of the index $f$, spacing between successive terms becomes much denser, with each
+difference become $\Delta f$, increasingly small.
+
+Note that the relation $nT=kP$ has to be maintained.
+
+$$
+\begin{align*}
+nT &= kP \\
+n &= \frac{k}{T} P = fP \\
+\Delta n &= \Delta f P \\
+\end{align*}
+$$
+
+If we write out the Fourier Series:
+
+$$
+\begin{align*}
+g(t) &= \sum_n^N C_n \, e^{i\tau \frac{n}{P} t} = \sum_n^N C_n \, e^{i\tau \frac{n}{P} t} \Delta n \\
+& = \sum_k C_k \, e^{i\tau \frac{k}{T} t} \, \Delta n = \sum_f C_f \, e^{i\tau f t} \, \Delta n \\
+& = \lim_{\Delta f \to 0} \sum_f C_f \, e^{i\tau f t} \, P \, \Delta f  \\
+\end{align*}
+$$
+
+Substituting $C_f$ as $T \to P$ and $P \to \infty$.
+
+$$
+\begin{align*}
+g(t) & = \lim_{\Delta f \to 0, \, T \to P, \, P \to \infty} \sum_f \frac{P}{T} \left[ \int_{-\frac{T}{2}}^{\frac{T}{2}} g(t) \, e^{-i \tau f t} dt \right] \, e^{i\tau f t} \, \Delta f  \\
+\end{align*}
+$$
+
+Under above condition, we can simplify things by taking into the limit:
+
+Let's introduce another function $F(f)$.
+
+$$
+\begin{align*}
+\tag{E5}
+C_f &= \lim_{T \to \infty} \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}} g(t) \, e^{-i \tau f t} dt \\
+F(f) &= \lim_{T \to \infty} T \, C_f = \lim_{T \to \infty} \int_{-\frac{T}{2}}^{\frac{T}{2}} g(t) \, e^{-i \tau f t} dt \\
+F(f) &= \int_{-\infty}^{\infty} g(t) \, e^{-i \tau f t} dt
+\end{align*}
+$$
+
+The Fourier Series/Sum now can be converted into an integral
+
+$$
+\begin{align*}
+\tag{E6}
+g(t) & = \lim_{\Delta f \to 0, \, T \to P, \, P \to \infty} \sum_f \frac{P}{T} \left[ \int_{-\frac{T}{2}}^{\frac{T}{2}} g(t) \, e^{-i \tau f t} dt \right] \, e^{i\tau f t} \, \Delta f  \\
+&= \lim_{\Delta f \to 0} F(f) \, e^{i\tau f t} \, \Delta f  \\
+&= \int_{-\infty}^{\infty} F(f) \, e^{i\tau f t} \, df \\
+\end{align*}
+$$
+
+Both the "analysis" and "synthesis" part now becomes integral transform and dramatically took a similar form.
+
+The Fourier Transform now converts a function into another function with different domain. Since it depends on frequency $f$,
+we usually call it the function on **frequency domain**.
+
+The Fourier Series now takes form of another integral transform that can be called an **Inverse Fourier Transform**.
+The function is in the **time domain**.
+
+Although we call it frequency and time domain, for non-periodic function, there is no canonical identity that lets us
+determine whether a function comes from a Fourier Transform (FT) or an Inverse Fourier Transform (IFT).
+This is because if both of them were complex function, the domain are the same.
+
+Although, historically for physics related problem, a function in real number space is usually called function in the time domain.
+Meanwhile, a function that is in the complex number space (which has frequency and phase information) is called function in the frequency domain.
+For signal processing, it is very convenient to express a function in their frequency domain.
+
+# Constructing periodic Fourier Series from the non-periodic Fourier Transform
+
+Our notion of the transformation now changes from finding coefficients of integer indices into finding a function in the frequency domain.
+
+Surprisingly, the non-periodic formula of FT and IFT works really well for periodic function too. We just need to take into account the appropriate normalization scaling.
+
+Let's take an example of a function $\cos(\omega t)$.
+
+First, we tried to determine whether this is periodic or non-periodic, from the FT at frequency 0.
+Suppose that the function is periodic, then there exists the smallest non-zero interval $T$, in which
+the FT can be decomposed into a partition of $n$ integral with the same $T$ interval.
+
+Its FT, the frequency-domain function:
+
+$$
+\begin{align*}
+F(f) &= \int_{-\infty}^{\infty} \cos(\omega t) \, e^{-i \tau ft} \, dt \\
+&= \lim_{n \to \infty} n \, \int_{t}^{t+T} \cos(\omega t) \, e^{-i \tau ft} \, dt \\
+F(0) &= \lim_{n \to \infty} n \, \int_{t}^{t+T} \cos(\omega t) \, dt \\
+&= \lim_{n \to \infty} \frac{n}{\omega} \, \left[ \sin(\omega t + \omega T) - \sin(\omega t) \right] \\
+\end{align*}
+$$
+
+The FT with frequency 0 corresponds to the average/mean of the area of the integration.
+For periodic function, the average has to be the same for any integer multiple of $T$, the smallest non-zero period.
+In this situation, the average area $\lim_{n\to \infty} \frac{F(0)}{n}$ has to be constant under changes of $t$.
+So the derivative with respect to $t$ is zero.
+
+$$
+\begin{align*}
+D_t \left[ \lim_{n\to \infty} \frac{F(0)}{n} \right] = 0 \\
+\frac{1}{\omega} \, D_t \left[ \sin(\omega t + \omega T) - \sin(\omega t) \right] &= 0\\
+\cos(\omega t + \omega T) = \cos(\omega t) \\
+\omega T = 2 \pi \\
+T = \frac{2 \pi}{\omega}
+\end{align*}
+$$
+
+We can then reduce the range of the FT. Instead of integrating from $-\infty$ to $\infty$. We can use
+$-\frac{\pi}{\omega}$ to $\frac{\pi}{\omega}$
+
+The FT then becomes:
+
+$$
+\begin{align*}
+F(f) &= \int_{-\frac{\pi}{\omega}}^{\frac{\pi}{\omega}} \cos(\omega t) \, e^{-i \tau ft} dt \\
+&= \left[\frac{1}{\omega} \, \sin(\omega t) \, e^{-i \tau ft} \right]_{-\frac{\pi}{\omega}}^{\frac{\pi}{\omega}}
++ \frac{i \tau f}{\omega} \int_{-\frac{\pi}{\omega}}^{\frac{\pi}{\omega}} \sin(\omega t) \, e^{-i \tau ft} dt \\
+&= 0 + \left[\frac{i \tau f}{\omega} \, \frac{(-1)}{\omega}  \, \cos(\omega t) \, e^{-i \tau ft} \right]_{-\frac{\pi}{\omega}}^{\frac{\pi}{\omega}}
++ \frac{(i \tau f)^2}{\omega} \, \frac{(-1)}{\omega} \, \int_{-\frac{\pi}{\omega}}^{\frac{\pi}{\omega}} \cos(\omega t) \, e^{-i \tau ft} dt \\
+&= - \frac{i \tau f}{\omega^2} \, \left[ e^{-i\tau f \frac{\pi}{\omega}} - e^{i\tau f \frac{\pi}{\omega} } \right] + \frac{(\tau f)^2}{\omega^2} \, F(f) \\
+&= \frac{2 \tau f}{\omega^2}\, \sin(\tau f \frac{\pi}{ \omega}) + \frac{(\tau f)^2}{\omega^2} \, F(f) \\
+\omega^2 \, F(f) - (\tau f)^2 \, F(f) &= 2 \tau f \, \sin(\tau f \frac{\pi}{ \omega}) \\
+F(f) &= \frac{2 \tau f}{\omega^2 - (\tau f)^2} \, \sin(\tau f \frac{\pi}{\omega})
+\end{align*}
+$$
+
+If we see the above function $F(f)$, it is immediately obvious that the function will have a peak frequency when $\omega^2 - (\tau f)^2=0$.
+Meaning that the function will have Fourier Series coefficient at $f_{peak}=\pm\frac{\omega}{\tau}$.
+
+$F(f_{peak})$ will have indefinite form $\frac{0}{0}$, when $f_{peak}$. This would imply that we should use L'Hopital's rule to get the limit of the value.
+
+$$
+\begin{align*}
+\lim_{f \to f_{peak}} F(f) &= \frac{2 \tau f}{\omega^2 - (\tau f)^2} \, \sin(\tau f \frac{\pi}{\omega}) \\
+&= \frac{2 \tau}{- 2 \tau^2 f} \, \sin(\tau f \frac{\pi}{\omega}) + \frac{2 \tau f}{- 2 \tau^2 f} \, \tau  \frac{\pi}{\omega} \cos(\tau f \frac{\pi}{\omega})
+= -\frac{1}{\tau f} \, \sin(\pi) - \frac{2 \tau^2 f \pi}{2 \tau^2 f \omega} \, \cos(\pi) \\
+&= \frac{\pi}{\omega}
+\end{align*}
+$$
+
+From the same function of $F(f)$, we can also check which frequency $f$ that has zero value of $F(f)$.
+It's easily be $f_n = n \frac{\omega}{\tau}$. We can then define the index $n$ that can be used in the Fourier Series approximation.
+So, the Fourier coefficient set only contains 2 values: $F(f_{-peak})$ and $F(f_{peak})$
+
+The Fourier Series then will be like this:
+
+$$
+\begin{align*}
+g(t) &= \frac{1}{T} \sum_n^N F(f_n)\, e^{i\tau f_n t} \\
+&= \frac{\omega}{2 \pi} \left[ \frac{\pi}{\omega}\, e^{i \omega t} + \frac{\pi}{\omega} \, e^{-i \omega t} \right] \\
+&= \frac{e^{i \omega t} + e^{-i \omega t}}{2} \\
+&= \cos(\omega t)
+\end{align*}
+$$
+
+Which is indeed that we recover the original function using the Fourier Series.
+
+As for why we are using the Fourier Series instead of the IFT integral transform, this is because for periodic function it will be essentially the same for finite range of integration $T$.
+It is also easier to compute if the set of frequencies are finite.
+
+# Recap
+
+The journey this time is quite long, but I think it is helpful as a simulation to build ideas from first principle.
+
+As you may now, in engineering course, we often directly use Fourier Transform and Fourier Transform Inversion Theorem directly.
+At least when I first learn it, it feels un-intuitive and looks like hand-waving the theorem without intuitive grounds.
+Sure, it is easier to use because the theorem has been proven and reformed into a much more easier presentation.
+But sometimes it feels like it lacks fundamental understanding on why **it has to be that way**.
+
+This illustration serves as a guide on how to view math as an **exploration of ideas**.
+We build it, test it, figure out what went wrong when it doesn't do what we expect.
+Then finally, we condense the theory so that it can be easily used in a much more generic situation.
+
+Let's have a quick recap.
+
+We start from building upon the ideas of Fourier Series, its alternative view as **inner product** orthogonal basis, and its integral transform to compute the coefficient.
+We then arrived at a much more generic formula that can be reduced into Fourier Series for a much more specific case.
+
+Given a complex function with **time** parameter $t \to g(t)$.
+If the integral converges over its domain $t$, then there exists a Fourier Transform **FT**:
+
+$$
+\begin{align*}
+\tag{T1}
+F(f) = \int_{-\infty}^{\infty} \, g(t) \, e^{-i\tau f t} \, dt
+\end{align*}
+$$
+
+With $F(f)$ another complex function, but on a **frequency** domain with parameter $f$.
+The inverse transform: Inverse Fourier Transform **IFT** also exists:
+
+$$
+\begin{align*}
+\tag{T2}
+g(t) = \int_{-\infty}^{\infty} \, F(f) \, e^{i\tau f t} \, df
+\end{align*}
+$$
+
+In the case of periodic function, we can find the smallest periodic interval $T$, by finding the average value of the integration.
+Suppose $F(f,n, T)$ is the function in frequency domain with boundary/interval parameter $T$, and number of integer partitions $n$.
+
+$$
+\begin{align*}
+\tag{T3}
+F(f, n, T) = \lim_{n \to \infty} \, n \int_{t}^{t+T} \, g(t) \, e^{-i\tau f t} \, dt
+\end{align*}
+$$
+
+If there exists $T$ as the smallest non-zero period. Then the zero-th frequency is the average/mean of integral under the curve.
+For periodic function, this value has to be constant under parameter $t$. This can be expressed as:
+
+$$
+\begin{align*}
+\tag{T4}
+\frac{d}{dt} \left[ \lim_{n\to\infty} \frac{F(0, n, T)}{n}\right] = 0
+\end{align*}
+$$
+
+Solve $T4$ to get the period $T$. Use the boundary to perform FT.
+Construct discrete indices $n$ in which frequency $f_n$ is defined.
+We can then approximate the Fourier Series for periodic function $g_T(t)$ using:
+
+$$
+
+\begin{align*}
+\tag{T5}
+g_T(t)=\frac{1}{T} \sum_n^N F(f_n)\, e^{i\tau f_n t}
+\end{align*}
+$$
+
+For finite set of frequency spectrum $F(f_n)$, it can be shown that above approximation is equal to the original function, $g(t)=g_T(t)$.
+
+From above interpretation, we can then interpret the difference between Taylor approximation and Fourier approximation.
+
+Taylor series is an approximation of the function at only the point $t$ of the evaluation.
+Fourier series is an approximation of the function at a given interval $T$ of the evaluation.
+
+In this sense, Fourier Series can be thought of as a "compression" technique for an information about the function.
+For any periodic function with infinite domain, there exists a small subset of interval $T$, in which we can sample the function to retrieve the **frequency** information.
+This discrete set of frequency is then enough to reconstruct the function for the whole intervals.
