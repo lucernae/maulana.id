@@ -1,0 +1,94 @@
+---
+layout: blog-post
+title: 'Fourier Series: part 4'
+description: 'Fourier Transform and its identities: part 2'
+date: 2024-02-23T00:00:00.00Z
+category:
+    name: blog
+---
+
+# Fourier Transform Identities and Properties
+
+We covered the basics of FT properties in [previous article of part 3](../2024--02--11--00--fourier-series-part-3/)
+
+In this article, we are going to cover some more properties, in a more abstract way.
+
+## Fourier Transform of a derivative
+
+If we have function $g(t)$, and its derivative $g'(t)$. Then there is a relation between the fourier transform of $g(t)$ and $g'(t)$.
+
+Suppose that the FT of $g(t)$ is $G(f)=\widehat{g}(f)$.
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ g(t)\right\} &= \widehat{g}(f) = G(f)
+\end{align*}
+$$
+
+Then the FT of the derivative $g'(t)$ with respect to $t$ is:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ g'(t)\right\} &= \int_{-\infty}^\infty g'(t) \, e^{-i\tau f t} dt \\
+&= \left[ g(t)\, e^{-i\tau f t} \right]_{-\infty}^\infty + i \tau f \, \int_{-\infty}^\infty g(t) \, e^{-i\tau f t} dt \\
+&= 0 + i \tau f \, \widehat{g}(f) \\
+&= i \tau f \, \widehat{g}(f) = i \tau f \, G(f) \\
+\end{align*}
+$$
+
+From step (1) to (2), we use integration by parts.
+From step (2) to (3), we rely on the assumption that if $g(t)$ is periodic, then the first term will vanish to zero.
+If it is not periodic, then we are going to assume that the average also vanish to zero as $\lim_{t\to\infty}g(t) = 0$.
+Finally we got result (4).
+
+So interestingly, an FT of a derivative wrt to $t$, is the same as the FT of the original function, times $i \tau f$, with $f$ being the dual variable of $t$ (its frequency domain).
+
+Basically FT turns derivative into a multiplication in the frequency domain.
+
+The other interesting aspect is that you will get the same result, even if you tried to derive it using the inverse FT.
+
+$$
+\begin{align*}
+g(t) &=  \mathcal{F}^{-1}\left\{ G(f) \right\} \\
+&=  \int_{-\infty}^\infty G(f) \, e^{i\tau f t} df \\
+\frac{d}{dt} g(t) &= \frac{d}{dt} \int_{-\infty}^\infty G(f) \, e^{i\tau f t} df \\
+g'(t) &= \int_{-\infty}^\infty G(f) \, \left[ \frac{d}{dt}  e^{i\tau f t} \right] df \\
+&= \int_{-\infty}^\infty \left[ i \tau f G(f) \right] \,  e^{i\tau f t} \, df \\
+g'(t) &= \mathcal{F}^{-1}\left\{ i \tau f G(f) \right\} \\
+\mathcal{F}\left\{ g'(t) \right\} &= i \tau f G(f) \\
+\end{align*}
+$$
+
+Step (1) and (2) is using the definition of inverse Fourier Transform.
+Step (3) to (4) is assuming the convergence of the integrals, then by linearity, we can swap the order of integrals
+and derivative, because it is against a different variable.
+In step (4), we took derivative of $e^{i\tau f t}$ because it is the only term that contains variable $t$.
+Step (5) is using the definition of inverse Fourier Transform, but backwards. The term in the bracket must be the Fourier Transform of $g'(t)$.
+
+In summary, we conclude:
+
+$$
+\begin{align*}
+\tag{P7}
+\mathcal{F}\left\{ g(t) \right\} &= G(f) \\
+\mathcal{F}\left\{ g'(t) \right\} &= i \tau f G(f) \\
+\mathcal{F}\left\{ D_t^n g(t) \right\} &= (i \tau f)^n G(f) \\
+\end{align*}
+$$
+
+The last row is a direct result if we took the derivative of $g(t)$, as much as $n$ times.
+
+## Fourier Transform of a constant function
+
+The next interesting thing to observe after figuring out derivative, is how we model a Fourier Transform of a constant function.
+
+A constant function is tricky. It expands to both $\infty$ and $-\infty$, so the integral (area under the curve), is definitely $\infty$ as well.
+
+In terms of periodicity, we can think of constant function as a function that has "arbitrarily small" fundamental period.
+We can set it as small as possible, and it can still be considered as a periodic function, since the output is constant.
+
+This made us wonder, suppose that there exists a smallest interval possible (but still non-zero), that can't be divided again.
+Can we use this as the fundamental period $T$?
+
+Let's challenge this idea. But first, let us use a constant $h$ to represent this smallest interval. Also, remember, it can't be zero.
+
