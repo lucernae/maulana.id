@@ -82,13 +82,401 @@ The last row is a direct result if we took the derivative of $g(t)$, as much as 
 
 The next interesting thing to observe after figuring out derivative, is how we model a Fourier Transform of a constant function.
 
+We can have two different approach.
+
+Approach A: use the fact that a constant function can be thought of as a periodic function with finite smallest non-zero period T. 
+Then, we can use Fourier Series approximation to construct back the original function.
+
+Approach B: use the fact that a constant function can also be thought of as a non-periodic function with infinite period T.
+Then, we can use Inverse Fourier Transform integral to construct back the original function.
+
+### Constant function, interpreted from periodic function
+
 A constant function is tricky. It expands to both $\infty$ and $-\infty$, so the integral (area under the curve), is definitely $\infty$ as well.
 
 In terms of periodicity, we can think of constant function as a function that has "arbitrarily small" fundamental period.
 We can set it as small as possible, and it can still be considered as a periodic function, since the output is constant.
 
-This made us wonder, suppose that there exists a smallest interval possible (but still non-zero), that can't be divided again.
+This made us wondering. Suppose that there exists a smallest interval possible (but still non-zero), that can't be divided again.
 Can we use this as the fundamental period $T$?
 
-Let's challenge this idea. But first, let us use a constant $h$ to represent this smallest interval. Also, remember, it can't be zero.
+Let's challenge this idea. But first, let us use a constant $h$ instead of $T$ to represent this smallest interval. Also, remember, it can't be zero.
+In this interval, the value of $g(t)$ is decidedly 1 (a constant).
 
+We are going to use periodic approximation from [article 2-T3](../2024--02--04--00--fourier-series-part-2/#recap)
+
+$$
+\begin{align*}
+G(f, N, h) &= N \int_{t}^{t+h} g(t) \, e^{-i\tau f t} \, dt \\
+&= N \int_{t}^{t+h} 1 \, e^{-i\tau f t} \, dt \\
+&= N \int_{t-\frac{h}{2}}^{t+\frac{h}{2}} 1 \, e^{-i\tau f t} \, dt \\
+&= N \left[ \frac{e^{-i\tau f t}}{-i \tau f} \right]_{t-\frac{h}{2}}^{t+\frac{h}{2}} \\
+&= N \left[ \frac{e^{-i\tau f t}}{i \tau f} \right]_{t+\frac{h}{2}}^{t-\frac{h}{2}} \\
+&= N \left[ \frac{e^{-i\tau f t + i \tau f \frac{h}{2}}-e^{-i\tau f t - i \tau f \frac{h}{2}}}{i \tau f} \right] \\
+&= N \, e^{-i\tau f t} \left[ \frac{e^{i \tau f \frac{h}{2}}-e^{-i \tau f \frac{h}{2}}}{i \tau f} \right] \\
+&= N \, e^{-i\tau f t} \, h \, \frac{\sin(\tau f \frac{h}{2})}{\tau f \frac{h}{2}} \\
+&= N  \, h \, e^{-i\tau f t} \operatorname{sinc}(\tau f \frac{h}{2}) \\
+\end{align*}
+$$
+
+From step (1) to (2), we evaluate the value of $g(t)=1$ in this interval.
+
+From step (2) to (3), notice that for a constant value, we can shift the interval so that $t$ is the center.
+The range is shifted into $t\pm\frac{h}{2}$ because the length needs to be the same $h$.
+
+From step (7) to (8), we use the definition of $\sin(\phi) = \frac{e^{i\phi} - e^{-i\phi}}{2i}$.
+
+From step (8) to (9), we use the definition of sine cardinal function: $\operatorname{sinc} = \frac{\sin(\phi)}{\phi}$.
+
+Looking at the last expression, we know that the whole interval of domain $t$ is approximately $Nh$.
+This is because the integral under the curve had to match (means the frequency $f=0$).
+
+For a constant function $g(t)$, we can pick any $t$ and it should behave the same way as if $t=0$, the center of the function.
+So, evaluating $t=0$ would cause $e^{-i \tau f t} = 1$. We will then being left with the final expression:
+
+$$
+G(f,N,h) = N  \, h \, \operatorname{sinc}(\tau f \frac{h}{2})
+$$
+
+But, it's not over yet. Ideally the function should be independent from any variable other than $f$. So, we need to figure out how 
+to eliminate $N$ and $h$. We will use the Fourier Series form to do that. Taken from [article 2-T5](../2024--02--04--00--fourier-series-part-2/#recap)
+
+$$
+\begin{align*}
+g_h(t) &= \frac{1}{N} \sum_{f=-\infty}^\infty G(f,N,h) \, e^{i\tau f t} \\
+&= \frac{1}{N} \sum_{f=-\infty}^\infty N  \, h \, \operatorname{sinc}(\tau f \frac{h}{2}) \, e^{i\tau f t} \\
+&= h \sum_{f=-\infty}^\infty  \frac{\sin(\tau f \frac{h}{2})}{\tau f \frac{h}{2}} \, e^{i\tau f t}  \\
+&= \sum_{f=-\infty}^\infty  \frac{e^{i \tau f \frac{h}{2}} - e^{-i \tau f \frac{h}{2}}}{i \tau f} \, e^{i\tau f t}  \\
+\end{align*}
+$$
+
+Notice that, since $g_h(t)$ should be a constant function, then its derivative with respect to $t$ is zero.
+However, this can only mean, term inside the sum evaluates to zero (the right hand side).
+
+$$
+\begin{align*}
+g_h(t) &= \sum_{f=-\infty}^\infty  \frac{e^{i \tau f \frac{h}{2}} - e^{-i \tau f \frac{h}{2}}}{i \tau f} \, e^{i\tau f t}  \\
+\frac{d}{dt} g_h(t) &= \sum_{f=-\infty}^\infty  \frac{e^{i \tau f \frac{h}{2}} - e^{-i \tau f \frac{h}{2}}}{i \tau f} \, \frac{d}{dt} \left[ e^{i\tau f t} \right] \\
+0 &= \sum_{f=-\infty}^\infty \left(  e^{i \tau f \frac{h}{2}} - e^{-i \tau f \frac{h}{2}} \right) \, e^{i\tau f t} \\
+e^{i \tau f \frac{h}{2}} &= e^{-i \tau f \frac{h}{2}} \\
+\end{align*}
+$$
+
+In step (2) to (3) from derivation above, you will notice that the factor $i \tau f$ cancels out with the derivative of $e^{i\tau f t}$.
+This allows a very neat equation under the summation signs. Also, a peculiar one at that.
+
+Suppose that we want to check the equality before integration, then for any $t$, and any $f$ it seems that:
+
+$$
+\begin{align*}
+1 = e^{i \tau f h}
+\end{align*}
+$$
+
+This would contradict our assumption in a strange way. The consequences: one of the following needs to be true:
+
+1. $h$ is actually dependent on the value of $f$ that is currently being evaluated in the Fourier Transform.
+2. $h$ can be the smallest non-zero value possible (doesn't matter what it is), but $fh$ needs to be related with an integer $n$ such that $f h = n$. 
+So that $e^{i\tau n}= e^{i 2 \pi n} = e^{i 2\pi} = 1$
+
+The condition for 1. will be covered automatically if we are dealing with signal scaling. 
+But this is not the case for constant function, since stretching the function horizontally will have no effect.
+So, we have to accept point 2.
+
+But if we accept point 2, then $\sin(\tau f \frac{h}{2}) = \sin(n \pi)$ which is zero for all $n$.
+Then, the function $G(f,N,h)$ is zero for all $n$, which means the sums also zero.
+
+There is one weird catch, though. When $f=0$, $G(f,N,h)=Nh$ like what we concluded before (because $\operatorname{sinc}(0)=1$).
+
+Concluding what we have found now, we know that $G(f,N,h)$ is one peculiar "function" that is zero everywhere, except when $f=0$.
+Now, we need to figure out the value of $Nh$ and check if this has limit of some sorts.
+
+From the Fourier Series representation, but taking $t=0$ (the center), the value of $g_h(t)=0$ must be zero.
+We also substitute $f=\frac{n}{h}$.
+
+$$
+\begin{align*}
+g_h(t) &= \frac{1}{N} \sum_{f=-\infty}^{\infty} G(f) \, e^{i\tau f t} \\
+&= h \sum_{f=-\infty}^{\infty} \operatorname{sinc}(\tau f \frac{h}{2}) \\
+&= h \sum_{n=-\infty}^{\infty} \operatorname{sinc}(n \pi) \\
+\end{align*}
+$$
+
+The last sum is easy to solve. Since we already decided that $n$ is an integers, $\operatorname{sinc}(n \pi)$ is zero everywhere, except when $n=0$, where the value of $\operatorname{sinc}(0)=1$.
+
+It would immediately follows that $g_h(t)=h=1$.
+
+Whaaaat? So, in fact $h=1$ is the smallest interval that we can use.
+
+Our $G(f,N,h)=G(f,N)=N \, \operatorname{sinc}(f \pi)$.
+
+To make it consistent with our convention that integer frequency should be named $k$,
+we uses $G(k,N) = N \, \operatorname{sinc}(k \pi)$.
+
+In our particular case here, $N$ really depends on the choice of the span of domain $t$.
+So if $t$ ranges from $-\infty$ to $\infty$, then $\lim_{N\to\infty}=\infty$, so the series has a very tall spike when $k=0$, but zero in everywhere else.
+
+$$
+\begin{align*}
+\tag{P8}
+G(k,N)= N \operatorname{sinc}(k \pi)
+\end{align*}
+$$
+
+
+### Constant function, interpreted from non-periodic function
+
+As we have discussed before, we can also thought of constant function as a non-periodic function with infinite periods.
+
+This line of thinking makes it easy to generalize the concept, but it is a much more challenging ideas to constructs.
+
+Our starting line is the same. Take a segment of a constant function $g(t)$ with the span $T$. Its Fourier Transform is a function in frequency domain that can represent the function, up to this span $T$. This step is similar with Approach A, where we thought that there is a periodic slices with interval $h$.
+
+However, this time, instead of multiplying it by $N$ (the count of the interval).
+We instead want to **enlarge** the slice by taking the limit of $T$ to infinity.
+This is analoguous to stretching the function horizontally to positive and negative x-axis direcation.
+
+Our $G(f)$ is a representation of the interval $T$, now. We are going to use 
+the Fourier Transform definition in [article 2-T1](../2024--02--04--00--fourier-series-part-2/#recap).
+
+$$
+\begin{align*}
+G(f) &= \lim_{T\to\infty} \int_{-T}^{T} \, g(t) \, e^{-i\tau f t} \, dt \\
+G_T(f) &= \int_{-T}^{T} \, g(t) \, e^{-i\tau f t} \, dt \\
+&= \int_{-T}^{T} \, 1 \, e^{-i\tau f t} \, dt \\
+&= 2 T \operatorname{sinc}(\tau f T) \\
+\end{align*}
+$$
+
+Step (1) to (2), is just a notational convenience. $G_T(f)$ means $G(f)$ in the limit that $\lim_{T\to\infty}$.
+
+This way, the end result $G_T(f)$ is a function that took the form of a function that its limit hasn't been taken **yet**. 
+
+Let's evaluate it for a moment. From this form, it is clear that when $f=0$, the function $G_T(0)$ evaluates to $\infty$ and becomes really huge. This is because $\operatorname{sinc}(0)=1$ and the value $2T$ approaches a really huge number.
+
+What we are not sure yet, is how this function behaves on continuous $f$.
+Suppose that $fT=n$ an integer, just like what we concluded in Approach A. 
+It means that the function evaluates to zero.
+But what about when $fT$ not equal to an integer?
+Especially when we are going to set $T$ as a really huge number.
+
+Let's calculate the Inverse Fourier Transform, and we are going to see from there.
+
+$$
+\begin{align*}
+g(t) &= \int_{-\infty}^{\infty} G(f) \, e^{i\tau f t} \, df \\
+g_T(t) &= \int_{-\infty}^{\infty} G_T(f) \, e^{i\tau f t} \, df \\
+&= 2 T \int_{-\infty}^{\infty} \operatorname{sinc}(\tau f T) \, e^{i\tau f t} \, df \\
+&= 2 T \int_{-\infty}^{\infty} \frac{\sin(\tau f T)}{\tau f T} \, e^{i\tau f t} \, df \\
+&= 2 \int_{-\infty}^{\infty} \frac{e^{i \tau f T} - e^{-i \tau f T}}{i \tau f} \, e^{i\tau f t} \, df \\
+\end{align*}
+$$
+
+Just like what we do before, we are going to take derivative with respect to $t$.
+Since this is a constant function, the derivative should be zero.
+
+$$
+\begin{align*}
+g_T(t) &= 2 \int_{-\infty}^{\infty} \frac{e^{i \tau f T} - e^{-i \tau f T}}{i \tau f} \, e^{i\tau f t} \, df \\
+\frac{d}{dt} g(t) &= 2 \int_{-\infty}^{\infty} \frac{e^{i \tau f T} - e^{-i \tau f T}}{i \tau f} \, \frac{d}{dt} \left[ e^{i\tau f t} \right] \, df \\
+0 &= \int_{-\infty}^{\infty} \left(  e^{i \tau f T} - e^{-i \tau f T} \right) \, e^{i\tau f t}  \, df \\
+\int_{-\infty}^{\infty} e^{i \tau f (t+T)} \, df &= \int_{-\infty}^{\infty} e^{i \tau f (t-T)} \, df \\
+\end{align*}
+$$
+
+Just like before, it would imply that for any $t$ and any $T$, it seems that:
+
+$$
+\begin{align*}
+1 = e^{i \tau 2 f T} = e^{i 4\pi f T}
+\end{align*}
+$$
+
+We arrived at the same contradiction. But, the situation is different now.
+Previously, the only resolution makes sense is statement 2, where $h$ needs to be the smallest non-zero value possible, with $fh=n$ as an integer.
+
+This time, $f$ is continuous, and $T$ is in the limit of some large number approaching to infinity (not a small number). There is a specific relation needs to be hold such that both $f$ and $T$ were dependent from each other in such a way that $fT=\frac{n}{2}$.
+
+It implies a natural constraint, such that we can set $f$ to be as small as possible, as long as $fT=\frac{n}{2}$. If we stretch the signal to $T$ approaching infinity, for example, in the case of our constant function. Then its Fourier Transform domain $f$ is so localized that $G(f)$ only has non-zero values around $f=0$.
+
+It has similar (if not the same) consequences as Approach A, albeit with entirely different reasoning.
+
+In conclusion, $G_T(f)$ behaves the same way as its Fourier Series counterpart.
+It is zero everywhere when $fT=\frac{n}{2}$, except when $f=0$, where its value spikes to infinity.
+
+Next, from the FT to IFT relationship, we will try to find another condition such that 
+the transform is invertible. Suppose that at $t=0$, the value $g(t)=1$ is a constant.
+We also substitute $f=\frac{n}{2T}$
+
+$$
+\begin{align*}
+g_T(t) &= \int_{-\infty}^{\infty} G_T(f) \, e^{i\tau f t} \, df \\
+&= 2T \int_{-\infty}^{\infty} \operatorname{sinc}(\tau f T ) \, df \\
+&= \int_{-\infty}^{\infty} \operatorname{sinc}(n \pi) \, dn \\
+\end{align*}
+$$
+
+Since there are no variable left on the right hand side. We can **guess** that the right hand side evaluates to 1, in order for the limit to converge with the left hand side $g(t)=1$. But we had to make sure.
+
+Previously we evaluate a sum, and it was easy to do because for any value of $n$, the function evaluates to zero, except when $n=0$. This time $n$ represents a continuous variable. This last integral is a little bit tricky to solve. But we will use several steps to change the form. 
+
+In order to evaluate the integral, notice that $\operatorname{sinc}(\phi)$ is an even symmetric function. So we can change the integral into this:
+
+$$
+\int_{-\infty}^{\infty} \operatorname{sinc}(n \pi) \, dn = 2 \int_{0}^{\infty} \operatorname{sinc}(n \pi) \, dn \\
+$$
+
+We expand $\operatorname{sinc}(n \pi)=\frac{\sin(n \pi) }{n \pi}$
+
+$$
+2 \int_{0}^{\infty} \operatorname{sinc}(n \pi) \, dn = 2 \int_{0}^{\infty} \frac{\sin(n\pi)}{n\pi} \, dn
+$$
+
+We are going to decompose $\frac{1}{n}$ as an integral: $\frac{1}{n} = \int_0^\infty e^{-n s} \, ds$
+
+$$
+2 \int_{0}^{\infty} \frac{\sin(n\pi)}{n\pi} \, dn = \frac{2}{\pi} \int_{0}^{\infty} \int_{0}^{\infty} \sin(n\pi) \,e^{-n s} \, ds \, dn
+$$
+
+Using Fubini's Theorem, assuming the integral converges, we swap the order of the integration.
+
+$$
+\frac{2}{\pi} \int_{0}^{\infty} \int_{0}^{\infty} \sin(n\pi) \,e^{-n s} \, ds \, dn = \frac{2}{\pi} \int_{0}^{\infty} \int_{0}^{\infty} \sin(n\pi) \,e^{-n s} \, dn \, ds
+$$
+
+Let's break apart into smaller terms. Suppose that $I(n)=\int_0^\infty \sin(n\pi) \, e^{-ns} \, dn$, then we solve it.
+
+$$
+\begin{align*}
+I(n) &= \int_0^\infty \sin(n\pi) \, e^{-ns} \, dn \\
+&= \frac{1}{-s}\left[ \sin(n\pi) \, e^{-ns} \right]_0^\infty + \frac{\pi}{s} \int_0^\infty \cos(n\pi) \, e^{-ns} \, dn \\ 
+&= 0 + \frac{\pi}{s} \int_0^\infty \cos(n\pi) \, e^{-ns} \, dn\\
+\frac{s}{\pi} I(n) &= \frac{1}{-s}\left[ \cos(n\pi) \, e^{-ns} \right]_0^\infty - \frac{\pi}{s} \int_0^\infty \sin(n\pi) \, e^{-ns} \, dn \\
+&= \frac{1}{s} - \frac{\pi}{s} I(n) \\
+\frac{s^2+\pi^2}{\pi^2}I(n)&=\frac{1}{\pi} \\
+I(n)&=\frac{\pi}{s^2+\pi^2} \\
+\end{align*}
+$$
+
+Substituting this result back, we have:
+
+$$
+\frac{2}{\pi} \int_{0}^{\infty} \int_{0}^{\infty} \sin(n\pi) \,e^{-n s} \, dn \, ds = 2 \int_0^\infty \frac{1}{s^2+\pi^2} \, ds \\
+$$
+
+That last integral is just a trigonometric integral, that can be solved by choosing $s=\pi \tan(\phi)$. So that $\frac{ds}{d\phi}=\pi \sec^2(\phi)$.
+With the integration boundaries becomes $\phi \to [0,\frac{\pi}{2}]$
+
+$$
+\begin{align*}
+2 \int_0^\infty \frac{1}{s^2+\pi^2} \, ds &= 2 \int_0^\frac{\pi}{2} \frac{\pi \sec^2(\phi)}{\pi^2 (\tan^2(\phi) + 1)} \, d\phi \\
+&= \frac{2}{\pi} \int_0^\frac{\pi}{2} d\phi \\
+&= \frac{2}{\pi} \frac{\pi}{2} \\
+&= 1
+\end{align*}
+$$
+
+With this, we concluded that indeed $g(t)=g_T(t)=1$. In the limit of large $T$, turns out the integral converges, even without us having to specify that $n$ has to be integers.
+
+So the Fourier Transform of a constant signal with arbitrarily large span $T$ is:
+
+$$
+\begin{align*}
+\tag{P9}
+\mathcal{F}\left\{ g(t) \right\} &= \lim_{T\to\infty} G_T(f) \\
+\mathcal{F}\left\{1\right\} &= \lim_{T\to\infty} 2T \operatorname{sinc}(\tau f T) \\
+\end{align*}
+$$
+
+Note that, although the concept is different, when $T=\frac{1}{2}$, we recover the Fourier Series representation of a constant function: $G(k)= \operatorname{sinc}(k \pi)$
+
+### Constant function, interpreted as distribution
+
+Originally, we have two approaches A and B.
+We now realized that both is similar but not equal.
+It appears that one approach is most suited when the time interval is very small.
+The other one is most suited when the time interval is very large.
+
+Can't we have both?
+
+For instance, both representation of the FT, $G(f)$ seems to behave like these:
+
+1. The value $G(f)$ at $f=0$, is either very large, dependent on the span of the domain $t$, or just $\infty$.
+2. The value $G(f)$ at $f\ne0$, is zero everywhere.
+3. The integral over all domain $f$ for $G(f)$ is 1.
+
+This seems to be a very weird function. How come it has value $\infty$, but the integral area under the curve is normalized at $1$? Doesn't look like a function to me.
+
+In the case of Fourier Transform, this looks like an identity basis.
+
+In the previous two approach, we started from a constant function, then we try to find its FT. However, if we go the other way around: "What is a function that its FT is a constant function?", then we might understand something.
+
+Suppose that there exists a function (or property, whatever), called the delta function $\delta(t)$. Delta function has a property in such a way that its FT $D(f)$ is a constant 1.
+Can this function exists?
+
+The reason why we called it "Delta function" is probably special in its way. It is called "Delta" because it represent a small slice of interval.
+
+Note that it is the inverse/reverse direction of approach A & B where we assume that constant function is in the time domain.
+Now we assume the constant function is in the frequency domain.
+The only benefit that we have, is that we can immediately construct a Fourier Series $\delta(t)$ just by composing the frequencies.
+
+From a Fourier Series definition if a function $\delta(t)$ has a Fourier Transform $D(f)=1$. Then it immediately follows:
+
+$$
+\begin{align*}
+\delta(t) &= \frac{1}{N} \sum_{f=-\infty}^{\infty} 1 \, e^{i\tau f t} \\
+&= \frac{1}{N} \sum_{f=-\infty}^{\infty} e^{i\tau f t} \\
+\end{align*}
+$$
+
+Using this kind of representation. We can figure out 3 criterias of $\delta(t)$ to be the same with the function $G(f)$ we are trying to find before.
+
+1. When $t=0$, $\delta(t)$ values approach infinity. This is because the sum happens to sum 1 from negative infinity to infinity. So this becomes a huge number.
+2. When $t\ne0$, there is a corresponding indices $f$, in such a way that $\tau f t = n\pi$ where $n$ is an integer.
+3. The integral over the domain $t$ must equal to 1.
+
+This last property can be proven using integral.
+
+$$
+\begin{align*}
+\int_{t=-\infty}^{\infty} \delta(t) \, dt &= 1 \\
+\int_{t=-\infty}^{\infty} \frac{1}{N}\sum_{f=-\infty}^{\infty} e^{i\tau f t} \, dt &= \\
+\frac{1}{N} \sum_{f=-\infty}^{\infty} \int_{t=-\infty}^{\infty} e^{i\tau f t} \, dt &= \\
+\frac{1}{N} \sum_{f=-\infty}^{\infty} \lim_{T\to\infty} \int_{-T}^{T} e^{i\tau f t} \, dt &= \\
+\frac{1}{N} \sum_{f=-\infty}^{\infty} \lim_{T\to\infty} \frac{2 \sin(\tau f T)} {\tau f}&= \\
+\frac{1}{N} \lim_{T\to\infty} \sum_{f=-\infty}^{\infty} \frac{2 \sin(\tau f T)} {\tau f}&= \\
+\frac{1}{N} \lim_{T\to\infty} \sum_{n=-\infty}^{\infty} \frac{2 T \sin(n \pi)} {n \pi}&= \\
+\frac{1}{N} \lim_{T\to\infty} 2T \sum_{n=-\infty}^{\infty} \frac{\sin(n \pi)} {n \pi}&= \\
+\lim_{T\to\infty} \frac{2T}{N} &= 1 \\
+\lim_{T\to\infty} 2T &= N
+\end{align*}
+$$
+
+The end result only makes sense if the equality is true. Which means the normalization factor of this delta function
+depends from the span of the integration, the domain of $t$.
+
+Now, here's the connection we are trying to make.
+
+Since $\delta(t)$ and $D(f)=1$ is a Fourier Dual, with $g(t)=1$ and $G(f)$ is a Fourier Dual...
+It would imply that $\delta(t)=G(f)$.
+
+But..., the representation is different:
+
+$$
+\begin{align*}
+\delta(x) &= G(x) \\
+\lim_{T\to\infty} \frac{1}{2T} \sum_{f=-\infty}^{\infty} e^{i\tau f x} &= \lim_{T\to\infty} 2T \operatorname{sinc}(x \pi )
+\end{align*}
+$$
+
+When $x=0$:
+
+$$
+\begin{align*}
+\lim_{T\to\infty} \frac{1}{2T} \sum_{f=-\infty}^{\infty} e^{i\tau f x} &=\lim_{T\to\infty} 2T\operatorname{sinc}(\pi x ) \\
+\end{align*}
+$$
+
+These symbols must have some correspondence. Since all the values for $x\ne 0$ is the same.
+We can only care when $\lim_{T\to \infty}$. It should increase the same way in the case $x=0$.
+Now, since both of $T$ depends on the span of the integration (the domain of x). We should see some relationship.
