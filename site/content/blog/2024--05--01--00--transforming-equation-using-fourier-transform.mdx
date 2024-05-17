@@ -1,0 +1,548 @@
+---
+layout: blog-post
+title: 'Fourier Series: part 6: Transforming equation using Fourier Transform'
+description: 'Using Fourier Transform to simplify differential equation'
+date: 2024-05-01T00:00:00.00Z
+category:
+    name: blog
+---
+
+I see a funny math joke post from twitter:
+
+<blockquote class="twitter-tweet">
+    <p lang="en" dir="ltr">today&#39;s fun math fact
+        <a href="https://t.co/aV0XTofVhx">pic.twitter.com/aV0XTofVhx</a>
+    </p>&mdash; guille (@GuilleAngeris)
+    <a href="https://twitter.com/GuilleAngeris/status/1784936202686300283?ref_src=twsrc%5Etfw">April 29, 2024</a>
+</blockquote>
+
+Basically, given equation
+
+$$
+g'(t)=g(t)
+$$
+
+Find the solution to function $g(t)$.
+
+Of course, since we already know this is the very definition of exponential function, we got the solution already.
+But the point of the joke is to use invalid integral operation and algebra, and still got the correct result.
+
+If we think about it backwards, how can this happen? Why we still got the correct answer?
+
+The key in the post is that it treats integral as variable, and then apply algebra to it (which can be argued as invalid operation. LMAO).
+This is actually what [Operator Theory](https://en.wikipedia.org/wiki/Operator_theory) is all about.
+
+# Operator Theory... for dummies
+
+I guess, I don't have that much credentials to talk about the formalism. But what I perceive as operator theory is the study
+of an object called "operator" acts on "function" spaces.
+
+To compare with the usual approach of algebra, that we used to see. A variable is something that can be replaced with "numbers".
+The idea of numbers is then extended from integer to complex numbers. This variable can be combined with an "algebra operation",
+such as addition, subtraction, multiplication, etc.
+
+At some point, people developed composition of numbers, such as vectors, or matrices. These objects can be "named" or "referred to" using variables.
+Because, it can be referred to as "variables", naturally people thought that the usual rule of algebra can still be applied to it.
+
+Now, for the operator theory, (in my humble opinion), is kind of similar.
+We use variables to refer or represents "functions", instead of the actual number itself.
+So the above equation $g'=g$ can be thought of as a function itself, or a variable that can be replaced by a "function" in "function spaces".
+
+I mean, we know that $g'=g$ still applies whether if $g=e^t$ or $g=10e^t$. So there can be more than one function that satisfies the above criteria.
+
+# Transforming operators and changing spaces and domains
+
+A derivative can be thought of as an operator because it is actually a composition of algebra/calculus operation (subtraction, division, and limits).
+Suppose that the variable $g$ above was meant to be a function, because derivative operator works on a function
+instead of a particular number.
+However, notice that the equation does not contain any "parameters".
+By parameters, I mean the input of the function itself.
+
+As an example, a function $g(t)$ with equation $g^2=g+t^2$ is an equation with $t$ as the parameter of the function $g$.
+Both $g$ and $t$ are variables. But $g$ represents function in function spaces (can be replaced by functions), while
+$t$ represents numbers in number spaces (can be replaced by numbers, such as 1, 2, 3, etc.)
+
+Meanwhile, equation $g'=g$ is an equation with free parameters. In fact, it doesn't even says how many parameters does the function $g$ has.
+If it is $g(t)$, then we can be sure that there is only one parameter $t$.
+
+Now, in my previous articles, we already discussed Fourier Transform.
+Note that we covered these following concepts:
+
+1. Fourier Transform changes a variable by both its function representation **and** the domain of the parameters
+2. Derivative operator can be "transformed" using Fourier Transform to become a multiplication
+
+Linking these two concepts drastically change our perspectives to solve problems or equation.
+
+Previously we only do FT on a function or variables. What if we transformed the whole equation? What will happen?
+
+Suppose that for an equation to be "transformed", you need to transform left and right side the same way.
+
+Function $g(t)$ then become its dual function $\widehat{g}(f)$.
+
+Function $g'(t)$ then become its dual function $\widehat{g'}(f)$.
+
+However, using the property of Fourier Transform for any applicable function $g(t)$, it follows that:
+$\widehat{g'}(f)=i2\pi f\widehat{g}(f)$.
+
+So we have two equation now. The original equation:
+
+$$
+g'=g
+$$
+
+... And the "transformed" equation (we replace $\widehat{g}$ with plain $G$ for my convenience):
+
+$$
+\begin{align*}
+i 2\pi f \widehat{g} = \widehat{g} \\
+i 2\pi f G = G \\
+\end{align*}
+$$
+
+Since both refer to the same thing, it's just they were two different forms. It means, solving one has to mean solving the other one as well.
+If we found the solution of the second equation, we can have the solution of the first equation by doing Inverse Transform!
+It is such a powerful concept.
+
+Now, the important point to note, is that our second equation has very similar form with the above joke post.
+It's just that the integral sign is replaced/represented as $i 2 \pi f$. This is not just a coincidence, but it is an inevitable property.
+Our derivative operator which previously "acts" as an operator, is now a number. These are two different kinds of object, but
+now we can "operate" on the operator as just a number!
+
+It means, algebra can be used here. Note that this time the equation contains both the "functional" $G$ and the parameter of the function $f$.
+So, $G$ represents **any kind of function** that fits the above equation and parameters.
+
+Since algebra can work now:
+
+$$
+\begin{align*}
+\tag{E1}
+i 2\pi f G &= G \\
+(1 - i2\pi f ) G &= 0 \\
+\end{align*}
+$$
+
+Notice that, this algebra is a kind of algebra that works on "functionals" $G$. Which means the symbols $0$ here means function that always maps to $0$, given any parameter $f$.
+In order to not distract you from zero as in numbers, let's replace $0$ as a variable as well. Let's call it $C$.
+Our solution then has become:
+
+$$
+\begin{align*}
+\tag{E2}
+(1 - i 2\pi f ) G &= C \\
+G &= \frac{C}{1- i 2 \pi f} \\
+\end{align*}
+$$
+
+We now has the solution for $G$.
+
+From here, there are several ways to "solve" the issue.
+
+Suppose that we start from $(1 - i2\pi f ) G = 0$. From using the factorization rule, there are only two possible outcome.
+
+The first one is simply $f=\frac{1}{i2\pi}$. It means, whatever form the function $G$ takes, the equation is always true if
+the value $f$ is fixed to only one value.
+
+From there, we construct the function $g$ using Fourier Series.
+
+$$
+\begin{align*}
+g(t) &= \frac{1}{N} \sum_{f=\infty}^{\infty} G(f) \, e^{i2\pi f t} \\
+&= \frac{G(\frac{1}{i2\pi})}{N} \, e^t \\
+&= k \, e^t
+\end{align*}
+$$
+
+The above solution were particularly straightforward to construct since the sum only has one term at $f=\frac{1}{i2\pi}$
+We also know that $G(f)$ has to be in the form of the delta function because it needs to be zero everywhere except at
+$f=\frac{1}{i2\pi}$. This is to accommodate the previous factorization rule. Lastly, since both $N$ value of $G(f)$ at specific $f$ is a constant,
+we can then replace it as constant $k$.
+
+We can see the difference here. When we are solving equation $E1$. We treat $G$ as functions. It is not fixed to a specific number.
+However, if we treat $G$ as number, then it is immediately has value $G=0$.
+
+Now, let's try to solve this using the equation $E2$.
+
+In equation $E2$, we already have a closed form solution of $G(f)$. But notice this is functional, and $C$ is a function as well.
+
+Now, here's the funny part. Suppose we use (just like above twitter post):
+
+$$
+(1-i2\pi f)^{-1}=\sum_{n=0}^{\infty} (i 2 \pi f)^n
+$$
+
+Then the expression becomes:
+
+$$
+\begin{align*}
+G(f) &= C(f) \sum_{n=0}^{\infty} (i 2 \pi f)^n \\
+\end{align*}
+$$
+
+The functional $C(f)$ needs to be an expression that is zero everywhere, except at $f_0=\frac{1}{i 2 \pi}$.
+An immediate idea was that $C(f)=k\,\delta(f-f_0)$. With $k$ being a constant
+Then, for each term of the indices $n$, we have this expression:
+
+$$
+\begin{align*}
+G_n(f) &= k\, \delta(f-f_0) (i 2 \pi f)^n \\
+\end{align*}
+$$
+
+If we took an inverse Fourier Transform on both sides, notice that $G_n(f)$ becomes $g_n(t)$.
+To show you the trick. Suppose that $n=0$. Then $g_0(t)=k_0\,e^t$.
+
+For $n=1$, and then applying IFT on both sides, $g_1(t)=k_1 \, \frac{d}{dt} \left( e^t \right)= k_1 \, e^t$.
+
+For the next $n$, you can already guess what happens. If we summarize:
+
+$$
+\begin{align*}
+\mathcal{F^{-1}}\left\{ G(f) \right\} &= \mathcal{F^{-1}}\left\{ C(f) \sum_{n=0}^{\infty} (i 2 \pi f)^n \right\}  \\
+g(t) &= \sum_{n=0}^\infty k_n \, e^t = e^t \, \sum_{n=0}^\infty k_n = k \, e^t
+\end{align*}
+$$
+
+Funnily enough, it is circular because we use the fact that the derivative of $e^t$ is also $e^t$, although that was actually the solution we want to find here. Hahaha.
+Lastly, the summation $\sum_{n=0}^\infty k_n = k$ is possible for arbitrary constant, because previously it was implied from the power series that the sums has to converge to a bounded value.
+
+
+# Several examples of equations that is explained clearly by Fourier Transform
+
+In physics, one of the fundamental principle is that "a physical law must be true in all inertial reference frame".
+In the context of function transforms, it basically means that once you have a physical law, the same law applies whether if the equation is transformed or not.
+This has dramatic impact because some equation is harder to solve as is, but is easier to solve in the transformed domain.
+We can then get the original solution by transforming it back.
+
+To illustrate the idea, let's see several examples
+
+## Harmonic Oscillator
+
+You may have know about the equation of motion for a simple harmonic oscillator with displacement $x(t)$ and time parameter $t$.
+
+$$
+\begin{align*}
+\frac{d^2 x}{dt^2} = - \frac{k}{m} \, x
+\end{align*}
+$$
+
+In most high school textbook, it was explained using some elaborate integration technique that the solution of this differential equation is in the form $x(t)=A \, sin(\omega t)$.
+
+Fourier transform can explain why the solution has to be this way.
+
+The first assumption to note, is that the equation is an equation of motion. The value has to be bounded. This justifies us to do a Fourier Transform.
+
+The second question is **how** we do the transform? Since the function $x(t)$ has only one parameter, then it was an obvious choice to do the transform over function $x(t)$.
+Let's say the dual is $X(f)$. Meaning $\mathcal{F}\left\{ x(t) \right\} = X(f)$.
+
+Applying Fourier Transform to both sides:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \frac{d^2 x}{dt^2} \right\} &= \mathcal{F}\left\{ - \frac{k}{m} \, x \right\} \\
+(i 2 \pi f)^2 \, X(f) &= - \frac{k}{m} \, X(f) \\
+(\frac{k}{m}- 4\pi^2 f^2) \, X(f) = 0 \\
+(\sqrt{\frac{k}{m}}- 2 \pi f) (\sqrt{\frac{k}{m}}+2\pi f) \, X(f) = 0 \\
+\end{align*}
+$$
+
+Similar with what we do previously. We notice that there are **two** $f$ values that will cause the equation to be true for every $X(f)$ function. If we use this to construct the Fourier series,
+we will have:
+
+$$
+\begin{align*}
+f_{-} &= - \frac{1}{2\pi} \sqrt{\frac{k}{m}} \\
+f_{+} &= \frac{1}{2\pi} \sqrt{\frac{k}{m}} \\
+x(t) &= \sum_{f=-\infty}^\infty C_f \, e^{i 2 \pi f t} \\
+x(t) &= C_{-} \, e^{-i \sqrt{\frac{k}{m}} t}  + C_{+} \, e^{i \sqrt{\frac{k}{m}} t} \\
+\end{align*}
+$$
+
+With a little bit more algebra and initial conditions, we can further simplify the solution above into the more familiar form $x(t)=A \, sin(\omega t)$ or $x(t)=A \, cos(\omega t)$.
+From there we got the relation:
+
+$$
+\begin{align*}
+C_{-}=C_{+} &= A \\
+\sqrt{\frac{k}{m}} &= \omega
+\end{align*}
+$$
+
+There is a beautiful insight from this equation.
+Apparently, the object oscillates, because of pure mathematical fact that the position function has two mode of frequency in the Fourier domain.
+Fourier domain is an abstract concept, but in here it corresponds to the actual physical behaviour... the oscillating frequency.
+
+Another interesting to note is that the expression of $x(t)$ uses complex exponentials, but the number being evaluated for any $t$ is always real number.
+This is made possible because analytic functions is continuous in the complex plane and the coefficient being used here make sure that $x(t)$ is always real.
+You can use Euler's relation $e^{i\theta} = cos(\theta) + i sin(\theta)$ to derive this relationship.
+
+# Wave Equation
+
+Another equation that is probably one of the most important thing in Quantum Mechanics is the wave equation.
+
+As a simple illustration, consider classical wave equation in one dimensional space. The equation will have form:
+
+$$
+\begin{align*}
+\frac{\partial^2 u}{\partial t^2} = c^2 \frac{\partial^2 u}{\partial x^2}
+\end{align*}
+$$
+
+This time, we have a quantity $u(x,t)$ with two parameters $x$ (in space) and $t$ (in time).
+Because we have two parameters, we need to decide how we are going to do the transform.
+Suppose we have a dual $U(x,f)$ that is a Fourier transform of $u$ over variable $t$. That is: $\mathcal{F}\left\{ u(x,t) \right\} = U(x,f)$.
+
+$$
+\begin{align*}
+\frac{\partial^2 u}{\partial t^2} &= c^2 \frac{\partial^2 u}{\partial x^2} \\
+\mathcal{F}\left\{ \frac{\partial^2 u}{\partial t^2} \right\} &= \mathcal{F}\left\{ c^2 \frac{\partial^2 u}{\partial x^2} \right\} \\
+(i 2 \pi f)^2 \, U(x,f) &= c^2 \, \frac{\partial^2 U(x,f)}{\partial x^2} \\
+- \frac{4 \pi^2 f^2}{c^2} \, U(x,f) &=  \frac{\partial^2 U(x,f)}{\partial x^2} \\
+\end{align*}
+$$
+
+The last equation above is just the harmonic oscillator equation again! We can just use the same solution again, or use another Fourier transform.
+This time over variable $x$ into variable $\xi$.
+
+$$
+\begin{align*}
+- \frac{4 \pi^2 f^2}{c^2} \, U(x,f) &=  \frac{\partial^2 U(x,f)}{\partial x^2} \\
+\mathcal{F}\left\{ - \frac{4 \pi^2 f^2}{c^2} \, U(x,f)  \right\} &= \mathcal{F}\left\{ \frac{\partial^2 U(x,f)}{\partial x^2} \right\} \\
+- \frac{4 \pi^2 f^2}{c^2} \, \Psi(\xi,f) &= (i 2 \pi \xi)^2 \, \Psi(\xi,f) \\
+\Psi(\xi,f) &= \frac{c^2 \xi^2}{f^2} \, \Psi(\xi,f) \\
+\left(1 - \frac{c\xi}{f}\right)\left(1+\frac{c\xi}{f}\right)\Psi(\xi,f) &= 0
+\end{align*}
+$$
+
+We have basically 4 possible **frequencies**. Two from $\xi$ and two from $f$. Since the difference would only be at the sign of the function, we can write it in general like this:
+
+$$
+\begin{align*}
+u(x,t)=\sum_{m=1}^2 \sum_{n=1}^2 C_{m,n} \, e^{i 2 \pi c \xi_{m} t} \, e^{i 2 \pi \frac{f_n}{c} x}
+\end{align*}
+$$
+
+Conventionally, in the terminologies of waves, we often uses $f$ as the frequency of the oscillation (the dual of time $t$) and $\lambda = \frac{1}{\xi}$ as the wavelength (the dual of space $x$).
+Thus, essentially $c$ is the propagation speed, because $c=\frac{f}{\xi}=\lambda f$.
+In other common notation, we have $\omega=2 \pi f$ (the angular speed) and $k=\frac{2\pi}{\lambda}$ the wave number.
+
+With this, the solution above can be rearranged into (by omitting $c$).
+
+$$
+\begin{align*}
+u(x,t)=\sum_{m=1}^2 \sum_{n=1}^2 C_{m,n} \, e^{i (k_m x + \omega_n t)}
+\end{align*}
+$$
+
+The interesting insight we got from here is that the solution is a linear combination of each basis of the parameters.
+This means a travelling wave can be thought of as **sum** of standing oscillation in both of space axis and time axis.
+This is most commonly referred to as the [**wave superposition principle**](https://en.wikipedia.org/wiki/Superposition_principle)
+
+# Heat Equation
+
+Historically, it was said that Joseph Fourier invented Fourier Transform to solve [Heat Equation](https://en.wikipedia.org/wiki/Heat_equation).
+
+The form of heat equation resembles much of wave equation. Except that the time derivative has order 1 (only the first partial derivative).
+
+$$
+\begin{align*}
+\frac{\partial u}{\partial t} = \alpha \frac{\partial^2 u}{\partial x^2}
+\end{align*}
+$$
+
+Do the transform over $x$ and $t$ again, and we will have $\psi(\xi, f)$:
+
+$$
+\begin{align*}
+\frac{\partial u}{\partial t} &= \alpha \frac{\partial^2 u}{\partial x^2} \\
+i 2 \pi f \psi(\xi,f) &= \alpha (i 2 \pi \xi)^2 \psi(\xi,f) \\
+(i 2 \pi \alpha \xi^2 - f) \psi(\xi, f) &= 0 \\
+\end{align*}
+$$
+
+This time, there is only one corresponding frequency $f$, but two frequencies $\xi$.
+
+The general solution take in the form of:
+
+$$
+\begin{align*}
+f&=i 2\pi \alpha \xi^2 \\
+u(x,t)&= \sum_{n=1}^2 C_{n} \, e^{i 2 \pi f t} \, e^{i 2 \pi \xi_n x} \\
+u(x,t)&= \sum_{n=1}^2 C_{n} \, e^{- 4 \pi^2 \alpha \xi_n^2 t} \, e^{i 2 \pi \xi_n x} \\
+\end{align*}
+$$
+
+This doesn't look like the usual solution of the Heat Equation, but we can show that these are the equivalent forma
+by providing the initial boundary condition.
+
+Suppose that the object that we want to observe is a single dimensional bar (a rod) of length $L$.
+That means at $t=0$, we have to define the initial temperature $u(x,t)$ at every point
+in the bar. We call this $u(x,0)=g(x)$.
+
+For simplicity, of course we can also set $g(x)$ to be a constant value as well.
+This means the bar is at thermal equilibrium at time $t=0$.
+But let's just say we have arbitrary function $g(x)$. Using general solution above, we have:
+
+$$
+\begin{align*}
+g(x)=u(x,0)&= \sum_{n=1}^2 C_{n} \, e^{- 4 \pi^2 \alpha \xi_n^2 0} \, e^{i 2 \pi \xi_n x} \\
+g(x) &= \sum_{n=1}^2 C_{n} \, e^{i 2 \pi \xi_n x} \\
+\end{align*}
+$$
+
+If you see $g(x)$ above, it is essentially a Fourier sums for only specific frequency.
+For any possible functions $g(x)$, we can rewrite it per definition of Fourier transform.
+
+$$
+\begin{align*}
+G(\xi) &= \int_{-\infty}^{\infty} g(x) \, e^{-i 2\pi \xi x} \, dx \\
+g(x) &= \int_{-\infty}^{\infty} G(\xi) \, e^{i 2 \pi \xi x} \, d\xi \\
+\end{align*}
+$$
+
+However, practically, when solving the equation for a real object like bar or plane,
+we didn't use the integral form to infinity. Simply because the rod itself has finite length, so $g(x)$
+is not defined by measurement beyond length $L$.
+
+This is why when we usually on solving the Heat Equation, we use Fourier series (for the discrete frequencies, periodic function $g(x)$):
+
+$$
+\begin{align*}
+C_n &= \frac{1}{L} \int_{0}^{L} g(x) \, e^{-i 2\pi n x} \, dx \\
+g(x) &= \sum_{n=-\infty}^{\infty} C_n \, e^{i 2 \pi n x} \\
+\end{align*}
+$$
+
+We can put further constraint in the solution using more initial value/boundary condition.
+For example, if both ends of the bar were insulated, that means heat can't flow and the temperature
+is always at equilibrium in those ends. Namely $u_x(0,t)=0$ and $u_x(L,t)=0$. From here, we recover $g(x)$.
+
+Once we have $g(x)$ as some kind of specific solution, the entire solution with respect to time can be rewritten as:
+
+$$
+\begin{align*}
+u(x,t)&= \sum_{n=1}^2 C_{n} \, e^{- 4 \pi^2 \alpha \xi_n^2 t} \, e^{i 2 \pi \xi_n x} \\
+u(x,t)&= \sum_n g_n(x) \, e^{-4\pi^2 \alpha n^2 t} \\
+\end{align*}
+$$
+
+This has more resemblance with the more known heat equation solution.
+
+One interesting aspect to see from the solution is that the solution of heat equation
+is a specific case for the solution of wave equation. For a long time, physicists has been
+wondering if the reason why two different phenomenon (wave and heat transfer) can be modeled
+using the same mathematical description is hinted towards the same physical origin.
+
+In other words, does heat/temperature propagate as waves because individual atoms transferred energy using vibration (harmonic oscillator)?
+
+The answer has distinct and subtle difference between the two.
+In the wave equation, the Laplacian operator (the operator that transform $u$ over all spatial spaces) is proportional to
+a constant **second** order derivative over time. Since second derivative of time refers to the acceleration, it has
+subtle effect that the speed of propagation is always constant in the case of wave.
+
+In the heat equation, the Laplacian is proportional to the **first** derivative over time.
+Which means, there are no speed limit on how heat propagates. It may even be *instantaneous*.
+
+To see what I mean, notice that the argument of the exponent for both heat and wave equation for the spatial frequency $\xi$
+is an imaginary number. However, in the case of heat equation it uses real argument instead of imaginary number.
+This subtle difference caused the time component of the solution to have a decaying property, instead of oscillations.
+Which means on heat equation, only the spatial component oscillates, but the time component does not.
+
+This has a causal effect in such way that heat equation caused the temperature to be even out or averaged over time, since it has asymptote.
+You can't predict the past/initial condition from a future state of heat equation.
+But you can somewhat do that in wave equation, assuming there is no discontinuous jump in the propagation.
+
+If we think about it in terms of information exchange, a wave propagation is as ideal as you can get to transfer information around.
+While the heat equation describes theoritical limit on how information becomes noises over time.
+
+# Speed of rocket
+
+The [Tsiolkovsky](https://en.wikipedia.org/wiki/Tsiolkovsky_rocket_equation) rocket propulsion is an excellent examples on how
+to use Fourier Analysis as an "overkill" way of solving another differential equation.
+I said overkill because usually one can just use separation of variables to find the solution.
+But we will use Fourier transform and then be surprised that the solution does not oscillates!
+
+The common expression of this ideal rocket equation is like this:
+
+$$
+\begin{align*}
+m \frac{dv}{dt} = - v_e \frac{dm}{dt}
+\end{align*}
+$$
+
+Notice that the time parameter $t$ can be completely eliminated from the equation.
+So this equation actually doesn't care about the time parameter.
+
+$$
+\begin{align*}
+\frac{dv}{dm} = - \frac{v_e}{m}
+\end{align*}
+$$
+
+As we can see, the parameter is $m$ now, so if we do Fourier transform, the corresponding dual parameter is $\mu$.
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \frac{dv}{dm} \right\} &= \mathcal{F}\left\{ - \frac{v_e}{m} \right\}\\
+i2\pi \mu V &= -v_e \mathcal{F}\left\{ \frac{1}{m} \right\} \\
+i2\pi \mu V &= i v_e \pi sgn(\mu) \\
+V &= \frac{v_e}{2} \frac{sgn(\mu)}{\mu} = \frac{v_e}{2} \frac{1}{|\mu|} \\
+\mathcal{F^{-1}}\left\{ V \right\} &= \mathcal{F^{-1}}\left\{ \frac{v_e}{2} \frac{1}{|\mu|} \right\} \\
+v &= \frac{v_e}{2} \left( -2 \ln(2 \pi |m|)+ C \right) \\
+v &= - v_e \ln(\frac{m}{m_0}) \\
+\end{align*}
+$$
+
+It eventually yield the same solution. In the last step we just renamed the constant C into the initial condition $m_0$.
+
+This derivation relies on using the FT of $\frac{1}{m}$ and IFT of $\frac{1}{|m|}$.
+This relationship can be taken from using a tempered distribution, which is out of scope for now.
+
+However since the solution has to be the same, then we can also work the other way around.
+For example, finding FT of $\frac{1}{m}$ from using this exact rocket equation.
+
+# Fourier Transform and separation of variables
+
+If you noticed on both Wave Equation and Heat Equation, the solution it described has an interesting property.
+It was **separable**.
+
+By separable, I mean both of the solution of $u(x,t)$ has two parameters $x$ (spatial) and $t$ (temporal).
+If we have two functions that only depends on individual parameter: $g(x)$ and $h(t)$, then the general solution
+is always in the form of $u(x,t)=\sum g(x)\,h(t)$. Basically the parameters don't mix.
+
+I found this idea pretty interesting to see.
+At the beginning, physicists uses this approach as an "assumption" or hypothesis, in order for them to find a special solutions.
+
+A step by step approach is mostly involves by imagining if a solution $u(x,t)$ exists,
+**what if** the solution is nice enough, that it can be separated as a products of two function $g(x)$ and $h(t)$.
+Because, if it is, then we will have an easier time to solve the partial differential equation, since the order of the operator can be swapped and the operator becomes linear (the parameter that we are not currently operating is treated as constant values).
+
+So this is kind of like a hit-and-miss guess. If we solve it, then it's good. If it's not, then tough luck.
+
+However, Fourier Analysis offer much more in depth knowledge about **why** the parameter has to be separated.
+
+It turns out that, if there are any equation that is transformed using Fourier transform and it becomes "nicely" linear,
+then the solution has to be separable because in Fourier domain, a parameter can be seen as an orthonormal basis with its dual.
+So if all the parameters are orthonormal, then using Inverse Fourier Transform, it kinds of guarantee that the original equation is **separable** (as products of two independent function).
+
+In the Fourier domain, all frequencies commutes.
+It doesn't care if the frequency is from a temporal parameter or spatial parameter.
+If it commutes as a product, then it is a basis.
+Sometimes it made us confuse about what does "frequency" really means.
+But basically it helps us think about it easily if we thought about "frequencies" as just the Fourier domains parameters.
+
+So, to rephrase, if the parameters in the Fourier domain (the dual of the original parameter) commutes as products, then the original equation is separable.
+
+To conclude this article, we have multiple different concepts and perspectives:
+
+- Operator theory
+- Fourier analysis
+- Separation of variables
+- Spectral theorem
+
+All of these turns out to be the same thing or equivalent. Solving the problem using one of the methods is equivalent
+to solving it on the corresponding domain of knowledge.
+This is a mathematically powerful tools because it allows us to convert existing class of problems at hand into a different class
+and solve it using a different perspectives that is potentially easier than solving it directly in the original domain of knowledge.
+
+It is also why Quantum Mechanics is heavily influenced by both linear algebra (use of matrix) and wave analysis (use of wave operator).
+It turns out that both are essentially the same thing, even though both approach were developed by two different person at the same time.
