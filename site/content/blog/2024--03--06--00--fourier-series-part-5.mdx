@@ -1,0 +1,407 @@
+---
+layout: blog-post
+title: 'Fourier Series: part 5'
+description: 'Common Fourier Transform and how it looks like'
+date: 2024-03-06T00:00:00.00Z
+category:
+    name: blog
+---
+
+# Common Fourier Transform Pairs and how it looks like
+
+In this article, let's have some fun and see how the function and its Fourier Transform corresponds to.
+
+PS: the content maybe updated over time for my personal notes
+
+## For Any applicable function
+
+Fourier transform behaves in such a way that applying it twice is the same as flipping the argument.
+Applying it 4-th times will recover the original function.
+
+Suppose we have a dual $g(t)$ and $G(f)$.
+
+$$
+\begin{align*}
+\mathcal{F^0}\left\{ g(t) \right\}(t) &= g(t) \\
+\mathcal{F}\left\{ g(t) \right\}(f) &= G(f) \\
+\mathcal{F^2}\left\{ g(t) \right\}(t) &= g(-t) \\
+\mathcal{F^3}\left\{ g(t) \right\}(f) &= G(-f) \\
+\mathcal{F^4}\left\{ g(t) \right\}(t) &= g(t) \\
+\end{align*}
+$$
+
+Due to this cycle rules, a special function $g(t)$ has to be an **even** function if the function doesn't change after being transformed twice.
+This is because the flipped sign has no effect for this function (invariant).
+
+Because of this, we also have a special relationship since the cycle is modulo 4.
+Performing inverse Fourier Transform is the same as doing Fourier Transform 3 times.
+
+$$
+\begin{align*}
+\mathcal{F^{-1}}\left\{ G(f) \right\}(t) &= \mathcal{F^3}\left\{ G(f) \right\}(t) = g(t) \\
+\end{align*}
+$$
+
+For even function (function that is the same under flipped parameters), its inverse Fourier Transform is the same as its Fourier Transform,
+because the transform cycles in modulo 2.
+
+$$
+\begin{align*}
+\mathcal{F^{-1}}\left\{ G(f) \right\}(t) &= \mathcal{F}\left\{ G(f) \right\}(t) = g(t) \\
+\end{align*}
+$$
+
+## Dirac Delta function and constants
+
+Just to recap from the previous articles.
+We have defined a "function" (in quotes, because it is not a true function) called Dirac Delta which is used
+as a dual of a constant values/function.
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ 1 \right\}(f) &= \delta(f) \\
+\mathcal{F^2}\left\{ 1 \right\}(t) &= \mathcal{F}\left\{ \delta(f) \right\}(t) = 1 \\
+\mathcal{F^3}\left\{ 1 \right\}(f) &= \mathcal{F}\left\{ 1 \right\}(f) = \delta(f) \\
+\mathcal{F^4}\left\{ 1 \right\}(f) &= \mathcal{F^2}\left\{ \delta(f) \right\}(t) = 1 \\
+\end{align*}
+$$
+
+As you can see that $d(t)$ is an even symmetric function. So it doesn't matter if it's inverse or forward transform, it is always a pair from a constant.
+
+Because any function can be thought of as product between a function and constants, dirac delta function can be seen everywhere.
+
+## Harmonics
+
+A harmonic or as we can say a natural periodic signals can be decomposed easily using delta function.
+
+We can proof the duality using forward or inverse transform, but for me it is easier to proof it backward.
+
+### Single frequency
+
+Suppose that a harmonic is defined to be a signal with singular frequency $f_k$. That means, in the Frequency domain,
+it can be viewed as a singular jump in value using delta function. The value $f_k$ doesn't even has to be purely real (it can be a complex number).
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ G(f) \right\}(t) &= \mathcal{F}\left\{ a\, \delta(f-f_k) \right\}(t)  \\
+&= \int_{-\infty}^\infty a\, \delta(f-f_k) \, e^{-i 2 \pi f t} \, df \\
+&= a \, e^{-i 2\pi f_k t} \int_{-\infty}^\infty \, \delta(f-f_k) \, e^{-i 2 \pi (f-f_k) t} \, df \\
+&= a \, e^{-i 2\pi f_k t} \, 1 = a \, e^{-i 2\pi f_k t}
+\end{align*}
+$$
+
+This yields the following relationship:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \delta(t-t_k) \right\}(f) &= e^{-i 2\pi f t_k} \\
+\mathcal{F^2}\left\{ \delta(t-t_k) \right\}(t) &= \mathcal{F}\left\{ e^{-i 2\pi f t_k} \right\}(t)=\delta(t+t_k) \\
+\mathcal{F^3}\left\{ \delta(t-t_k) \right\}(f) &= \mathcal{F}\left\{ \delta(t+t_k) \right\}(f)=e^{i 2\pi f t_k} \\
+\end{align*}
+$$
+
+The second (and fourth) Fourier transform from above implies that:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ e^{i 2\pi f_k t} \right\}(f) &= \delta(f-f_k) \\
+\end{align*}
+$$
+
+Basically the transform just cycles between these four.
+
+### Multiple frequencies
+
+If a signal consists of multiple frequencies in Frequency domain, we can think of it as a spectrum of sums of multiple delta functions.
+
+Suppose we have spectrum $s(f)$, by linearity, we can treat it as sums and apply Fourier Transform to recover the time domain signals.
+Since Fourier Transform is a linear operator, applying it multiple times doesn't affect the sums (superposition principle).
+
+$$
+\begin{align*}
+s(f) &= \sum_k c_k \delta(f-f_k) \\
+\mathcal{F}\left\{ s(f) \right\}(t) &= \sum_k c_k \, e^{-i 2\pi f_k t} \\
+\mathcal{F^2}\left\{ s(f) \right\}(f) &= \mathcal{F}\left\{ \sum_k c_k \, e^{-i 2\pi f_k t} \right\}(f)=\sum_k c_k \delta(f+f_k) = s(-f) \\
+\mathcal{F^3}\left\{ s(f) \right\}(t) &= \mathcal{F}\left\{ \sum_k c_k \delta(f+f_k) \right\}(t)= \sum_k c_k \, e^{i 2\pi f_k t} \\
+\end{align*}
+$$
+
+### Sinusoidal frequencies
+
+Using Euler's formula, we know that:
+
+$$
+\begin{align*}
+\sin(2 \pi f_k t ) &= \frac{e^{i 2 \pi f_k t} - e^{-i 2\pi f_k t}}{2i} \\
+\cos(2 \pi f_k t ) &= \frac{e^{i 2 \pi f_k t} + e^{-i 2\pi f_k t}}{2} \\
+\end{align*}
+$$
+
+It immediately follows from multiple frequencies relationship that the FT is something like this:
+
+$$
+\begin{align*}
+\sin(2 \pi f_k t ) &= \frac{e^{i 2 \pi f_k t} - e^{-i 2\pi f_k t}}{2i} \\
+\mathcal{F}\left\{ \sin(2\pi f_k t)\right\}(f) &= \frac{\delta(f-f_k) - \delta(f+f_k)}{2i} \\
+\end{align*}
+$$
+
+$$
+\begin{align*}
+\cos(2 \pi f_k t ) &= \frac{e^{i 2 \pi f_k t} + e^{-i 2\pi f_k t}}{2} \\
+\mathcal{F}\left\{ \cos(2\pi f_k t)\right\}(f) &= \frac{\delta(f-f_k) + \delta(f+f_k)}{2} \\
+\end{align*}
+$$
+
+## Gaussian
+
+We already derive it before. So to summarize, given a Gaussian $g(t)$
+
+$$
+\begin{align*}
+g(t) &= e^{- a t^2} = \exp(- a t^2) \\
+\mathcal{F}\left\{ g(t) \right\}(f) &= \sqrt{\frac{\pi}{a}} \exp({-\frac{\pi^2}{a} f^2}) \\
+\mathcal{F^2}\left\{ g(t) \right\}(t) &= \mathcal{F}\left\{ \sqrt{\frac{\pi}{a}} \exp({-\frac{\pi^2}{a} f^2}) \right\}(t) = \exp(- a t^2) = g(t) \\
+\end{align*}
+$$
+
+As you can see, the cycle is only modulo 2. This is because a Gaussian is an even-symmetric function.
+
+## Discrete signals
+
+We refer to a discrete signals as signals that is discontinuous and can have jump in its amplitude.
+
+One interesting thing to note is that a discrete signals may have continuous representation in the Fourier domain or the other way around.
+A simple example would be the Dirac delta function when it can be thought as a sudden impulse (discrete) on a specific values of frequency only.
+However, it is actually continuous (constant function) in its temporal domain.
+
+### Rectangular function and Sinc function
+
+Rectangular function is any function that is constant, but has sudden jump in amplitude in specific time period.
+
+Previously we described Dirac delta function as a limit of sinc function when the integral of constant function approach infinity.
+
+The rectangular function is the opposite. We can think of it as being only constant in a certain length, but zero value for the rest.
+
+Let us define rectangle function $r(t)$ in which it only has value 1 on the span $t=-T/2$ to $t=T/2$.
+From there, we proceed to find the Fourier Transform.
+
+
+$$
+\begin{align*}
+r(\frac{t}{T}) &= \left\{
+{\begin{array}{rl}
+1, & {\text{if }} |t|<{\frac{T}{2}} \\
+0, &{\text{everywhere else}}.\end{array}}\right. \\
+\mathcal{F}\left\{ r(\frac{t}{T}) \right\}(f) &= \int_{-\infty}^{\infty} r(\frac{t}{T}) \, e^{-i 2\pi ft} \, dt \\
+&= \int_{-\frac{T}{2}}^{\frac{T}{2}} 1 \, e^{-i 2\pi f t} \, dt \\
+&= \frac{i}{2\pi f} \left( \exp({-i 2\pi f \frac{T}{2}}) - \exp({i 2\pi f \frac{T}{2}})\right) \\
+&= \frac{\sin(\pi f T)}{\pi f} \\
+&= T \operatorname{sinc}(\pi f T)
+\end{align*}
+$$
+
+We actually already derived this before. The Fourier transfrom of Sine Cardinal function (sinc) is a rectangular function.
+However, previously in our case, we try to increase the limit of $T$ to approach infinity to approximate a constant function, and then we get the delta function.
+
+This time, if we set $T=1$. We got the following relationship
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \operatorname{rect}(t) \right\}(f) &= \operatorname{sinc}(\pi f) \\
+\mathcal{F^2}\left\{ \operatorname{rect}(t) \right\}(t) &= \mathcal{F}\left\{ \operatorname{sinc}(\pi f) \right\}(t) = \operatorname{rect}(t) \\
+\end{align*}
+$$
+
+Note that in some text book, the $\pi$ constant inside the sinc function is kind of annoying so sometimes the sinc function is defined like this:
+
+$$
+\begin{align*}
+\operatorname{sinc}(x) &= \frac{\sin(\pi x)}{\pi x} \\
+\end{align*}
+$$
+
+The key difference to watch out for, is the integral. From the Fourier transform above, we got:
+
+$$
+\begin{align*}
+\int_{-\infty}^{\infty} \frac{\sin(\pi x)}{\pi x} \, dx = \operatorname{rect}(0) = 1
+\end{align*}
+$$
+
+So the sinc definition above is the "normalized" version. Because the integral adds up to 1.
+If you use the following definition, the value of the integral changes accordingly:
+
+$$
+\begin{align*}
+\int_{-\infty}^{\infty} \frac{\sin(x)}{x } \, dx = \pi \int_{-\infty}^{\infty} \frac{\sin(\pi t)}{\pi t } \, dt = \pi
+\end{align*}
+$$
+
+Suppose if we use the "normalized" version, then the Fourier transform duals have a nice form like this:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \operatorname{rect}(at) \right\}(f) &= \frac{1}{|a|}\operatorname{sinc}(\frac{f}{|a|}) \\
+\mathcal{F}\left\{ \operatorname{sinc}(at) \right\}(f) &= \frac{1}{|a|}\operatorname{rect}(\frac{f}{|a|}) \\
+\end{align*}
+$$
+
+## Polynomials
+
+Of course, it would be interesting to see if polynomials can be transformed, becase Taylor series depends on polynomials.
+
+There is just a catch though. A polynomial most likely approach infinity rather than vanishing (a property needed by Fourier Transform).
+So, how do we even define this?
+
+The more rigor approach would be to use tempered distribution and Schwartz function to define the transform. However, the building block will be to long for a short article.
+
+In this section, we are going to assume that the transform exists (via handwaving, haha). If it does exists, it must be consistent with another class of problems.
+So, we are going to use differential equation to derive it.
+
+Suppose that we have a nice function that is differentiable called $u(t)$.
+
+Suppose as well, that we have another function $g(t)$ with differential equation that shows the relationship between these two:
+
+$$
+\begin{align*}
+\frac{d u(t)}{dt} &= g(t) \\
+\mathcal{F}\left\{ \frac{d u(t)}{dt}  \right\} &= \mathcal{F}\left\{ g(t) \right\} \\
+i 2 \pi f U(f) &= G(f) \\
+U(f) &= \frac{-i}{2\pi f} G(f)
+\end{align*}
+$$
+
+After Fourier transforming left side and right side, we have the equation above.
+Suppose that $G(f)$ exists and the function in such a way that it eliminates variable $f$.
+So we choose $G(f)=f$.
+Rearranging the equation and transforming it back:
+
+$$
+\begin{align*}
+U(f) &= \frac{-i}{2\pi f} G(f) = \frac{-i}{2\pi f} f \\
+&=\frac{-i}{2\pi} \\
+\mathcal{F^{-1}}\left\{ U(f)  \right\} &= \mathcal{F^{-1}}\left\{ \frac{-i}{2\pi}  \right\} \\
+u(t) &= \frac{-i}{2\pi} \delta(t) \\
+\frac{d u(t)}{dt} &= \frac{-i}{2\pi} \delta'(t) \\
+g(t) = \frac{-i}{2\pi} \delta'(t) \\
+\end{align*}
+$$
+
+Thus, we obtain the following Fourier pairs:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \delta'(t) \right\} &= i 2 \pi f \\
+\mathcal{F}\left\{ t \right\} &= \frac{i}{2 \pi} \delta'(f) \\
+\end{align*}
+$$
+
+We can extend to other powers of the polynomial by just repeating the steps in the above equation. So instead of choosing $G(f)=f$,
+we can choose $G(f)=f^n$ for arbitrary power. You will then need to do inverse Fourier transform of $f^{n-1}$ which you already have in previous iteration.
+The base case is when $n=1$.
+
+To summarize:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \delta^{(n)}(t) \right\} &= (i 2 \pi f)^n \\
+\mathcal{F}\left\{ t^n \right\} &= \left( \frac{i}{2 \pi} \right)^n \delta^{(n)}(f) \\
+\end{align*}
+$$
+
+Notice that the pairs contains derivative of the delta function, which doesn't makes sense yet until we defined Fourier transform over tempered distribution,
+and treat delta function as distribution.
+
+
+## Reciprocal and signum
+
+What we will define as reciprocal is the function in the form $\frac{1}{x}$.
+
+Same with the polynomials, we can't compute the transform directly because the values blew up at $x=0$.
+We are going to assume it exists then work from there.
+The approach is the same with how we found the polynomials Fourier transform.
+
+We start with defining $g(t)=\delta(t)$ such that $G(f)=1$. This is because we want the following equation:
+
+$$
+\begin{align*}
+\frac{d u(t)}{dt} &= g(t) = \delta(t) \\
+\end{align*}
+$$
+
+To become this: after doing the transform:
+
+$$
+\begin{align*}
+U(f) &= \frac{-i}{2\pi f} G(f) = \frac{-i}{2\pi f} 1 \\
+\end{align*}
+$$
+
+When we do the inverse transform, we had to transform back $\frac{1}{f}$. Since we don't know yet what is this now, just assume it is a function called $s(t)$.
+
+The equation after inverse transform becomes:
+
+$$
+\begin{align*}
+u(t) &= \frac{-i}{2\pi} s(t) \\
+\frac{d u(t)}{dt} &= \frac{-i}{2\pi} s'(t) \\
+\delta(t) &= \frac{-i}{2\pi} s'(t) \\
+s'(t) &= i 2 \pi \delta(t) \\
+s(t) &= i 2 \pi \int_{-\infty}^t \delta(t) \, dt + C
+\end{align*}
+$$
+
+Because delta function is not legit function (sorry), the integral doesn't make any sense.
+So, obviously $s(t)$ is also some special function as well.
+We need to define it based on its behaviour.
+
+Let's figure out some key properties.
+
+1. If $t$ less than zero, the integral evaluates to $C$ because the integral of delta function is zero for $t$ less than zero
+2. We can't define properly what happens when $t=0$ because the delta function has peak undefined value there.
+3. For $t$ greater than zero, we can treat the integral as $1 - \int_t^\infty \, delta(t)$ because the total integral of delta function had to be 1.
+
+$$
+\begin{align*}
+s(t) &= i 2 \pi (1- \int_{t}^\infty \delta(t) + C \\
+s(t) + s(-t) &=i 2 \pi + 2C
+\end{align*}
+$$
+
+From this, we know that the right hand side somewhat unaffected by parameter $t$, even though the range can be increased forever.
+We can then conclude that $s(t)$ is constant function. It just doesn't have any defined value at $t=0$.
+
+4. Because of how delta function curved, it is easy to see that the integral jumps in value.
+
+We can then understood that $s(t)$ is some kind of step function. The last key is now to realize that $s(t)$ jumps from
+value $a$ to value $b$. But how to know if it jumps from what to what?
+
+5. If we set $t=\infty$ that means we can have the value $b$ the upper bound. If we set $t<0$ we get the lower bound $a$.
+
+Meaning $a=C$ and $b=i2\pi +C$.
+
+But notice that $s(t)$ is an inverse Fourier transform of $\frac{1}{x}$. The sign must also correspond, so it is reasonable
+if we set $C=-i \pi$ so that $a=-b=-i\pi$.
+
+With this we conclude that the function $s(t)$ is function that has value $-i\pi$ when $t<0$. But $i\pi$ when $t>0$.
+
+To make it easier, we define a primitive function called sign function, that returns only the sign of the argument.
+
+This way:
+
+$$
+\begin{align*}
+s(t) = i\pi \operatorname{sgn}(t)
+\end{align*}
+$$
+
+We now have the following Fourier pair
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \frac{1}{t} \right\} &= - i \pi \operatorname{sgn}(f) \\
+\mathcal{F}\left\{ \operatorname{sgn}(t) \right\} &= \frac{1}{i \pi f} \\
+\end{align*}
+$$
+
