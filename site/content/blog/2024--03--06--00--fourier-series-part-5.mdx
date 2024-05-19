@@ -17,6 +17,8 @@ For the rests of the sections, we use Fourier transform definition that is norma
 
 ## For Any applicable function
 
+### Cycling property
+
 Fourier transform behaves in such a way that applying it twice is the same as flipping the argument.
 Applying it 4-th times will recover the original function.
 
@@ -425,3 +427,278 @@ $$
 \mathcal{F}\left\{ \operatorname{sgn}(t) \right\} &= \frac{1}{i \pi f} \\
 \end{align*}
 $$
+
+## Fourier Transform of derivative
+
+We used this multiple times because it has been discussed [here](../2024--02--23--00--fourier-series-part-4/#fourier-transform-of-a-derivative)
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ g(t) \right\} &= G(f) \\
+\mathcal{F}\left\{ g'(t) \right\} &= i \tau f G(f) \\
+\mathcal{F}\left\{ D_t^n g(t) \right\} &= (i \tau f)^n G(f) \\
+\end{align*}
+$$
+
+## Fourier Transform of integral
+
+The way we calculate sign function [here](#reciprocal-and-signum) gives us an idea on how to do a Fourier transform for an integral.
+
+As a sketch, assume function $s(t)$ and $g(x)$, such that:
+
+$$
+\begin{align*}
+s(t) &= \int_{-\infty}^t \, g(x) \, dx + C
+\end{align*}
+$$
+
+This would imply that a derivative exists like this:
+
+$$
+\begin{align*}
+s'(t) &= g(t)
+\end{align*}
+$$
+
+Applying A Fourier transform on both sides yields:
+
+$$
+\begin{align*}
+i\tau f S(f) &= G(f) \\
+S(f) &= \frac{G(f)}{i\tau f} \\
+\end{align*}
+$$
+
+However, a Fourier transform is a linear operator. If we consider the integral part to be $r(t)$, then:
+
+$$
+\begin{align*}
+s(t) &= \int_{-\infty}^t \, g(x) \, dx + C \\
+s(t) &= r(t) + C \\
+S(f) &= R(f) + C\delta(f) \\
+\frac{G(f)}{i\tau f} &= R(f) + C \delta(f) \\
+R(f) &= \frac{G(f)}{i\tau f} - C\delta(f)
+\end{align*}
+$$
+
+We now have an expression for the Fourier transform of the integral.
+Assuming $r(t)$ only consists of the definite integral, then $R(f)$ is its Fourier transform.
+
+The problem is, we need to figure out the value of $C$. The strategy is similar with previous section.
+If we use the fact that $s(-\infty)$ must be the lower bound, so it is equal to $C$.
+The $s(\infty)$ is the upperbound, so it is equal to $G(0) + C$.
+
+We can calculate $R(0)$, as this is the Fourier transform values on $f=0$ for $r(t)$ function. This is also the average
+values of $r(t)$ over all its domain. Just a recap:
+
+$$
+\begin{align*}
+R(0) &= \int_{-\infty}^{\infty} \int_{-\infty}^{t} g(x) \, dx \, dt \\
+\end{align*}
+$$
+
+From here we can calculate $C$, by using the Fourier transform at $f=0$
+
+$$
+\begin{align*}
+C\delta(f) &= \frac{G(f)}{i\tau f} - R(f) \\
+C &= \frac{G(f)}{i\tau f} - R(0) \\
+\end{align*}
+$$
+
+Note that $\frac{G(f)}{i\tau f}$ has indeterminate form at $f=0$. But, the value **must** exists. So we should apply
+L'Hôpital's rule.
+
+$$
+\begin{align*}
+C &= \frac{G(f)}{i\tau f} - R(0) \\
+C &= \frac{G'(0)}{i\tau} - R(0) \\
+\end{align*}
+$$
+
+Let's check if we can simplify $G'(f)$:
+
+$$
+\begin{align*}
+G'(f)&=\frac{d}{df} \int_{-\infty}^{\infty} g(t) \, e^{-i\tau f t} \, dt \\
+&=\int_{-\infty}^{\infty} g(t) \frac{d e^{-i\tau f t}}{df} \, dt \\
+&=-i \tau \int_{-\infty}^{\infty} g(t) \, t \, e^{-i\tau f t} \, dt \\
+&= -i \tau \left[ t\, G(f) \big|_{-\infty}^{\infty} -\int_{-\infty}^{\infty} g(t) \, e^{-i\tau f t} \, dt \right] \\
+&= -i \tau \left[ t\, G(f) \big|_{-\infty}^{\infty} - G(f)\right] \\
+&= i \tau G(f) \left[ 1 - t\, \big|_{-\infty}^{\infty} \right] \\
+G'(0) &= i \tau G(0) \left[ 1 - t\, \big|_{-\infty}^{\infty} \right] \\
+\end{align*}
+$$
+
+From above criteria, it is necessary that we are able to evaluate said limit. This can only mean that the only applicable $G(f)$
+is if $G(0)=0$. Meaning, any function $g(t)$ with total integral averaged to 0.
+
+Substituting back to previous condition:
+
+$$
+\begin{align*}
+C &= \frac{G'(0)}{i\tau} - R(0) \\
+C &= G(0) \left[ 1 - t\, \big|_{-\infty}^{\infty} \right] - R(0) \\
+&= - R(0) = -\int_{-\infty}^{\infty} r(t) \, dt  \\
+\end{align*}
+$$
+
+From here, we understand that $C$ and $R(0)$ is the same thing. Rewriting our Fourier transform:
+
+$$
+\begin{align*}
+R(f) &= \frac{G(f)}{i\tau f} + R(0)\delta(f)
+\end{align*}
+$$
+
+With the condition that $g(t)$ is such a function that its average value is 0, $G(0)=0$
+
+The condition regarding the average values is already a limiting criteria. The function $g(t)$ needs to vanish in infinities.
+
+Now consider the reverse when $G(0)\ne 0$. To make it simpler, let's say that $g(t)=\delta(t)$.
+
+It means, $r(t)$ is a step function that evaluates to 0 when $t<0$ and evaluates to 1 when $t>0$.
+
+The value of $R(0)$ is the average of $r(t)$, so we can predict that it would be $R(0)=\frac{1}{2}$.
+Because half the real line it has value 0, and half the real line it has value of 1.
+
+Applying above formula would mean:
+
+$$
+\begin{align*}
+R(f) &= \frac{G(f)}{i\tau f} + R(0)\delta(f) \\
+R(f) &= \frac{1}{i\tau f} + \frac{1}{2} \delta(f)
+\end{align*}
+$$
+
+As you can see, we are unable to evaluate $R(0)$ from the expression because the first term $\frac{1}{i\tau f}$ blow up to infinities.
+
+However, coincidentally, we know how to compute inverse Fourier transform of $\frac{1}{i\tau f}$ from our previous derivation of signum.
+Applying inverse Fourier transform:
+
+$$
+\begin{align*}
+R(f) &= \frac{1}{i\tau f} + \frac{1}{2} \delta(f) \\
+r(t) &= \frac{\operatorname{sgn}(t)}{2} + \frac{1}{2} \\
+\end{align*}
+$$
+
+Surprisingly the function above behaves the same way with our predicted step function.
+So we actually got the correct answer even though we can't evaluate $R(0)$ from the solution due to inapplicable L'Hôpital's rule.
+
+In summary because we have two method on calculating $R(0)$ for the correcting term above, we need to make sure which one is correct.
+
+Since evaluating the $R(0)$ from the Fourier transform probably won't work everytime, we can use:
+
+$$
+\begin{align*}
+R(0) &= \int_{-\infty}^{\infty} \int_{-\infty}^{t} g(t) \, dt
+\end{align*}
+$$
+
+To find the average at frequency $f=0$.
+
+Assuming some notion of average. We can also see that the total integral of the function is zero, if we offset the original function by the average.
+Basically:
+
+$$
+\begin{align*}
+\int_{-\infty}^{\infty} \left( r(t) - R(0) \right) \, dt = 0
+\end{align*}
+$$
+
+Finally, we can conclude that given:
+
+$$
+\begin{align*}
+r(t) &= \int_{-\infty}^{t} g(t) \, dt \\
+\int_{-\infty}^{\infty} \left( r(t) - R(0) \right) \, dt &= 0 \\
+\mathcal{F}\left\{ r(t) \right\} = R(f) &= \frac{G(f)}{i\tau f} + R(0) \delta(f) \\
+\end{align*}
+$$
+
+Alternatively, the form that I used to remember this relationship easily, is this one:
+
+$$
+\begin{align*}
+s(t) &= \int_{-\infty}^{t} g(t) \, dt + C \\
+\int_{-\infty}^{\infty} \left( s(t) - C \right) \, dt &= 0 \\
+\mathcal{F}\left\{ \int_{-\infty}^{t} g(t) \, dt + C \right\} &= \frac{G(f)}{i\tau f} + C \delta(f) \\
+\end{align*}
+$$
+
+It looks pretty much similar with the usual integral rule.
+
+## Negative power
+
+Now that we have some rules for the Fourier transform of integral, consider the following function:
+
+$g(t)= \frac{1}{x^2}$
+
+With another function
+
+$r(t)= \int_{-\infty}^{t} g(t)\, dt + C = - \frac{1}{t} + C$
+
+Because $g(t)$ is an even function, the average value over all its domain is zero. We set $C=0$.
+
+Using the method of Fourier Transform over integral:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \int_{-\infty}^{t} g(t) \, dt + C \right\} &= \frac{G(f)}{i\tau f} + C \delta(f) \\
+\mathcal{F}\left\{ -\frac{1}{t} \right\} &= \frac{G(f)}{i\tau f} \\
+i\pi \operatorname{sgn}(f) &= \frac{G(f)}{i\tau f} \\
+G(f) &= - 2 \pi^2 f \operatorname{sgn}(f)
+\end{align*}
+$$
+
+In summary:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \frac{1}{t^2} \right\} &= - 2 \pi^2 f \operatorname{sgn}(f) \\
+\end{align*}
+$$
+
+We can then build iteratively to the next negative power. Consider
+
+$g(t)= \frac{1}{x^3}$
+
+With another function
+
+$r(t)= \int_{-\infty}^{t} g(t)\, dt + C = - \frac{1}{2t^2} + C$
+
+We know that $R(0)=0$ since $r(t)$ has negative power.
+In fact, all the negative power like such function should have $C=0$, so that its $R(0)=0$.
+
+Doing the same thing again using Fourier Transform over integral:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \int_{-\infty}^{t} g(t) \, dt + C \right\} &= \frac{G(f)}{i\tau f} + C \delta(f) \\
+\mathcal{F}\left\{ - \frac{1}{2t^2} \right\} &= \frac{G(f)}{i\tau f} \\
+\pi^2 f \operatorname{sgn}(f) &= \frac{G(f)}{i\tau f} \\
+G(f) &= i 2 \pi^3 f^2 \operatorname{sgn}(f)
+\end{align*}
+$$
+
+In summary:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \frac{1}{t^3} \right\} &= i 2 \pi^3 f^2 \operatorname{sgn}(f) \\
+\end{align*}
+$$
+
+We can see the pattern now:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \frac{1}{t^n} \right\} &=  \frac{(-i \tau f)^n}{(n-1)! 2 f} \operatorname{sgn}(f) \\
+&= \frac{(-i \pi)^n (2f)^{n-1}}{(n-1)!} \operatorname{sgn}(f) \\
+&= -i \pi \operatorname{sgn}(f) \frac{(-i\tau f)^{n-1}}{(n-1)!} \\
+&= \mathcal{F}\left\{ \frac{1}{t} \right\}\frac{(-i\tau f)^{n-1}}{(n-1)!} \\
+\end{align*}
+$$
+
+Several expressions listed above is used to have an easier time memorizing the transform. Just pick the most intuitive one.
