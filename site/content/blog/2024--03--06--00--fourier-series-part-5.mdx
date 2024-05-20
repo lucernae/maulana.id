@@ -506,7 +506,7 @@ C &= \frac{G(f)}{i\tau f} - R(0) \\
 \end{align*}
 $$
 
-Note that $\frac{G(f)}{i\tau f}$ has indeterminate form at $f=0$. But, the value **must** exists. So we should apply
+Note that $\frac{G(f)}{i\tau f}$ has indeterminate form at $f=0$ when $G(0)=0$. But, the value **must** exists. So we should apply
 L'Hôpital's rule.
 
 $$
@@ -523,31 +523,35 @@ $$
 G'(f)&=\frac{d}{df} \int_{-\infty}^{\infty} g(t) \, e^{-i\tau f t} \, dt \\
 &=\int_{-\infty}^{\infty} g(t) \frac{d e^{-i\tau f t}}{df} \, dt \\
 &=-i \tau \int_{-\infty}^{\infty} g(t) \, t \, e^{-i\tau f t} \, dt \\
-&= -i \tau \left[ t\, G(f) \big|_{-\infty}^{\infty} -\int_{-\infty}^{\infty} g(t) \, e^{-i\tau f t} \, dt \right] \\
-&= -i \tau \left[ t\, G(f) \big|_{-\infty}^{\infty} - G(f)\right] \\
-&= i \tau G(f) \left[ 1 - t\, \big|_{-\infty}^{\infty} \right] \\
-G'(0) &= i \tau G(0) \left[ 1 - t\, \big|_{-\infty}^{\infty} \right] \\
+G'(0) &= -i \tau \int_{-\infty}^{\infty} g(t) \, t \, dt \\
+&= -i \tau \mu_{g(t)}
 \end{align*}
 $$
 
-From above criteria, it is necessary that we are able to evaluate said limit. This can only mean that the only applicable $G(f)$
-is if $G(0)=0$. Meaning, any function $g(t)$ with total integral averaged to 0.
+From above criteria, it is necessary that we are able to evaluate said limit.
 
-Substituting back to previous condition:
+The term $\int_{-\infty}^{\infty} g(t) \, t \, dt$ is the average value of function $g(t)$.
+So, if $G(0)=0$ and $\mu$ converges, substituting back to previous condition:
 
 $$
 \begin{align*}
 C &= \frac{G'(0)}{i\tau} - R(0) \\
-C &= G(0) \left[ 1 - t\, \big|_{-\infty}^{\infty} \right] - R(0) \\
-&= - R(0) = -\int_{-\infty}^{\infty} r(t) \, dt  \\
+C &= -\mu_{g(t)} - R(0) \\
+&= -\mu_{g(t)} - R(0) \\
 \end{align*}
 $$
 
-From here, we understand that $C$ and $R(0)$ is the same thing. Rewriting our Fourier transform:
+Consider the following case. When $C=0$, that means $R(0) = -\mu_{g(t)}$.
+
+It would imply that if $g(t)$ is a distribution (vanish at both infinities, and the total integral is exists), then both
+$\mu$ and $R(0)$ just depend each other. It was an offset of the same thing. We could just use one constant for the whole thing.
+So we will use $-\mu_{g(t)}$.
+
+Rewriting our Fourier transform:
 
 $$
 \begin{align*}
-R(f) &= \frac{G(f)}{i\tau f} + R(0)\delta(f)
+R(f) &= \frac{G(f)}{i\tau f} + \mu_{g(t)} \delta(f) \\
 \end{align*}
 $$
 
@@ -559,14 +563,14 @@ Now consider the reverse when $G(0)\ne 0$. To make it simpler, let's say that $g
 
 It means, $r(t)$ is a step function that evaluates to 0 when $t<0$ and evaluates to 1 when $t>0$.
 
-The value of $R(0)$ is the average of $r(t)$, so we can predict that it would be $R(0)=\frac{1}{2}$.
+The value of $R(0)$ is the average of $r(t)$, so we can predict that it would be $\mu_{g(t)}=\frac{1}{2}$.
 Because half the real line it has value 0, and half the real line it has value of 1.
 
 Applying above formula would mean:
 
 $$
 \begin{align*}
-R(f) &= \frac{G(f)}{i\tau f} + R(0)\delta(f) \\
+R(f) &= \frac{G(f)}{i\tau f} + \mu_{g(t)} \delta(f) \\
 R(f) &= \frac{1}{i\tau f} + \frac{1}{2} \delta(f)
 \end{align*}
 $$
@@ -603,7 +607,7 @@ Basically:
 
 $$
 \begin{align*}
-\int_{-\infty}^{\infty} \left( r(t) - R(0) \right) \, dt = 0
+\int_{-\infty}^{\infty} \left( r(t) - \mu_{g(t)} \right) \, dt = 0
 \end{align*}
 $$
 
@@ -612,8 +616,8 @@ Finally, we can conclude that given:
 $$
 \begin{align*}
 r(t) &= \int_{-\infty}^{t} g(t) \, dt \\
-\int_{-\infty}^{\infty} \left( r(t) - R(0) \right) \, dt &= 0 \\
-\mathcal{F}\left\{ r(t) \right\} = R(f) &= \frac{G(f)}{i\tau f} + R(0) \delta(f) \\
+\int_{-\infty}^{\infty} \left( r(t) - \mu_{g(t)} \right) \, dt &= 0 \\
+\mathcal{F}\left\{ r(t) \right\} = R(f) &= \frac{G(f)}{i\tau f} + \mu_{g(t)} \delta(f) \\
 \end{align*}
 $$
 
