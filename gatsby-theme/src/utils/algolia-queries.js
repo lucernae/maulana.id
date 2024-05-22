@@ -1,4 +1,4 @@
-const indexName = `Pages`
+const indexName = `Pages_${process.env.DEPLOY_ENVIRONMENT ?? 'testing'}`
 const pageQuery = `{
   pages: allMdx {
     edges {
@@ -37,7 +37,7 @@ const queries = [
     transformer: ({ data })=>  {
       return data.pages.edges.map(pageToAlgoliaRecord)
     },
-        indexName,
+    indexName,
     settings: { attributesToSnippet: [`excerpt:20`] },
   },
 ]

@@ -29,6 +29,8 @@ jobs:
             experimental-features = nix-command flakes
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Build Gatsby
+        env:
+          GATSBY_ALGOLIA_DRY_RUN: true
         run: |
           nix develop --command ${{matrix.run_time}} install
           nix develop --command ${{matrix.run_time}} gatsby-build

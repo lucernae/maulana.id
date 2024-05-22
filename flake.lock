@@ -126,11 +126,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1716348019,
-        "narHash": "sha256-DixFFgn+8pfqPkW1w3+DpnQmuxkI8ps31J7GAFwyioI=",
+        "lastModified": 1716350832,
+        "narHash": "sha256-E56zvpZZqCn2aLDfSu8MH8WfPU62PlwLPdVgAJ4mtTA=",
         "owner": "lucernae",
         "repo": "gatsby-starter-lucernae",
-        "rev": "09ff37ed40667151f952f7bf8930e48645af4173",
+        "rev": "6061372f90546bbb75ca3d89e2d1481eb157b4ce",
         "type": "github"
       },
       "original": {
