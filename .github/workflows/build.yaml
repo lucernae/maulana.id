@@ -30,7 +30,11 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Build Gatsby
         env:
+          GATSBY_ALGOLIA_APP_ID: ${{ secrets.GATSBY_ALGOLIA_APP_ID }}
+          GATSBY_ALGOLIA_SEARCH_KEY: ${{ secrets.GATSBY_ALGOLIA_SEARCH_KEY }}
+          GATSBY_ALGOLIA_WRITE_KEY: ${{ secrets.GATSBY_ALGOLIA_WRITE_KEY }}
           GATSBY_ALGOLIA_DRY_RUN: true
+          GATSBY_ALGOLIA_CONTINUE_ON_FAILURE: true
         run: |
           nix develop --command ${{matrix.run_time}} install
           nix develop --command ${{matrix.run_time}} gatsby-build

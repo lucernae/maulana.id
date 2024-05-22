@@ -1,3 +1,4 @@
+const crypto = require(`crypto`)
 const indexName = `Pages_${process.env.DEPLOY_ENVIRONMENT ?? 'testing'}`
 const pageQuery = `{
   pages: allMdx {
@@ -21,6 +22,20 @@ const pageQuery = `{
   }
 }`
 
+function calculateHash(item) {
+  const hash = crypto
+    .createHash('md5')
+    .update(JSON.stringify(item))
+    .digest('hex');
+  const doc = pageToAlgoliaRecord(item)
+  return {
+    ...doc,
+    internal: {
+      contentDigest: hash,
+    }
+  }
+}
+
 function pageToAlgoliaRecord({ node: { id, frontmatter, fields, ...rest } }) {
   const doc = {
     objectID: id,
@@ -35,7 +50,7 @@ const queries = [
   {
     query: pageQuery,
     transformer: ({ data })=>  {
-      return data.pages.edges.map(pageToAlgoliaRecord)
+      return data.pages.edges.map(calculateHash)
     },
     indexName,
     settings: { attributesToSnippet: [`excerpt:20`] },
