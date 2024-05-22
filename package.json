@@ -5,6 +5,7 @@
         "gatsby-build": "yarn workspace site build",
         "build": "yarn workspace site build",
         "clean-develop": "yarn workspace site clean && yarn workspace site develop",
+        "clean-build": "yarn workspace site clean && yarn workspace site build",
         "develop": "yarn workspace site develop",
         "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
         "start": "yarn workspace site develop",

@@ -4,6 +4,8 @@
  * See: https://www.gatsbyjs.com/docs/reference/config-files/gatsby-config/
  */
 
+require("dotenv").config()
+
 const gatsbyThemeConfig = require(`../gatsby-theme/gatsby-config.js`)
 
 /**
@@ -143,6 +145,14 @@ module.exports = {
           delayOnRouteUpdate: 0,
         },
       },
+    },
+    {
+      resolve: `gatsby-plugin-algolia`,
+      options: {
+        appId: process.env.GATSBY_ALGOLIA_APP_ID,
+        apiKey: process.env.ALGOLIA_ADMIN_KEY,
+        queries: require("../gatsby-theme/src/utils/algolia-queries")
+      }
     },
     // {
     //   resolve: `gatsby-plugin-manifest`,

@@ -18,17 +18,44 @@ const BlogPostTemplate = ({
 }) => {
   const siteTitle = site.siteMetadata?.title || `Title`
   const navigationLinks = GetNavigationLinks()
+  const quickNav = <nav className="blog-post-nav">
+    <ul
+      style={{
+        display: `flex`,
+        flexWrap: `wrap`,
+        justifyContent: `space-between`,
+        listStyle: `none`,
+        padding: 0
+      }}
+    >
+      <li>
+        {previous && (
+          <Link to={previous.fields.slug} rel="prev">
+            ← {previous.frontmatter.title}
+          </Link>
+        )}
+      </li>
+      <li>
+        {next && (
+          <Link to={next.fields.slug} rel="next">
+            {next.frontmatter.title} →
+          </Link>
+        )}
+      </li>
+    </ul>
+  </nav>
   return (
     <div>
       <NavigationPanel location={location} navigationLinks={navigationLinks}>
         {siteTitle}
       </NavigationPanel>
-      <Layout 
-        location={location} 
-        title={siteTitle} 
+      <Layout
+        location={location}
+        title={siteTitle}
         commentsEnabled={post.frontmatter.comments}
         commentsProps={site.siteMetadata?.config?.commentsProps}
       >
+        {quickNav}
         <article
           className="blog-post"
           itemScope
@@ -44,32 +71,7 @@ const BlogPostTemplate = ({
             <Bio />
           </footer>
         </article>
-        <nav className="blog-post-nav">
-          <ul
-            style={{
-              display: `flex`,
-              flexWrap: `wrap`,
-              justifyContent: `space-between`,
-              listStyle: `none`,
-              padding: 0,
-            }}
-          >
-            <li>
-              {previous && (
-                <Link to={previous.fields.slug} rel="prev">
-                  ← {previous.frontmatter.title}
-                </Link>
-              )}
-            </li>
-            <li>
-              {next && (
-                <Link to={next.fields.slug} rel="next">
-                  {next.frontmatter.title} →
-                </Link>
-              )}
-            </li>
-          </ul>
-        </nav>
+        {quickNav}
       </Layout>
     </div>
   )

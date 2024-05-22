@@ -4,6 +4,8 @@
  * See: https://www.gatsbyjs.com/docs/reference/config-files/gatsby-config/
  */
 
+require("dotenv").config()
+
 // Patch from https://www.gatsbyjs.com/plugins/gatsby-plugin-mdx#mdxoptions
 const wrapESMPlugin = name =>
   function wrapESM(opts) {
@@ -111,6 +113,14 @@ module.exports = ({
       },
     },
     {
+      resolve: `gatsby-plugin-algolia`,
+      options: {
+        appId: process.env.GATSBY_ALGOLIA_APP_ID,
+        apiKey: process.env.ALGOLIA_ADMIN_KEY,
+        queries: require("./src/utils/algolia-queries")
+      }
+    },
+    {
       resolve: `gatsby-plugin-manifest`,
       options: {
         name: `Gatsby Starter Blog`,
@@ -130,6 +140,7 @@ module.exports = ({
         pathToConfigModule: `${__dirname}/src/utils/typography`,
       },
     },
+    `gatsby-plugin-styled-components`,
     `gatsby-plugin-postcss`,
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
