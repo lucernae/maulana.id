@@ -28,7 +28,6 @@ function pageToAlgoliaRecord({ node: { id, frontmatter, fields, ...rest } }) {
     ...fields,
     ...rest,
   }
-  console.log(doc)
   return doc
 }
 
@@ -36,7 +35,6 @@ const queries = [
   {
     query: pageQuery,
     transformer: ({ data })=>  {
-      console.log(data.pages)
       return data.pages.edges.map(pageToAlgoliaRecord)
     },
         indexName,
