@@ -1226,7 +1226,7 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
-"@babel/runtime@^7.1.2":
+"@babel/runtime@^7.1.2", "@babel/runtime@^7.23.2":
   version "7.24.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.24.5.tgz#230946857c053a36ccc66e1dd03b17dd0c4ed02c"
   integrity sha512-Nms86NXrsaeU9vbBJKni6gXiEXZ4CVpYVzEjDH9Sb8vmZ3UljyA1GSOJl/6LGPO8EHLuSF9H+IxNXHPX8QHJ4g==
@@ -8541,11 +8541,11 @@ markdown-table@^2.0.0:
     repeat-string "^1.0.0"
 
 mathjs@^11.5.0:
-  version "11.11.2"
-  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-11.11.2.tgz#8e4332aefbd37c3b80381d7bbb8b31f117fb6df9"
-  integrity sha512-SL4/0Fxm9X4sgovUpJTeyVeZ2Ifnk4tzLPTYWDyR3AIx9SabnXYqtCkyJtmoF3vZrDPKGkLvrhbIL4YN2YbXLQ==
+  version "11.12.0"
+  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-11.12.0.tgz#e933e5941930d44763ddfc5bfb08b90059449b2c"
+  integrity sha512-UGhVw8rS1AyedyI55DGz9q1qZ0p98kyKPyc9vherBkoueLntPfKtPBh14x+V4cdUWK0NZV2TBwqRFlvadscSuw==
   dependencies:
-    "@babel/runtime" "^7.23.1"
+    "@babel/runtime" "^7.23.2"
     complex.js "^2.1.1"
     decimal.js "^10.4.3"
     escape-latex "^1.2.0"
