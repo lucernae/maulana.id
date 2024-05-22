@@ -7,6 +7,7 @@
 require("dotenv").config()
 
 const gatsbyThemeConfig = require(`../gatsby-theme/gatsby-config.js`)
+const algoliaIndexName = `Pages_${process.env.DEPLOY_ENVIRONMENT ?? 'testing'}`
 
 /**
  * @type {import('gatsby').GatsbyConfig}
@@ -48,6 +49,9 @@ module.exports = {
           theme: "preferred_color_scheme",
           lang: "en",
           loading: "lazy",
+        },
+        algoliaProps: {
+          indexName: algoliaIndexName
         },
       },
     },
@@ -149,10 +153,20 @@ module.exports = {
     {
       resolve: `gatsby-plugin-algolia`,
       options: {
-        appId: process.env.GATSBY_ALGOLIA_APP_ID,
-        apiKey: process.env.GATSBY_ALGOLIA_WRITE_KEY,
+        appId: process.env.GATSBY_ALGOLIA_APP_ID ?? '',
+        apiKey: process.env.GATSBY_ALGOLIA_WRITE_KEY ?? '',
         dryRun: process.env.GATSBY_ALGOLIA_DRY_RUN === 'true',
-        queries: require("../gatsby-theme/src/utils/algolia-queries")
+        continueOnFailure: process.env.GATSBY_ALGOLIA_CONTINUE_ON_FAILURE === 'true',
+        queries: (() => {
+          const q = require("../gatsby-theme/src/utils/algolia-queries")
+          return q.map((item) => {
+            const result = {
+              ...item,
+              indexName: algoliaIndexName,
+            }
+            return result
+          })
+        })(),
       }
     },
     // {

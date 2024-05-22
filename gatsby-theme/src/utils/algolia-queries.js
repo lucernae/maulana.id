@@ -1,5 +1,4 @@
 const crypto = require(`crypto`)
-const indexName = `Pages_${process.env.DEPLOY_ENVIRONMENT ?? 'testing'}`
 const pageQuery = `{
   pages: allMdx {
     edges {
@@ -52,7 +51,6 @@ const queries = [
     transformer: ({ data })=>  {
       return data.pages.edges.map(calculateHash)
     },
-    indexName,
     settings: { attributesToSnippet: [`excerpt:20`] },
   },
 ]

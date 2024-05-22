@@ -6,18 +6,18 @@ import GeoGebra from "./geogebra"
 import Comments from "./comments"
 import Mermaid, { MermaidModule } from "./mermaid"
 import Search from "./search"
-const searchIndices = [{
-  name: `Pages`,
-  title: `Pages`
-}]
 
 // import { rhythm, scale } from "../utils/typography"
 import "katex/dist/katex.min.css"
 
-const Layout = ({ location, title, children, commentsEnabled, commentsProps }) => {
+const Layout = ({ location, title, children, commentsEnabled, commentsProps, algoliaProps }) => {
   const rootPath = `${__PATH_PREFIX__}/`
   const isRootPath = location.pathname === rootPath
   const shortcodes = { GeoGebra, Mermaid, Comments }
+  const searchIndices = [{
+    name: algoliaProps?.indexName,
+    title: `Pages`
+  }]
   useEffect(() => {
     if(window.twttr != undefined) {
       // load twitter embedded after component mounted

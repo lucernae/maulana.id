@@ -47,6 +47,7 @@ const IndexPostTemplate = ({
         title={siteTitle} 
         commentsEnabled={post.frontmatter.comments}
         commentsProps={site.siteMetadata?.config?.commentsProps}
+        algoliaProps={site.siteMetadata?.config?.algoliaProps}
       >
         <Bio />
         <article
@@ -148,6 +149,9 @@ export const pageQuery = graphql`
             theme
             lang
             loading
+          }
+          algoliaProps {
+            indexName
           }
         }
       }

@@ -39,6 +39,9 @@ module.exports = ({
     // lang="en",
     // loading="lazy",
   },
+  algoliaProps = {
+    // indexName="Pages",
+  },
 }) => ({
   siteMetadata: {
     title: `Maulana's Gatsby Theme`,
@@ -59,6 +62,7 @@ module.exports = ({
       assetPath: assetPath,
       commentsEnabled: commentsEnabled || true,
       commentsProps: commentsProps || {},
+      algoliaProps: algoliaProps || {},
     },
   },
   plugins: [

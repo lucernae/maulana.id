@@ -27,7 +27,6 @@ export default function Search({ indices }) {
   )
 
   useClickOutside(rootRef, () => setFocus(false))
-
   return (
     <ThemeProvider theme={theme}>
       <StyledSearchRoot ref={rootRef}>
