@@ -4,6 +4,7 @@ import { Script } from "gatsby"
 import { MDXProvider } from "@mdx-js/react"
 import GeoGebra from "./geogebra"
 import Comments from "./comments"
+import { FITDataProvider, ActivityEmbedViewer, HeartRateViewer, PaceViewer, CadenceViewer } from "./fit"
 import Mermaid, { MermaidModule } from "./mermaid"
 import Search from "./search"
 
@@ -13,13 +14,15 @@ import "katex/dist/katex.min.css"
 const Layout = ({ location, title, children, commentsEnabled, commentsProps, algoliaProps }) => {
   const rootPath = `${__PATH_PREFIX__}/`
   const isRootPath = location.pathname === rootPath
-  const shortcodes = { GeoGebra, Mermaid, Comments }
+  const shortcodes = {
+    FITDataProvider,
+    GeoGebra, Mermaid, Comments, ActivityEmbedViewer, HeartRateViewer, PaceViewer, CadenceViewer }
   const searchIndices = [{
     name: algoliaProps?.indexName,
     title: `Pages`
   }]
   useEffect(() => {
-    if(window.twttr != undefined) {
+    if(window.twttr !== undefined) {
       // load twitter embedded after component mounted
       twttr.widgets.load()
     }

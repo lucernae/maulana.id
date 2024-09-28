@@ -95,7 +95,7 @@
           env = [
             {
               name = "NODE_OPTIONS";
-              value = "--max-old-space-size=4096";
+              value = "--max-old-space-size=8192";
             }
           ];
         };

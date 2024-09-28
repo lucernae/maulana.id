@@ -1,0 +1,117 @@
+---
+layout: blog-post
+title: '3Blue1Brown Challenge: Computing probability distribution'
+description: 'We already have the answer, but what was the reason?'
+date: 2024-09-28T00:00:00.00Z
+category:
+    name: blog
+---
+
+# Challenge
+
+Here's the statement of the challenge!
+
+<blockquote className="twitter-tweet">
+    <p lang="en" dir="ltr">
+        Here&#39;s the challenge mode for all you math whizzes. Sample three numbers x, y, z uniformly at random in [0, 1], and compute (xy)^z. What distribution describes this result?
+        <br />
+        <br />
+        Answer: It&#39;s uniform!<br /><br />I know how to prove it, but haven&#39;t yet found the &quot;aha&quot; style explanation where it… 
+        <a href="https://t.co/mHKIHJPxLb">https://t.co/mHKIHJPxLb</a>
+    </p>
+    &mdash; Grant Sanderson (@3blue1brown) 
+    <a href="https://twitter.com/3blue1brown/status/1833534452187664468?ref_src=twsrc%5Etfw">September 10, 2024</a>
+</blockquote> 
+
+Can we find a beautiful proof, intuitive enough to get Grant's seals of approval?
+Let's attempt to do it
+
+# What it means to sample
+
+Let's break down the problem to smaller pieces. We need to understand what it means to sample 
+and measure the probability distribution (let's call it PDF as Probability Density Function).
+
+Suppose we have a random variable $X$ with uniform PDF. Given $N$ attempts at generating the samples of $X$,
+the numbers sampled will have distribution close to its PDF, which is uniform.
+
+Let's say we sample 10 numbers, each must have values between $\left[0,1\right]$, then we get a collection of 
+numbers: $(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)$.
+Of course the order of the numbers can be at "random" when you sampled it, but we need to sort it in increasing
+order.
+This is needed because we want to calculate the PDF.
+However a PDF is defined as $X$'s probability of happening if the value is exactly at $x$.
+But our sampling is not continuous. So we won't know "how many times $0.123$ appears in our collection"
+because simply the number doesn't exists in the sampled collection.
+
+What we need to do is approximate the PDF. We do this by defining something called Cumulative Distribution Function
+or CDF in short. It is defined as the density of values less than $x$, instead of **at** $x$.
+That means saying $CDF(0.5)$ means the same as $PDF(x<0.5)$, or calculating how many numbers in $X$ is less than $0.5$, 
+out of 10 samples. In our collection above, there were 4 numbers out of 10, so the density is $0.4$. 
+Which means $CDF(0.5)=0.4$.
+
+Based on our definition above, a CDF is always an increasing function which has output from 0 to 1, being 1 the max possible values.
+This is because eventually all numbers in the collection will get picked up. For example, $CDF(1)=1$ because 10 numbers will be picked 
+out of 10 samples. This is why it is necessary to sort the collection in increasing order when we sample it.
+So that, when we chart the graph, we immediately see the CDF. With the x-axis being the value of the random number's sample,
+and the y-axis being the "index" of the collection.
+
+TODO: need to put a graph here.
+
+To estimate the PDF now becomes a much straightforward task. Since PDF is the density at exactly the random number values at $x$, 
+then it is definitely the difference between the adjacent values of the CDF.
+For example, from our samples above, $PDF(0.123) \approx CDF(0.2)-CDF(0.1)$ because value $0.123$ is between $0.2$ and $0.1$.
+
+Speaking in calculus terms, if we have many numbers in our collections (huge $N$ samples), then the adjacent CDF values is more 
+close. Which means, the PDF is actually a derivative of CDF.
+
+$$
+\begin{align*}
+\operatorname{CDF}(x) &= \int_{0}^{x} \operatorname{PDF}(x) \, dx \\
+\operatorname{PDF}(x) &= \frac{d}{dx} \operatorname{CDF}(x) \\
+\end{align*}
+$$
+
+For uniform distribution, it is apparent that the CDF will be a straight line with 45 degree angle between 0 to 1.
+It's PDF then will be a flat line, because each numbers has equal chance of being picked.
+
+## Sampling an operation of random variables
+
+Now that we understand how to sample a single random variables $X$, we want to sample two random number variables, combined by 
+some sort of operations. Let's say $X\cdot Y$. We sampled two collections $X$ and $Y$, and then we loop over for each indices,
+and produce another collection that contains the operation of the numbers.
+
+Let's say $X$ is a collection of 4 samples: $(0.1, 0.2, 0.3, 0.4)$, then $Y$ must be a collection of 4 samples as well
+$(0.2, 0.4, 0.6, 0.8)$. Because the operation is $X \cdot Y$, for each indices, we perform multiplication.
+In this case, it is essentially a dot product. The collections were: $(0.1\cdot 0.2, 0.2 \cdot 0.4, 0.3 \cdot 0.6, 0.4 \cdot 0.8)$
+simplified as $(0.02, 0.08, 0.18, 0.32)$. We can approximate the resulting PDF just like before. From the collection, 
+measure the CDF, then the PDF is the derivative of the resulting chart.
+
+The values were smoothed out as we take significantly greater sampling numbers. So, instead of 4 samples, we should do 1 million samples 
+for examples. Then see the resulting distributions.
+
+## Order of the operation of the random variables
+
+Notice in the previous example, we operate the collection on each indices. So we can treat each indices in the collection as it's own basis
+of the values. Independent basis can't mix each other. Also in the case of multiplication above, we have commutivity.
+Which means if we swap the collection, the resulting distribution will still be the same.
+
+So, for $X$ and $Y$ having the same distribution, the new random variables $Z=XY$ will still have the same distribution as if $X$ and $Y$ were swapped.
+As long as you swap the entire collection, not just any specific indices. This symmetry implies that the information regarding the distribution 
+is only affected by the operation it self, not by the collection. 
+
+For any probability density function, the entropy it contains will directly affected by 
+how the information were distributed. That means, we can exploit the symmetry to gain insights on the resulting entropy
+
+# Approach 1: Using symmetry 
+
+Since all 3 random variables have the same distributions, swapping the variables have no effect on the resulting distribution.
+The distribution should also look the same if we use the same variables.
+
+$$
+\begin{align*}
+W&=(XY)^Z \\
+&= (X\cdot X)^X \\
+&=X^{2X} \\
+\end{align*}
+$$
+

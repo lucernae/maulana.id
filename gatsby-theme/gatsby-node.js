@@ -6,39 +6,34 @@
 
 const path = require(`path`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
-const slugify = require(`@sindresorhus/slugify`)
 const { compileMDXWithCustomOptions } = require(`gatsby-plugin-mdx`)
 const { remarkHeadingsPlugin } = require(`./remark-headings-plugin`)
-const { node } = require("prop-types")
 
-const createIndexPage = async (
-  { actions, post, postCount, categoriesList },
-  options
-) => {
+const createIndexPage = async ({ actions, post, postCount, categoriesList }, options) => {
   const { createPage } = actions
   const limit = options.paginationPageSize
   const layout = post.frontmatter.layout || "index-post"
   const template = path.resolve(`${__dirname}/src/templates/${layout}.js`)
-  for (let i = 0; i < postCount; i += limit) {
-    let pagePath = post.fields.slug
-    if (i != 0) {
-      let pageIndex = Math.floor(i / limit) + 1
-      pagePath = path.join(pagePath, `index-page/${pageIndex}`)
-    }
-    let categoriesFilter = [post.frontmatter.category.name]
-    if (post.frontmatter.category.name === options.categoryNameForAll) {
-      categoriesFilter = categoriesList
-    }
-    createPage({
+
+  for (const [i, _] of Array.from({ length: Math.ceil(postCount / limit) }).entries()) {
+    const pagePath = i === 0
+      ? post.fields.slug
+      : path.join(post.fields.slug, `index-page/${i + 1}`)
+    const categoriesFilter = post.frontmatter.category.name === options.categoryNameForAll
+      ? categoriesList
+      : [post.frontmatter.category.name]
+
+    await createPage({
       path: pagePath,
       component: `${template}?__contentFilePath=${post.internal.contentFilePath}`,
       context: {
         id: post.id,
         slug: post.fields.slug,
+        relativePath: path.dirname(post.internal.contentFilePath),
         categoriesList: categoriesFilter,
-        skip: i,
-        limit: limit,
-      },
+        skip: i * limit,
+        limit
+      }
     })
   }
 }
@@ -93,60 +88,50 @@ exports.createPages = async ({ graphql, actions, reporter }, options) => {
   // `context` is available in the template as a prop and as a variable in GraphQL
 
   if (posts.length > 0) {
-    // aggregate posts by categories
-    const postsByCategory = posts.reduce((total, value) => {
-      const category =
-        value.frontmatter.category.name || options.categoryNameForAll
-      if (total[category] === undefined) {
-        total[category] = []
-      }
-      total[category].push(value)
-      if(category != options.categoryNameForAll) {
-        total[options.categoryNameForAll].push(value)
-      }
-      return total
-    }, {
-      [options.categoryNameForAll]: []
-    })
-    const categoriesList = Object.keys(postsByCategory)
-    categoriesList.forEach(key => {
-      const post = postsByCategory[key].find(value => {
-        return value.frontmatter.index == true
-      })
-      if (post === undefined) {
-        return
-      }
-      const postCount = postsByCategory[key].length
-      createIndexPage({ actions, post, postCount, categoriesList }, options)
-    })
 
-    // page for each posts
-    posts
-      .filter(post => {
-        return post.frontmatter.index != true
-      })
-      .forEach((post, index) => {
-        const previousPostId = index === 0 ? null : posts[index - 1].id
-        const nextPostId =
-          index === posts.length - 1 ? null : posts[index + 1].id
+    const postsByCategory = posts.reduce((acc, cur) => {
+      const curCategory = cur.frontmatter.category.name || options.categoryNameForAll
+      acc[curCategory] = acc[curCategory] || []
+      acc[curCategory].push(cur)
 
-        // Define the template for blog post
-        const layout = post.frontmatter.layout || "blog-post"
-        const template = path.resolve(`${__dirname}/src/templates/${layout}.js`)
-        createPage({
-          path: post.fields.slug,
-          component: `${template}?__contentFilePath=${post.internal.contentFilePath}`,
-          // component: post.internal.contentFilePath,
-          // component: blogPost,
-          context: {
-            id: post.id,
-            slug: post.fields.slug,
-            title: post.frontmatter.title,
-            previousPostId,
-            nextPostId,
-          },
-        })
+      if (curCategory !== options.categoryNameForAll) {
+        acc[options.categoryNameForAll].push(cur)
+      }
+
+      return acc
+    }, { [options.categoryNameForAll]: [] })
+
+    for (const [key, value] of Object.entries(postsByCategory)) {
+      const postForIndexPage = value.find(post => post.frontmatter.index === true)
+      if (!postForIndexPage) continue
+
+      const postCount = value.length
+      await createIndexPage({
+        actions,
+        post: postForIndexPage,
+        postCount,
+        categoriesList: Object.keys(postsByCategory)
+      }, options)
+    }
+
+    for (const post of posts.filter(post => !post.frontmatter.index)) {
+      const index = posts.filter(post => !post.frontmatter.index).indexOf(post)
+      const upperPostId = index === 0 ? null : posts[index - 1].id
+      const lowerPostId = index === posts.length - 1 ? null : posts[index + 1].id
+
+      await createPage({
+        path: post.fields.slug,
+        component: `${path.resolve(`${__dirname}/src/templates/${post.frontmatter.layout || "blog-post"}.js`)}?__contentFilePath=${post.internal.contentFilePath}`,
+        context: {
+          id: post.id,
+          slug: post.fields.slug,
+          relativePath: post.internal.relativePath,
+          title: post.frontmatter.title,
+          previousPostId: upperPostId,
+          nextPostId: lowerPostId
+        }
       })
+    }
   }
 }
 
@@ -168,6 +153,26 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
 
 exports.onCreateWebpackConfig = ({ stage, actions }) => {
   actions.setWebpackConfig({
+    module: {
+      rules: [
+        {
+          test: /\.(fit)$/i,
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                outputPath: (url, resourcePath, context) => {
+                  return `/static/fit/${url}`
+                },
+                publicPath: (url, resourcePath, context) => {
+                  return `/static/fit/${url}`
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
     resolve: {
       fallback: {
         path: require.resolve("path-browserify"),

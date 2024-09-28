@@ -35,14 +35,14 @@ const IndexPostTemplate = ({
       return
     }
     navigate(linkPath)
-    return
   }
+
   return (
     <div>
       <NavigationPanel location={location} navigationLinks={navigationLinks}>
         {siteTitle}
       </NavigationPanel>
-      <Layout 
+      <Layout
         location={location} 
         title={siteTitle} 
         commentsEnabled={post.frontmatter.comments}
