@@ -3,28 +3,28 @@ layout_name: blog-post
 title: Using Tailscale with Nix
 description: Nix and NixOS support for the Tailscale network
 category:
-    name: soft-dev
+  name: soft-dev
 date: 2023-01-30T00:00:00.00Z
 ---
 
 Just like other posts, I usually started by quoting the person that inspired me to write this particular article.
 It began when a friend suggested me to use Tailscale. However his twitter profile are protected, so I couldn't quote or search back his exact tweet.
-Anyway, the general idea is that I wanted to setup a home lab router/relay so I can check up from time to time while working away from home. 
+Anyway, the general idea is that I wanted to setup a home lab router/relay so I can check up from time to time while working away from home.
 
 # Tailscale a zero setup VPN... or sort of...
 
 [Tailscale](https://tailscale.com) is a free service that my friend suggested to check out. By free, I mean for personal use, it offers a free service.
-If you are a little bit serious you could check their paid plan to see their offers. 
+If you are a little bit serious you could check their paid plan to see their offers.
 If you ever used OpenVPN or WireGuard, or you set up something like that in the past, then think of Tailscale as an easier stack to install.
 
 How easy it is?
 
-Well, by comparison, usually when you want to set up an OpenVPN network, you generate RSA or certificates. You then distribute and create a background 
-service (both server and client). Also, the setup might look different in macos, linux, or windows. In fact, my original pi-hole instance uses openvpn 
+Well, by comparison, usually when you want to set up an OpenVPN network, you generate RSA or certificates. You then distribute and create a background
+service (both server and client). Also, the setup might look different in macos, linux, or windows. In fact, my original pi-hole instance uses openvpn
 client in the background as a proxy to forward DNS over HTTPS, and or certain traffic to bypass my ISP's absurd restrictions (Indihome, I'm talking about you).
 
-Anyway, those days are long gone. Just a couple of months back in November, I have access to a more reliable ISP with 1:1 downlink:uplink connection. 
-Or at least, from what I observed, the uplink was pretty decent. That means I could do more sophisticated things like streaming remote desktop connection, 
+Anyway, those days are long gone. Just a couple of months back in November, I have access to a more reliable ISP with 1:1 downlink:uplink connection.
+Or at least, from what I observed, the uplink was pretty decent. That means I could do more sophisticated things like streaming remote desktop connection,
 steam remote, or playstation remote using this bandwidth. The problem is, if it goes thru Openvpn, it will be limited by my own vpn server in the cloud.
 Also, it will be a pain to set up a forwarding rule for streaming services which is mostly based on UDP.
 
@@ -37,7 +37,7 @@ I'm going to skip directly and assume reader knew what Nix and NixOS is.
 My pi-hole uses NixOS. Because it is easier for me to setup systemd or docker services that way. It also can be optimized to be as light as possible.
 My Raspberry Pi model is 3B+, not version 4, so I want to squeeze all the possible performance saving.
 
-I haven't updated my pi for a while, so the first thing to do is to upgrade NixOS to the latest stable version (22.05 or 22.11). This is because Tailscale 
+I haven't updated my pi for a while, so the first thing to do is to upgrade NixOS to the latest stable version (22.05 or 22.11). This is because Tailscale
 is so quickly updated, you want the latest version to use all the features it offered.
 
 To upgrade NixOS without changing the config, yo do:
@@ -67,7 +67,7 @@ If I do `tailscale version`, the version I am currently using when I'm writing t
 
 That only installs the tailscale CLI.
 
-We still need the tailscale server. Fortunately, it already exists within NixOS modules. To enable it declaratively (both the Server and CLI), modify 
+We still need the tailscale server. Fortunately, it already exists within NixOS modules. To enable it declaratively (both the Server and CLI), modify
 NixOS config with these lines
 
 ```nix
@@ -88,7 +88,7 @@ NixOS config with these lines
 }
 ```
 
-To recap, the `services.tailscale.enable` config is just to enable the daemon service. The one who setup forwarding/tunnel etc. You actually need 
+To recap, the `services.tailscale.enable` config is just to enable the daemon service. The one who setup forwarding/tunnel etc. You actually need
 to login first using the CLI.
 
 ```shell
@@ -162,7 +162,7 @@ It will show the lists of the devices. For example, currently I have these (an e
 100.84.196.90   red-fenrir           my.email@  linux   offline
 ```
 
-A quick explanation, 
+A quick explanation,
 
 The first column is the "tailscale" IP. Whenever your devices connected with tailscale you can reach the other using this IP. It is assigned per-device, so it won't change, even if you are connected
 from a different network.
@@ -193,13 +193,13 @@ Literally.
 
 Like, I don't even need to declare anything. I just do `tailscale up`, log in (if this is the first time for this device), then it was connected. That's it.
 
-Reaching the hostname is resolved using Magic DNS. It was done transparently, and I think really cleverly. In Linux, I just realized that the DNS "server" 
+Reaching the hostname is resolved using Magic DNS. It was done transparently, and I think really cleverly. In Linux, I just realized that the DNS "server"
 (I quoted, because I'm not really sure yet if this is an actual server) is reachable on 100.100.100.100. It is clever because this is a shared reserved space, and local.
 Although not entirely equivalent, you can think of it as reaching 127.0.0.1 which is always exists in your device.
 
 So, the hostname were appended the tailscale net name, such as `abc.ts.net`. So if your device hostname is `albatros`, it actually resolves to `albatros.abc.ts.net`
 and handled by 100.100.100.100. If it doesn't resolve, it will fallback to whichever other DNS you are currently using. This is how it can find your device tailnet IP.
-Since the 100.x.y.z is a shared reserved space, this is basically a subnet just for your Tailscale account. Other might have the same IP, but you won't connect to the 
+Since the 100.x.y.z is a shared reserved space, this is basically a subnet just for your Tailscale account. Other might have the same IP, but you won't connect to the
 other subnet since it was on a different Tailscale account. Think of these as your private VPN LAN subnet.
 
 If your usage is pretty simple, "I need to connect to my device A from B, but over an insecure network" this solves your problem.

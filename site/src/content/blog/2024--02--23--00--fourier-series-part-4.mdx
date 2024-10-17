@@ -4,7 +4,7 @@ title: 'Fourier Series: part 4'
 description: 'Fourier Transform and its identities: part 2'
 date: 2024-02-23T00:00:00.00Z
 category:
-    name: blog
+  name: blog
 ---
 
 # Fourier Transform Identities and Properties
@@ -84,7 +84,7 @@ The next interesting thing to observe after figuring out derivative, is how we m
 
 We can have two different approach.
 
-Approach A: use the fact that a constant function can be thought of as a periodic function with finite smallest non-zero period T. 
+Approach A: use the fact that a constant function can be thought of as a periodic function with finite smallest non-zero period T.
 Then, we can use Fourier Series approximation to construct back the original function.
 
 Approach B: use the fact that a constant function can also be thought of as a non-periodic function with infinite period T.
@@ -138,7 +138,7 @@ $$
 G(f,N,h) = N  \, h \, \operatorname{sinc}(\tau f \frac{h}{2})
 $$
 
-But, it's not over yet. Ideally the function should be independent from any variable other than $f$. So, we need to figure out how 
+But, it's not over yet. Ideally the function should be independent from any variable other than $f$. So, we need to figure out how
 to eliminate $N$ and $h$. We will use the Fourier Series form to do that. Taken from [article 2-T5](../2024--02--04--00--fourier-series-part-2/#recap)
 
 $$
@@ -176,10 +176,10 @@ $$
 This would contradict our assumption in a strange way. The consequences: one of the following needs to be true:
 
 1. $h$ is actually dependent on the value of $f$ that is currently being evaluated in the Fourier Transform.
-2. $h$ can be the smallest non-zero value possible (doesn't matter what it is), but $fh$ needs to be related with an integer $n$ such that $f h = n$. 
-So that $e^{i\tau n}= e^{i 2 \pi n} = e^{i 2\pi} = 1$
+2. $h$ can be the smallest non-zero value possible (doesn't matter what it is), but $fh$ needs to be related with an integer $n$ such that $f h = n$.
+   So that $e^{i\tau n}= e^{i 2 \pi n} = e^{i 2\pi} = 1$
 
-The condition for 1. will be covered automatically if we are dealing with signal scaling. 
+The condition for 1. will be covered automatically if we are dealing with signal scaling.
 But this is not the case for constant function, since stretching the function horizontally will have no effect.
 So, we have to accept point 2.
 
@@ -223,7 +223,6 @@ G(k,N)= N \operatorname{sinc}(k \pi)
 \end{align*}
 $$
 
-
 ### Constant function, interpreted from non-periodic function
 
 As we have discussed before, we can also thought of constant function as a non-periodic function with infinite periods.
@@ -236,7 +235,7 @@ However, this time, instead of multiplying it by $N$ (the count of the interval)
 We instead want to **enlarge** the slice by taking the limit of $T$ to infinity.
 This is analoguous to stretching the function horizontally to positive and negative x-axis direcation.
 
-Our $G(f)$ is a representation of the interval $T$, now. We are going to use 
+Our $G(f)$ is a representation of the interval $T$, now. We are going to use
 the Fourier Transform definition in [article 2-T1](../2024--02--04--00--fourier-series-part-2/#recap).
 
 $$
@@ -250,12 +249,12 @@ $$
 
 Step (1) to (2), is just a notational convenience. $G_T(f)$ means $G(f)$ in the limit that $\lim_{T\to\infty}$.
 
-This way, the end result $G_T(f)$ is a function that took the form of a function that its limit hasn't been taken **yet**. 
+This way, the end result $G_T(f)$ is a function that took the form of a function that its limit hasn't been taken **yet**.
 
 Let's evaluate it for a moment. From this form, it is clear that when $f=0$, the function $G_T(0)$ evaluates to $\infty$ and becomes really huge. This is because $\operatorname{sinc}(0)=1$ and the value $2T$ approaches a really huge number.
 
 What we are not sure yet, is how this function behaves on continuous $f$.
-Suppose that $fT=n$ an integer, just like what we concluded in Approach A. 
+Suppose that $fT=n$ an integer, just like what we concluded in Approach A.
 It means that the function evaluates to zero.
 But what about when $fT$ not equal to an integer?
 Especially when we are going to set $T$ as a really huge number.
@@ -304,7 +303,7 @@ It has similar (if not the same) consequences as Approach A, albeit with entirel
 In conclusion, $G_T(f)$ behaves the same way as its Fourier Series counterpart.
 It is zero everywhere when $fT=\frac{n}{2}$, except when $f=0$, where its value spikes to infinity.
 
-Next, from the FT to IFT relationship, we will try to find another condition such that 
+Next, from the FT to IFT relationship, we will try to find another condition such that
 the transform is invertible. Suppose that at $t=0$, the value $g(t)=1$ is a constant.
 We also substitute $f=\frac{n}{2T}$
 
@@ -318,7 +317,7 @@ $$
 
 Since there are no variable left on the right hand side. We can **guess** that the right hand side evaluates to 1, in order for the limit to converge with the left hand side $g(t)=1$. But we had to make sure.
 
-Previously we evaluate a sum, and it was easy to do because for any value of $n$, the function evaluates to zero, except when $n=0$. This time $n$ represents a continuous variable. This last integral is a little bit tricky to solve. But we will use several steps to change the form. 
+Previously we evaluate a sum, and it was easy to do because for any value of $n$, the function evaluates to zero, except when $n=0$. This time $n$ represents a continuous variable. This last integral is a little bit tricky to solve. But we will use several steps to change the form.
 
 In order to evaluate the integral, notice that $\operatorname{sinc}(\phi)$ is an even symmetric function. So we can change the integral into this:
 
@@ -349,7 +348,7 @@ Let's break apart into smaller terms. Suppose that $I(n)=\int_0^\infty \sin(n\pi
 $$
 \begin{align*}
 I(n) &= \int_0^\infty \sin(n\pi) \, e^{-ns} \, dn \\
-&= \frac{1}{-s}\left[ \sin(n\pi) \, e^{-ns} \right]_0^\infty + \frac{\pi}{s} \int_0^\infty \cos(n\pi) \, e^{-ns} \, dn \\ 
+&= \frac{1}{-s}\left[ \sin(n\pi) \, e^{-ns} \right]_0^\infty + \frac{\pi}{s} \int_0^\infty \cos(n\pi) \, e^{-ns} \, dn \\
 &= 0 + \frac{\pi}{s} \int_0^\infty \cos(n\pi) \, e^{-ns} \, dn\\
 \frac{s}{\pi} I(n) &= \frac{1}{-s}\left[ \cos(n\pi) \, e^{-ns} \right]_0^\infty - \frac{\pi}{s} \int_0^\infty \sin(n\pi) \, e^{-ns} \, dn \\
 &= \frac{1}{s} - \frac{\pi}{s} I(n) \\
@@ -528,7 +527,7 @@ g(t) &= \int_{-\infty}^{\infty} G(f) \, e^{i\tau f t} \, df \\
 \end{align*}
 $$
 
-The left hand side is the integral of $g(t)$ over all $t$. Using the [zero-th frequency property](../2024--02--11--00--fourier-series-part-3/#the-zero-th-frequency), 
+The left hand side is the integral of $g(t)$ over all $t$. Using the [zero-th frequency property](../2024--02--11--00--fourier-series-part-3/#the-zero-th-frequency),
 this can be replaced with $G(0)$.
 
 Assuming both Fourier Dual can converge, we can swap the order of integration in the right hand side using Fubini's Theorem.
@@ -549,7 +548,6 @@ Now compare the last right hand side with the following definition from probabil
 Suppose we have a probability distribution $p(x)$, and a function $f(x)$.
 Then the expectation of $f(x)$ given random variable $X$, is defined by:
 
-
 $$
 \begin{align*}
 \operatorname{E}\left[ f(X) \right]= \int_{-\infty}^{\infty} p(x) \, f(x) \, dx
@@ -560,11 +558,11 @@ With this analogy, we can think of $\delta(t)$ as some probability distribution 
 Meaning, the value $G(0)$ is the expectation value of function $G(f)$.
 
 This is quite surprising because we just found a connection between Fourier Transform and probability distribution.
-The reason why $G(0)$ is the expectation value, is simply because $\delta(f)$ is some kind of distribution 
-that has sudden spike of peak in the zero-th frequency $f=0$. So, in a probability sense, its probability 
+The reason why $G(0)$ is the expectation value, is simply because $\delta(f)$ is some kind of distribution
+that has sudden spike of peak in the zero-th frequency $f=0$. So, in a probability sense, its probability
 around $f=0$ is a near certainty. Which is why, the expectation ends up being $G(0)$, the value of $G(f)$ at $f=0$.
 
-Using this kind of definition, we kind of understand that $\delta(x)$ is not a function, but rather 
+Using this kind of definition, we kind of understand that $\delta(x)$ is not a function, but rather
 some kind of distribution that allows Fourier Transform to be computed iteratively in succession.
 
 For any function $g(t)$ that is a Fourier Dual, there exists a $\delta(t)$ function such that:
@@ -652,7 +650,7 @@ $$
 $$
 
 Notice that it doesn't matter if $a$ is positive and negative above left hand side,
-the frequency still peaked at $f=0$. The above relationship were derived using the linearity property of Fourier Transform, so the constant $a$ can be taken out of the transform, 
+the frequency still peaked at $f=0$. The above relationship were derived using the linearity property of Fourier Transform, so the constant $a$ can be taken out of the transform,
 leaving only constant $\mathcal{F}\left\{ 1 \right\}$. However, we can derive similar thing, but got different form using property $P15$.
 
 $$
@@ -716,7 +714,6 @@ and the delta function had to be defined that way, in relation with the partitio
 
 Basically, you can make $h$ as small as possible... but still not zero, otherwise it would contradict all these assumption.
 This is inline with our previous argument that says that a constant function can be thought of as a periodic function with the smallest non-zero period $h$.
-
 
 # Remarks
 

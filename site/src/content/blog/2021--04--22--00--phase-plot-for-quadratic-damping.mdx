@@ -3,10 +3,11 @@ layout_name: blog-post
 title: Phase plot for quadratic damping oscillator
 description: As promised, the phase plot/diagram for the oscillations
 category:
-    name: blog
+  name: blog
 date: 2021-04-22T00:00:00.00Z
 ---
-As an appendix promised for the article [How fast helium balloon floats...](2021--04--11--17--how-fast-helium-balloon-floats), 
+
+As an appendix promised for the article [How fast helium balloon floats...](2021--04--11--17--how-fast-helium-balloon-floats),
 and also appendix for the follow up article [Hint for solving quadratic drag force on a damping oscillator](2021--04--16--00--hint-for-solving-quadratic-drag-force-on-a-damping-oscillator/),
 I'm going to show the phase plot or phase diagram of the oscillation of quadratically damped floating balloon.
 
@@ -21,25 +22,25 @@ $
 \ddot x=-\omega^2 x - d \dot x \left| \dot x \right|
 $
 
-In the previous article we call $d$ as $D_2$ the damping coefficient for **quadratic** 
-drag force. Because we are very clear now that this article only consider **quadratic** 
+In the previous article we call $d$ as $D_2$ the damping coefficient for **quadratic**
+drag force. Because we are very clear now that this article only consider **quadratic**
 case, let's just call the coefficient $d$.
 
-The equation of motion above have interesting property. It will converge to a stable 
-position, $x=0$ and $\dot x=0$ and $\ddot x=0$, due to losing energy. That means, the 
+The equation of motion above have interesting property. It will converge to a stable
+position, $x=0$ and $\dot x=0$ and $\ddot x=0$, due to losing energy. That means, the
 center of the coordinate system is the position where the object converges and stop moving.
 
-Any oscillation with linear restoring force $-\omega x$ and quadratic damping 
+Any oscillation with linear restoring force $-\omega x$ and quadratic damping
 drag force $- d \dot x \left| \dot x \right|$, can be reduced into a generic equation above.
-If the equation have constant force $C$, we shall find $C=\omega A$ where A is the amplitude 
-value that can be used to do a coordinate shift from the original reference frame to 
+If the equation have constant force $C$, we shall find $C=\omega A$ where A is the amplitude
+value that can be used to do a coordinate shift from the original reference frame to
 a reference frame where position 0 is where the object will be at rest.
 
-So, it's suffice for us to find the behaviour of above equation, because any similar motions 
+So, it's suffice for us to find the behaviour of above equation, because any similar motions
 can be reduced to our equation above.
 
 The term in the drag force $- d \dot x \left| \dot x \right|$, the absolute value of $\dot x$,
-is just a convenient way for us to say that the direction of the drag force is always 
+is just a convenient way for us to say that the direction of the drag force is always
 opposing the direction of the velocity. With the magnitude of drag force proportional to $\dot x^2$.
 
 So, our equation above can be broken down into positive (positive x) direction and negative (negative x) direction.
@@ -84,10 +85,10 @@ We can pick either in the left side or right side of origin. But I prefer to sta
 By starting from the left side, we will use the positive equation of motion (where velocity direction is positive).
 
 If the distance between initial position and $x=0$ is $A$ (the maximum amplitude). Then the initial position $x_0=-A$.
-The initial acceleration becomes the maximum acceleration possible, and we can easily calculate it using 
+The initial acceleration becomes the maximum acceleration possible, and we can easily calculate it using
 Newton’s First Law in the initial condition. Or, shortly $a_0=\omega^2 A$
 
-After defining the initial condition above, we have completely mapped a phase from our standard 
+After defining the initial condition above, we have completely mapped a phase from our standard
 phase space $X$ and $V$ into the actual phase space of the object $x$ and $\dot x$.
 
 # Drawing the plot of first iteration
@@ -99,10 +100,10 @@ $
 K_+=(1-X_0)e^{X_0}
 $
 
-The constant for our standard phase is determined by it's original position. 
+The constant for our standard phase is determined by it's original position.
 
 If we use Lambert W function to find $X$ at $V=0$, we should find two values of $X$.
-One at $X_0$ when the object began to move and another one at $X_1$, which is when the 
+One at $X_0$ when the object began to move and another one at $X_1$, which is when the
 object stop and change it's velocity direction.
 
 $
@@ -195,7 +196,7 @@ After that, the equation just alternates it's sign with different value of $K$.
 
 We can reformulate which equation/constants to use based on which iteration number.
 
-Note, that if we define $K_0=0$, there is only one $X$ value possible, which is 1. 
+Note, that if we define $K_0=0$, there is only one $X$ value possible, which is 1.
 We can imagine that the original amplitude $X_0$ is so far away at $-\infty$ that it technically doesn't cross $X$ axis.
 Let's use this as a base.
 
@@ -221,12 +222,12 @@ when $n$ is even, velocity is positive. When $n$ is odd, velocity is negative.
 
 From this recursive relation, you can make a simple program that calculate all the necessary points of interests.
 
-It's also worth noting that subsequent values of $K_n$ is only determined by the initial values in the range 
+It's also worth noting that subsequent values of $K_n$ is only determined by the initial values in the range
 of $-\infty < X_0 \leq -1$. If $X_0$ were to happen in the range $-1 < X_0 < 0$ it is probably not the first iteration,
 and you can determine the the original $X$ that is capable of generating that value.
 
-Simply speaking, if you make a phase plot with $X_0=-1$ then you will get the same phase plot if you draw 
-the same plot, but starting at $X_2$ that is generated from $X_0=-1$. So, hypothetically speaking, 
+Simply speaking, if you make a phase plot with $X_0=-1$ then you will get the same phase plot if you draw
+the same plot, but starting at $X_2$ that is generated from $X_0=-1$. So, hypothetically speaking,
 if we have a canonical phase plot and the other phase plot can be transformed into this canonical phase plot,
 that means it is possible to define a standard function that will cover the whole dynamics.
 
@@ -241,15 +242,14 @@ Same plot with but now with $X'_0=X_2$, also with 5 iterations as you can see, s
 
 ![](/images/uploads/Screen-Shot-2021-04-26-at-00.00.58.png)
 
-
 # Deriving interesting identities
 
-We can go a little bit further deep. There is an interesting relation that we don't have if the plot phase 
+We can go a little bit further deep. There is an interesting relation that we don't have if the plot phase
 is a simple harmonic cycles.
 If we choose two arbitrary index of a different parity $K$, with the same value of $V^2$.
 We have an interesting relationship between positive $V$ and negative $V$.
 Obviously in the different half cycle, it will corresponds with a different $X$ value that maps to the same $V^2$.
-With simple harmonics, this is not interesting because the $X$ value will be the same, but with this plot phase, 
+With simple harmonics, this is not interesting because the $X$ value will be the same, but with this plot phase,
 we will have extra identity. Let's suppose that $X_a$ is the position where velocity is positive, meanwhile $X_b$
 is the position where velocity is negative.
 
@@ -259,7 +259,7 @@ K_be^X_b-K_ae^-X_a=X_b+X_a \\
 H \sinh(\phi)=\frac{X_b+X_a}{2}
 $
 
-We just introduced a new variable $H$ and hyperbolic angle $\phi$. 
+We just introduced a new variable $H$ and hyperbolic angle $\phi$.
 For every same $V^2$ between consecutive half cycles, this relation emerges.
 The definition of the new variables:
 
@@ -284,7 +284,7 @@ We can immediately know which cycle is earlier or later. We can even compare dif
 The idea is very powerful, that we can think about $H$ as the absolute cycle lengths. Then $H_a$ and $H_b$ can be divided to get a relative cycles.
 We can even know, if $\sqrt{2} < H$ then that means it is the very first initial cycle.
 
-Now, we are going to try to interpret the hyperbolic angle $\phi$. We can immediately recognize that it 
+Now, we are going to try to interpret the hyperbolic angle $\phi$. We can immediately recognize that it
 is possible to set the right hand side to zero. But the cycle length $H$ can not be zero.
 So the zero must comes from $\sinh(\phi)$. The reason why it happens, maybe because of these:
 
@@ -303,7 +303,6 @@ If we define, the absolute cycle length of cycle n as $H_n$:
 $
 H_n=K_ne^x
 $
-
 
 Then our previous $H$ is actually a square root/geometric average between two absolute cycles:
 
@@ -349,14 +348,13 @@ K_- e^\frac{{X_b+X_a}}{2} sinh(\frac{X_b-X_a}{2})=\frac{X_b-X_a}{2}
 $
 
 From both equation, we can't determine if we set $X_a=X_b$, which is make sense because the only time it happens
-is when $X=X_{peak-n}$. 
+is when $X=X_{peak-n}$.
 
 If both $X$ are zeroes of the equation, then $\left|X_b-X_a\right|$ is the full range/length of $X$ of that cycle.
-We can call this the span $S=\left|X_b-X_a\right|$. Meanwhile the quantity $\frac{{-X_b-X_a}}{2}$ and 
+We can call this the span $S=\left|X_b-X_a\right|$. Meanwhile the quantity $\frac{{-X_b-X_a}}{2}$ and
 $\frac{{X_b+X_a}}{2}$ turns out to be always positive due to the slanted shape of the phase plot.
 It is the average of absolute value of left and right amplitude difference.
 Let's call this $\Delta A$.
-
 
 $
 K e^{\frac{\Delta A}{2}} sinh(\frac{S}{2})=\frac{S}{2}
@@ -364,7 +362,7 @@ $
 
 Regardless of if it is an odd or even cycle, $\Delta A$ is actually a good quantity to compare against difference cycles.
 If $\Delta A$ is small or near zero, that means it is closer to final cycle. If we remember our definition of
-absolute cycle length $H_n$. Then the value $K e^{\frac{\Delta A}{2}}$ is a relative cycle length between the same span 
+absolute cycle length $H_n$. Then the value $K e^{\frac{\Delta A}{2}}$ is a relative cycle length between the same span
 of cycle $H_{avg}$.
 
 With this property, we can easily scale any phase plot with a given span $S$ into another span.
@@ -398,7 +396,7 @@ $
 $
 
 The new quantity $\Phi_n(X)$ is the relative hyperbolic angle from the midpoint angle. From this form, we can intuitively understand that,
-the $\Phi_n(X)$ corresponds to how big the value of $e^X$ is compared with the current $K_n$. If $\Phi_n(X)$ is negative, 
+the $\Phi_n(X)$ corresponds to how big the value of $e^X$ is compared with the current $K_n$. If $\Phi_n(X)$ is negative,
 that mean $e^X$ is less than $K_n$ is magnitude, (also the other way around by inference).
 
 You can check the graph of $\Phi(X)$ and $\phi(x)$. It is very convenient that $\Phi(X)$ can be used to show the phase angle of the cycle.
@@ -451,7 +449,6 @@ K_n=(1+(-1)^{n-1} X_n)e^{(-1^{n-1}) X_n} \\
 V_n=(-1)^n \sqrt{1+(-1)^{n-1} X- K_n e^{(-1^{n-1}) X}} \\
 X_{peak-n}=(-1)^n\ln(K_n)
 $
-
 
 ## Qualitative definition
 
@@ -506,7 +503,7 @@ $
 
 The normalized phase angle difference is the same phase angle difference, $\Delta \Phi=\Delta \phi$.
 
-From the normalized phase angle, we can construct a normalized cycle length $L_n(X)$. 
+From the normalized phase angle, we can construct a normalized cycle length $L_n(X)$.
 The contour of $L_n(X)$ preserves ordering between cycles.
 
 $
@@ -573,7 +570,6 @@ If both $X$ are zeroes in the same cycle, relation is simplified into:
 $
 Ke^{\frac{\Delta A}{2}}sinh(\frac{S}{2})=\frac{S}{2}
 $
-
 
 Some defition have connecting relation:
 

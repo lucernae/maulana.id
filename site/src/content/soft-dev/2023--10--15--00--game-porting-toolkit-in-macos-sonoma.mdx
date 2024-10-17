@@ -3,7 +3,7 @@ layout_name: blog-post
 title: Game Porting Toolkit in MacOS Sonoma
 description: Testing out Game Porting Toolkit (GPTK) to play Windows Games in MacOS Sonoma.
 category:
-    name: soft-dev
+  name: soft-dev
 date: 2023-10-15T00:00:00.00Z
 ---
 
@@ -14,12 +14,18 @@ Here's the recap of what happened.
 
 I also summarized it in a thread here:
 
-<blockquote className="twitter-tweet">
-  <p lang="en" dir="ltr">Installed macOS Sonoma today.
-    <br/>Since Apple Game Porting Toolkit requires homebrew x86_64, it&#39;s time to try this nix-darwin module to manage both my arm64 and x86_64 homebrew prefix 😂😂😂
-    <a href="https://t.co/i0ogB5qNAC">https://t.co/i0ogB5qNAC</a>
-  </p>&mdash; Maulana 🌸 eiyuuden chronicle (@maulana_pcfre) 
-  <a href="https://twitter.com/maulana_pcfre/status/1707451877124931700?ref_src=twsrc%5Etfw">September 28, 2023</a>
+<blockquote className='twitter-tweet'>
+	<p lang='en' dir='ltr'>
+		Installed macOS Sonoma today.
+		<br />
+		Since Apple Game Porting Toolkit requires homebrew x86_64, it&#39;s time to try this nix-darwin
+		module to manage both my arm64 and x86_64 homebrew prefix 😂😂😂
+		<a href='https://t.co/i0ogB5qNAC'>https://t.co/i0ogB5qNAC</a>
+	</p>
+	&mdash; Maulana 🌸 eiyuuden chronicle (@maulana_pcfre)
+	<a href='https://twitter.com/maulana_pcfre/status/1707451877124931700?ref_src=twsrc%5Etfw'>
+		September 28, 2023
+	</a>
 </blockquote>
 
 # Installing homebrew for x86_64 and aarch64
@@ -41,7 +47,7 @@ Then added each brew taps I used here:
 
 ```nix
 # nix-homebrew tap
-{ 
+{
   inputs = {
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
@@ -232,8 +238,8 @@ brew list
 # will output brew packages in aarch64 prefix
 ```
 
-We will then uses hombrew prefix for x86_64 architecture to use Apple Game Porting Toolkit (AGPTK).
-Basically AGPTK is a wrapper to [WINE](https://en.wikipedia.org/wiki/Wine_(software)), which is 
+We will then uses hombrew prefix for x86*64 architecture to use Apple Game Porting Toolkit (AGPTK).
+Basically AGPTK is a wrapper to [WINE](https://en.wikipedia.org/wiki/Wine*(software)), which is
 a compatibility layer for x86_64 Windows binaries.
 
 # Installing Apple Game Porting Toolkit (AGPTK)
@@ -284,7 +290,7 @@ You can check the compatibility lists from CrossOver/CodeWeavers offical page [h
 
 If you don't want to try compiling AGPTK, you can use [Whisky](https://getwhisky.app).
 This is a wrapper on top of WINE + AGPTK.
-If you already setup Hombrew x86_64, then you can use Whisky to manage your Wine Bottle/Prefix and download precompiled 
+If you already setup Hombrew x86_64, then you can use Whisky to manage your Wine Bottle/Prefix and download precompiled
 AGPTK.
 
 During my first try, I ended up using Whisky because I'm not able to download AGPTK from Apple website (due to bug in the website).
@@ -296,12 +302,21 @@ From the FPS bar in the screenshots, I can see that the bottleneck is CPU instea
 I assume this is because MBA lacks proper coolings.
 So next time, I should probably test it using laptop cooling pad. Hahaha.
 
-<blockquote className="twitter-tweet">
-  <p lang="en" dir="ltr">
-    This is absurd...<br/>Low fps, sure.<br/>But this is running under emulation with no proper cooling 😂.<br/>Apple Game Porting Toolkit is using WINE under the hood.<br/>So basically you can run windows exe as well... 
-    <a href="https://t.co/C1EJRxKXVH">pic.twitter.com/C1EJRxKXVH</a>
-  </p>
-  &mdash; Maulana 🌸 eiyuuden chronicle (@maulana_pcfre) 
-  <a href="https://twitter.com/maulana_pcfre/status/1707552472590688503?ref_src=twsrc%5Etfw">September 29, 2023</a>
+<blockquote className='twitter-tweet'>
+	<p lang='en' dir='ltr'>
+		This is absurd...
+		<br />
+		Low fps, sure.
+		<br />
+		But this is running under emulation with no proper cooling 😂.
+		<br />
+		Apple Game Porting Toolkit is using WINE under the hood.
+		<br />
+		So basically you can run windows exe as well...
+		<a href='https://t.co/C1EJRxKXVH'>pic.twitter.com/C1EJRxKXVH</a>
+	</p>
+	&mdash; Maulana 🌸 eiyuuden chronicle (@maulana_pcfre)
+	<a href='https://twitter.com/maulana_pcfre/status/1707552472590688503?ref_src=twsrc%5Etfw'>
+		September 29, 2023
+	</a>
 </blockquote>
-

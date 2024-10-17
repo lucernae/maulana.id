@@ -3,21 +3,23 @@ layout_name: blog-post
 title: IMO 2023 problem 3
 description: My friend will buy me a coffee if I can solve this
 category:
-    name: blog
+  name: blog
 date: 2023-07-16T00:00:00.00Z
 ---
 
 I quoted a random tweet about IMO 2023 problem sheet.
 
-<blockquote className="twitter-tweet">
-    <p lang="in" dir="ltr">
-        wait, gw baru tahu kalau soalnya ditranslate dari sononya? 
-        <a href="https://t.co/9oRqEy9Crs">https://t.co/9oRqEy9Crs</a>
-    </p>
-    &mdash; Maulana 🌸 eiyuuden chronicle (@maulana_pcfre) 
-    <a href="https://twitter.com/maulana_pcfre/status/1680090723155329030?ref_src=twsrc%5Etfw">July 15, 2023</a>
-</blockquote> 
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<blockquote className='twitter-tweet'>
+	<p lang='in' dir='ltr'>
+		wait, gw baru tahu kalau soalnya ditranslate dari sononya?
+		<a href='https://t.co/9oRqEy9Crs'>https://t.co/9oRqEy9Crs</a>
+	</p>
+	&mdash; Maulana 🌸 eiyuuden chronicle (@maulana_pcfre)
+	<a href='https://twitter.com/maulana_pcfre/status/1680090723155329030?ref_src=twsrc%5Etfw'>
+		July 15, 2023
+	</a>
+</blockquote>
+<script async src='https://platform.twitter.com/widgets.js' charset='utf-8'></script>
 
 The thing that interests me, was that the problem sheets were officially translated in Indonesian.
 So these students read it in Indonesian instead of English. Initially I thought they read the problem in English.
@@ -28,7 +30,7 @@ Before you assume anything, I am no formal mathematician, so consider this artic
 
 # Problem statement
 
-Since the sheet I read is in Indonesian, I will try to translate back to English. But if you have the English sheet, 
+Since the sheet I read is in Indonesian, I will try to translate back to English. But if you have the English sheet,
 you should probably refer to those.
 
 <blockquote>
@@ -56,11 +58,11 @@ It just needs to be an integer. Since it ends with $...$, I assume it is infinit
 
 Assume that there exists a trivial sequence (so that we can learn the behaviour first).
 
-From this trivial sequence, if there exists an operator or function $f(x)$, 
+From this trivial sequence, if there exists an operator or function $f(x)$,
 there might be a whole class of sequence by applying $f(a_n)=b_n$. Thus,
 we can claim a whole class of sequence by finding this operator.
 
-Since the relation of $P$ is a factors of the sequence. It is natural to guess that 
+Since the relation of $P$ is a factors of the sequence. It is natural to guess that
 the operator is scalars. Such that:
 
 $f(x)=sx$
@@ -95,7 +97,7 @@ The first thing came to mind is just a sequence of zero. Since any $a_n$ will ju
 
 The next thing is a sequence of 1. Since any $a_n$ will just be 1.
 
-So, this whole class of solutions is __any__ $a_n=s$ which is a constants for every sequence indices, and it will span infinitely.
+So, this whole class of solutions is **any** $a_n=s$ which is a constants for every sequence indices, and it will span infinitely.
 
 Some examples are $1,1,1,1...$ or $2,2,2,2,...$, basically all integers.
 
@@ -105,8 +107,8 @@ Well, I basically told my friend that the solution would be a constant integer s
 
 But he demand that I found all possible solution. Not just the trivial class.
 
-Actually, I'm not sure if the Indonesian wording are descriptive enough. 
-I thought it was obvious if we just pick any polynomial and then using the recurrence relation 
+Actually, I'm not sure if the Indonesian wording are descriptive enough.
+I thought it was obvious if we just pick any polynomial and then using the recurrence relation
 to find the sequence, forward or backward. It is like a construction, so I'm not really sure what else to proof.
 
 Anyway, in my opinion, there is two different way to approach the problem.
@@ -135,8 +137,8 @@ If it is not monotonic, then it will just ends in cycle, because we can always s
 To illustrate, let's use $a_1=3$, then the $P(a_1)=27$. Factors of $27$ can be $1$, $3$, and $9$.
 If $a_2=1$ sequence will stop, so we have to pick 3. But if we pick $3$ it will just be the trivial sequence.
 
-So we have no other way, besides modifying the $P$ function. 
-If we assume that the sequence always increase (we have to, because integer products always increases), 
+So we have no other way, besides modifying the $P$ function.
+If we assume that the sequence always increase (we have to, because integer products always increases),
 then there is a certain bound with the polynomial function in order to make sure that $a_n$ is always less than $a_{n+1}$.
 
 Let's just say that $P_k(x)= x^k + P_{k-1}(x)$ with $P_{k-1}$ means a polynomial with degree $k-1$.
@@ -155,7 +157,7 @@ The thing that we need to prove is how to make $P$ relation shows that it can al
 
 Since $P$ was declared to be polynomials. If it can't be factored into exactly $k$ integer factors then the sequence will stop, since you have to put $1$ as the factor in the sequence.
 
-Not sure if this requires further proof? 
+Not sure if this requires further proof?
 But to illustrate, let's say $P(x)=x^2+1$, which can't be factored.
 Well, I guess it can be factored into two complex polynoms, but we are dealing with integer here.
 
@@ -185,7 +187,7 @@ $f(x)$ operator to each member of the sequence, so that $f(a_n)=b_n$ with $b_n$ 
 
 Since we need a certain interval between sequences, let's just use $f(x)=x+d$. I'm running out of variable, we already uses $a,b,c$ and $s$, lol.
 
-Also notice that we can't use (for now) $f(x)=sx+d$ because the product of the factors then becomes $sx^k$ in the highest degree, meanwhile we want to focus on the polynomial 
+Also notice that we can't use (for now) $f(x)=sx+d$ because the product of the factors then becomes $sx^k$ in the highest degree, meanwhile we want to focus on the polynomial
 $x^k$ with the coefficient being one. Don't worry though, this is just so that $d$ becomes integer. If we use scalar $s$ later, then $d$ just needs to be divisible by $s$.
 
 Anyway, start with the simplest one first.
@@ -199,7 +201,7 @@ P(a_{n+1})&=(a_{n+2})(a_{n+3})...(a_{n+k+1})\\
 \end{align}
 $$
 
-Now this has become interesting. The operator creates a new sequence, but it ended up shifting the indices by one. 
+Now this has become interesting. The operator creates a new sequence, but it ended up shifting the indices by one.
 So, essentially this is the same sequence, it's just that we start at different indices if we shift by $d$ interval.
 For a given $d$, if we find $k$ numbers that is the member of the sequence, then we can use recurrence to find the whole sequence.
 
@@ -216,7 +218,7 @@ a_{n+1+k}-a_{n+1}&=a_{n+1} \left( \frac{P(a_{n+1})-P(a_n)}{P(a_n)} \right) \\
 \end{align}
 $$
 
-Now that previously we already establish for any polynomial, we can define $s$ such that $P(x)=(x+s)^k$. Since in the right side we have a fraction of 
+Now that previously we already establish for any polynomial, we can define $s$ such that $P(x)=(x+s)^k$. Since in the right side we have a fraction of
 polynomial with the same $k$ degree, there is a limit when we use very large number $a_n$. In this situation, the sequence is so large that $\frac{a_{n+1}}{a_n} \approx 1$ is some relatively small difference.
 Using an upper bound of $P(x)\le(x+s)^k=x^k+ksx^{k-1}+...$.
 Then the term $\frac{P(a_{n+1})-P(a_n)}{P(a_n)}$ can be written as $\frac{ksa_{n+1}^{k-1}+...}{a_n^k+...}$ when approaching this limit. (I'm too lazy to write the full expression).
@@ -243,7 +245,7 @@ As a sanity check, let's try again with $k=3$, with $d=1$.
 Our polynomial then consists of 3 factors like this $P(x)=(x+1)(x+2)(x+3)$.
 However, it is quite obvious now, that we can set $a_1=1$ then, the rests will follow $a_2=2$, $a_3=3$, $a_4=4$.
 
-So, we have found another class of sequences. For any positive integer value of $d$, we can construct a polynomial $P(x)=(x+d)(x+2d)(x+3d)...(x+kd)$, 
+So, we have found another class of sequences. For any positive integer value of $d$, we can construct a polynomial $P(x)=(x+d)(x+2d)(x+3d)...(x+kd)$,
 such that there exists $a_n$ that becomes the solutions. It also spans infinitely.
 
 From this sequence, we can also find another sequence using the previous operator/function $f(x)=sx+d$. Suppose $s=2$, so $d$ needs to be divisible by 2. Suppose $d=6$.

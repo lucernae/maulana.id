@@ -4,7 +4,7 @@ title: 'Deriving probability distribution from entropy: part 2'
 description: Deriving the Poisson distribution
 date: 2023-12-29T00:00:00.00Z
 category:
-    name: blog
+  name: blog
 ---
 
 Yesterday, I was planning to make a follow-up article from this [part 1](../2023--07--21--00--deriving-probability-distribution-from-entropy).
@@ -29,14 +29,14 @@ So the distribution actually measures the probability of a given **size** of the
 
 Our first constraint is still the normalization axiom.
 
-Second constraint is taken from the context. A Poisson process is characterized by a "memoryless" property. 
+Second constraint is taken from the context. A Poisson process is characterized by a "memoryless" property.
 In the case of $k$ event occurrence, each event doesn't care about the history of previous event.
-In the case of atomic decay above (that means $k=1$), a single decay event doesn't care if the current size of the atoms 
-is 1000 or just 2. It will decay with the same probability. 
+In the case of atomic decay above (that means $k=1$), a single decay event doesn't care if the current size of the atoms
+is 1000 or just 2. It will decay with the same probability.
 However, since what human observe is a time interval between each occurrence, the distribution we recorded is "probability of the size of the nuclei to become half, given a specified interval $t$".
 So, the input of the distribution is **time** instead of **frequency**, thus it appears somewhat counterintuitive to apply entropy on it.
 
-From what the process describes, we know that the distribution is a function of two variables, $k$ and $t$. 
+From what the process describes, we know that the distribution is a function of two variables, $k$ and $t$.
 But since occurrence is a discrete variables, then $p(k,t)$ is a discrete probability distribution.
 Our entropy formula is the plain simple sum, instead of integral that we used in the previous article.
 

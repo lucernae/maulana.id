@@ -3,7 +3,7 @@ layout_name: blog-post
 title: Deriving probability distribution from entropy
 description: Probability distribution can be inferred/generated from entropy principle
 category:
-    name: blog
+  name: blog
 date: 2023-07-21T00:00:00.00Z
 ---
 
@@ -12,7 +12,7 @@ This is useful to understand the reason why a formula has to be that way.
 
 # Uniform distribution
 
-Before information theory was established, it was already declared by statistician that there should be no prior bias 
+Before information theory was established, it was already declared by statistician that there should be no prior bias
 when defining probability of event. In other words, each possibility has to be fair, unless you include a bias.
 Any random variable that follows this principle is called uniformly distributed.
 
@@ -22,7 +22,7 @@ An example would be a coin toss or a die toss. Each sides must have equal chance
 This is usually accepted as fact, without questioning the reason.
 
 In the perspective of information theory, an observation can be measured with information entropy.
-[Differential Information entropy](https://en.wikipedia.org/wiki/Differential_entropy) can be used 
+[Differential Information entropy](https://en.wikipedia.org/wiki/Differential_entropy) can be used
 to measure continuous probability distribution, and is defined as.
 
 $$
@@ -33,16 +33,16 @@ $$
 
 With $p(x)$ is the probability of the event at $X=x$.
 
-By perceiving this as an optimization problem (min-max), we can reason that since entropy has to be always increasing in an observation, 
+By perceiving this as an optimization problem (min-max), we can reason that since entropy has to be always increasing in an observation,
 the probability distribution when all the information are gained needs to be stabilizing when entropy is at maximum.
 
 From a physical perspectives, an alternative analogy was that when two heat contact touching each other, the final temperature
 has to happen when the entropy is maximized.
 
-If we treat $H(p)$ as a functional using variational calculus, we can then use [Lagrangian multiplier](https://en.wikipedia.org/wiki/Lagrange_multiplier) method to 
+If we treat $H(p)$ as a functional using variational calculus, we can then use [Lagrangian multiplier](https://en.wikipedia.org/wiki/Lagrange_multiplier) method to
 derive the probability distribution.
 
-The Lagrangian (function) can be constructed by using the entropy with an added linear constraints. 
+The Lagrangian (function) can be constructed by using the entropy with an added linear constraints.
 Then if we set the constraint to 0, we should find the optimum points when the partial derivatives are 0.
 
 The most fundamental constraint of probability distribution was that if you added all the chances, then it has to sum up to 1.
@@ -59,7 +59,7 @@ F(x,p)&=-\int_X p(x) \ln(p(x)) dx + \lambda_0 (1-\int_X p(x)dx) \\
 $$
 
 Now, since the Lagrangian includes integrals, technically we should integrate it first to obtain the correct function.
-But the expression of $F(x,p)$ is neatly an integral along $dx$. 
+But the expression of $F(x,p)$ is neatly an integral along $dx$.
 Usually in physics, by [stationary action principle](https://en.wikipedia.org/wiki/Stationary-action_principle) (or historically known as least-action principle),
 we can define the action $S$ of the Lagrangian as $S=\int L(x,p)dx$.
 
@@ -112,7 +112,7 @@ $$
 
 # Normal distribution
 
-The article would not be complete if we didn't derive normal distribution. 
+The article would not be complete if we didn't derive normal distribution.
 Normal distribution is the simplest continuous probability distribution with a standard mean and variance to perform statistical analysis.
 It also exists in most cases in nature.
 From information theory perspectives, it was a consequence of nature that tends to maximize information entropy,
@@ -123,14 +123,14 @@ Thus $g_0(x)=1-\int_X p(x)dx$.
 
 The second constraint is that we include additional assumptions that "not every chances are equal", but "the average has to be at the center".
 
-This is just coming from a naive assumptions about the notion of "average". For example, suppose you have datasets of person heights, 
+This is just coming from a naive assumptions about the notion of "average". For example, suppose you have datasets of person heights,
 You imagine that more people exists with the height around the center of the height range.
-For a distribution function, this would mean that $\int_X x\, p(x)dx=c_1$. 
+For a distribution function, this would mean that $\int_X x\, p(x)dx=c_1$.
 In a concept of physics (typically mass distribution), it just means that the first moment (center of mass) of the distribution exists.
 In this case, the first moment we are going to be set to a constant $c_1$.
 To summarize, $g_1(x)=c_1-\int_X x \, p(x)dx$
 
-The third constraint is that we assume the distribution is symmetric around the mean. 
+The third constraint is that we assume the distribution is symmetric around the mean.
 In the concept of moment distribution, this would imply that $\int_X x^2 \,p(x)dx=c_2$.
 It will have a constant value $c_2$.
 So, $g_2(x)=c_2-\int_X x^2 \,p(x)dx$.
@@ -145,7 +145,7 @@ $$
 L(x,p)&=-p(x) \ln(p(x)) -\lambda_0 p(x) - \lambda_1 x\,p(x) - \lambda_2 x^2\,p(x) \\
 \frac{\partial}{\partial p}L(x,p)&= -\ln(p(x)) - 1 - \lambda_0 -\lambda_1 x -\lambda_2 x^2 \\
 0&= -\ln(p(x)) - 1 - \lambda_0 -\lambda_1 x -\lambda_2 x^2 \\
-p &= e^{-1-\lambda_0 -\lambda_1 x - \lambda_2 x^2} \\ 
+p &= e^{-1-\lambda_0 -\lambda_1 x - \lambda_2 x^2} \\
 p(x) &= A e^{-\lambda_1 x - \lambda_2 x^2}
 \end{align}
 $$
@@ -158,7 +158,7 @@ We won't be using that, and instead work on a more fundamental assumptions.
 
 We can't solve the first constraint yet, which is essentially a normalization, since there are 2 Lagrange multipliers needs to be solved first.
 
-We are going to solve the second constraint. Notice that if the distribution has average values, then the probability at the average 
+We are going to solve the second constraint. Notice that if the distribution has average values, then the probability at the average
 has to be the highest, since it is the most common. If it is the highest values, then the derivative of the distribution on that point is 0.
 Let us call this point an arbitrary name $\mu$, so $x=\mu$.
 
@@ -231,7 +231,7 @@ $$
 The interesting thing with this derivation is that it "predicts" the datasets, rather than deducing from a datasets.
 The formula rises because when the observation is in a saturated state, then the distribution **has to** use that function.
 
-No wonder a normal distribution is the most common we can see in nature. 
+No wonder a normal distribution is the most common we can see in nature.
 This is because it is the next simplest distribution with minimal assumptions that can fit more data.
 
 To see what I really meant, let's use the recovered formula to calculate the differential entropy.

@@ -2,10 +2,11 @@
 layout_name: blog-post
 title: Using a resized block volume in Longhorn.IO
 category:
-    name: soft-dev
+  name: soft-dev
 description: Resizing cloud volume and use it in Longhorn
 date: 2020-12-19T07:57:19.089Z
 ---
+
 This one is more for my personal notes.
 
 Lately I was tasked to manage our company’s Nextcloud instance. It was used as internal tools to share files, as replacement from Google Drive.
@@ -14,11 +15,11 @@ I deployed it using Rancher and Helm chart recipe. However since it needs huge s
 
 This is also the first time for me to set something like this, so I there’s some bit of gotchas I had to learn.
 
-First, this is a kind of storage *virtualization*, because longhorn will create the disk and attach it to the pod as volume. However, actually longhorn store the data (blocks) as files in the mount point in the original node. So, if you look at the original mount point, you wont’s see files, but rather and obfuscated folders of hash that corresponds to the blocks of the filesystem used by pod. You might think that this is not important, but you need to consider this because to reconstruct the actual files/folders used by pods you need to use longhorn to reconstruct the blocks into real files.
+First, this is a kind of storage _virtualization_, because longhorn will create the disk and attach it to the pod as volume. However, actually longhorn store the data (blocks) as files in the mount point in the original node. So, if you look at the original mount point, you wont’s see files, but rather and obfuscated folders of hash that corresponds to the blocks of the filesystem used by pod. You might think that this is not important, but you need to consider this because to reconstruct the actual files/folders used by pods you need to use longhorn to reconstruct the blocks into real files.
 
 Second, the reason longhorn work like this is because it’s easier for it to create snapshots of **blocks**. I don’t understand it at first, however it seems that the snapshots were also stored in the same node mount point (same longhorn disk). Which means, if you Hetzner EBS were sized as 150GB, and then you provision the longhorn disk to be sized as 150GB, then you only have typically around 70 GB of storage that can be used by the pods. The rest of the storage were used to store the snapshots. The size of the snapshots depending on how many snapshots you want to store. On another note, longhorn snapshots works by diffing between snapshots. So it’s somewhat efficient. If you have 10 snapshots but the files are not different by each snapshots, you only store 1 real snapshots in total.
 
-I didn’t know this at first so I setup 150 GB longhorn disk, expecting it to be used fully 150 GB by the pods. So, yesterday when kubelet report disk pressure, I was confused on why the storage is not enough given that we only uses around 70 GB. It turns out I have so many snapshots, around 20 and everyday we sync new files so  there are many changes everyday. For instance if we upload 20 GB of files, and then deletes it, the snapshot will still remember (kind of like git).
+I didn’t know this at first so I setup 150 GB longhorn disk, expecting it to be used fully 150 GB by the pods. So, yesterday when kubelet report disk pressure, I was confused on why the storage is not enough given that we only uses around 70 GB. It turns out I have so many snapshots, around 20 and everyday we sync new files so there are many changes everyday. For instance if we upload 20 GB of files, and then deletes it, the snapshot will still remember (kind of like git).
 
 The first thing I do to try to recover from this situation is to remove the pod, so the volume can be detached and safe from possible race condition or bad state.
 

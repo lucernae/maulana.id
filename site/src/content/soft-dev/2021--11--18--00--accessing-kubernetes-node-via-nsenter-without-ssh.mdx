@@ -3,7 +3,7 @@ layout_name: blog-post
 title: Accessing Kubernetes Node via nsenter without SSH
 description: Gaining root access in Node if you have cluster Administrator role
 category:
-    name: soft-dev
+  name: soft-dev
 date: 2021-11-18T00:00:00.00Z
 ---
 
@@ -12,6 +12,7 @@ cluster using Rancher Kubernetes Engine in Hetzner Cloud. Hetzner itself doesn't
 we assembled nodes by ourselves using the Hetzner Cloud instances.
 
 In some rare cases, we need to access the nodes. We can do that with some of the options here:
+
 - Old fashioned public key ssh login
 - Hetzner CLI `hcloud server ssh` command
 - Rancher CLI `rancher ssh` command
@@ -89,7 +90,7 @@ From the key `metadata` it means, we create a pod with a name `root-shell` (name
 k8s namespace, because usually only cluster-admin are allowed to access this namespace.
 
 From the key `spec.containers[]` we create a container with name `shell` (names are arbitrary too). We uses `image: alpine`
-because it is lightweight and quick to pull. We then execute program `nsenter`, which is a program to execute another *program*
+because it is lightweight and quick to pull. We then execute program `nsenter`, which is a program to execute another _program_
 using the specified Linux namespace.
 
 The arguments used are fairly straightforward:

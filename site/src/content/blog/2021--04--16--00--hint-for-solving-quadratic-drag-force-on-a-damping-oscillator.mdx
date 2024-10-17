@@ -3,9 +3,10 @@ layout_name: blog-post
 title: Hint for solving quadratic drag force on a damping oscillator
 description: My thought process on trying to solve the differential equation
 category:
-    name: blog
+  name: blog
 date: 2021-04-15T23:45:27.301Z
 ---
+
 As an appendix promised for the article [How fast helium balloon floats...](https://maulana.id/blog/2021--04--11--17--how-fast-helium-balloon-floats/), I’m going to explain the hint on how to derive the insights behind the quadratic drag force presents in the damped harmonic oscillations found in the previous articles.
 
 Solving the usual damped oscillations is simple enough because it’s linear. Meanwhile, the quadratic force is not so straight-forward. Originally, I didn’t find any open literature that discuss this. There are several articles found online with the keyword “Quadratic Drag Force Damping Oscillator”, but most of it is behind a paygate, so I can’t access it. Some of the article I found, only discuss a falling object under drag force. That one is also simple, but way different from the case of quadratic damping found in the oscillator.
@@ -130,7 +131,7 @@ So, to proceed with understanding the cycles. We first start with initial positi
 
 By knowing $K_+$, we can proceed to know what the maximum acceleration at the initial position. The maximum acceleration is $\frac{\omega^2}{2D_2}$. We infer that for each initial half cycles, the initial acceleration magnitude will be less than that. I have to say that I’m surprised the value entirely determined by $\omega^2$ and $D_2$, since we set that the maximum initial displacement in the phase space to be $\left|X\right|=1$.
 
-Next, in the quarter cycle, the acceleration must be $\alpha=0$, so that velocity is at maximum. We got $X=\ln\left|\frac{2}{e}\right|$ . 
+Next, in the quarter cycle, the acceleration must be $\alpha=0$, so that velocity is at maximum. We got $X=\ln\left|\frac{2}{e}\right|$ .
 Then $\dot{x}=\frac{\omega}{D_2}\sqrt{\frac{1}{2}\ln{\frac{e}{2}}}$.
 
 Continuing to the end at the half cycle. This one is a little bit tricky. We have to know when the $K_+$ relation intersects the X axis again. From the relation formula, we intuitively know that it must cross X axis twice at maximum. So you had to solve $K_+e^{-X}+X-1=0$, probably numerically. From this, you will have the next $X$ for using the next half cycle phase. Let's just call our initial $X$ for the previous cycle to be $X_0$ and $X_1$ for the next cycle.
@@ -139,9 +140,9 @@ After this, you just have to repeat the process. This time, using $X_1$ to get t
 
 # Using a different set of coordinate origin
 
-In the case of my original problem, the floating balloon. I am using a different reference coordinate. Instead of using the final equilibrium position as coordinate $x=0$, I'm using the initial displacement as $x=0$. This can tremendously help to guess the trajectory. 
+In the case of my original problem, the floating balloon. I am using a different reference coordinate. Instead of using the final equilibrium position as coordinate $x=0$, I'm using the initial displacement as $x=0$. This can tremendously help to guess the trajectory.
 
-Let's say that the distance between the initial position $x=0$ and the equilibrium is it's maximum displacement $A$. Then by using Newton's Law, when the damping is finished, whatever form of $\ddot{y}(t)$  it has to corresponds with the Newton's Law.
+Let's say that the distance between the initial position $x=0$ and the equilibrium is it's maximum displacement $A$. Then by using Newton's Law, when the damping is finished, whatever form of $\ddot{y}(t)$ it has to corresponds with the Newton's Law.
 
 Equation of motion without drag force:
 
@@ -172,7 +173,7 @@ x=y-A \\
 \ddot x = -\omega^2 x - D_2 \dot{x}^2
 $
 
-As you can see, just by doing coordinate transform, we are back to the initial equation we discuss above. 
+As you can see, just by doing coordinate transform, we are back to the initial equation we discuss above.
 
 # Solving the trajectory of the motion
 
@@ -195,4 +196,3 @@ I personally think that the integral terms here: $\int{\frac{1}{\sqrt{2(1-X-K_+e
 # Conclusions
 
 In this article we discussed some hints to solve for quadratic dampening on harmonic oscillator. Not every question is answered, but it should provide enough insights to the dynamic of the system. The phase space that the system generates is very unique to this type of problem.
-

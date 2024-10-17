@@ -2,7 +2,7 @@
 layout_name: blog-post
 title: Debugging VSCode Devcontainer Creations
 category:
-    name: soft-dev
+  name: soft-dev
 description: Devcontainer is a good developer experience, unless you were the one who had to make the Devcontainer
 date: 2023-08-20T00:00:00.00Z
 ---
@@ -16,8 +16,8 @@ There is many assumptions being made about the structure of the devcontainer ima
 At the moment, Microsoft tend to prefer debian-like Unix FS structure and package manager.
 There is no tooling avaible to make sure a container is compatible under this assumption.
 
-In my previous post [Patching ELF header with Nix](../2022--11--20--00--patching-elf-header-with-nix/), we talk about 
-the main issue. Microsoft's Remote Containers extension is installing their own node binaries. 
+In my previous post [Patching ELF header with Nix](../2022--11--20--00--patching-elf-header-with-nix/), we talk about
+the main issue. Microsoft's Remote Containers extension is installing their own node binaries.
 I believe the intent was to make sure that specific node distribution works with the extensions.
 The problem for nix is that shared library linking was done differently since the lib location is taken from nix store
 instead of `/lib` or `/lib64` like standard Unix distribution.
@@ -76,7 +76,7 @@ In my case, the error message is something like this:
 # Step 3: Debugging/Investigating the containers
 
 If you see the second line, it failed to execute `node` binaries because the shared library can't be found.
-It is expected if you are using Nix. However, I already uses [Nix-LD](https://github.com/Mic92/nix-ld). 
+It is expected if you are using Nix. However, I already uses [Nix-LD](https://github.com/Mic92/nix-ld).
 So, this was not supposed to happen.
 
 To prove it, I will use docker exec to directly call this binaries.
@@ -99,7 +99,7 @@ In the above error message, the logs actually prints the command being executed.
 
 We can use socat to make Unix Socket forwarder while printing out the message transferred between the socket.
 
-This command, create another socket `tcp://localhost:2345` that will forward the messages to the real Docker API unix socket in 
+This command, create another socket `tcp://localhost:2345` that will forward the messages to the real Docker API unix socket in
 `unix:///var/run/docker.sock`. The terms `&> /tmp/socat.log` output the debug messages to a file `/tmp/socat.log`
 
 ```shell

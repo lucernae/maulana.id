@@ -2,30 +2,30 @@
 layout_name: blog-post
 title: Running Nix, Inside Docker Container, Inside Apple Silicon
 category:
-    name: soft-dev
+  name: soft-dev
 description: Getting deep inside containerization
 date: 2023-08-22T00:00:00.00Z
 ---
 
-Continuing my personal quests to make Nix easily usable as devcontainer, the challenge I have in the past 
+Continuing my personal quests to make Nix easily usable as devcontainer, the challenge I have in the past
 is how to run Nix itself (as a builder), from inside the container.
 
 To be more specific, if you run a docker container on x86_64-linux system (majority of standard desktop/laptop PC),
-Nix can easily be used to build a docker image. The challenge I was discussing now is, if the target image 
-is of a different architecture than the builder. 
+Nix can easily be used to build a docker image. The challenge I was discussing now is, if the target image
+is of a different architecture than the builder.
 
-Typically you build the image for x86_64 architecture, because your PC use it. 
+Typically you build the image for x86_64 architecture, because your PC use it.
 The server you are running on in the cloud, also use x86_64. So normally your docker image is compatible by default.
 However, since Apple released their iconic Macbook Air M1, there is some kind of weird demand surging for ARM architecture.
 
 Linux on ARM systems itself is not new. Raspberry Pi uses ARM because of its low power and efficient nature.
 There exists OS distro Specifically to cater Raspberry Pi, so people build ARM binaries for their packages.
-But usually these ARM systems is not so fast for building things. It can run things efficiently, but building 
-packages or binaries requires fast disk IO and/or parallel cores. So, before all of this, normally 
+But usually these ARM systems is not so fast for building things. It can run things efficiently, but building
+packages or binaries requires fast disk IO and/or parallel cores. So, before all of this, normally
 you build ARM packages in x86_64 systems via cross compilation, or using emulation like QEMU.
 This can be really slow.
 
-Apple Silicon in Macbook Air M1, however, is insanely efficient and fasts, it can even run (and later, build) 
+Apple Silicon in Macbook Air M1, however, is insanely efficient and fasts, it can even run (and later, build)
 x86_64 binaries in ARM system. So, this is kind of like a turn around.
 Developers then can easily build ARM binaries, and since it is already efficient to run ARM systems,
 then the demand suddenly surged for a server to also hosts ARM architecture.
@@ -93,17 +93,17 @@ nix build nixpkgs#legacyPackages.aarch64-linux.hello
 # will output:  exec format error: ./result/bin/hello
 ```
 
-However you can't run it, since it needs Linux kernel to execute it. If you inspect it using file, 
+However you can't run it, since it needs Linux kernel to execute it. If you inspect it using file,
 it looks like this:
 
 ```shell
-file ./result/bin/hello 
+file ./result/bin/hello
 # will output: ./result/bin/hello: ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /nix/store/cq6hdmfn4aid08zjmrywnsk2klfhjy57-glibc-2.37-8/lib/ld-linux-aarch64.so.1, for GNU/Linux 3.10.0, not stripped
 ```
 
 ## How Docker works on MacOS
 
-As I've said before, Docker wraps binaries inside containers. 
+As I've said before, Docker wraps binaries inside containers.
 Containers itself is not VM, but more like process namespaces, executed by Linux kernel.
 So obviously it needs Linux to run Docker.
 
@@ -113,41 +113,41 @@ Recently, Apple also provides a Virtualization framework as well.
 Originally, Docker for Desktop works in MacOS M1 by using its own MobyVM virtual machine.
 MobyVM also ships with the Docker daemon and other Docker tools.
 
-Around 2015, there are efforts to make Docker more "Open Source". The Docker that we know has since 
+Around 2015, there are efforts to make Docker more "Open Source". The Docker that we know has since
 refer to Docker as company and many-many things, while the containerization approach that we previously called as Docker has become an open standard
 called an Open Container Initiatives. Or OCI for short.
 
 Under the hood, OCI is responsible on making an open standard, or spec, that others can implement.
 This will ensure that "how you run containers" has the same experience, even though it was implemented by different vendors.
 
-Now around 2021, (this was after Apple released its Macbook Air for about a year), there are efforts 
+Now around 2021, (this was after Apple released its Macbook Air for about a year), there are efforts
 to package OCI compliant stacks for MacOS Apple Silicon, as an alternative to Docker.
-What I mean by alternatives is that it was not made by Docker (you know, as a company), but rather 
+What I mean by alternatives is that it was not made by Docker (you know, as a company), but rather
 as a stack of open-sourced, OCI compliant tools. This consists of Containerd (alternatives of Docker daemon)
-and RunC (runtime component that interfacing with Linux libcontainer). This tools already exists because 
+and RunC (runtime component that interfacing with Linux libcontainer). This tools already exists because
 Docker also helps breaking apart its Docker Engine to comply with OCI spec.
-However, the VM does not. The missing piece here is what made possible by LimaVM, a VM made as an alternative 
+However, the VM does not. The missing piece here is what made possible by LimaVM, a VM made as an alternative
 to MobyVM, that is also packaged with containerd, nerdctl (CLI for containerd), and RunC.
 
 After LimaVM exists, people can focus on making a better developer experience on managing containers in MacOS.
 Now, tools like Colima and Rancher Desktop exists because it also uses LimaVM under the hood.
 
-After explaining the whole higher level architecture (or building blocks), you can then understand that what I mean 
+After explaining the whole higher level architecture (or building blocks), you can then understand that what I mean
 by Docker containers is not necesarrily having it run using Docker for Desktop. Colima or Rancher Desktop should work as well.
 
-## Tying this up together 
+## Tying this up together
 
-To wrap up this section, let's summarize a little bit. Here's what happened when you run `docker run ...` 
+To wrap up this section, let's summarize a little bit. Here's what happened when you run `docker run ...`
 from inside a MacOS terminal with Docker (or LimaVM).
 
 1. Docker/Nerdctl (CLI) of MacOS will talk to Dockerd/Containerd via unix socket
 
-Unix socket provides a nice abstraction layer. Note that the CLI itself runs on MacOS, but the Dockerd/Containerd 
+Unix socket provides a nice abstraction layer. Note that the CLI itself runs on MacOS, but the Dockerd/Containerd
 runs inside LimaVM, which runs on MacOS using virtualization layer.
 
 2. Dockerd/Containerd will try to pull Docker image from the registry with matching architecture
 
-This means, since you are running a MacOS M1, you use aarch64 or arm64 architecture. LimaVM is a Linux with 
+This means, since you are running a MacOS M1, you use aarch64 or arm64 architecture. LimaVM is a Linux with
 arm64 architecture. So the Docker Image platform that is going to be retrieved is something like platform linux/arm64.
 
 If Docker daemon can't find it, then it will fetch whatever's available. Mostly this is linux/amd64 (x86_64)
@@ -156,7 +156,7 @@ for reasons I mentioned above (people normally build this arch).
 3. Dockerd/Containerd will use RunC to run the image as containers
 
 RunC will "talk" with the Linux kernel to run binaries inside containers as processess.
-However, if the binaries are of a different architecture than LimaVM, then kernel will use QEMU binfmt 
+However, if the binaries are of a different architecture than LimaVM, then kernel will use QEMU binfmt
 to emulate the executions.
 
 By understanding these, you will understand these following consequences:
@@ -178,7 +178,7 @@ The first time you use Nix inside docker containers on MacOS with Apple Silicon,
 
 The Nix docker image most probably an x86_64 arch. So when it runs on aarch64 LimaVM, it uses QEMU. Since it uses QEMU,
 it needs further syscalls to build for aarch64 architecture. What I initially want to do is to build a self bootstrapping Nix.
-If I can build Nix aarch64-linux from an x86_64 arch docker container, then I can use the resulting build to natively build 
+If I can build Nix aarch64-linux from an x86_64 arch docker container, then I can use the resulting build to natively build
 other aarch64-linux package. Seems like a nice idea, right?
 
 ## Use nixpkgs/nix of x86_64 arch to build aarch64 nixpkgs/nix
@@ -195,14 +195,14 @@ In my case, it says that the target platform does not match the downloaded image
 
 ![](./P1.png)
 
-However, the shell is usable. We can see that it uses QEMU emulation by doing `ps -ax`. Uh, but however 
+However, the shell is usable. We can see that it uses QEMU emulation by doing `ps -ax`. Uh, but however
 this is a barebone image, so only basic shell is included. We can install it first.
 
 ```shell
 nix-shell -p ps
 ```
 
-But, we got error. 
+But, we got error.
 
 ![](./P2.png)
 
@@ -237,7 +237,7 @@ Whoops, we got `error: unable to load seccomp BPF program: Invalid argument`.
 
 ![](./P5.png)
 
-This is the first roadblock I encountered. 
+This is the first roadblock I encountered.
 It implies that our QEMU interpreter doesn't implement seccomp BPF.
 However since we only want to build things inside this container, it should be no problem to bypass this security feature.
 
@@ -249,10 +249,10 @@ nix-channel --update
 ```
 
 We are now ready to build!
-In fact, I've forked [docker-nixpkgs](https://github.com/nix-community/docker-nixpkgs), to modify the recipes 
+In fact, I've forked [docker-nixpkgs](https://github.com/nix-community/docker-nixpkgs), to modify the recipes
 to use flake to build depending on the architecture.
 
-With nix flake, you can directly build by referring "online" flake stored in GitHub, without having to clone it first in your 
+With nix flake, you can directly build by referring "online" flake stored in GitHub, without having to clone it first in your
 working directory.
 
 ```shell
@@ -263,8 +263,8 @@ nix build github:lucernae/docker-nixpkgs/flake#docker-nixpkgs.aarch64-linux.nix 
 However, I got error like this:
 
 ```log
-error: a 'aarch64-linux' with features {} is required to build 
-'/nix/store/2ci7cqgr0wa1g3yrlcrsjs2ylxfivch5-nix-2.13.5-config.json.drv', 
+error: a 'aarch64-linux' with features {} is required to build
+'/nix/store/2ci7cqgr0wa1g3yrlcrsjs2ylxfivch5-nix-2.13.5-config.json.drv',
 but I am a 'x86_64-linux' with features {benchmark, big-parallel, nixos-test, uid-range}
 ```
 
@@ -340,7 +340,7 @@ So, if you target 2 platforms, ideally there are two host/runner for each, so it
 It will results in 2 image tags getting pushed into the registry.
 If we use this kind of approach, then we must combine these tags under one single multiplatform tag, just like docker buildx do.
 
-Of course you can keep managing 2 tags/variant for each architecture, but combining them would be 
+Of course you can keep managing 2 tags/variant for each architecture, but combining them would be
 easier in terms of developer experience, since you only refer to one tag then the daemon picks up which image is relevant for your arch.
 
 There are not that many documentation I can find regarding how to create these manifest.
@@ -381,28 +381,28 @@ My output is something like this:
 
 ```json
 {
-   "schemaVersion": 2,
-   "mediaType": "application/vnd.docker.distribution.manifest.list.v2+json",
-   "manifests": [
-      {
-         "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
-         "size": 529,
-         "digest": "sha256:e1e6bf01a2cd162509afef91e17c4e101b9a8b4c51857658ca8e8f16d0e016cd",
-         "platform": {
-            "architecture": "arm64",
-            "os": "linux"
-         }
-      },
-      {
-         "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
-         "size": 529,
-         "digest": "sha256:e808c08b178d50caae3d69495b7849db527e3b7fe4dea212ad0de764c536d022",
-         "platform": {
-            "architecture": "amd64",
-            "os": "linux"
-         }
-      }
-   ]
+	"schemaVersion": 2,
+	"mediaType": "application/vnd.docker.distribution.manifest.list.v2+json",
+	"manifests": [
+		{
+			"mediaType": "application/vnd.docker.distribution.manifest.v2+json",
+			"size": 529,
+			"digest": "sha256:e1e6bf01a2cd162509afef91e17c4e101b9a8b4c51857658ca8e8f16d0e016cd",
+			"platform": {
+				"architecture": "arm64",
+				"os": "linux"
+			}
+		},
+		{
+			"mediaType": "application/vnd.docker.distribution.manifest.v2+json",
+			"size": 529,
+			"digest": "sha256:e808c08b178d50caae3d69495b7849db527e3b7fe4dea212ad0de764c536d022",
+			"platform": {
+				"architecture": "amd64",
+				"os": "linux"
+			}
+		}
+	]
 }
 ```
 
@@ -427,15 +427,15 @@ docker run -it -e NIX_PATH=nixpkgs=channel:nixos-unstable \
 
 # Remark
 
-The point of this exercise is just to provide an alternative to use nix in a CI environment, 
+The point of this exercise is just to provide an alternative to use nix in a CI environment,
 or to evaluate Nix in a system that already has Docker in it.
 
-Theoritically it is self-bootstrapping. If you start in a system that has Nix installed, you 
+Theoritically it is self-bootstrapping. If you start in a system that has Nix installed, you
 can build a Docker image using Nix for a different architecture.
-If you start in a system that has Docker (but without Nix natively installed), 
+If you start in a system that has Docker (but without Nix natively installed),
 you can also use Nix to build another Docker image for other systems as well.
 
-Caching also works wonderfully for Nix + Docker setup, because if you build the image using Nix, 
+Caching also works wonderfully for Nix + Docker setup, because if you build the image using Nix,
 then the binary packages is most likely pure and cacheable in the nix store. If the build is repeated
 with access to the same Nix store, then it will just fetch existing package.
 The cross compilation is also an important bonus :D.

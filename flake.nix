@@ -61,6 +61,12 @@
               };
             }
             {
+              name = "pnpm";
+              package = pkgs.pnpm.override {
+                nodejs = pkgs.nodejs;
+              };
+            }
+            {
               name = "yarn2nix";
               package = pkgs.yarn2nix;
             }

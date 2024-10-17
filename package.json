@@ -1,14 +1,16 @@
 {
     "private": true,
     "scripts": {
-        "clean-node-modules": "rm -rf node_modules gatsby-theme/node_modules site/node_modules",
-        "gatsby-build": "yarn workspace site build",
+        "clean-node-modules": "rm -rf node_modules site/node_modules",
+        "start": "yarn workspace site start",
+        "sync": "yarn workspace site sync",
+        "preview": "yarn workspace site preview",
+        "postbuild": "yarn workspace site postbuild",
         "build": "yarn workspace site build",
         "clean-develop": "yarn workspace site clean && yarn workspace site develop",
         "clean-build": "yarn workspace site clean && yarn workspace site build",
         "develop": "yarn workspace site develop",
-        "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-        "start": "yarn workspace site develop",
+        "format": "yarn workspace site format",
         "serve": "yarn workspace site serve",
         "clean": "yarn workspace site clean",
         "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
@@ -16,5 +18,5 @@
     "devDependencies": {
         "prettier": "^2.8.0"
     },
-    "workspaces": ["gatsby-theme", "site"]
+    "workspaces": ["site"]
   }

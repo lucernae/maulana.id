@@ -19,5 +19,5 @@ export const CATEGORIES = [
 	{
 		title: 'Sandbox',
 		slug: 'sandbox'
-	},
+	}
 ] as const

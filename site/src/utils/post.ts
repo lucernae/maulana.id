@@ -1,16 +1,16 @@
 import { getCollection } from 'astro:content'
 import { CATEGORIES } from '@/data/categories.ts'
 import { unsluglify } from './sluglify.ts'
-import { siteConfig } from "@/site-config"
+import { siteConfig } from '@/site-config'
 
 export const getAllCollection = async () => {
 	const allPosts = [
 		await getCollection('blog'),
 		await getCollection('soft-dev'),
-		await getCollection('llm'),
+		await getCollection('llm')
 		// await getCollection('sandbox'),
 	]
-	const filteredPosts =  allPosts.flat().filter((c) => {
+	const filteredPosts = allPosts.flat().filter((c) => {
 		return c.data.title !== undefined
 	})
 	return filteredPosts

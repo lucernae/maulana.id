@@ -3,7 +3,7 @@ layout_name: blog-post
 title: Pythagorean Theorem
 description: Short notes collection of Pythagorean Theorem
 category:
-    name: blog
+  name: blog
 date: 2023-05-04T00:00:00.00Z
 ---
 
@@ -40,7 +40,7 @@ A hypothenuse can be dissected with equal parts of right triangle, so any right 
 
 All these triangles is guaranteed to be similar because two of the angles are the same for all triangles.
 
-Assume a function called $Area(\alpha,\beta,\gamma,r)$. It doesn't matter what the formula to calculate the area is. 
+Assume a function called $Area(\alpha,\beta,\gamma,r)$. It doesn't matter what the formula to calculate the area is.
 By function mapping, it should be possible to map these parameter to a certain area.
 
 Angle $\gamma$ can be calculated from $\alpha$ and $\beta$ because the total has to be constant for all kind of triangles. (can be set to 180 degrees, although any value won't matter)
@@ -121,7 +121,7 @@ y\frac{dx}{dt} = x \frac{dy}{dt} \\[8pt]
 $
 
 There should be no preferences between $x$ and $y$. Each must changes wrt to $r$ the same way. So this satisfy scaling property.
-If this satisfy scaling property, then $x$ and $y$ are completely normal/independent/perpendicular. 
+If this satisfy scaling property, then $x$ and $y$ are completely normal/independent/perpendicular.
 If $x$ and $y$ has to be perpendicular, then it has to be a right triangle. So it completes the proof.
 
 To illustrate this, use contradiction. I can think of several alternatives.
@@ -146,16 +146,16 @@ $$
 \left| \frac{y}{x} \right| = C = k \\[8pt]
 $$
 
-$C$ is just a constant so it essentially the same as $k$. 
+$C$ is just a constant so it essentially the same as $k$.
 
-Because the ratio is the same even when the sides changes, then it had to be similar triangle with the initial triangle. 
+Because the ratio is the same even when the sides changes, then it had to be similar triangle with the initial triangle.
 Since the initial triangle is a right triangle, then after the changes it has to be a right triangle again.
 
 So the claim is contradictory and Pythagorean triplet has to be true for all right triangles, with any initial constant $k$.
 
 ### Contradict the independence of the axis
 
-For a right triangle to work, $x$ and $y$ has to be always perpendicular. 
+For a right triangle to work, $x$ and $y$ has to be always perpendicular.
 
 Given an independent parameter $t$, it must change $x$ and $y$ independently.
 
@@ -195,7 +195,7 @@ $$
 \left(\frac{dr}{dt}\right)^2 =\left(\frac{dx}{dt}\right)^2 + \left(\frac{dy}{dt}\right)^2 \\[8pt]
 $$
 
-Unrelated with the proofing method, this is actually quite an interesting corollary. 
+Unrelated with the proofing method, this is actually quite an interesting corollary.
 If Pythagorean theorem is true, it was direct consequences that the derivative of each variables with respect to independent parameter $t$ is also a Pythagorean triplet.
 Applying this statement to itself, if the n-th derivative exists, it will also form a Pythagorean triplet.
 That means Pythagorean theorem is invariant to derivative operator in Euclidean geometry.
@@ -225,13 +225,12 @@ y = \pm ix + C \\[8pt]
 $$
 
 The difference with the proof is that we directly proof that $y$ is dependent on $x$ in a very particular way.
-In complex number, multiplication by $i$ means it rotate the number by 90 degrees. 
+In complex number, multiplication by $i$ means it rotate the number by 90 degrees.
 
 In other words, $y$ is always perpendicular to $x$. So it is dependent in such a way that it guarantees the orthogonality of $x$ and $y$, hence it is always a right triangle.
 
 The problem with this line of reasoning is because the construction of Complex numbers usually **uses** Pythagorean theorem itself.
 If we have alternative construction using only group theory and definition of $i$ from a square root, then it can be used to prove Pythagorean theorem.
-
 
 ## Proof by matrix
 
@@ -299,7 +298,7 @@ Lastly, if we want to define matrix $R$ from a more generic function, there are 
 to be always 1, and always invertible. This is called the rotation matrix which has a more generic form like this:
 
 $$
-R(\theta) = 
+R(\theta) =
 \begin{pmatrix}
 \cos{\theta} & -\sin{\theta} \\
 \sin{\theta} & \cos{\theta}

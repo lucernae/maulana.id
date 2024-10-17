@@ -2,10 +2,11 @@
 layout_name: blog-post
 title: Using Docker Compose based Python Interpreter in PyCharm
 category:
-    name: soft-dev
+  name: soft-dev
 description: Debugging container just becomes slightly easier
 date: 2020-11-20T09:57:03.865Z
 ---
+
 # Intro
 
 I was involved with different kinds of Django projects in the past. Back then the standard approach of attaching your debug interpreter is by creating a virtual environment in your python project. We debug using PyCharm at that time. JetBrains has generously gave us free open source license to use the whole suite of JetBrains tools.
@@ -53,7 +54,7 @@ This is just to warm up docker. We want to build our initial images and see it r
 
 If you open your browser and navigate to http://localhost/ . You will see the default welcome screen. It will only says `Welcome in localhost`.
 
-Since using an IDE is a choice, I want to believe that running the project immediately should not depend heavily on the choice of IDE. The developer should be able to run this out of the box. 
+Since using an IDE is a choice, I want to believe that running the project immediately should not depend heavily on the choice of IDE. The developer should be able to run this out of the box.
 
 However, this is a minimal setup. When doing some custom development works, or deployment, you will have to change some deployment configuration. To illustrate this, I've prepared a simple template `.template.env` and `docker-compose.override.template.yml`.
 
@@ -107,11 +108,11 @@ services:
   django:
     command: python manage.py runserver 0.0.0.0:8080
     volumes:
-    - ../django_project:/home/web/django_project
+      - ../django_project:/home/web/django_project
 
   nginx:
     volumes:
-    - ./sites-enabled:/etc/nginx/conf.d
+      - ./sites-enabled:/etc/nginx/conf.d
 ```
 
 Since we are going to be in 'development mode', we use django manage.py server. We also mount our local directory so the container will always have latest changes in our files. We also mount nginx config in case we are dealing with production mode settings. You can even add more overrides like `environments` or `ports` depending on the need.
@@ -150,7 +151,7 @@ PyCharm bundled the docker-compose plugin integration by default. If for some re
 
 Open the `docker-compose.yml` file in the `deployment` directory. You will see that the lines are annotated by arrows like this:
 
-![docker-compose.yml file](/images/uploads/screen-shot-2020-11-22-at-18.51.14.png "docker-compose.yml file")
+![docker-compose.yml file](/images/uploads/screen-shot-2020-11-22-at-18.51.14.png 'docker-compose.yml file')
 
 You can click the arrow. Click the double arrow in the `services:` line. PyCharm will deploy that recipe for you. The service tab will appear to let you know that the compose file are deployed.
 
@@ -208,7 +209,7 @@ It's the same thing you get from running `docker-compose exec django python mana
 
 Now, let's step up further and create a Django server run configuration.
 
-Mark `django_project` directory as a **Source Directory** by right clicking the directory and select **Mark Directory as** >  **Sources Root** . If it's not detected already, mark the `django_project/mysite/templates` directory as **Templates Folder**. You will now be able to activate code completions in that folder.
+Mark `django_project` directory as a **Source Directory** by right clicking the directory and select **Mark Directory as** > **Sources Root** . If it's not detected already, mark the `django_project/mysite/templates` directory as **Templates Folder**. You will now be able to activate code completions in that folder.
 
 To create a new Run/Debug Config (for Django now), click the Configuration selector, or navigate from menu **Run** > **Edit Configuration**. As you can see, you already have docker-compose run configuration. We now want to add Django run config. Click the + button and choose **Django Server**. Most of our config resides in `.env` file. So we don't actually need to modify anything else here besides the target server address to match the port that we expose to in the container (currently 8080). See the screenshot for reference:
 
@@ -224,7 +225,7 @@ As with any debugging session, you can attach breakpoint to any of your python c
 
 ![](/images/uploads/screen-shot-2020-11-22-at-20.05.03.png)
 
-You can do many things in this mode, such as inspecting variables and so on. If for some reason this template debugger doesn't work for you, check out the [documentation](https://www.jetbrains.com/help/pycharm/templates.html) and make sure that you set the current template language to be Django instead of Jinja. 
+You can do many things in this mode, such as inspecting variables and so on. If for some reason this template debugger doesn't work for you, check out the [documentation](https://www.jetbrains.com/help/pycharm/templates.html) and make sure that you set the current template language to be Django instead of Jinja.
 
 ## Test runner setup
 

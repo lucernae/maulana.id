@@ -1,10 +1,10 @@
 ---
 layout: blog-post
-title: "Beyond entropy and probability distribution: part 1"
+title: 'Beyond entropy and probability distribution: part 1'
 description: the intro
 date: 2023-12-31T00:00:00.00Z
 category:
-    name: blog
+  name: blog
 ---
 
 > Author's note
@@ -40,14 +40,14 @@ $$
 
 With $p$ is a probability distribution with input $x$ such that $\int p(x)dx=1$.
 
-Note that this is a continuous probability distribution, and a smooth function. 
-In a real observation however, we usually deals with discrete probability distribution, and entropy gets updated 
+Note that this is a continuous probability distribution, and a smooth function.
+In a real observation however, we usually deals with discrete probability distribution, and entropy gets updated
 iteratively as experiments goes while observing this random variable.
 
-Our strong motivation at the moment is to find connection between this discrete probability distribution and relate 
+Our strong motivation at the moment is to find connection between this discrete probability distribution and relate
 it with the continuous version of the probability distribution as observation went on.
 
-Recall that by observing, what really changes is informational value we obtained. 
+Recall that by observing, what really changes is informational value we obtained.
 So this is like constructing a continuous function from a discrete datasets.
 The higher our information is, the smoother our function is.
 
@@ -58,13 +58,13 @@ But our function should still be describing the same thing, fundamentally speaki
 We will then estimate the continuous distribution using a Fourier transform.
 
 As for why we use the Fourier transform. It is intuitive to think that a discrete probability function
-is a set of $n$ different frequencies $f_n$, for each $n$ is a state in random variable $X$. 
+is a set of $n$ different frequencies $f_n$, for each $n$ is a state in random variable $X$.
 No matter what the probability function ends up into, if we use Fourier transform, we can approximate a continuous function using these discrete frequencies.
 If we have infinitely many states and frequencies, there is a one to one correspondence between a function and its Fourier transform.
 
-So, ultimately, figuring out these frequencies means we can identify a class of probability distribution. 
+So, ultimately, figuring out these frequencies means we can identify a class of probability distribution.
 The one to one correspondence means for many given discrete probability function, there is a single continuous probability distribution that can be used to identify a "kind of distribution".
-This is why it is called a ["characteristic function of probability distribution"](https://en.wikipedia.org/wiki/Characteristic_function_(probability_theory)).
+This is why it is called a ["characteristic function of probability distribution"](<https://en.wikipedia.org/wiki/Characteristic_function_(probability_theory)>).
 
 Back to our special case, we want to know a certain continuous probability function, if we transform arbitrary discrete distribution.
 
@@ -73,10 +73,10 @@ What we did is the other way around. From a set of frequencies constants, we wan
 So we define characteristic function as the "inverse" Fourier transform of sets of frequencies.
 
 To test out these ideas, consider a simple random variable of a "coin toss" event. The random variable $X$ has two states,
-$X=0$ and $X=1$. Let's say that the probability of getting a head is $p$, and tail is $q=1-p$. This distribution 
+$X=0$ and $X=1$. Let's say that the probability of getting a head is $p$, and tail is $q=1-p$. This distribution
 is called Bernoulli distribution.
 
-A current observation will tell us that the frequency $f(X=1)=p$ and $f(X=0)=1-p$. 
+A current observation will tell us that the frequency $f(X=1)=p$ and $f(X=0)=1-p$.
 If we construct a fourier series $F(t)$ using this information, we have:
 
 $$
@@ -86,15 +86,15 @@ $$
 While $f(x)$ has $x$ as the input of the function, the characteristic function $F(t)$ has $t$ or "time" as the input.
 So, what does characteristic function even means/represents?
 
-Since $F(t)$ is a complex function, you can think of it as time evolution of a needle in a circle. It describes how 
-the needle moves and changes shape. Since at $t=0$ it denotes the sum of all frequencies, then $F(0)=1$ for all kinds 
+Since $F(t)$ is a complex function, you can think of it as time evolution of a needle in a circle. It describes how
+the needle moves and changes shape. Since at $t=0$ it denotes the sum of all frequencies, then $F(0)=1$ for all kinds
 of distribution. Because probability distribution has to add up to 1.
 
 If we take an analogy with physics/mechanics, a time-evolution function will completely determine the dynamics of the objects.
 This coin-toss distribution for example, will have characteristic function like a needle that sways a certain way.
 It will look/move different with, let's say, uniform distribution.
 
-As observation goes, it is to be expected that we found more and more frequencies to be added into the series. 
+As observation goes, it is to be expected that we found more and more frequencies to be added into the series.
 Suppose that observation uses so many sampling, then function $F(t)$ will tend to converge to retain its shape.
 In the case like this, it becomes intuitive to understand that a continuous $F(t)$ corresponds to both discrete and continuous $f(x)$.
 The generalization for the continuous probability distribution is like this:
@@ -141,7 +141,7 @@ The relative differential entropy, also known as [Kullback–Leibler divergence]
 
 Suppose that we have a reference or base or "true" probability distribution called $P$, then its relative entropy is written as $H(P(X))=H(P)$.
 Then suppose that we have another probability distribution that we currently observe or measures called $Q$.
-Then the entropy of the events, if encoded using the "wrong" or "incomplete" distribution Q, when actually it is using P, is called the cross entropy and 
+Then the entropy of the events, if encoded using the "wrong" or "incomplete" distribution Q, when actually it is using P, is called the cross entropy and
 written as $H(P,Q)$.
 
 KL Divergence is then essentially the "excess/missing" information/entropy to measure the gap between information entropy of P and Q.
@@ -416,7 +416,8 @@ $$
 Note, that the ratio above is just a rough scaling interpretation.
 Fourier Transform itself has time scaling property.
 
-{/*
+{/\*
+
 ### The minimum bound of wave uncertainty principle
 
 If we regard probability distribution as function in "frequency" domain, and then the characteristic function is its "time" domain,
@@ -551,5 +552,4 @@ H(|g|^2) &= H(p(\sigma=\frac{1}{\sqrt{2}})) \\
 \end{align*}
 $$
 
-*/}
-
+\*/}

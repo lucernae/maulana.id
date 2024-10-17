@@ -3,7 +3,7 @@ layout_name: blog-post
 title: What is Pi? Non-Geometrically?
 description: The journey of what if we found Pi, not from circle?
 category:
-    name: blog
+  name: blog
 date: 2022-03-14T00:00:00.00Z
 ---
 
@@ -11,8 +11,8 @@ This article was made to celebrate the Pi day, 14th of March.
 
 In this story, I want to take a step back to try to rediscover Pi.
 Pi, like any other math student anywhere know, is synonimous with circle.
-This is because both historically and in standard curriculum, we are taught about basic geometrical 
-shape first. Pi can be defined as the ratio between the area of a circle and it's square radius. 
+This is because both historically and in standard curriculum, we are taught about basic geometrical
+shape first. Pi can be defined as the ratio between the area of a circle and it's square radius.
 Or, it can also be defined as the ratio between the circle's circumference and it's diameter.
 
 However later on throughout my study, I found Pi everywhere, from the trigonometry functions, to oscillators equations.
@@ -41,7 +41,7 @@ However, this begs the question. We know about Pi first. That's why we can deduc
 the right hand side will be equal to 1.
 What if we never knew about Pi?
 
-To know about Pi, we need to ask the correct question first. In order to unlearn my knowledge about Pi, 
+To know about Pi, we need to ask the correct question first. In order to unlearn my knowledge about Pi,
 let's forget about circle and trigonometry. Start by finding the core problem, then ask the fundamental question.
 
 # Exponential function and the imaginary unit
@@ -49,7 +49,7 @@ let's forget about circle and trigonometry. Start by finding the core problem, t
 Let's say that we found a special function called the exponential function $\exp (x)=e^x$.
 We can argue that we found this function by reasoning totally unrelated with circle.
 We found this function by questioning ourselves, "What is a function that it is own derivative?".
-That means, if we have a transformation function called "derivative", we want to find a function 
+That means, if we have a transformation function called "derivative", we want to find a function
 that is invariant under that transformation. Which is a fancy way of saying: the function doesn't change under derivative operations.
 
 From this question, we will naturally found the function using Taylor series, or power series.
@@ -120,8 +120,8 @@ First, we modify or scale the unit of $y$ in such a way that the roots is exactl
 
 Second, we didn't scale the unit of $y$, instead we just let the natural location of the roots that fits the differential equation above.
 
-If we go with the first approach. We can be sure that $f(y)$ **will** definitely have roots. If it doesn't have roots, we can choose any arbitrary 
-constant $C$ and construct a new function $f_1(y)$ in such a way that it will have roots. This is because adding a simple function with constant 
+If we go with the first approach. We can be sure that $f(y)$ **will** definitely have roots. If it doesn't have roots, we can choose any arbitrary
+constant $C$ and construct a new function $f_1(y)$ in such a way that it will have roots. This is because adding a simple function with constant
 means translating it up or down. Because the second derivative is non-zero, it will guarantee that for some $C$, it will have roots.
 
 By taking into account the first approach. We can choose a scalar $K$, in such a way that at least one of the root is an integer multiple, or 1.
@@ -187,8 +187,8 @@ Recall that we learned these things from $f_1(y)$
 To reiterate again, we are sure that we have infinite roots after we found just one. This is because the differential equation would mean that the curve crossing
 the x-axis by curving down but will curve up again. Since the curve it self is an inverted equation, that means it will cross x-axis again on the way up, and periodically have roots.
 
-You might wonder how do I know that the other roots are odd integers. An easy way to guess is to just calculate the distance between root 1 and root -1. 
-So the distance is 2. That means the next positive roots are $1 + 2 = 3$, and so on. It's going to be the same distance because the curve from one roots to the other is the same curve, 
+You might wonder how do I know that the other roots are odd integers. An easy way to guess is to just calculate the distance between root 1 and root -1.
+So the distance is 2. That means the next positive roots are $1 + 2 = 3$, and so on. It's going to be the same distance because the curve from one roots to the other is the same curve,
 but inverted (when we look at the differential equation).
 
 Notice that we haven't actually graphed anything, yet already found interesting information from the polynomials alone.
@@ -231,7 +231,7 @@ It ticks all these boxes:
 - [x] when $x=0$, the products of all the factors will be 1. Which satisfies $f_1(0)=1$
 - [x] guarantees convergence for the coefficient of $x^n$, due to the total product of the roots being a very big number.
 
-With that in mind, we just need to collect all the roots and combine it as factors. From $x=0$ to positive infinity, we have positive odd numbers. 
+With that in mind, we just need to collect all the roots and combine it as factors. From $x=0$ to positive infinity, we have positive odd numbers.
 From $x=0$ to negative infinity, we have negative odd numbers. It is surprisingly convenient that the expressions is quite simple:
 
 $
@@ -277,7 +277,7 @@ $
 \pi^2=8\sum_{m=0}^{\infty}\frac{1}{(2m+1)^2}
 $
 
-All the constant described here have a close relationship. The only difference is that our forefathers are leaning towards defining the differential equation $f{''}(x)=-f(x)$ and found $\cos(x)$ 
+All the constant described here have a close relationship. The only difference is that our forefathers are leaning towards defining the differential equation $f{''}(x)=-f(x)$ and found $\cos(x)$
 with the consequence that the roots of the function is not a multiple of integer, but rather, some sort of ratio of $\pi$.
 Meanwhile, our approach are leaning towards defining simpler integer roots, with the consequence that the differential equation has non-unitary ratio $f{''}(x)=-K^2f(x)$.
 
@@ -316,7 +316,6 @@ $
 
 In this case here we can immediately follow from the $\sin(x)$ function that $L=\pi$.
 
-
 # Final remark
 
 Overall, it is quite fun to imagine a "what-if" scenario if our civilizations found Pi not from a geometrical approach.
@@ -328,13 +327,12 @@ In our approach above, we found two distinct number $K$ and $L$, then we found o
 Depends on which function or numbers that we want to declare as fundamental, or elementary, we might have a different symbols.
 We might even have a different understanding of math.
 
-For example, as we can see that both $K$ and $L$ is a solution to the same differential equation $f(x)=-A^2f{''}(x)$. 
-The difference is just from the initial value and the first derivative. 
-In that, we can conclude that two different Taylor series expressions of $f_1(x)$ and $g_1(x)$ rises from a single more fundamental function. 
+For example, as we can see that both $K$ and $L$ is a solution to the same differential equation $f(x)=-A^2f{''}(x)$.
+The difference is just from the initial value and the first derivative.
+In that, we can conclude that two different Taylor series expressions of $f_1(x)$ and $g_1(x)$ rises from a single more fundamental function.
 Since both functions are linear, that means actually the more fundamental function is the exponential function, which is a linear combination of both.
 
 This brings us to the following question. Can we find a more fundamental constant by finding the roots of $e^{i\theta}$?
 
 Well, perhaps not today. I haven't found it yet, because $e^{i\theta}$ doesn't have any values of $\theta$ that causes both the real and imaginary part zero at the same time.
 So we can't use the same approach.
-

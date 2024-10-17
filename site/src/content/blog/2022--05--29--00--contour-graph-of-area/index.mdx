@@ -3,7 +3,7 @@ layout_name: blog-post
 title: Contour graph of area
 description: Relationship between contour graph and area of rectangle
 category:
-    name: blog
+  name: blog
 date: 2022-05-29T00:00:00.00Z
 ---
 
@@ -11,25 +11,30 @@ date: 2022-05-29T00:00:00.00Z
 
 As usual, I found another math puzzle over twitter here:
 
-<blockquote className="twitter-tweet">
-    <p lang="in" dir="ltr">
-        Semua garis di sini panjangnya bilangan bulat.
-        <br/><br/>
-        a) berapa luas keseluruhan?<br/><br/>
-        b) berapa keliling keseluruhan? 
-        <a href="https://t.co/LheJQgGIr0">pic.twitter.com/LheJQgGIr0</a>
-    </p>
-    &mdash; Ainun Najib (@ainunnajib) 
-    <a href="https://twitter.com/ainunnajib/status/1530118002233921536?ref_src=twsrc%5Etfw">May 27, 2022</a>
-</blockquote> 
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<blockquote className='twitter-tweet'>
+	<p lang='in' dir='ltr'>
+		Semua garis di sini panjangnya bilangan bulat.
+		<br />
+		<br />
+		a) berapa luas keseluruhan?
+		<br />
+		<br />
+		b) berapa keliling keseluruhan?
+		<a href='https://t.co/LheJQgGIr0'>pic.twitter.com/LheJQgGIr0</a>
+	</p>
+	&mdash; Ainun Najib (@ainunnajib)
+	<a href='https://twitter.com/ainunnajib/status/1530118002233921536?ref_src=twsrc%5Etfw'>
+		May 27, 2022
+	</a>
+</blockquote>
+<script async src='https://platform.twitter.com/widgets.js' charset='utf-8'></script>
 
 Since it is in Indonesian language, I will translate it over:
 
 > All of the lengths defined here is integers.
-> 
+>
 > a) What is the total area?
-> 
+>
 > b) What is the total perimeter?
 
 We have a rectangle divided in 4 sections. All the top left, top right, and bottom left have defined area. Only the bottom right is unspecified.
@@ -47,7 +52,7 @@ Then, look at this graph here:
 
 ![](./P1.png)
 
-Notice that the point A is in (-4, 6) coordinate. Which means it has length 4 and 6 in horizontal and vertical direction. The area is 24. 
+Notice that the point A is in (-4, 6) coordinate. Which means it has length 4 and 6 in horizontal and vertical direction. The area is 24.
 The green line here is a function of $y=\frac{24}{x}$. This is one way to represents the problem. But there is another way to represents this problem, called contour graph.
 
 A contour graph, or plot, is a plot in 2D to represents a function in 3D spaces. To illustrate, let's suppose we have a function called Area.
@@ -65,7 +70,7 @@ In a contour graph, every point in the 2D cartesian plot have a color. Each colo
 This is because each location corresponds to a scalar value. The value in this case is the area of the constructed rectangles.
 
 Contour plot also used in GIS or mapping to draw an elevation of a certain location in the 2D cartesian plot. Usually, for neighboring pixels/points with the same certain color, one would draw a line.
-This line, called contour line, will denote certain exact lines where the value of the function is exactly the same. It is useful because human can't distinguish continuous color difference accurately, 
+This line, called contour line, will denote certain exact lines where the value of the function is exactly the same. It is useful because human can't distinguish continuous color difference accurately,
 so drawing a line helps them "see" exactly where the value is exactly the same.
 
 Now let's go back to the original graph of rectangle A. The green contour line means a location where the x and y values results in an area of exactly 24 $cm^2$ units.
@@ -153,7 +158,6 @@ So, the common factors of 24 and 192 that are also divisible by 2, are {2, 4, 6,
 
 From these lists of possible constraints for x, further reduce it by applying the constraint for rectangle B and C.
 Which means, x must be a factors of 72, and $y_A$ must be a factors of 30.
-
 
 Factors of 72 are {1, 2, 3, 4, 6, 8, 9, 12, 18, 24, 36, 72}, so all x is possible.
 

@@ -3,7 +3,7 @@ layout_name: blog-post
 title: Using Tailscale Serve and Tailscale Funnel for indie developer
 description: Access your devices from public internet
 category:
-    name: soft-dev
+  name: soft-dev
 date: 2023-10-07T00:00:00.00Z
 ---
 
@@ -15,7 +15,7 @@ Here's my story.
 # Homelab configuration using Tailscale
 
 As I explained in the previous article about how I got interested with [Tailscale](../2023--01--30--00--using-tailscale-with-nix),
-it is a simple solution for your homelab servers. All of your devices can easily be connected within the same subnet, even if they are 
+it is a simple solution for your homelab servers. All of your devices can easily be connected within the same subnet, even if they are
 physically on a different network.
 
 Since then, I have been using my Tailnet (sort of a catchy name for Tailscale network) by connecting my raspi at home.
@@ -23,11 +23,11 @@ By exposing a subnet, I can access my home router (that can't be installed with 
 That way, I can access the subnet within the same Tailnet, using other devices.
 
 I've been using this functionality for quite some time. Now that my raspi is dead, I don't have mini router within my homelab.
-That's when I thought I should make my PC take the role for now. However, my PC has some customized network settings to be used within 
+That's when I thought I should make my PC take the role for now. However, my PC has some customized network settings to be used within
 the PC itself. I still wanted to keep the functionality going.
 
-One of usage my PC has, is as a machine for setting up devices. From within the tailnet, it can share Nix build caches, and sometimes 
-can be used as a Nix builder for x86_64 arch (my main laptop at the moment is an M2 Air, aarch64). I also installed a [Rancher](https://ranchermanager.docs.rancher.com) server, 
+One of usage my PC has, is as a machine for setting up devices. From within the tailnet, it can share Nix build caches, and sometimes
+can be used as a Nix builder for x86_64 arch (my main laptop at the moment is an M2 Air, aarch64). I also installed a [Rancher](https://ranchermanager.docs.rancher.com) server,
 so I can add arbitrary k8s cluster to be inspected there.
 
 # Making a Tailscale Subnet Route
@@ -125,28 +125,28 @@ http://<your-device-name>.<tailnet>.ts.net (tailnet only)
 |-- / proxy http://127.0.0.1:9000
 ```
 
-You can access your proxied service using `http://<your-device-name>`. Basically using your Tailscale device name. 
+You can access your proxied service using `http://<your-device-name>`. Basically using your Tailscale device name.
 Also, it can be accessed from within any of your Tailscale device.
 
-However, in my case, due to stupid Internet Service Provider (ISP) regulation, single phrase-hostname will be redirected by my ISP's DNS into 
+However, in my case, due to stupid Internet Service Provider (ISP) regulation, single phrase-hostname will be redirected by my ISP's DNS into
 their ad page...
 
 Yeah it sucks.
 
-So, for my particular case, it was easier to just access it by its full name: `http://<your-device-name>.<tailnet>.ts.net`, 
+So, for my particular case, it was easier to just access it by its full name: `http://<your-device-name>.<tailnet>.ts.net`,
 instead of tampering my DNS' settings.
 
 Okaaay, now this seems to not be a big deal. It's just port reroute. You can do similar things with Caddy, Nginx, Traefik, etc.
 
 But, imagine you work in a team. You can easily share your local development service just by using your Tailscale device name.
-It kind of simplify the sharing process. Good for you if you are familiar with how advanced proxy services works. But if you 
+It kind of simplify the sharing process. Good for you if you are familiar with how advanced proxy services works. But if you
 only want to quickly bring some services up and share it, this could be a good alternatives.
 
 ## Exposing HTTPS service
 
 Ok now, the next part has some concrete benefit. This is HTTPS support.
 
-To expose HTTPS local server, normally you have to deal with certificate generators. This can be cumbersome, but I've learned 
+To expose HTTPS local server, normally you have to deal with certificate generators. This can be cumbersome, but I've learned
 along the way that there are certain tools that specializes on making certificate provisioning easier. Like Caddy, certmanager,
 etc. But all of them shared the same limitation, which is a self signed certificate.
 
@@ -185,13 +185,13 @@ Well, technically, it was Let's Encrypt who provides the certificate, but still.
 TLS terminated TCP is a pretty similar use case with HTTPS proxying to HTTP.
 I'm not sure how often you use TCP, but some example I can think of is using gRPC or the classic example of SMTP with TLS.
 It is possible to add this secure layer, so the client can send encrypted request. Then your service receive unencrypted TCP.
-For multi tier architecture, you can also add SSL layer for the Database connection to the service layer. This is because 
+For multi tier architecture, you can also add SSL layer for the Database connection to the service layer. This is because
 usually they are not in the same host or infra.
 
 Since it's quite similar with previous HTTPS to HTTP proxy, I'm going to focus on TCP passthru instead.
 
 TCP Passthru/Forwarder basically means the client sends raw TCP (so it applies for encrypted as well) and your service also receives raw TCP.
-So, if the traffic uses TCP with TLS, the decryption happens from inside your service. 
+So, if the traffic uses TCP with TLS, the decryption happens from inside your service.
 Tailscale just acts as relay.
 
 Let's say you have a local HTTPS server, using self-signed certificate (you use your own certificate).
@@ -213,7 +213,7 @@ tailscale serve https / https+insecure://localhost:443
 
 When you access it on `https://<your-device-name>.<tailnet>.ts.net`, it will use Tailscale certificate generated by Let's Encrypt.
 
-I'm not quite sure how this works. But it seems the client connect with the Tailscale remote domain and the connection is fowarded 
+I'm not quite sure how this works. But it seems the client connect with the Tailscale remote domain and the connection is fowarded
 to Tailscale device. It is then terminated/decrypted and proxied to your local service, which uses self-signed certificate.
 
 ## Tailscale Funnel
@@ -244,7 +244,7 @@ Trust me, someone will have a way to brute force it.
 
 ## Combining Subnet Routing and Tailscale Serve
 
-If you know how to manage reverse proxy. It is then possible to install a reverse proxy in one of your devices to act as some kind of Ingress/Load Balancer 
+If you know how to manage reverse proxy. It is then possible to install a reverse proxy in one of your devices to act as some kind of Ingress/Load Balancer
 to access services in your subnet that is not part of your Tailscale devices.
 Using the diagram above, I installed K8s Ingress on my Workstation device (I installed Tailscale as well).
 I can then activate Tailscale Serve, to proxy traffic to my Ingress, so that it can be forwarded to other services that is not part of my Tailscale devices.

@@ -2,26 +2,27 @@
 layout_name: blog-post
 title: Inner circle of a function
 category:
-    name: blog
+  name: blog
 description: Calculating the radius of the inner circle, enclosed between the function and larger circle.
 date: 2023-09-23T00:00:00.00Z
 ---
 
 I came across an interesting challenge from a tweet:
 
-<blockquote className="twitter-tweet">
-    <p lang="en" dir="ltr">
-        Hiring our first employee today. Gave this insanely hard problem for round 1, try it out if you're free: 
-        <a href="https://t.co/gRxG2jl9xt">https://t.co/gRxG2jl9xt</a>
-    </p>
-    &mdash; sir MIT, PhD in Vast Demented Atrophy (@iwontoffendyou)
-    <a href="https://twitter.com/iwontoffendyou/status/1704935240907518367">Sep 21, 2023</a>
-</blockquote> 
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<blockquote className='twitter-tweet'>
+	<p lang='en' dir='ltr'>
+		Hiring our first employee today. Gave this insanely hard problem for round 1, try it out if
+		you're free:
+		<a href='https://t.co/gRxG2jl9xt'>https://t.co/gRxG2jl9xt</a>
+	</p>
+	&mdash; sir MIT, PhD in Vast Demented Atrophy (@iwontoffendyou)
+	<a href='https://twitter.com/iwontoffendyou/status/1704935240907518367'>Sep 21, 2023</a>
+</blockquote>
+<script async src='https://platform.twitter.com/widgets.js' charset='utf-8'></script>
 
 It is a simple problem, but can be tricky depending on how you see it.
 
-I made a GeoGebra snippet that describes the same problem, but the $x$ and $y$ axis is swapped, because it is 
+I made a GeoGebra snippet that describes the same problem, but the $x$ and $y$ axis is swapped, because it is
 easier to write and understand if $y=x^2$ instead of $y=\sqrt{x}$.
 
 Feel free to play around with the snippet. You can drag point $A$ left and right until the outer circle has radius 1.
@@ -29,9 +30,10 @@ Then you can see the radius of inner circle being questioned, by checking the he
 
 # GeoGebra
 
-<GeoGebra 
-    title="Inner Circle from function" 
-    src="https://www.geogebra.org/calculator/upcycxdz?embed" />
+<GeoGebra
+	title='Inner Circle from function'
+	src='https://www.geogebra.org/calculator/upcycxdz?embed'
+/>
 
 ## Things to try
 
@@ -77,8 +79,7 @@ Some variable have different meaning here.
 
 I modified the original problem by swapping $x$ with $y$. This way, I used the function $y=x^2$ instead of using square root.
 
-First constraint comes from the function itself, which is 
-
+First constraint comes from the function itself, which is
 
 $$
 \begin{align*}
@@ -96,7 +97,6 @@ $$
 \tag{E2} r^2 = (x-a)^2 + (y-r)^2
 \end{align*}
 $$
-
 
 From $E1$, taking the derivative, we know the rate of change should be:
 
@@ -135,7 +135,7 @@ $$
 
 Now, the last constraints. We take into account the outer circle.
 
-Since by the problem statement, it was stated that the outer circle be intersected with the inner circle, then the tangent at the point of intersection 
+Since by the problem statement, it was stated that the outer circle be intersected with the inner circle, then the tangent at the point of intersection
 has the same direction. We can then conclude the outer radius $R$ is equal to $p+r$. But $R=1$.
 Which brings us the to the final constraint:
 
@@ -189,7 +189,7 @@ $$
 
 From the discriminant, we entirely isolate value of $a$.
 
-For $16a^4$ and $E7$ it means $r=\frac{1}{2}$ and $a=0$. Which is the solution if the inner circle 
+For $16a^4$ and $E7$ it means $r=\frac{1}{2}$ and $a=0$. Which is the solution if the inner circle
 is located above the origin $(0,0)$. But this is not what we want to find.
 
 So, the other factors must contain the solution: $(-27 + 52 a^2 - 9 a^4 + a^6)=0$.

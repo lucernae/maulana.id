@@ -24,11 +24,9 @@ export async function getStaticPaths({ paginate }: any) {
 
 	return categories.flatMap((category: string) => {
 		const sluglifyNameCategory = sluglify(category!.toLowerCase())
-		const filteredPosts = allPosts.filter(
-			(post) => {
-			    return sluglify(getCategoryName(post.data.category).toLowerCase()) === sluglifyNameCategory
-			}
-		)
+		const filteredPosts = allPosts.filter((post) => {
+			return sluglify(getCategoryName(post.data.category).toLowerCase()) === sluglifyNameCategory
+		})
 
 		return paginate(filteredPosts, {
 			params: {

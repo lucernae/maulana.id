@@ -12,9 +12,7 @@ import rehypeKatex from 'rehype-katex'
 export default defineConfig({
 	site: 'https://maulana.id/', // Write here your website url
 	vite: {
-		assetsInclude: [
-			'**/*.fit',
-		],
+		assetsInclude: ['**/*.fit']
 	},
 	markdown: {
 		remarkPlugins: [remarkReadingTime, RemarkMermaidClient, remarkMath],
@@ -28,7 +26,7 @@ export default defineConfig({
 	},
 	integrations: [
 		react({
-			experimentalReactChildren: true,
+			experimentalReactChildren: true
 		}),
 		// starlight({
 		//     title: 'astro-blog-template',

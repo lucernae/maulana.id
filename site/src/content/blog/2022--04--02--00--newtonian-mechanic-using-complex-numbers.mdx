@@ -2,7 +2,7 @@
 layout_name: blog-post
 title: Newtonian mechanic using complex numbers
 category:
-    name: blog
+  name: blog
 description: Some rotation dynamics in a plane turns out to be easily described using complex numbers
 date: 2022-04-02T00:00:00.00Z
 ---
@@ -19,7 +19,7 @@ $
 \sum{\bm \tau} = I \alpha
 $
 
-This definition works really well for rigid bodies, but turns out very weird in my opinion when dealing with rotation under gravity. 
+This definition works really well for rigid bodies, but turns out very weird in my opinion when dealing with rotation under gravity.
 In gravity's case, the rigid bodies can vary in the distance between the axis and itself.
 Then, the Newton's equation of motion suddenly contains terms like **centripetal acceleration**, **angular acceleration**, and so on.
 
@@ -128,7 +128,7 @@ z = r e^{i\theta} \\
 \dot{z} = (\dot{r} + i \dot{\theta} r )e^{i\theta}
 $
 
-The velocity of the object can be seen immediately that it has two distinct components. The real part $\dot{r}$ and the imaginary part $i\dot{\theta}r$. Both of them are multiplied by the angle argument $e^{i\theta}$. 
+The velocity of the object can be seen immediately that it has two distinct components. The real part $\dot{r}$ and the imaginary part $i\dot{\theta}r$. Both of them are multiplied by the angle argument $e^{i\theta}$.
 That means the actual projection of the real and imaginary part depends on the angle. However, it is easily seen that magnitude of the velocity contains radial direction $\dot{r}$ (because it is real) and tangential direction $i\dot{\theta}r$ (because it has imaginary number).
 
 If we take the derivative again wrt time, we got the acceleration.

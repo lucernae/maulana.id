@@ -37,5 +37,5 @@ jobs:
           GATSBY_ALGOLIA_DRY_RUN: true
           GATSBY_ALGOLIA_CONTINUE_ON_FAILURE: true
         run: |
-          nix develop --command "cd site && ${{matrix.run_time}} install"
-          nix develop --command "cd site && ${{matrix.run_time}} build"
+          nix develop --command bash -c "cd site && ${{matrix.run_time}} install"
+          nix develop --command bash -c "cd site && ${{matrix.run_time}} build"

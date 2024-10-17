@@ -4,7 +4,7 @@ title: 'Fourier Series: part 1'
 description: Fourier series and how to define them
 date: 2024-01-29T00:00:00.00Z
 category:
-    name: blog
+  name: blog
 ---
 
 # Taylor Series
@@ -79,7 +79,6 @@ $$
 We will elaborate this on a separate article. But for now, we realized that there exists a function like this.
 
 Now, what if we replaced $x$ with $\exp(x)$. What is this function?
-
 
 $$
 f(x) = \sum_{n=0}^\infty \frac{(e^x)^n}{n!} = \sum_{n=0}^\infty \frac{e^{nx}}{n!}
@@ -338,7 +337,7 @@ The problem now, if $n \ne -1$, then the basis still exists for the rests of the
 Let's say if $n=2$, then the basis for $C_2$ becomes $e^{i(2-1)t} = e^{it}$. This is not zero like the case in vector above.
 It is only shifted.
 
-Now, since the basis *evolve* over time, we might want to evaluate the basis in the span of time $T$.
+Now, since the basis _evolve_ over time, we might want to evaluate the basis in the span of time $T$.
 We want to see if we can do any specific transform in this time interval/period that causes the basis term to become zero and make the constant term $C_n$ vanish for other $n \ne -1$.
 
 If we transform the equation using derivative, the component $C_1$ that we figured out before, will vanish because it is a constant term.

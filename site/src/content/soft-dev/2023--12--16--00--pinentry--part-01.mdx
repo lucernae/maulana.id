@@ -3,7 +3,7 @@ layout_name: blog-post
 title: 'Developing GPG Pinentry: Part 01 - General Architecture'
 description: How GPG Pinentry works and its terminologies
 category:
-    name: soft-dev
+  name: soft-dev
 date: 2023-12-16T00:00:00.00Z
 ---
 
@@ -42,7 +42,7 @@ There is no native connection between your computer and the VSCode UI in the bro
 
 So, there is no neat solution yet.
 
-Another point that I want to remark is that how GitHub seems to "missed the point" on having GPG-signed commits. In Codespace you 
+Another point that I want to remark is that how GitHub seems to "missed the point" on having GPG-signed commits. In Codespace you
 can enable GPG verification commits. But the one who signs the commits is using GitHub's signature.
 I was really confused seeing this. Sure, your commits were signed. But if the key being used is from GitHub, then what's the point?
 It only verifies that the commits were made from inside GitHub's platform, but it doesn't say the one who made commit is the commit author.
@@ -55,7 +55,7 @@ If it is not, then GPG Agent will try to "unlock" the key using passphrase. Then
 We can think of this "pinentry" as a program to "shove" and "show" dialog to us users to unlock the key.
 User can then input their passphrase or PINs.
 
-If the passphrase is a random characters and difficult to remember, like what I have, it is useful for the pinentry to have 
+If the passphrase is a random characters and difficult to remember, like what I have, it is useful for the pinentry to have
 some sort of integration with a Keychain or Password manager. We have this in Mac (which is super excellent) and Linux (which is somewhat working to a degree).
 Don't ask me about Windows, I've never signed my commits on Windows.
 
@@ -86,11 +86,11 @@ Assuming the use case is a CLI command of GPG to encrypt a message:
 
 ```mermaid render
 sequenceDiagram
-    
+
     participant u as User/CLI
     participant g as GPG-Agent
     participant p as pinentry
-    
+
     u->>g: request encryption with message signing using key
     g->>g: finding public/private key pair
     g->>p: requesting PIN/passphrase to decrypt private key

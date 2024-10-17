@@ -3,7 +3,7 @@ layout_name: blog-post
 title: Newtonian gravity using complex numbers
 description: Exploring celestial orbit and trajectories using complex numbers
 category:
-    name: blog
+  name: blog
 date: 2022-04-03T00:00:00.00Z
 ---
 
@@ -26,7 +26,7 @@ We are going to use the above definition a lot. A dot over a variable means firs
 
 Let us start with something simple. A classic two body problem. Two celestial bodies in a plane is interacting via gravity.
 
-A full Newton's Second Law applied to the system will yield two nearly identical equation for each bodies. 
+A full Newton's Second Law applied to the system will yield two nearly identical equation for each bodies.
 Usually we solve by defining the inertial reference frame first, in which case a point where Newton's First Law is true.
 This is usually called the barycenter.
 
@@ -47,7 +47,7 @@ Distance between $m_1$ and $m_2$ is a scalar multiple of the distance between $m
 
 ## Why we need a barycenter
 
-The barycenter is going to be used as the *center* (pun intended) of our derivation. If we want to use Newton's Second Law. There has to be an inertial reference frame where Newton's First Law holds true.
+The barycenter is going to be used as the _center_ (pun intended) of our derivation. If we want to use Newton's Second Law. There has to be an inertial reference frame where Newton's First Law holds true.
 We just need to find it. In a rotation, the criteria is even more strict (which makes it very easy). The axis of the rotation has to be an inertial reference frame, because the point doesn't rotate.
 If it doesn't rotate, it has zero angular speed which made most acceleration in a rotation becomes zero. The axis also means it becomes the center in which we measure the radial position. By definition, the axis has no radial position changes.
 Thus we can conclude the net force and torque in that position has to be zero.
@@ -98,7 +98,7 @@ $
 Let's simplify it a bit. Index 1 doesn't matter because every variables in the above equation are owned by body 1. So we can just remove the index.
 We can divide by the angle argumen $e^{i\theta_1}$ because the acceleration complex number and the force complex number has the same argument.
 Due to they are always at the same phase.
-Lastly, since $m_1$ is also constant. Let's define $\frac{\mu}{m_1}=M$. 
+Lastly, since $m_1$ is also constant. Let's define $\frac{\mu}{m_1}=M$.
 
 $$
 (\ddot{r}-r\dot{\theta}^2)+i(2\dot{r}\dot{\theta}+\ddot{\theta}r) = - \frac{M}{k^2 r^2}
@@ -203,7 +203,7 @@ In order for this to become our solution, it must satisfy our requirements:
 1. $r$ is a real number (not complex)
 2. At $\theta=0$ we want the distance of the body to the barycenter to be minimum (usually called perigee)
 
-Now, here's the catch if we use complex numbers. There is a simplifying property about complex numbers in second order linear differential equation. Due to the linearity of the equation, 
+Now, here's the catch if we use complex numbers. There is a simplifying property about complex numbers in second order linear differential equation. Due to the linearity of the equation,
 if we want to have a more strictly real solution for $r$, we can just take real part of $w$ to become the solution. This is because for linear differential equation, if a solution satisfy the equation,
 then it's linear combination must also satisfy it.
 
@@ -252,6 +252,7 @@ $$
 $$
 
 This is actually a nice equation because:
+
 1. The variables are already separable, $z$ in the left and $\theta$ in the right
 2. Both $z$ and $\theta$ are linear
 
@@ -305,7 +306,6 @@ $
 
 It is the same result like before, but much simpler derivation.
 
-
 # Remark
 
 As you can see, complex representations can be proven useful for some cases. In our particular cases, it was because an object rotation can be naturally represented as complex numbers. So, no wonder if it can be solved and understood easier this way.
@@ -319,5 +319,5 @@ As opposed to that, the substitution approach, relies on "pure" math. It doesn't
 I like the substitution approach because it is more fundamental and elegant. It doesn't need a physical intuition. However, it is not a physical method. If you are using the substitution method, it doesn't guarantee that the same approach can be applied to other physical systems.
 The energy equation is more methodical. You doesn't need to be a math genius to arrive at the conclusions.
 
-If I were to make an analogy, the substitution approach feels like an expert seamen traveling from a port to port. He is already an expert. He can read winds, climate, stars, etc. The energy equation approach feels like seamen using map and compass. He trusts the map and compass, 
+If I were to make an analogy, the substitution approach feels like an expert seamen traveling from a port to port. He is already an expert. He can read winds, climate, stars, etc. The energy equation approach feels like seamen using map and compass. He trusts the map and compass,
 and then make methodical judgement on where they need to go. Both goes hand in hand in which an expert/genius seamen can make charts and compass so that it can help regular seamen to navigate dangerous unfamiliar seas.

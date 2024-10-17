@@ -3,9 +3,10 @@ layout_name: blog-post
 title: Converging exponential recursive function
 description: Interesting problem from twitterland about recursive function.
 category:
-    name: blog
+  name: blog
 date: 2021-03-14T00:00:00.000Z
 ---
+
 > Disclaimer:
 >
 > I don't have any formal mathematics degree.
@@ -15,21 +16,29 @@ First things first, I don't even know what type of class the problem is, so I wi
 
 It all began from an interesting tweet [here](https://twitter.com/SamuelGWalters/status/1368886676861243394?s=20)
 
-
-<blockquote className="twitter-tweet">
-    <p lang="en" dir="ltr">
-    Let a &gt; 0 and consider the exponential function
-    <br/>F(x) = aˣ = a^x
-    <br/>where x ≥ 0. Show that the sequence of iterations
-    <br/>a, F(a), F(F(a)), F(F(F(a))), ...
-    <br/>converges iff
-    <br/>a ≤ exp(1/e) = 1.4446...
-    <br/>In particular, it converges for Dillon&#39;s <a href="https://twitter.com/InertialObservr?ref_src=twsrc%5Etfw">@InertialObservr</a> example a = √2. 
-    <a href="https://twitter.com/hashtag/math?src=hash&amp;ref_src=twsrc%5Etfw">#math</a> 
-    <a href="https://twitter.com/hashtag/calculus?src=hash&amp;ref_src=twsrc%5Etfw">#calculus</a>
-    </p>
-    &mdash; Sam Walters ☕️ (@SamuelGWalters) 
-    <a href="https://twitter.com/SamuelGWalters/status/1368886676861243394?ref_src=twsrc%5Etfw">March 8, 2021</a>
+<blockquote className='twitter-tweet'>
+	<p lang='en' dir='ltr'>
+		Let a &gt; 0 and consider the exponential function
+		<br />
+		F(x) = aˣ = a^x
+		<br />
+		where x ≥ 0. Show that the sequence of iterations
+		<br />
+		a, F(a), F(F(a)), F(F(F(a))), ...
+		<br />
+		converges iff
+		<br />a ≤ exp(1/e) = 1.4446...
+		<br />
+		In particular, it converges for Dillon&#39;s{' '}
+		<a href='https://twitter.com/InertialObservr?ref_src=twsrc%5Etfw'>@InertialObservr</a> example a
+		= √2.
+		<a href='https://twitter.com/hashtag/math?src=hash&amp;ref_src=twsrc%5Etfw'>#math</a>
+		<a href='https://twitter.com/hashtag/calculus?src=hash&amp;ref_src=twsrc%5Etfw'>#calculus</a>
+	</p>
+	&mdash; Sam Walters ☕️ (@SamuelGWalters)
+	<a href='https://twitter.com/SamuelGWalters/status/1368886676861243394?ref_src=twsrc%5Etfw'>
+		March 8, 2021
+	</a>
 </blockquote>
 
 The question is: "Why such things happens?"
@@ -44,7 +53,7 @@ This is very procedural (or rather, recursive?), in fact you can make the functi
 
 ## Sample Recursive Runner
 
-import { RecursiveFunctionForm } from "./widget.jsx"
+import { RecursiveFunctionForm } from './widget.jsx'
 
 <RecursiveFunctionForm client:only="react">
     <div aslabel="input">
@@ -80,8 +89,8 @@ import { RecursiveFunctionForm } from "./widget.jsx"
     </div>
 
     <div aslabel="converge">Is it converging?</div>
-</RecursiveFunctionForm>
 
+</RecursiveFunctionForm>
 
 In the above Javascript snippets, you can try the following:
 
@@ -97,9 +106,7 @@ It's make sense because $a$ is the basis of the exponent. If it is 0, any power 
 
 Specifically for #4, $L$ goes unbounded towards infinity. It keeps increasing as the number of iteration goes.
 
-
 From the result of #3 and #4, we know that there is an upper bound of possible value of $a$. We want to know the upper bound.
-
 
 # Solving the problem using limit
 
@@ -131,18 +138,18 @@ We know that at first $F(0,x)$ won't be equal to $L$. It's value depend on both 
 In the javascript code above, we set initial value of $x$ to be $a$. The output of that function were feed back, over and over again.
 
 Let's say, we can freely choose the value of $x$, then we "measure" how close the result would be to our convergent value $L$, which is the final value.
-Let's define the range of $x$ first. We know it had to be greater than 0, since $x$ is divergent if less than 0. It's also less than 1.5, since greater than that is 
+Let's define the range of $x$ first. We know it had to be greater than 0, since $x$ is divergent if less than 0. It's also less than 1.5, since greater than that is
 divergent too. So, hey, the range of values is actually small!
 
 We can explore a little bit more. Let's say we can "variate" $x$ around these range, in small increment. $x$ has to be close to our convergent value $L$, right?
 We can then define the "difference" between the function's output from the convergent output $a^L$: $D(x)=F(0,x)-a^L$.
 We also define the "difference" between the function's input from where it is convergent: $d(x)=x-L$.
 We want to measure these differences and see how "far" $x$ is from the value $L$ that we want to find. So, we divide it to have a more "normalized" value or ratio:
-$O(x)=\frac{D(x)}{d(x)}$. We call this our measured quantity, the objective function. Objective function can have arbitrary output, but it should tell us 
+$O(x)=\frac{D(x)}{d(x)}$. We call this our measured quantity, the objective function. Objective function can have arbitrary output, but it should tell us
 how close it is to our target objective value. In our case, our objective is to get as close as possible to $O(L)$.
 
 You might be thinking what good this will be? Well, now, I can show you where the magic happens. If we look at our objective function, it looks really similar to a derivative! Surprising!
-Let's make it a derivative. To justify it, we say that we variate $x$ as close to $L$ as possible, but not get passed it (because if we pass it, we get divergent output). 
+Let's make it a derivative. To justify it, we say that we variate $x$ as close to $L$ as possible, but not get passed it (because if we pass it, we get divergent output).
 So the limit is increasing from the left.
 
 $$
@@ -151,9 +158,9 @@ $$
 \ln{(a)} a^x = F'(0,x)
 $$
 
-Now, mind you, this equation only valid around $x=L$. This is not useful unless we made a connection to something else. 
-The great news is, we do happen to know the value of the derivative when $x=L$! How lucky are we? A derivative of $F(0,x)$, which is $F'(0,x)$ is a function that 
-corresponds to the tangent of $F(0,x)$ graph. Our function have a special property, no matter what $a$ we choose, it will converge to a value $L$. 
+Now, mind you, this equation only valid around $x=L$. This is not useful unless we made a connection to something else.
+The great news is, we do happen to know the value of the derivative when $x=L$! How lucky are we? A derivative of $F(0,x)$, which is $F'(0,x)$ is a function that
+corresponds to the tangent of $F(0,x)$ graph. Our function have a special property, no matter what $a$ we choose, it will converge to a value $L$.
 When it converges, no matter how many times $L$ are given as input to the function, it will always produce $L$ again. Which is the equality that we have before,
 $a^L=L$. If we have 2D graph, the function converges to a point $(L,a^L)=(L,L)$.
 
@@ -167,19 +174,19 @@ $$
 It conveniently reduce to 1 because nominator and denominator have equal value.
 
 You might not be satisfied with this intuition. Unfortunately I'm weak at formal proof, hahaha. But another reasoning can be derived if you think that the derivative of $F(0,x)$ can vary.
-First hint, we know that if $x<L$ the tangent line has to keep increasing, so that the function can recursively get closer to $L$, by logic alone. This means, in the entire range of $x$, 
+First hint, we know that if $x<L$ the tangent line has to keep increasing, so that the function can recursively get closer to $L$, by logic alone. This means, in the entire range of $x$,
 the derivative has to always increase, but somewhat stop increasing in $x=L$. However, due to the nature of the function, for $x>L$, it has to have a drastic steep tangent/slope so that the function can't converge (it always increase in rapid stride). This is the second hint.
 
-You might be thinking that: 
+You might be thinking that:
 
 > "Meh, it's a tangent, so let's just divide function output by input, we get $\frac{a^L}{L}=1$. The tangent is 1".
 
-While we got the same result, the logic 
+While we got the same result, the logic
 has a flaw because it's just an average tangent from 0 to $L$ and we only got lucky because the function $a^x$ doesn't have any constant in it.
 
-The correct reasoning, is to understand **why** the function decided to suddenly increase the slope when $x$ gets past $L$. Something is happening at $L$. For the function to drastically increase, 
-that means the first derivative has to drastically increase. But, for the first derivative to drastically increase, the second derivative has to drastically increase too. We can keep this going, 
-until the $n$-th derivative, even to infinity. But wait, before it got past $L$, it converges, it just means a simple fact that at the $n$-th derivative, that derivative is simply *ZERO*.
+The correct reasoning, is to understand **why** the function decided to suddenly increase the slope when $x$ gets past $L$. Something is happening at $L$. For the function to drastically increase,
+that means the first derivative has to drastically increase. But, for the first derivative to drastically increase, the second derivative has to drastically increase too. We can keep this going,
+until the $n$-th derivative, even to infinity. But wait, before it got past $L$, it converges, it just means a simple fact that at the $n$-th derivative, that derivative is simply _ZERO_.
 
 The $n$-th derivative of $F(0,x)=a^x$ is just (conveniently) $F'^n(0,x)=\ln{(a)}^n a^x$. The deciding factor is to understand that for it to be 0, it must be that $\ln{(a)}<1$. Because, otherwise if $\ln{(a)}$ greater than 1, the compounding effect will make sure that $\ln{(a)}^n$ goes to infinity. We then deduce a very simple result, the very first derivative itself must be less than one. Which is the same with what we found earlier.
 
@@ -239,10 +246,9 @@ $$
 L \leq e
 $$
 
-Interesting, we have two inequality now with clear value and free of $L$. 
+Interesting, we have two inequality now with clear value and free of $L$.
 Combine this and reorder. With the fact that $1 \le a \le e$, it just means that $\frac{1}{\ln{(a)}}$ has to be the upper bound of $L$
 if we want all of these to actually makes sense and consistent. The combined equality becomes (we can then later kick $L$ out of the inequality):
-
 
 $$
 L \leq e \leq \frac{1}{\ln{(a)}} \\
@@ -252,8 +258,8 @@ $$
 
 Oh boy, now we found the more strict version of the upper bound, which is $e^{\frac{1}{e}}$, or more conveniently written in the tweet as $\exp({\frac{1}{e}})$.
 
-If we trace back the steps, they seems to consists of several magic tricks. How can we even know that the solution exists (and elegant) from the beginning? This doesn't seems to be a reliable 
-problem solving method. Hahaha. I get it that math are beautiful poetry, but in practice, we want a reliable and generic way to solve problem, and not relying of 
+If we trace back the steps, they seems to consists of several magic tricks. How can we even know that the solution exists (and elegant) from the beginning? This doesn't seems to be a reliable
+problem solving method. Hahaha. I get it that math are beautiful poetry, but in practice, we want a reliable and generic way to solve problem, and not relying of
 any "genious" trick that math plebs can't figure out from their own. I mean, not everyone of us is Gauss.
 
 This begs the second part of the article, which explore how even a mere mortal like me can even glimpse at the final solution.
@@ -270,7 +276,6 @@ a^x = a^{a^x} \\
 x = a^x
 $$
 
-
 We got the above result by comparing the exponent, because we are using the same base $a$.
 
 Next, as I said before, solving for $x$ will be possible, although difficult. We then weigh several options. I listed it here (it can become your source of inspiration for other approach):
@@ -281,7 +286,7 @@ Next, as I said before, solving for $x$ will be possible, although difficult. We
 
 No #3, is a big no, because I don't have that much time to guess at it. Ain't got time to do full-time math job.
 
-No #1 will provide a better way of understanding the problem, because it will have a clear picture of why does it converges. But again, let's leave that for the pro mathlete. We just 
+No #1 will provide a better way of understanding the problem, because it will have a clear picture of why does it converges. But again, let's leave that for the pro mathlete. We just
 want to poke around.
 
 No #2 seems to be a good candidate because we can quickly check it if it is valid.
@@ -294,7 +299,7 @@ x = a^x \\
 1 = \ln{(a)} a^x
 $$
 
-Hold up, these seems dodgy because the left hand side's derivative is simply 1. Which means we are comparing $a^x$ function with a straight line! What does that even mean? Anyway, we have no 
+Hold up, these seems dodgy because the left hand side's derivative is simply 1. Which means we are comparing $a^x$ function with a straight line! What does that even mean? Anyway, we have no
 time (yet) to provide the justifications. Just assume the universe let this be true. What happens now, is we can substitute (conveniently, strange) $a^x$ from both equation. We immediately got
 $x=\frac{1}{\ln{(a)}}$. Then continue substituting $x$ with the second equation $1 = \ln{(a)} a^x$ will lead us to:
 
@@ -307,12 +312,11 @@ $$
 Now that I knew the solution exists. I just have to trace back and justify the proof. I'm quite surprised myself that the upper bound of $a$ doesn't depend on any variable.
 As long as $a$ is within that range, the recursive function **will** converges eventually. Very interesting.
 
-
 # So, now how to compute the convergent value?
 
 We already established the fact that the final convergent value $L$ is only depends on $a$ from this equation $a^L=L$. Knowing what the value **is**, however, is entirely different problem.
 
-First, just to emphasizes, even though we have relation $x=\frac{1}{\ln{(a)}}$, that doesn't mean $L=\frac{1}{\ln{(a)}}$. The equation above is for calculating the upper bound of $a$. But $a$ 
+First, just to emphasizes, even though we have relation $x=\frac{1}{\ln{(a)}}$, that doesn't mean $L=\frac{1}{\ln{(a)}}$. The equation above is for calculating the upper bound of $a$. But $a$
 itself can be less than that, consequently making $L$ different. That equation above only valid for $a=\exp({\frac{1}{e}})$, which in turns make $L=e$.
 
 To find the value $L$ for any $a$ within convergence radius, currently we only have one equation. To be honest, I was happen to know about the [Lambert-W function](https://en.wikipedia.org/wiki/Lambert_W_function), so I can figure out a hint. We can use this to solve this equation. The catch is, Lambert-W is not an elementary function.
@@ -334,7 +338,7 @@ $$
 we^w=z
 $$
 
-Using this definition, we are going to move backwards. We pretend that we can calculate $W(z)$ then manipulate the inverse equation so that we can substitute $W(z)$. 
+Using this definition, we are going to move backwards. We pretend that we can calculate $W(z)$ then manipulate the inverse equation so that we can substitute $W(z)$.
 That's basically the plan.
 
 ## Solve using Lambert-W
@@ -348,7 +352,7 @@ a^L=L \\
 z = we^w
 $$
 
-We now get that $z=-\ln{a}$ and $w=-L\ln{a}$. We are now going to assume that $\ln{a}$ is in a complex domain. Meaning that our equation will also cover 
+We now get that $z=-\ln{a}$ and $w=-L\ln{a}$. We are now going to assume that $\ln{a}$ is in a complex domain. Meaning that our equation will also cover
 the values of $a \leq 0$ for complex logarithm function. Using Lambert-W we separate the variable:
 
 $$
@@ -363,9 +367,9 @@ can returns multiple output depending on the $k$ argument. But because $L$ has t
 
 Since Lambert-W have some special properties. We get some of the facts for free because of the already established theorems.
 
-First fact, since we are dealing with only real positive values of both $a$ and $L$, the input of $W(z)$ 
-can be guessed to come from the domain that made the principal branch of $W(z)$ to be available. 
-If the input of $W(z)$ greater than $-\frac{1}{e}$, we are using Lambert-W with $k=0$. 
+First fact, since we are dealing with only real positive values of both $a$ and $L$, the input of $W(z)$
+can be guessed to come from the domain that made the principal branch of $W(z)$ to be available.
+If the input of $W(z)$ greater than $-\frac{1}{e}$, we are using Lambert-W with $k=0$.
 $W_0(z)$ have radius of convergence $\frac{1}{e}$. From this information alone, we can derive
 the fact that the upper bound of $a$ has to be $\exp{(\frac{1}{e})}$. Pretty quick, eh?
 
@@ -397,17 +401,17 @@ $$
 For the second line, note that the sign in the left side now depends on the sign of $-\ln{a}$. $W(z)$ switch signs the same way as $z$. Thus, grouping it like that making sure the inequality doesn't change sign.
 
 You probably need to do some mental gymnastic for the last part if you're not familiar. We basically have to say:
-pick $z$ such that the $W(z)$ greater than 0. Since $W(0)=0$ and the function increases. That means the lower bound of $z$ is 0. The upper bound of $a$ thus becomes 1, 
+pick $z$ such that the $W(z)$ greater than 0. Since $W(0)=0$ and the function increases. That means the lower bound of $z$ is 0. The upper bound of $a$ thus becomes 1,
 i.e $a \le 1$.
 
 Let's stop again for a moment and digest it. We are a little bit confused. We already described that the upper bound of $a$ is $\exp{(\frac{1}{e})}$,
 but now we have a result that the upper bound $a$ is $1$. Something is wrong here and I don't know what it is :p.
 
-I can only guess that there is a branching point (because $W(z)$ can have multiple output) when $a=1$. At that point the value of $L$ trivially becomes $1$ by definition. 
+I can only guess that there is a branching point (because $W(z)$ can have multiple output) when $a=1$. At that point the value of $L$ trivially becomes $1$ by definition.
 But it's not possible to calculate it directly using above closed form, since $L$ becomes zero by zero division. You had to take the limit.
 
 Consequently, when $0 \le a \le 1$, $L$ has to be some small value and decrease as $a$ decrease, then becomes undefined when $a=0$. At this moment, the $z$ interval
-becomes $0 \le z \le \infty$, which can be quite big. The closed form says it converging to a small value of $L$, but if we take the value procedurally using 
+becomes $0 \le z \le \infty$, which can be quite big. The closed form says it converging to a small value of $L$, but if we take the value procedurally using
 recursive definition at the beginning, any base $a$ exponentiated into a small value of $L \approx 0$, will cause the output to approach $1$. In the next
 iteration, a small base of $a$ exponentiated into a value of $L \approx 1$, will cause the output to approach the base again. So we have an alternating value
 of nearly $1$ and nearly $0$ that made it not possible for $L$ to converge, recursively. But, the closed form function will only consider the smaller one.
@@ -422,19 +426,19 @@ To calculate $W_0(z)$ numerically, we can use Taylor series to arbitrary precisi
 
 FYI, I didn't test all edge cases in the following widget. Basically, we expect to get a result as long as $a$ is within bounds.
 
-The bounds that I refer to is the bounds that applies to the principal branch of Lambert-W. I only implement that one, so the bounds 
+The bounds that I refer to is the bounds that applies to the principal branch of Lambert-W. I only implement that one, so the bounds
 are $\exp{(\frac{1}{e})} \geq a \geq \exp{(-\frac{1}{e})}$. Other than that, it's not guaranteed that the Taylor series I implemented can converge.
 
 The widget below works by calculating L directly using Lambert-W function. The Lambert-W function is calculated using Taylor series.
 
-Because Lambert-W works in complex domain, we convert it's input into a complex number. We limit our implementation by truncating the 
-terms when the real part of term is lower then accepted epsilon, which means further terms will not significantly adds up. 
-Due to how complex number behaves, it will always have real and imaginary part for each terms. The imaginary parts will rotate 
-for each term. However we want to make sure the final sum of the imaginary parts gets as close to 0 as possible to consider 
+Because Lambert-W works in complex domain, we convert it's input into a complex number. We limit our implementation by truncating the
+terms when the real part of term is lower then accepted epsilon, which means further terms will not significantly adds up.
+Due to how complex number behaves, it will always have real and imaginary part for each terms. The imaginary parts will rotate
+for each term. However we want to make sure the final sum of the imaginary parts gets as close to 0 as possible to consider
 the output to be real. When the final sum has significant imaginary unit, more than epsilon, then we consider it to "diverge".
 Diverge here is in the sense the $L$ value is not pure real number. It actually has value (converge) in the sense of complex domain (analytical).
 
-import { LConvergenceForm } from "./widget.jsx"
+import { LConvergenceForm } from './widget.jsx'
 
 <LConvergenceForm client:only="react">
   <div aslabel="input">
@@ -459,13 +463,12 @@ import { LConvergenceForm } from "./widget.jsx"
 
 <div aslabel="output">
 
-  Direct calculation of output $L$
+Direct calculation of output $L$
 
 </div>
 
 <div aslabel="converge">Is it converging?</div>
 </LConvergenceForm>
-
 
 # Wrapping Up and Conclusion
 

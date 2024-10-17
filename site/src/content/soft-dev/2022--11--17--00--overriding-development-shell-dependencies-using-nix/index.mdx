@@ -2,7 +2,7 @@
 layout_name: blog-post
 title: Overriding development shell's dependencies using Nix
 category:
-    name: soft-dev
+  name: soft-dev
 description: A short walkthrough on troubleshooting Nix dependencies for devshell
 date: 2022-11-17T00:00:00.00Z
 ---
@@ -10,7 +10,7 @@ date: 2022-11-17T00:00:00.00Z
 I wanted to write an article in this blog after I left it for a while.
 This blog is written using GatsbyJS (a Headless-CMS), so I cloned the repo to my computer.
 
-I immediately run `yarn install`. But it doesn't found yarn or node. 
+I immediately run `yarn install`. But it doesn't found yarn or node.
 I forgot that I was using a different laptop. To avoid similar problem in the future,
 I decided to make a nix recipe for this repo.
 
@@ -20,16 +20,16 @@ I used Nix for my devops works to pin CLI dependencies, so it can be reproducibl
 But, I'm not really familiar with Javascript stack, like Webpack, Babel, Yarn, etc.
 So, I never considered to make a Nix recipe for this.
 
-Standard Nix development setup usually requires you to define `default.nix` and `shell.nix` file 
-in the root directory of your project. If you have [direnv](https://direnv.net), then you can hook 
-Nix shell. This way, whenever you `cd` into your project directory, your shell automatically 
+Standard Nix development setup usually requires you to define `default.nix` and `shell.nix` file
+in the root directory of your project. If you have [direnv](https://direnv.net), then you can hook
+Nix shell. This way, whenever you `cd` into your project directory, your shell automatically
 switched to `nix-shell`, which will contain your development dependencies.
 
-As of today, Nix has reached version 2.11 which includes experimental support for 
+As of today, Nix has reached version 2.11 which includes experimental support for
 reproducible build environment called Nix Flakes. You need to enable it first to use it.
 The usage is quite widespread now. Since Nix Flakes and Nix itself doesn't tamper each other,
-generally it is safe to try it out, even if it is labeled "experimental". The thing 
-about Nix and Nix Flakes is that you can easily rollback if you mess up. Or you can 
+generally it is safe to try it out, even if it is labeled "experimental". The thing
+about Nix and Nix Flakes is that you can easily rollback if you mess up. Or you can
 even pin Nix Flakes dependencies. So there is no real risk of making your setup broke.
 
 So, let's try Nix Flake
@@ -69,12 +69,12 @@ is what I created initially
 }
 ```
 
-I'm tracking a `nixpkgs-unstable` repo. Despite the scary name `unstable`, 
-in my opinion it was stable in some sense. If you install a package, the source 
+I'm tracking a `nixpkgs-unstable` repo. Despite the scary name `unstable`,
+in my opinion it was stable in some sense. If you install a package, the source
 hash will be pinned, so it will always be reproducible.
 
 Next, I need `node` and `yarn`. The usual way is to define `outputs` that produce
-a development shell. However, recently I noticed that [Numtide](https://numtide.com) created another 
+a development shell. However, recently I noticed that [Numtide](https://numtide.com) created another
 experimental project called [devshell](https://github.com/numtide/devshell).
 I decided to play around with this.
 
@@ -115,24 +115,24 @@ Anyway. I configured my original flake into:
 ```
 
 To explain it bit by bit. I used `flake-utils` input, because originally
-Nix Flake requires you to define flake for each systems separately. 
-So you can have lists of packages for `x86_64-linux` (normal Linux) and 
+Nix Flake requires you to define flake for each systems separately.
+So you can have lists of packages for `x86_64-linux` (normal Linux) and
 `x86_64-darwin` (intel MacOS) separately.
 
 Since `nodejs` package provided by Nix is already cross-platform configured,
-I'm using flake-utils to automatically define the same package for both 
+I'm using flake-utils to automatically define the same package for both
 of these systems.
 
-For each system, I defined `devShell`, an output key for Nix flake to 
+For each system, I defined `devShell`, an output key for Nix flake to
 make a development shell, previously known as `shell.nix`.
 
-The definition of the `devShell` comes from the utils provided by Numtide's 
-devshell: `pkgs.devshell.mkShell`. Actually they also provide a way to 
-import the definition using TOML files. But I don't need that since I want 
+The definition of the `devShell` comes from the utils provided by Numtide's
+devshell: `pkgs.devshell.mkShell`. Actually they also provide a way to
+import the definition using TOML files. But I don't need that since I want
 to define it using Nix language.
 
 So this is the bare minimum. To test it, run `nix develop` on the directory.
-If you are inside a git repo, make sure to git add the `flake.nix`, because 
+If you are inside a git repo, make sure to git add the `flake.nix`, because
 nix flake only process changes that is already been added.
 
 ![](./P1.png)
@@ -149,9 +149,9 @@ pkgs.devshell.mkShell {
 }
 ```
 
-If I `nix develop` again, I will have `node` and `yarn` 
+If I `nix develop` again, I will have `node` and `yarn`
 executables. However, devshell README.md page recommends us to
-declare the CLI in the `commands` keys. So we change it again 
+declare the CLI in the `commands` keys. So we change it again
 like this.
 
 ```nix
@@ -170,12 +170,12 @@ pkgs.devshell.mkShell {
 }
 ```
 
-This has the same effect, but when you enter the shell, it will 
+This has the same effect, but when you enter the shell, it will
 lists all the available commands. Very neat, I must say.
 
 # Declaring shell's environment variables
 
-After getting node and yarn, I ran `yarn install` to install my 
+After getting node and yarn, I ran `yarn install` to install my
 node modules. Then I run `yarn develop`, but yarn crashed.
 
 Oops, what did I do wrong?
@@ -186,13 +186,13 @@ I see a significant error message:
 error: error:0308010c:digital envelope routines::unsupported
 ```
 
-Seems like an openssl thing, based on the error format. A quick 
+Seems like an openssl thing, based on the error format. A quick
 google proved me right. I then found this [stackoverflow link](https://stackoverflow.com/questions/69692842/error-message-error0308010cdigital-envelope-routinesunsupported).
 
 Basically it says that node can't work with the recent openssl.
-It suggests to add a `NODE_OPTIONS=--openssl-legacy-provider` in 
-the environment variables. We can do that easily with Nix 
-devShell as a shellHook. But, Numtide's devshell allow us to 
+It suggests to add a `NODE_OPTIONS=--openssl-legacy-provider` in
+the environment variables. We can do that easily with Nix
+devShell as a shellHook. But, Numtide's devshell allow us to
 declare it as attrset.
 
 ```nix
@@ -218,7 +218,7 @@ pkgs.devshell.mkShell {
 ```
 
 The error is gone. But I got another error when running `yarn 
-develop`. For some reason Webpack/Babel unable to generate my 
+develop`. For some reason Webpack/Babel unable to generate my
 `gatsby-plugin-postcss` output.
 
 I'm super noob in Javascript, so I could not debug it further.
@@ -229,7 +229,7 @@ But why I'm stuck in this rabbit hole???
 
 I remembered that my site worked when I am using Node v14.
 So, I decided to change node version. It's quite easy with Nix.
-Especially when the nixpkgs repo already prepare a package 
+Especially when the nixpkgs repo already prepare a package
 definition for Node v14 themselves.
 
 Using the new Nix flake based command, I searched the package:
@@ -256,10 +256,10 @@ Rebuilding the flake, and I can see the version is indeed 14, using `node --vers
 
 But Gatsby still produce the same error... What else were wrong?
 
-After thinking about it a little. I remembered that `yarn` was 
-supposed to wrap `node`. So it is possible that the `node` used 
+After thinking about it a little. I remembered that `yarn` was
+supposed to wrap `node`. So it is possible that the `node` used
 in my shell and the `node` used internally by `yarn` is different.
-After all, with Nix, that is exactly the idiomatic and suggested way 
+After all, with Nix, that is exactly the idiomatic and suggested way
 to have complete independent package description.
 
 To test the idea, I run `yarn node --version`. It outputs a version 18.
@@ -298,9 +298,9 @@ After rebuilding the flake, `yarn node --version` correctly says version 14.
 
 But we hit another problem now. `NODE_OPTIONS=--openssl-legacy-provider` options doesn't exists yet in Node 14. Node is complaining.
 
-Then it occured to me, can we just use OpenSSL v1 instead of OpenSSL v3 (the new one) for node 14? 
+Then it occured to me, can we just use OpenSSL v1 instead of OpenSSL v3 (the new one) for node 14?
 
-So we override the attribute again. Repeating the same process, 
+So we override the attribute again. Repeating the same process,
 I can see that `nodejs` package accepts `openssl` package as
 attribute set parameters. That means we can provide OpenSSL v1.
 By searching the package using `nix search nixpkgs openssl`.
@@ -330,7 +330,7 @@ I also used the same method for the `node` commands.
 }
 ```
 
-Since both were supposed to use the same nodejs version, I define a new variable to avoid mistake 
+Since both were supposed to use the same nodejs version, I define a new variable to avoid mistake
 on having to change it in just one place in the future.
 Basically, we will use DRY principle.
 
@@ -407,7 +407,7 @@ This will make direnv look for `flake.nix` and activates it whenever my shell is
 
 Things that made Nix Flake very compelling is that you can use the same flake shared by others.
 
-In this example, I made a Nix flake to 
+In this example, I made a Nix flake to
 describe devShell. I shared it in my github repo. Since it is publicly available, you can test it out.
 
 You can `cd` into an empty directory, for example `/tmp/test`.
@@ -428,16 +428,16 @@ These will be stories for another day.
 
 # Summary
 
-After a little bit of roundtrip, we finally able to provide a 
+After a little bit of roundtrip, we finally able to provide a
 devshell using Nix, Devshell, and Direnv.
 
-I believe the journey and stories to get here 
-is probably useful for new tinkerer when 
+I believe the journey and stories to get here
+is probably useful for new tinkerer when
 trying out Nix.
 
 Feel free to look at this example flake I used in [this blog's repo](https://github.com/lucernae/maulana.id/blob/main/flake.nix)
 
-I didn't dive in further to pin the node dependencies. I'm not 
+I didn't dive in further to pin the node dependencies. I'm not
 familiar with node js, so this is suffice.
 
 I also proceed to do what I wanted to do earlier, which is writing a new article...

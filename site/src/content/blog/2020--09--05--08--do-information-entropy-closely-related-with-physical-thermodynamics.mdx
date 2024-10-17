@@ -3,7 +3,7 @@ layout_name: blog-post
 title: Do information entropy closely related with physical thermodynamics?
 description: Surely the resemblance in formula is not a coincidence?
 category:
-    name: blog
+  name: blog
 date: 2020-09-05T08:05:13.758Z
 ---
 
@@ -27,7 +27,7 @@ Let's imagine a box with air. It will have so many molecules, let's just say N o
 
 The air inside the box will have air pressure P. This is a macroscopic quantity because it is attributed to the whole group of air inside the box, not individual air. Together, pressure and volume, we can have a direct relationship to calculate the internal energy of the air, because it is proportional. Thus there should be some kind of relationship between individual energy of the molecules with the energy that we directly measure.
 
-Naturally, given N number of molecules, we expect some kind of statistical distribution for the energy level of each molecules. To think about this easily. If we have 4 number of molecules with a range of energy level between 0 (the molecule is not moving) to some $$E_{max}$$, the maximum energy level a molecule can have, then it may happen that 1 molecule have 0 energy, 2 molecule have 1 Joule of energy, and 1 molecules have 2 Joule of energy. For this kind of arrangements, we can associate average energy of this system. One such way to calculate that is just to have the total energy of the system divided by total number of molecules. 
+Naturally, given N number of molecules, we expect some kind of statistical distribution for the energy level of each molecules. To think about this easily. If we have 4 number of molecules with a range of energy level between 0 (the molecule is not moving) to some $$E_{max}$$, the maximum energy level a molecule can have, then it may happen that 1 molecule have 0 energy, 2 molecule have 1 Joule of energy, and 1 molecules have 2 Joule of energy. For this kind of arrangements, we can associate average energy of this system. One such way to calculate that is just to have the total energy of the system divided by total number of molecules.
 
 If we plot the graph of energy level in x axis and number of particles that have said energy levels, we will get something that we can call the spectral density graph of energy. It is essentially a statistical distribution. If we imagine that the universe is **fair**, there is no reason for god to favor for one particle only, so each particle can have equally the same chance to have a certain energy level. This means the spectral graph can be a probability distribution!
 
@@ -41,7 +41,7 @@ $$
 
 With $$p_i$$ is the probability of a given microstate $$i$$ occurs for a certain energy level $$E_i$$. For classical thermodynamics situation, it just reduce to our previous entropy definition and the microstates probability terms are simplified to just W.
 
-Now, in computer science there is an entirely different concept gets introduced in this field. It was called **Shannon information quantity**.  When I first saw it, I had a huge mindblown moment. It is talking about different thing. A different concept yet the formula looks **exactly** the same.
+Now, in computer science there is an entirely different concept gets introduced in this field. It was called **Shannon information quantity**. When I first saw it, I had a huge mindblown moment. It is talking about different thing. A different concept yet the formula looks **exactly** the same.
 
 $$
 H = - \sum_i p_i \log_b p_i
@@ -53,7 +53,6 @@ So why does two different concept use the same formula? Maybe they are closely r
 
 But, mind you, one important factor of why I think this is really cool is the possibility of more deeper connections. We used to think that arrangements of physical objects contains information. But what about the other way around? Can it be that physical phenomenon emerges from encoded information and they are just one and the same thing?
 
-
 # The derivation of the Information Entropy
 
 I learned about physical entropy way before I knew about Shannon's definition of information entropy. The physical derivation of entropy is lengthy and contains many physical terms such as microstate/macrostate, pressure, volume, internal energy, etc. In contrast with that, information entropy (IMHO) can be derived and deduced easily from first principle. It is very elegant and based on pure math modelling. It is really surprising for me that such different derivation results in the same formula.
@@ -63,7 +62,6 @@ The physical derivation might be difficult to follow for people unfamiliar with 
 We start by familiarizing ourselves with what does **information** and **data** really means. In layman's terms, data is a collection of quantity. Meanwhile, information is how we interpret data. Information can change depending on how much data we have. For example, in dry season, we knew that it is less likely to rain. So based on past historical data, the chance of tomorrow will be raining in dry season is very low. Our information concludes that tomorrow is not likely to rain. However, it turns out that tomorrow is raining hard. That means we have new data. Our information changes because the new data is **interesting** (because it's raining despite the probability is low). If after that we have a week straight of rain, that means we have to change our information. There must be something going on horribly wrong in climate change to cause this. This is such example.
 
 But the explanation above is a qualitative explanation. We need something that can be quantitatively measure, things to predict, etc. We want to create a mathematical model that can fit with our concept of information. For this, we define 4 basic properties of information. This serves as the fundamental principle and base axioms.
-
 
 1. If an event has a low chance of happening, the information if we observe such event is more meaningful and impactful compared with information from high occurence event.
 
@@ -80,7 +78,6 @@ You can think about the sun like before. Or, for something more concrete, you kn
 4. Information is additive. If you receive new information from two independent events, that just means the informational value is added together.
 
 This might be less obvious, so think of it like this: If you have two different independent hobbies, you can enjoy both of them additively. There's no reason for you to force yourself to enjoy just one of them. Another way to think of it, is by seeing news. When you learn about some event in city A and city B from the news and those are independent events, then you have both information as if both happens at the same time.
-
 
 Now let's convert those statements into mathematical statements or models. Due to how often we rely on statistical event to define information. It is natural for us to choose statistical/probability as our mathematical language.
 
@@ -191,7 +188,6 @@ $$
 
 However, Boltzmann said there is no reason for particle to prefer specific energy level $E_i$. That means, every energy level are equally probable. So, if the process are given long enough time, it will reach thermal equilibrium where for every energy level $E_i$ it will use the same probability function. That means every $p_i$ is the same and the formula reduce to.
 
-
 $$
 H = -k \ln p
 $$
@@ -212,7 +208,7 @@ There are several different formulation exists, they are explained the same. The
 
 Note that for our system of ideal gas, the box and pressure stays the same (the box doesn't change). This means, the only macroscopic quantity corresponds with our average information is just the temperature. Because we assume that the act of observation corresponds to the transfer of information, that means the temperature that we observe changes. This will imply that there is a heat transfer.
 
-Let's conclude for now. Due to the pressure and volume remains the same, there is no work. That measn $\delta W = 0$. 
+Let's conclude for now. Due to the pressure and volume remains the same, there is no work. That measn $\delta W = 0$.
 
 There is a heat exchange. Because we transfer the information from the box to the observer, that means $\delta Q > 0$. This would also imply that some energy are transferred to the observer, thus the internal energy of the box decrease.
 
@@ -236,7 +232,7 @@ $$
 p = e^{-\frac{E}{kT}}
 $$
 
-Remember that probability distribution should sum over to 1. That means we should patch it with a normalizing factor $Z$. Where $Z$ is the value of total sum if we add up all different energy level available. 
+Remember that probability distribution should sum over to 1. That means we should patch it with a normalizing factor $Z$. Where $Z$ is the value of total sum if we add up all different energy level available.
 
 $$
 p = \frac{1}{Z} e^{-\frac{E}{kT}}

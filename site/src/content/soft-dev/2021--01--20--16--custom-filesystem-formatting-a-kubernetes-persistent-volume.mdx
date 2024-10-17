@@ -1,18 +1,18 @@
 ---
 layout_name: blog-post
 title: Custom filesystem formatting for kubernetes persistent volume
-description: "Hint: you need a block device driver first"
+description: 'Hint: you need a block device driver first'
 category:
-    name: soft-dev
+  name: soft-dev
 date: 2021-01-20T15:07:12.512Z
 ---
+
 # The Problem
 
 I encountered a rather specific problem. I have a tile caching container that produces lots of tile caches using [Mapproxy](https://mapproxy.org/). It uses 64k inodes while only using around 300 MB size of 1GB volume allocation. So, 70% space are wasted just because the inodes ran out. I tried to double the size and it seems the inodes were doubled. The problem still scale linearly. With 16GB volume size, we only have around 1 million inodes consumed, while only using around 5 GB size, again linear scale.
 
 **Note**
 If you are not familiar with what a tile cache is, it is basically a small patch of tile, square in shape, of PNG image type. But we have lots of them in order to serve a GIS layer efficiently without recomputing the layer.
-
 
 **Note**
 To check how many inodes available, run `df -hi`. It will show a table of inodes per device name.
@@ -34,7 +34,7 @@ From flipping thru the docs page, I found what I need from totally unrelated [ar
 To combine the approach, here's the gist:
 
 1. Log in to the node via ssh. We need root/sudo access. The node needs to be the node who have the replica of your PV.
-2. Find the name of your PV and the location of the Longhorn disk. 
+2. Find the name of your PV and the location of the Longhorn disk.
 
 To get the PV, simply use `kubectl get pv` command or figure it out by backtracking from your deployment to PVC to PV. The Longhorn disk location can be found from the Longhorn UI interface under the Nodes menu. By default it will be in /var/lib/longhorn
 
@@ -55,7 +55,7 @@ lsof /var/lib/longhorn/replicas/pvc-06b4a8a8-b51d-42c6-a8cc-d8c8d6bc65bc-d890efb
 The metadata is in `volume.meta` file of the replica directory.
 
 ```bash
-cat pvc-06b4a8a8-b51d-42c6-a8cc-d8c8d6bc65bc-d890efb2/volume.meta 
+cat pvc-06b4a8a8-b51d-42c6-a8cc-d8c8d6bc65bc-d890efb2/volume.meta
 # output:
  {"Size":1073741824,"Head":"volume-head-000.img","Dirty":true,"Rebuilding":false,"Parent":"","SectorSize":512,"BackingFileName":""}
 
@@ -73,7 +73,7 @@ docker run -v /dev:/host/dev -v /proc:/host/proc -v <data_path>:/volume --privil
 For example in our case above
 
 ```bash
-docker run -v /dev:/host/dev -v /proc:/host/proc -v /var/lib/longhorn/replicas/pvc-06b4a8a8-b51d-42c6-a8cc-d8c8d6bc65bc-d890efb2:/volume --privileged longhornio/longhorn-engine:v1.0.0 launch-simple-longhorn pvc-06b4a8a8-b51d-42c6-a8cc-d8c8d6bc65bc 1073741824 
+docker run -v /dev:/host/dev -v /proc:/host/proc -v /var/lib/longhorn/replicas/pvc-06b4a8a8-b51d-42c6-a8cc-d8c8d6bc65bc-d890efb2:/volume --privileged longhornio/longhorn-engine:v1.0.0 launch-simple-longhorn pvc-06b4a8a8-b51d-42c6-a8cc-d8c8d6bc65bc 1073741824
 ```
 
 **Note** The `launch-simple-longhorn` is not a container name, but rather the command name. Also make sure the engine image: `longhornio/longhorn-engine:v1.0.0` is the same with the engine your replica is using (can be seen from Longhron UI in Volume page).
@@ -92,7 +92,7 @@ You can do whatever you want with the block device, like mount it to your node. 
 sudo mkfs.ext4 -T <template> <device>
 ```
 
-To look at possible ext4 filesystem template, see `/etc/mke2fs.conf`. I opt to use `small` template, which is 128 inode block size,  and 1024 block size. This will give approximately 4MB per one inode ratio. The command example is like this:
+To look at possible ext4 filesystem template, see `/etc/mke2fs.conf`. I opt to use `small` template, which is 128 inode block size, and 1024 block size. This will give approximately 4MB per one inode ratio. The command example is like this:
 
 ```bash
 sudo mkfs.ext4 -T small /dev/longhorn/pvc-06b4a8a8-b51d-42c6-a8cc-d8c8d6bc65bc-d890efb2
@@ -100,8 +100,7 @@ sudo mkfs.ext4 -T small /dev/longhorn/pvc-06b4a8a8-b51d-42c6-a8cc-d8c8d6bc65bc-d
 
 8. Cleanup
 
-Once reformatting succeeded (destroying all the data inside). Stop the storage engine container using CTRL+C in it's shell. Then mount the PV to your pod. Now with 8GB volume size, I have 2 million inodes. 
-
+Once reformatting succeeded (destroying all the data inside). Stop the storage engine container using CTRL+C in it's shell. Then mount the PV to your pod. Now with 8GB volume size, I have 2 million inodes.
 
 # Conclusion/How do we know we solved the problem?
 

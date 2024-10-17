@@ -3,7 +3,7 @@ layout_name: blog-post
 title: Nix Flake Lock as your simple Git dependencies
 description: One lock file to rule them all. A case study for GatsbyJS.
 category:
-    name: soft-dev
+  name: soft-dev
 date: 2023-10-14T00:00:00.00Z
 ---
 
@@ -16,15 +16,15 @@ I think it would be wise to have a separate repo to tweak and test the version u
 write for the blogs in the meantime.
 
 After reading out about Gatsby, I decided that it is useful to extract out all non-content data to a seperate repo.
-This repo will then have Renovate bot updates the dependencies. I will also test build from there, because I can just include 
-small content for each use cases. Since my blogs already has several articles, it would be unwise and difficult to triage/bisect bugs 
+This repo will then have Renovate bot updates the dependencies. I will also test build from there, because I can just include
+small content for each use cases. Since my blogs already has several articles, it would be unwise and difficult to triage/bisect bugs
 on my own repo. I wouldn't know which component or article breaks the integration.
 
 So Gatsby docs recommends me to create a Gatsby Theme. I did just that. But the structure of the blogs becomes different.
 I had to use something called `yarn workspace`. I have two workspaces, first is the theme (I called it `gatsby-theme`), second is for the content and what will be actually deployed (I called it `site` workspace).
 
 After reading a little bit more, I realized that Gatsby is not very modular to handle custom sites.
-The "framework" expects the site API to be injected/implemented only at the `site` level. 
+The "framework" expects the site API to be injected/implemented only at the `site` level.
 So one site means you need to create `gatsby-node.js` and `gatsby-config.js` specifically catered for the site only.
 What I want/expect to do is to have the theme manage these settings so that my blog repo can just focus on the content,
 then listed the theme as JS dependency.
@@ -38,7 +38,7 @@ I ended up copying the `gatsby-theme` codes directly to my blog repo using Nix F
 Originally, Nix Flake were intended to pin dependencies of Nix Packages or Modules.
 But it can be used to pin the source code as well.
 
-If you see this blog git repo [flake.nix](https://github.com/lucernae/maulana.id/blob/main/flake.nix) file, 
+If you see this blog git repo [flake.nix](https://github.com/lucernae/maulana.id/blob/main/flake.nix) file,
 you can see that I listed the theme repo as an input.
 
 ```nix
@@ -59,11 +59,11 @@ you can see that I listed the theme repo as an input.
 }
 ```
 
-Any git URL treated as an input will be treated as input dependencies. 
+Any git URL treated as an input will be treated as input dependencies.
 So the hash and specific revisions (commits) of that input is stored in `flake.lock`.
 We call this **pinned** dependencies.
 
-Updating the dependencies means either you manually specify the revision hash/name in the input declaration, 
+Updating the dependencies means either you manually specify the revision hash/name in the input declaration,
 or you can update your rolling tag using `nix flake lock`.
 
 ```shell
@@ -72,11 +72,11 @@ nix flake lock --update-input gatsby-theme
 
 This only updates the input pointers. You need to actually use it.
 
-In my current case, since what I want to do is to just copy the source code from `gatsby-theme` to my repo, then no need to build 
+In my current case, since what I want to do is to just copy the source code from `gatsby-theme` to my repo, then no need to build
 anything using Nix. I just have to create a shortcut command to copy these source codes.
 
 I also uses [https://github.com/numtide/devshell](https://github.com/numtide/devshell) as shell helper.
-Nix Flake has its own customizable devShell (like nix-shell's `shell.nix` file). 
+Nix Flake has its own customizable devShell (like nix-shell's `shell.nix` file).
 But it's like a nuclear warhead for simple tasks. Numtide's devshell builds on top of Flake devShell by providing common structures people usually uses.
 
 I will highlight on the relevant part:
@@ -149,7 +149,7 @@ Well, I have two reason. The first one is that I don't want to publish my theme 
 Second, I've tried using yarn lock. It's confusing.
 
 When I used `yarn workspace`, it read the `package.json` declaration by my `gatsby-theme`, but it stores the `yarn.lock` in the root directory.
-So the lockfile doesn't actually get copied, sadly. It is possible that the `package.json` description is not strict enough, and 
+So the lockfile doesn't actually get copied, sadly. It is possible that the `package.json` description is not strict enough, and
 my blog and the theme ends up having two different lock files. Meanwhile, I want it to just works and reproducible.
 
 I have no solution for now, but I think in the future I will copy the root `yarn.lock` when doing `theme-update`.

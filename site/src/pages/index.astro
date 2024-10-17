@@ -16,39 +16,40 @@ const posts = await getPosts(MAX_POSTS)
 
 <BaseLayout title='Home'>
 	<TitlePage title="Maulana's Personal Blog" />
-    <div class="flex justify-start items-center gap-2">
-        <picture>
-        <Image src={avatar} width=64 height=64 alt={author?.name}/>
-        </picture>
-        <p>
-            Written by <strong>{author.name}</strong>
-            <br />
-            {author?.summary || null}
-            <br />
-            <a href={`https://twitter.com/${social.twitter}`}>
-            <img
-              alt="Twitter Follow"
-              src={`https://img.shields.io/twitter/follow/${social.twitter}?style=social`}
-            ></img>
-            </a>
-            <a href={`https://github.com/${social.github}`}>
-            <img
-              alt="GitHub followers"
-              src={`https://img.shields.io/github/followers/${social.github}?style=social`}
-            ></img>
-            </a>
-        </p>
-    </div>
-	<ListCategories />
-    <p>
-        Welcome to my personal blogs.
-        I write multiple things regarding works, hobby, and opinionated theme.
-    </p>
-	<div>
-		<h2 class='text-lg font-medium tracking-wide text-end'>Latest Posts</h2>
-		<ListPosts FirstBig={true} posts={posts} />
+	<div class='flex justify-start items-center gap-2'>
+		<picture>
+			<Image src={avatar} width='64' height='64' alt={author?.name} />
+		</picture>
+		<p>
+			Written by <strong>{author.name}</strong>
+			<br />
+			{author?.summary || null}
+			<br />
+			<a href={`https://twitter.com/${social.twitter}`}>
+				<img
+					alt='Twitter Follow'
+					src={`https://img.shields.io/twitter/follow/${social.twitter}?style=social`}
+				/></a
+			>
+		</p>
+		<a href={`https://github.com/${social.github}`}>
+			<img
+				alt='GitHub followers'
+				src={`https://img.shields.io/github/followers/${social.github}?style=social`}
+			/></a
+		>
 	</div>
 </BaseLayout>
+
+<ListCategories />
+<p>
+	Welcome to my personal blogs. I write multiple things regarding works, hobby, and opinionated
+	theme.
+</p>
+<div>
+	<h2 class='text-lg font-medium tracking-wide text-end'>Latest Posts</h2>
+	<ListPosts FirstBig={true} posts={posts} />
+</div>
 
 <script>
 	import { animate } from 'motion'

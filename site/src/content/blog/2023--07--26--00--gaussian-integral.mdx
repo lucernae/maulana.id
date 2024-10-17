@@ -3,7 +3,7 @@ layout_name: blog-post
 title: Gaussian integral
 description: Using symmetry to simplify problems
 category:
-    name: blog
+  name: blog
 date: 2023-07-26T00:00:00.00Z
 ---
 
@@ -13,8 +13,8 @@ So here it is, and hopefully a short article as well.
 
 # Gaussian integral as an introductary "integral" trick
 
-The integral is quite famous for being an example of an expression that doesn't have elementary indefinite form, but it does 
-converge to a certain value in the definite form. Moreover, the result involves $\pi$ which is usually related with 
+The integral is quite famous for being an example of an expression that doesn't have elementary indefinite form, but it does
+converge to a certain value in the definite form. Moreover, the result involves $\pi$ which is usually related with
 a circle.
 
 $$
@@ -54,7 +54,7 @@ just like a sum. This is known as [Fubini's Theorem](https://en.wikipedia.org/wi
 Step (3) to (4) is just circle identity we mentioned earlier.
 
 Now this equation becomes a double integral. In other words, it measures an area or volume with the function $e^{-r^2}$ as its density.
-The integral with respect to Cartesian coordinate $dx\,dy$ differentials can be integrated the same way using 
+The integral with respect to Cartesian coordinate $dx\,dy$ differentials can be integrated the same way using
 a polar coordinate with $r\,dr\,d\theta$ differentials. Technically, the conversion is done using Jacobian matrix.
 But we can accept it as fact for now.
 
@@ -82,19 +82,19 @@ We now understand that there is a circle symmetry at works, which is why the con
 An alternative way of interpreting Gaussian integral can be perceived using [Gauss's Law](https://en.wikipedia.org/wiki/Gauss%27s_law).
 
 If you haven't already know, an alternative of formulation for Coulomb's Law and Newton's Universal Gravitation is by using Gauss Law
-with spherical symmetry for constant electric flux. In the original derivation, it was known from observation/experimental results 
-that the magnitude of electric field from a point charge in vacuum is a constant $E$. 
+with spherical symmetry for constant electric flux. In the original derivation, it was known from observation/experimental results
+that the magnitude of electric field from a point charge in vacuum is a constant $E$.
 If we take the flux along a spherical area $\mathrm{d}\mathbf{A}$, we got:
 
 $$
 \begin{align}
-\Phi_E &= \oiint_{\mathrm{S}} \mathbf{E} \cdot \mathrm{d}\mathbf{A} = \frac{q}{\varepsilon_0} \\ 
+\Phi_E &= \oiint_{\mathrm{S}} \mathbf{E} \cdot \mathrm{d}\mathbf{A} = \frac{q}{\varepsilon_0} \\
 E\,4\pi r^2 &= \frac{q}{\varepsilon_0}\\
 E&= \frac{q}{4\pi\varepsilon_0 r^2}\\
 \end{align}
 $$
 
-If we observe above equation, we know that $E(r)$ is a function of $r$, and it measures the strength of the 
+If we observe above equation, we know that $E(r)$ is a function of $r$, and it measures the strength of the
 electric field. The above formulation has an equivalent expression using [divergence theorem](https://en.wikipedia.org/wiki/Divergence_theorem).
 
 $$
@@ -114,20 +114,20 @@ $$
 We can imagine that it is equivalent of a surface integral for a flat circle $S$, with $E$ is a vector field along the $z$ axis direction,
 so that it was integrated with parameter $dx\,dy$. So $E=e^{-r^2}$.
 
-Since a total flux of zero means there are no charge inside, we can imagine that if the boundary contains charge inside, then 
-we can choose a cylindrical shape. So we have two circle surface, and one surface wraps around the cylinder. Suppose that 
+Since a total flux of zero means there are no charge inside, we can imagine that if the boundary contains charge inside, then
+we can choose a cylindrical shape. So we have two circle surface, and one surface wraps around the cylinder. Suppose that
 field $\mathbf{E}$ is completely in the direction of $z$ axis, then the flux around the cylinder (along the $r$ direction) is zero.
 The total flux is then:
 
 $$
 \begin{align}
-\Phi_E &= \oiint_{\mathrm{S}} \mathbf{E} \cdot \mathrm{d}\mathbf{A} = \frac{q}{\varepsilon_0} \\ 
+\Phi_E &= \oiint_{\mathrm{S}} \mathbf{E} \cdot \mathrm{d}\mathbf{A} = \frac{q}{\varepsilon_0} \\
 &= 2 \int _{-\pi }^{\pi }\, d\theta \, \int _{0 }^{s }\frac{1}{2}e^{-s}\,ds \\
 &= 2 \pi (1 - e^{-r^2}) \\
 \end{align}
 $$
 
-What is interesting with above equation is that the total flux is capped at $2 \pi$ when $s$ is very large. 
+What is interesting with above equation is that the total flux is capped at $2 \pi$ when $s$ is very large.
 The total flux is proportional with the charge quantity contained inside the surface.
 
 If we follow along the divergence theorem, then equivalently we can construct the $\mathbf{E}$ field vector in cylindrical coordinate.
@@ -136,7 +136,7 @@ $$
 \mathbf{E} = e^{-r^2}\,\mathbf{\hat{z}}
 $$
 
-Interestingly, the divergence becomes zero this way because there are no $z$ parameter in $\hat{z}$ direction. Meanwhile if the total flux is non-zero 
+Interestingly, the divergence becomes zero this way because there are no $z$ parameter in $\hat{z}$ direction. Meanwhile if the total flux is non-zero
 then the divergence must be proportional to the density of the volume.
 
 If we inspect the flux equation in more detail, in order for the flux to not be zero then the sign of the vector must change.
@@ -160,8 +160,8 @@ e^{-r^2}\,sgn'(z) = \frac{\rho}{\varepsilon_0} \\
 \end{align}
 $$
 
-If we treat $\varepsilon_0$ as just a unit constant (to make sure the unit dimension is correct in electromagnetic theory), then 
-the general connection directly follows from divergence theorem that the density is the amount of charge contained in the cylindrical volume 
+If we treat $\varepsilon_0$ as just a unit constant (to make sure the unit dimension is correct in electromagnetic theory), then
+the general connection directly follows from divergence theorem that the density is the amount of charge contained in the cylindrical volume
 we decided earlier.
 
 Now if we consider a step function $sgn(z)$, we can intuitively imagine that the value of $sgn'(z)$ is zero everywhere, except around 0.
@@ -181,14 +181,14 @@ Combining both results confirms that $sgn'(z) = 2$ for some region near $z=0$.
 
 But the question then remains on how to formally express this region?
 
-Why there is such a strange connection from an entirely different perspectives? If we consider $e^{-r^2}$ as field vector that 
-penetrates an area, then calculate it using gaussian integral, we got a certain factor $2 \pi$. 
+Why there is such a strange connection from an entirely different perspectives? If we consider $e^{-r^2}$ as field vector that
+penetrates an area, then calculate it using gaussian integral, we got a certain factor $2 \pi$.
 This factor, coincidentally be the same factor needed in order for us to have the correct divergence, by the divergence theorem.
 
 In other words, the factor $\pi$ appears because on Divergence theorem we observed shows circular symmetry.
 Then since it is proportional to the surface integral (power of two), then the gaussian integral along one single axis/dimension is $\sqrt\pi$.
 
-Isn't it fascinating? If the distribution $\rho$ has a factor of $e^{-r^2}$, then total flux is $2\pi$, implying that the total amount 
+Isn't it fascinating? If the distribution $\rho$ has a factor of $e^{-r^2}$, then total flux is $2\pi$, implying that the total amount
 of charge contained inside the volume when $r$ goes to infinity, is $2\pi$. It doesn't care about the unit.
 
 If you are interested, you can also try using the same distribution, but apply it in all 3 axis.

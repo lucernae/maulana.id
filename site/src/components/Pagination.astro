@@ -1,10 +1,10 @@
 ---
 import ArrowLeft from './icons/ArrowLeft.astro'
 import ArrowRight from './icons/ArrowRight.astro'
-import { Pagination } from "@mui/material"
+import { Pagination } from '@mui/material'
 
 const { page } = Astro.props
-const pageCount = Math.ceil(page.total/page.size)
+const pageCount = Math.ceil(page.total / page.size)
 ---
 
 <div class='flex gap-5 md:gap-1 justify-around md:justify-end'>

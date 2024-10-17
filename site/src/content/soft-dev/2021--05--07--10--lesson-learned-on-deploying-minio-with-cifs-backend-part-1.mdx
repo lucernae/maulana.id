@@ -3,9 +3,10 @@ layout_name: blog-post
 title: Lesson learned on deploying Minio with CIFS backend. Part 1
 description: Spoilers. It's not a success story.
 category:
-    name: soft-dev
+  name: soft-dev
 date: 2021-05-07T08:51:06.091Z
 ---
+
 This is going to be my devops rant.
 
 I have a k8s cluster in Hetzner and managed by Rancher. The k8s distro I'm using is RKE. The default storage provisioner is Longhorn.io.
@@ -112,13 +113,13 @@ spec:
             claimName: minio-data
         - name: data-cifs
           flexVolume:
-            driver: "fstab/cifs"
-            fsType: "cifs"
+            driver: 'fstab/cifs'
+            fsType: 'cifs'
             secretRef:
-                name: "cifs-secret"
+              name: 'cifs-secret'
             options:
-                networkPath: "//server/share"
-                mountOptions: "dir_mode=0755,file_mode=0644,uid=1001,gid=1001"
+              networkPath: '//server/share'
+              mountOptions: 'dir_mode=0755,file_mode=0644,uid=1001,gid=1001'
 ```
 
 Note that in the above spec, I put `uid=1001,gid=1001` as the mount options because MinIO pod is using that security context as user with id/gid 1001/1001 and `fsGroup: 1001`.
@@ -127,8 +128,8 @@ Also, as you can see, I mount the CIFS share as a bucket inside `/data` director
 
 **HOWEVER** This doesn't work.
 
-Apparently, even though the CIFS share is mounted (yay!). 
-MinIO refuses to serve overlay mounts because it wants to control locks of the whole folder. 
+Apparently, even though the CIFS share is mounted (yay!).
+MinIO refuses to serve overlay mounts because it wants to control locks of the whole folder.
 Overlay mounts don't allow that. MinIO doesn't want to serve a folder that have a cross mount.
 
 # Conclusion
