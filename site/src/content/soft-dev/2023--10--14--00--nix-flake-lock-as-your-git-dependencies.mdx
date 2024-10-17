@@ -1,0 +1,158 @@
+---
+layout_name: blog-post
+title: Nix Flake Lock as your simple Git dependencies
+description: One lock file to rule them all. A case study for GatsbyJS.
+category:
+  name: soft-dev
+date: 2023-10-14T00:00:00.00Z
+---
+
+So, recently I decoupled this Gatsby Blog and extracted the main code into a separate repository
+[here: Gatsby Starter Lucernae](https://github.com/lucernae/gatsby-starter-lucernae)
+
+The reason I do this is because I'm not familiar enough with how Javascript manage its dependencies.
+In the past, I have my site broken and unable to be built just because I upgraded the Gatsby version and its plugin.
+I think it would be wise to have a separate repo to tweak and test the version upgrade, so I can still
+write for the blogs in the meantime.
+
+After reading out about Gatsby, I decided that it is useful to extract out all non-content data to a seperate repo.
+This repo will then have Renovate bot updates the dependencies. I will also test build from there, because I can just include
+small content for each use cases. Since my blogs already has several articles, it would be unwise and difficult to triage/bisect bugs
+on my own repo. I wouldn't know which component or article breaks the integration.
+
+So Gatsby docs recommends me to create a Gatsby Theme. I did just that. But the structure of the blogs becomes different.
+I had to use something called `yarn workspace`. I have two workspaces, first is the theme (I called it `gatsby-theme`), second is for the content and what will be actually deployed (I called it `site` workspace).
+
+After reading a little bit more, I realized that Gatsby is not very modular to handle custom sites.
+The "framework" expects the site API to be injected/implemented only at the `site` level.
+So one site means you need to create `gatsby-node.js` and `gatsby-config.js` specifically catered for the site only.
+What I want/expect to do is to have the theme manage these settings so that my blog repo can just focus on the content,
+then listed the theme as JS dependency.
+
+Since it was not possible, I ended up having this two workspace. But I don't want to manage it as submodule as well.
+I've used it in the past, and it's a pain because you can't patch changes in your own repo.
+I ended up copying the `gatsby-theme` codes directly to my blog repo using Nix Flake as the helper.
+
+# Nix Flake as Git source code dependency manager
+
+Originally, Nix Flake were intended to pin dependencies of Nix Packages or Modules.
+But it can be used to pin the source code as well.
+
+If you see this blog git repo [flake.nix](https://github.com/lucernae/maulana.id/blob/main/flake.nix) file,
+you can see that I listed the theme repo as an input.
+
+```nix
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
+    devshell.url = "github:numtide/devshell";
+
+    # flake location for the gatsby theme
+    gatsby-theme.url = "github:lucernae/gatsby-starter-lucernae";
+  };
+  outputs = { ... }: {};
+}
+```
+
+Any git URL treated as an input will be treated as input dependencies.
+So the hash and specific revisions (commits) of that input is stored in `flake.lock`.
+We call this **pinned** dependencies.
+
+Updating the dependencies means either you manually specify the revision hash/name in the input declaration,
+or you can update your rolling tag using `nix flake lock`.
+
+```shell
+nix flake lock --update-input gatsby-theme
+```
+
+This only updates the input pointers. You need to actually use it.
+
+In my current case, since what I want to do is to just copy the source code from `gatsby-theme` to my repo, then no need to build
+anything using Nix. I just have to create a shortcut command to copy these source codes.
+
+I also uses [https://github.com/numtide/devshell](https://github.com/numtide/devshell) as shell helper.
+Nix Flake has its own customizable devShell (like nix-shell's `shell.nix` file).
+But it's like a nuclear warhead for simple tasks. Numtide's devshell builds on top of Flake devShell by providing common structures people usually uses.
+
+I will highlight on the relevant part:
+
+```nix
+{
+    outputs = { self, nixpkgs, flake-utils, devshell, gatsby-theme, ... }:
+    flake-utils.lib.eachDefaultSystem (system: {
+      apps.devshell = self.outputs.devShell.${system}.flakeApp;
+      formatter = nixpkgs.legacyPackages.${system}.nixpkgs-fmt;
+      devShell =
+        pkgs.devshell.mkShell {
+          name = "maulana.id";
+          commands = [
+            {
+              name = "theme-upgrade";
+              command = ''
+                echo "updating flake lock"
+                nix flake lock --update-input gatsby-theme
+              '';
+            }
+            {
+              name = "theme-update";
+              command = ''
+                echo "copying gatsby-theme"
+                cp -Hrf ${gatsby-theme.outPath}/gatsby-theme .
+                chmod -R +w gatsby-theme
+                yarn
+                yarn --check-files
+              '';
+            }
+          ];
+        };
+    });
+}
+```
+
+I provided two additional commands `theme-upgrade` and `theme-update`.
+`theme-upgrade` updates the flake lock, while `theme-update` copied the source code from the pinned input.
+The command does this:
+
+```shell
+# Copy source code from the `gatsby-theme` inputs in the directory /gatsby-theme to current directory
+# This will also copy it into /gatsby-theme in the current directory
+cp -Hrf ${gatsby-theme.outPath}/gatsby-theme .
+# Flake input source in the nix store is read-only by default for security reasons
+# Modify it by addwing write flag for the copied files, so we can edit it in the future
+chmod -R +w gatsby-theme
+# Perform some yarn package update, since yarn locks will also changes.
+yarn
+yarn --check-files
+```
+
+These commands is available as commands from the shells.
+I also uses direnv, so the command is available only when I'm inside the directory.
+I can then just use the shortcuts
+
+```shell
+theme-upgrade
+theme-update
+```
+
+Just like you would with any normal executable.
+
+# Quirks of Javascript Packages
+
+You might wonder, since yarn itself has `yarn.lock`, why not just use yarn?
+
+Well, I have two reason. The first one is that I don't want to publish my theme to npm.
+Second, I've tried using yarn lock. It's confusing.
+
+When I used `yarn workspace`, it read the `package.json` declaration by my `gatsby-theme`, but it stores the `yarn.lock` in the root directory.
+So the lockfile doesn't actually get copied, sadly. It is possible that the `package.json` description is not strict enough, and
+my blog and the theme ends up having two different lock files. Meanwhile, I want it to just works and reproducible.
+
+I have no solution for now, but I think in the future I will copy the root `yarn.lock` when doing `theme-update`.
+This will integrate nicely with `renovate-bot` to maintain the dependencies.
+For the cloud build in netlify and GitHub action, mostly it wasn't necessary to do these because all these `node_modules` will be downloaded from scratch.
+Meanwhile, on local development, I had to clean it up first.

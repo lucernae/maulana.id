@@ -12,7 +12,7 @@ and its more fundamental relation to Fourier Uncertainty Principle.
 
 [Wikipedia Link](https://en.wikipedia.org/wiki/Fourier_transform#Uncertainty_principle)
 
-For the mathematical and more generic expressions of this uncertainty principle, we refer to a function 
+For the mathematical and more generic expressions of this uncertainty principle, we refer to a function
 $f(x)$. It's fourier transform is $\hat{f}(\xi)$. With $\sigma$ as the variance operator, then
 
 $$
@@ -110,17 +110,17 @@ Express the triangle as vectors and you got $\mathbf{r} = \mathbf{x} +\mathbf{y}
 So,
 
 $$
-{\displaystyle 
+{\displaystyle
 {\begin{alignedat}{4}
-    \|\mathbf {x} +\mathbf {y} \|^{2} &= \langle \mathbf {x} +\mathbf {y} ,\mathbf {x} +\mathbf {y} \rangle && 
+    \|\mathbf {x} +\mathbf {y} \|^{2} &= \langle \mathbf {x} +\mathbf {y} ,\mathbf {x} +\mathbf {y} \rangle &&
         \\ &= \|\mathbf {x} \|^{2}+\langle \mathbf {x} ,\mathbf {y} \rangle +\langle \mathbf {y} ,\mathbf {x} \rangle +\|\mathbf {y} \|^{2} ~&&~ {\text{ where }} \langle \mathbf {y} ,\mathbf {x} \rangle ={\overline {\langle \mathbf {x} ,\mathbf {y} \rangle }}
         \\ &= \|\mathbf {x} \|^{2}+2\operatorname {Re} \langle \mathbf {x} ,\mathbf {y} \rangle +\|\mathbf {y} \|^{2} &&
-        \\ &\leq \|\mathbf {x} \|^{2}+2|\langle \mathbf {x} ,\mathbf {y} \rangle |+\|\mathbf {y} \|^{2}&&\\&\leq \|\mathbf {x} \|^{2}+2\|\mathbf {x} \|\|\mathbf {y} \|+\|\mathbf {y} \|^{2}~&&~{\text{ using Cauchy-Schwarz}} 
+        \\ &\leq \|\mathbf {x} \|^{2}+2|\langle \mathbf {x} ,\mathbf {y} \rangle |+\|\mathbf {y} \|^{2}&&\\&\leq \|\mathbf {x} \|^{2}+2\|\mathbf {x} \|\|\mathbf {y} \|+\|\mathbf {y} \|^{2}~&&~{\text{ using Cauchy-Schwarz}}
         \\ &=(\|\mathbf {x} \|+\|\mathbf {y} \|)^{2} &&
 \end{alignedat}}
 } \\[8pt]
 
-{\displaystyle 
+{\displaystyle
 {\begin{alignedat}{4}
     \|\mathbf {r}\|^{2} &\leq (\|\mathbf {x} \|+\|\mathbf {y} \|)^{2} &&
     \\ \|\mathbf {r} \| &\leq \|\mathbf {x} \|+\|\mathbf {y} \| &&
@@ -138,7 +138,7 @@ If you represent the vectors as complex numbers, you can think of the operator a
 
 We generalize the ideas of vectors and complex numbers to have some rules on how to operate on complex numbers and its identities.
 
-Any triangle then can be represented by using two complex numbers. This is because two complex numbers will have two length (norm), 
+Any triangle then can be represented by using two complex numbers. This is because two complex numbers will have two length (norm),
 one notion of separation called "angle" between two of them. The remaining triangle side is taken from the operation of complex numbers,
 which can be addition or multiplication, depending on the context.
 
@@ -157,7 +157,7 @@ If I where to make an analogy, think of numbers as balls. We can pick and move o
 If we want to move many many balls, we need a container. A function can be thought of as this container where we put our balls, before we move it.
 We can just move the container to move all the balls. Lastly, a function transform can be thought of the shape of container.
 If we want to move the balls from one place to the other, it is easier to use box container.
-But, some operations are easier to do using different container shape. For example to roll all these balls 
+But, some operations are easier to do using different container shape. For example to roll all these balls
 all at once, it is easier to use a sphere container instead of boxes.
 
 [Fourier transform](https://en.wikipedia.org/wiki/Fourier_transform) is "function transform" with very specific rules. This transform applies for function that maps complex numbers to complex numbers.
@@ -170,8 +170,8 @@ $$
 {\displaystyle {\hat {f}}(\xi )=\int _{-\infty }^{\infty }f(x)\ e^{-i2\pi \xi x}\,dx.}
 $$
 
-What the transform is doing, is map **all** numbers in the set of complex numbers $x$ into an entirely 
-different set of complex numbers $\xi$. We have a change of variables by applying the transform, which is 
+What the transform is doing, is map **all** numbers in the set of complex numbers $x$ into an entirely
+different set of complex numbers $\xi$. We have a change of variables by applying the transform, which is
 a product of the function value with a complex rotation $e^{-i2\pi \xi}$, in which the value $\xi$ is the target map of the result of the integral over all $x$.
 
 So we get an entirely different function called "f-hat" $\hat{f}(\xi)$, in which it uses this "xi" $\xi$ as the parameter.
@@ -183,12 +183,12 @@ $$
 {\displaystyle f(x)=\int _{-\infty }^{\infty }{\hat {f}}(\xi )\ e^{i2\pi \xi x}\,d\xi }
 $$
 
-There are several proof and identities helping this Fourier transform definition. 
+There are several proof and identities helping this Fourier transform definition.
 The insights that we have using these rules is that:
 
 - A function $f$ and its Fourier transform $\hat{f}$ is basically the same thing but in a different form and domain.
 - Any operation that you do to an $\hat{f}$ has a corresponding operation in $f$
-- Any operation that you do to $\hat{f}$ will have the operation be appliead as well to $f$, and you can recover 
+- Any operation that you do to $\hat{f}$ will have the operation be appliead as well to $f$, and you can recover
   the applied operation by inverting the Fourier transform
 - Some operation is easier to do as $\hat{f}$ and some in $f$
 - Identities or rules in $\hat{f}$ means it also applies to $f$, even though it seems to be counter intuitive or bizarre.
@@ -231,10 +231,10 @@ It is possible to imagine or visualize how a function maps to another function, 
 However if we inspect further, what we are actually trying to manipulate is the $L_2$ norm. This is an absolute positive values without imaginary part.
 If we also only cares about the modulus $|z|$ and $|\xi|$, then we can reduce the number of axis we want to map from 8 to 4.
 
-The triangle then can be placed in the two plane. 
+The triangle then can be placed in the two plane.
 One plane that plots a graph of $(|z|,|f(z)|)$.
-One plane that plots a graph of $(|\xi|,|\hat{f}(x)|)$. 
-It will span a range of values possible values for both $f$ and $\hat{f}$. 
+One plane that plots a graph of $(|\xi|,|\hat{f}(x)|)$.
+It will span a range of values possible values for both $f$ and $\hat{f}$.
 
 Square integrability ensure that the area under the curve is finite for both graph.
 
@@ -243,12 +243,11 @@ Pancherel-Parseval identity make sure that the area from both graph has to be th
 However, range of possible values for $|f|$ and $|\hat{f}|$ has to be reciprocal or inverted, because Fourier transform can be inverted.
 Same argument applies for the range of $|z|$ and $|\xi|$.
 
-We can now intuitively understands where the triangle is. 
+We can now intuitively understands where the triangle is.
 Since $f$ and $\hat{f}$ is unique mapping, referring to one of them is enough by just describing the range.
-Since the curve itself won't change under domain translations, then it is easier for us to first define the "mean" or "center point" for 
+Since the curve itself won't change under domain translations, then it is easier for us to first define the "mean" or "center point" for
 each $f$ and $\hat{f}$. Let's just say it was centered at $z_0$ and $\xi_0$.
 
 Now consider arbitrary triangle in $f$. The base of the triangle is the length from $z$ to $z_0$, which is $|z-z_0|$.
 At $z_0$, it will have vertical height of $|f(z_0)|$, which is the average value of $f$. You can then draw a straight line from $z$ to $|f(z)|$, lets call it $|r|$ and form a right triangle.
 Notice that at any point $z$, we can draw a triangle. If we multiply the sides that are not $r$, it will satisfy Cauchy–Schwarz inequality.
-

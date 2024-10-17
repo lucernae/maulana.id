@@ -1,0 +1,205 @@
+---
+layout_name: blog-post
+title: Using Tailscale with Nix
+description: Nix and NixOS support for the Tailscale network
+category:
+  name: soft-dev
+date: 2023-01-30T00:00:00.00Z
+---
+
+Just like other posts, I usually started by quoting the person that inspired me to write this particular article.
+It began when a friend suggested me to use Tailscale. However his twitter profile are protected, so I couldn't quote or search back his exact tweet.
+Anyway, the general idea is that I wanted to setup a home lab router/relay so I can check up from time to time while working away from home.
+
+# Tailscale a zero setup VPN... or sort of...
+
+[Tailscale](https://tailscale.com) is a free service that my friend suggested to check out. By free, I mean for personal use, it offers a free service.
+If you are a little bit serious you could check their paid plan to see their offers.
+If you ever used OpenVPN or WireGuard, or you set up something like that in the past, then think of Tailscale as an easier stack to install.
+
+How easy it is?
+
+Well, by comparison, usually when you want to set up an OpenVPN network, you generate RSA or certificates. You then distribute and create a background
+service (both server and client). Also, the setup might look different in macos, linux, or windows. In fact, my original pi-hole instance uses openvpn
+client in the background as a proxy to forward DNS over HTTPS, and or certain traffic to bypass my ISP's absurd restrictions (Indihome, I'm talking about you).
+
+Anyway, those days are long gone. Just a couple of months back in November, I have access to a more reliable ISP with 1:1 downlink:uplink connection.
+Or at least, from what I observed, the uplink was pretty decent. That means I could do more sophisticated things like streaming remote desktop connection,
+steam remote, or playstation remote using this bandwidth. The problem is, if it goes thru Openvpn, it will be limited by my own vpn server in the cloud.
+Also, it will be a pain to set up a forwarding rule for streaming services which is mostly based on UDP.
+
+Thus, I want to see if Tailscale made it easier.
+
+# For now, the installation of Tailscale on NixOS
+
+I'm going to skip directly and assume reader knew what Nix and NixOS is.
+
+My pi-hole uses NixOS. Because it is easier for me to setup systemd or docker services that way. It also can be optimized to be as light as possible.
+My Raspberry Pi model is 3B+, not version 4, so I want to squeeze all the possible performance saving.
+
+I haven't updated my pi for a while, so the first thing to do is to upgrade NixOS to the latest stable version (22.05 or 22.11). This is because Tailscale
+is so quickly updated, you want the latest version to use all the features it offered.
+
+To upgrade NixOS without changing the config, yo do:
+
+```shell
+nixos-rebuild switch --upgrade --verbose
+```
+
+I added `--verbose` flag because I want to observe if my Pi was stuck in the upgrade process to download some caches.
+
+Once that is done. As usual I tested it by rebooting once. It was fine, as it should be, so let's proceed to the next step.
+
+Oh, I forgot to mention that my pi setup exists before Nix flake was widely used. So actually, in this step, I also enable Nix Flake experimental command
+and set my NixOS `system.stateVersion = "22.05"` (this option doesn't exists before and important for later NixOS version). Other than that, no major changes happening.
+
+So, to install tailscale to try it out, I install it via flake
+
+```shell
+# this is for flake way install
+nix profile install nixpkgs#tailscale
+
+# this is for the usual nixos install
+nix-env -iA nixos.tailscale
+```
+
+If I do `tailscale version`, the version I am currently using when I'm writing this article was tailscale 1.32.3.
+
+That only installs the tailscale CLI.
+
+We still need the tailscale server. Fortunately, it already exists within NixOS modules. To enable it declaratively (both the Server and CLI), modify
+NixOS config with these lines
+
+```nix
+// omitted the function parameters/headers for brevity
+{
+    // ...
+
+    environment.systemPackages = with pkgs; [
+        //...
+        // add the CLI
+        tailscale
+    ];
+
+    // add the services
+    services.tailscale.enable = true;
+
+    // ...
+}
+```
+
+To recap, the `services.tailscale.enable` config is just to enable the daemon service. The one who setup forwarding/tunnel etc. You actually need
+to login first using the CLI.
+
+```shell
+tailscale up
+```
+
+It then print an instructions for you, if this is your first time. Follow the link and create/sign up to make your very first tailscale network.
+Once you acknowledge/log in, there will be a new device registered under your Tailscale dashboard. Rename it however you want to identify it.
+
+Now, you can't see the magic yet, until you set up two devices, so that it can be linked.
+
+However I noticed one interesting thing. It has ipv6 address!
+
+If you print your tailscale interface address:
+
+```shell
+tailscale ip
+```
+
+It outputs both IPv4 and IPv6. Of course I'm immediately curious with IPv6 support, I just have to try.
+
+Spin up a quick python3 server to serve in IPv6 as well:
+
+```shell
+python -m http.server --bind ::
+```
+
+The server usually listens on port 8000, but you can check the output to see where it actually listens.
+
+Then do a curl, with the IPv6 address.
+
+```shell
+curl -v "http://[fd7a:115c:a1e0:ab12:4843:cd96:625f:720f]:8000"
+```
+
+If you are not familiar, the IPv6 address is enclosed in a square bracket `[]`, which is why I also enclosed the full URL with double quotes `""`.
+I'm using curl because my pi doesn't have desktop environment.
+
+It succesfully returns my directory tree, so it works really well.
+
+# Installation of Tailscale on MacOS
+
+There are several ways of installing tailscale on MacOS as covered [here](https://tailscale.com/kb/1065/macos-variants/)
+
+However, I personally uses nix to manage it, which is a configuration based on the open source tailscale + tailscaled CLI version.
+One of the benefit is that the daemon can run in background so you can have your device connected before you even logged in (but must be after FileVault description, if you have it activated).
+
+Assuming you have nix-darwin in your MacOS, then the setup is intended to be similar with NixOS. So nothing to explain more here.
+
+# Testing connection between device
+
+So, now I have two devices with tailscale installed. The magic happens when both of the devices are in a different network, but connected over the internet.
+
+When you do:
+
+```shell
+tailscale status
+```
+
+It will show the lists of the devices. For example, currently I have these (an example):
+
+```
+100.119.11.103  recalune-air-desktop my.email@  macOS   -
+100.99.117.114  albatros             my.email@  iOS     offline
+100.80.201.115  greyhound            my.email@  iOS     offline
+100.121.174.67  jaeger               my.email@  iOS     offline
+100.107.78.25   muhammads-imac       my.email@  macOS   -
+100.124.26.79   nixos-codespace      my.email@  linux   offline
+100.95.114.15   nixos-pi             my.email@  linux   idle, tx 29420 rx 39236
+100.96.119.4    recalune-mbp         my.email@  macOS   active; relay "sin"; offline, tx 70836 rx 43484
+100.84.196.90   red-fenrir           my.email@  linux   offline
+```
+
+A quick explanation,
+
+The first column is the "tailscale" IP. Whenever your devices connected with tailscale you can reach the other using this IP. It is assigned per-device, so it won't change, even if you are connected
+from a different network.
+
+The second column is the assigned hostname. You can use the name just like a LAN hostname to reach the devices. It will work due to name resolution using something that they called "Magic DNS",
+which I have to agree, it is kind of magic :D.
+
+The third column is your tailscale account name (your email address).
+
+The 4th column is the OS.
+
+The 5th column is the connection status.
+A dash "-" means it is "online" and connected.
+An "active" text, means your current device currently has a session connected with the other device. It also shows extra info such as wether it is using a relay or direct connection.
+An "idle" text, means you have a connection (in my case an ssh terminal), but I haven't interacting with it.
+An "offline" text, means the device is offline. Which means it either not connected to the internet, or the tailnet services are turned off.
+
+There are several commands that might interests you, like `tailscale netcheck`, `tailscale ping`, or `tailscale ssh`. You might want to check this out.
+
+# Magic DNS
+
+Now, what I think the key experience of tailscale is definitely the Magic DNS.
+
+Connecting two devices between network as subnet is actually pretty common. One can solve it using a VPN network. But it is really a hassle to maintain.
+You need to configure the DHCP, DNS, and/or tunnel IP assignment for each devices. For Tailscale, this **just works**.
+
+Literally.
+
+Like, I don't even need to declare anything. I just do `tailscale up`, log in (if this is the first time for this device), then it was connected. That's it.
+
+Reaching the hostname is resolved using Magic DNS. It was done transparently, and I think really cleverly. In Linux, I just realized that the DNS "server"
+(I quoted, because I'm not really sure yet if this is an actual server) is reachable on 100.100.100.100. It is clever because this is a shared reserved space, and local.
+Although not entirely equivalent, you can think of it as reaching 127.0.0.1 which is always exists in your device.
+
+So, the hostname were appended the tailscale net name, such as `abc.ts.net`. So if your device hostname is `albatros`, it actually resolves to `albatros.abc.ts.net`
+and handled by 100.100.100.100. If it doesn't resolve, it will fallback to whichever other DNS you are currently using. This is how it can find your device tailnet IP.
+Since the 100.x.y.z is a shared reserved space, this is basically a subnet just for your Tailscale account. Other might have the same IP, but you won't connect to the
+other subnet since it was on a different Tailscale account. Think of these as your private VPN LAN subnet.
+
+If your usage is pretty simple, "I need to connect to my device A from B, but over an insecure network" this solves your problem.

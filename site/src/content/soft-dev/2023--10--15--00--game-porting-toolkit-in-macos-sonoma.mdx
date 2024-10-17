@@ -1,0 +1,322 @@
+---
+layout_name: blog-post
+title: Game Porting Toolkit in MacOS Sonoma
+description: Testing out Game Porting Toolkit (GPTK) to play Windows Games in MacOS Sonoma.
+category:
+  name: soft-dev
+date: 2023-10-15T00:00:00.00Z
+---
+
+I upgraded MacOS on my MacBook Air to use MacOS Sonoma a while back.
+I've been waiting to use it, so that I can install Game Porting Tool Kit to try play Windows games on MacOS.
+
+Here's the recap of what happened.
+
+I also summarized it in a thread here:
+
+<blockquote className='twitter-tweet'>
+	<p lang='en' dir='ltr'>
+		Installed macOS Sonoma today.
+		<br />
+		Since Apple Game Porting Toolkit requires homebrew x86_64, it&#39;s time to try this nix-darwin
+		module to manage both my arm64 and x86_64 homebrew prefix 😂😂😂
+		<a href='https://t.co/i0ogB5qNAC'>https://t.co/i0ogB5qNAC</a>
+	</p>
+	&mdash; Maulana 🌸 eiyuuden chronicle (@maulana_pcfre)
+	<a href='https://twitter.com/maulana_pcfre/status/1707451877124931700?ref_src=twsrc%5Etfw'>
+		September 28, 2023
+	</a>
+</blockquote>
+
+# Installing homebrew for x86_64 and aarch64
+
+The first step we need to do is to install homebrew for x86_64.
+I'm using M2 MacBook Air, so I also have homebrew aarch64 installed.
+
+This seems to be the perfect excuse for me to use nix-homebrew that is recently made by zhaofengli here: https://github.com/zhaofengli/nix-homebrew
+
+My final setup can be seen in my nix-darwin config here: https://github.com/lucernae/nix-config
+
+I added the flake:
+
+```nix
+inputs.nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+```
+
+Then added each brew taps I used here:
+
+```nix
+# nix-homebrew tap
+{
+  inputs = {
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+    homebrew-bundle = {
+      url = "github:homebrew/homebrew-bundle";
+      flake = false;
+    };
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
+    homebrew-cask-drivers = {
+      url = "github:homebrew/homebrew-cask-drivers";
+      flake = false;
+    };
+    homebrew-cask-fonts = {
+      url = "github:homebrew/homebrew-cask-fonts";
+      flake = false;
+    };
+    homebrew-apple = {
+      url = "github:apple/homebrew-apple";
+      flake = false;
+    };
+  };
+}
+```
+
+The last one is the homebrew Apple tap (the official one).
+
+Next, I added the `darwinModule` to load `nix-homebrew`
+
+```nix
+...
+recalune = darwinSystem {
+  inherit system;
+  modules = attrValues self.darwinModules ++ [
+    # modules
+    nix-homebrew.darwinModules.nix-homebrew
+    {
+      nix-homebrew = {
+        # Install Homebrew under the default prefix
+        enable = true;
+
+        # Apple Silicon Only: Also install Homebrew under the default Intel prefix for Rosetta 2
+        enableRosetta = true;
+
+        # User owning the Homebrew prefix
+        user = "recalune";
+
+        # taps
+        taps = {
+          "homebrew/homebrew-core" = homebrew-core;
+          "homebrew/homebrew-bundle" = homebrew-bundle;
+          "homebrew/homebrew-cask" = homebrew-cask;
+          "homebrew/homebrew-cask-drivers" = homebrew-cask-drivers;
+          "homebrew/homebrew-cask-fonts" = homebrew-cask-fonts;
+          "apple/homebrew-apple" = homebrew-apple;
+        };
+
+        # Automatically migrate existing Homebrew installations
+        autoMigrate = true;
+      };
+    }]
+...
+```
+
+Because I already have homebrew installed, I toggled the `autoMigrate` option.
+
+The rest of the config for your nix-darwin stays the same.
+For completeness, here's an example of how my homebrew packages were managed in the [darwin config file](https://github.com/lucernae/nix-config/blob/main/systems/nix-darwin/recalune/default.nix)
+
+```nix
+homebrew = {
+  enable = pkgs.stdenv.isDarwin;
+  onActivation = {
+    autoUpdate = false;
+    upgrade = false;
+    # use zap if you want nix-darwin solely manages homebrew packages
+    # cleanup = "zap";
+  };
+  taps = [
+    "homebrew/bundle"
+    "homebrew/core"
+    "homebrew/cask"
+    "homebrew/cask-fonts"
+    "homebrew/cask-drivers"
+  ];
+  brews = [
+    # "pinentry-mac"
+    "jq"
+    "yq"
+    "mas"
+    "dagger"
+    "ykman"
+    "thefuck"
+    "opencv"
+    "onnxruntime"
+    "fswatch"
+  ];
+  masApps = {
+    Xcode = 497799835;
+    Tailscale = 1475387142;
+    Bitwarden = 1352778147;
+    WhatsAppWeb = 1147396723;
+    SlackDesktop = 803453959;
+    OneDrive = 823766827;
+  };
+  casks = [
+    "fig"
+    "cron"
+    "signal"
+    "discord"
+    # "visual-studio-code" maintained by home-manager
+    "docker"
+    "firefox"
+    "microsoft-edge"
+    "diffmerge"
+    "db-browser-for-sqlite"
+    "jetbrains-toolbox"
+    "github"
+    "google-drive"
+    "vmware-fusion"
+    "obs"
+    "rectangle"
+    "elgato-game-capture-hd"
+    "steam"
+  ];
+};
+```
+
+After that, we run `darwin-rebuild switch --flake` to apply the config
+
+# Testing homebrew prefix
+
+Testing the homebrew prefix is straightforward. `nix-homebrew` flake will also setup Rosetta 2. So I assume Rosetta 2 is enabled now.
+
+Rosetta 2 is a translation layer in MacOS Apple Silicon chip, so that it can run x86_64 arch as aarch64.
+
+My builtin Zsh shell for mac, for some reason uses x86_64.
+
+```shell
+/bin/zsh --version
+# outputs:
+zsh 5.9 (x86_64-apple-darwin23.0)
+```
+
+Meanwhile, Zsh from Nix uses aarch64 as expected
+
+```shell
+/Users/recalune/.nix-profile/bin/zsh --version
+# outputs:
+zsh 5.9 (aarch64-apple-darwin22.6.0)
+```
+
+We can use this to check brew prefix being used for each architecture.
+
+To check current architecture in your shell, use `arch` command.
+
+```shell
+arch
+# will output: arm64 or i386 depending on your current arch
+```
+
+Let's test running x86_64 executable
+
+```shell
+arch -x86_64 /bin/zsh
+uname -m
+# this for some reason output arm64
+arch
+# this will output i386 (which is correct)
+brew list
+# will output brew packages in x86_64
+```
+
+This is what happens on aarch64 (open a new terminal)
+
+```shell
+# you can also execute /bin/zsh as aarch64 because it is a universal app
+arch -arm64 /bin/zsh
+uname -m
+# will output arm64
+arch
+# will output arm64
+brew list
+# will output brew packages in aarch64 prefix
+```
+
+We will then uses hombrew prefix for x86*64 architecture to use Apple Game Porting Toolkit (AGPTK).
+Basically AGPTK is a wrapper to [WINE](https://en.wikipedia.org/wiki/Wine*(software)), which is
+a compatibility layer for x86_64 Windows binaries.
+
+# Installing Apple Game Porting Toolkit (AGPTK)
+
+I follow this docs: https://www.applegamingwiki.com/wiki/Game_Porting_Toolkit.
+
+For the brew part, I can skip most of it, since I configured it using Nix.
+
+Now, enter x86_64 zsh shell, because we had to use homebrew prefix for x86_64.
+
+```shell
+arch -x86_64 /bin/zsh
+```
+
+We will use this shell for all the next steps.
+There are several differences between the wiki and current situation at the time when I tried this.
+
+For the tap, I already include `apple/apple/game-porting-toolkit` using nix-homebrew flake.
+So the update/upgrade were done via flake.
+For now, let's install the toolkit.
+
+```shell
+brew -v install apple/apple/game-porting-toolkit
+```
+
+This process took a very long time on my MacBook Air M2. I just left it overnight.
+
+Next, download AGPTK from Apple official download page [here](https://developer.apple.com/download/all/?q=game%20porting%20toolkit).
+At that time, the download page is buggy and I can't see the [download link](https://download.developer.apple.com/Developer_Tools/Game_porting_toolkit_1.0/Game_porting_toolkit_1.dmg).
+Next week, I can see the download link.
+
+Also make sure you already register as Apple Developer (you don't need to pay the developer fee).
+
+Double click the DMG to mount it to `/Volumes`. Copy the redistributable files and the helper scripts from AGPTK.
+
+```shell
+ditto /Volumes/Game\ Porting\ Toolkit-1.0/redist/lib/ `brew --prefix game-porting-toolkit`/lib/
+cp /Volumes/Game\ Porting\ Toolkit*/gameportingtoolkit* /usr/local/bin
+```
+
+Once the toolkit has been installed, you can explore possible commands, tips, and usage from [Apple Gaming Wiki](https://www.applegamingwiki.com/wiki/Game_Porting_Toolkit).
+
+Note that since this is, in an essence, installing WINE/CrossOver, you can try using any Windows Apps, not just Games.
+
+You can check the compatibility lists from CrossOver/CodeWeavers offical page [here](https://www.codeweavers.com/compatibility).
+
+# Installing Whisky
+
+If you don't want to try compiling AGPTK, you can use [Whisky](https://getwhisky.app).
+This is a wrapper on top of WINE + AGPTK.
+If you already setup Hombrew x86_64, then you can use Whisky to manage your Wine Bottle/Prefix and download precompiled
+AGPTK.
+
+During my first try, I ended up using Whisky because I'm not able to download AGPTK from Apple website (due to bug in the website).
+
+# Remarks
+
+I used Elden Ring as my test bench, on MacBook Air M2, 16 GB, 8 cores.
+From the FPS bar in the screenshots, I can see that the bottleneck is CPU instead of GPU.
+I assume this is because MBA lacks proper coolings.
+So next time, I should probably test it using laptop cooling pad. Hahaha.
+
+<blockquote className='twitter-tweet'>
+	<p lang='en' dir='ltr'>
+		This is absurd...
+		<br />
+		Low fps, sure.
+		<br />
+		But this is running under emulation with no proper cooling 😂.
+		<br />
+		Apple Game Porting Toolkit is using WINE under the hood.
+		<br />
+		So basically you can run windows exe as well...
+		<a href='https://t.co/C1EJRxKXVH'>pic.twitter.com/C1EJRxKXVH</a>
+	</p>
+	&mdash; Maulana 🌸 eiyuuden chronicle (@maulana_pcfre)
+	<a href='https://twitter.com/maulana_pcfre/status/1707552472590688503?ref_src=twsrc%5Etfw'>
+		September 29, 2023
+	</a>
+</blockquote>

@@ -38,6 +38,7 @@ jspm_packages/
 node_modules
 node_modules_devcontainer/
 node_modules_native/
+node_modules_archive/
 
 # Typescript v1 declaration files
 typings/
@@ -61,7 +62,7 @@ typings/
 # gatsby files
 .cache/
 public
-
+!site/public
 # Mac files
 .DS_Store
 

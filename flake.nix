@@ -8,11 +8,11 @@
     };
     devshell.url = "github:numtide/devshell";
 
-    # flake location for the gatsby theme
-    gatsby-theme.url = "github:lucernae/gatsby-starter-lucernae";
+    # flake location for the astro template
+    astro-blog-template.url = "github:lucernae/astro-blog-template";
   };
 
-  outputs = { self, nixpkgs, flake-utils, devshell, gatsby-theme, ... }:
+  outputs = { self, nixpkgs, flake-utils, devshell, astro-blog-template, ... }:
     flake-utils.lib.eachDefaultSystem (system: {
       apps.devshell = self.outputs.devShell.${system}.flakeApp;
       formatter = nixpkgs.legacyPackages.${system}.nixpkgs-fmt;
@@ -60,6 +60,12 @@
               };
             }
             {
+              name = "pnpm";
+              package = pkgs.pnpm.override {
+                nodejs = pkgs.nodejs;
+              };
+            }
+            {
               name = "yarn2nix";
               package = pkgs.yarn2nix;
             }
@@ -75,15 +81,23 @@
               name = "theme-upgrade";
               command = ''
                 echo "updating flake lock"
-                nix flake lock --update-input gatsby-theme
+                nix flake lock --update-input astro-blog-template
               '';
             }
             {
               name = "theme-update";
               command = ''
-                echo "copying gatsby-theme"
-                cp -Hrf ${gatsby-theme.outPath}/gatsby-theme .
-                chmod -R +w gatsby-theme
+                echo "copying astro-blog-template"
+                rsync -avP \
+                    --exclude 'astro.config.mjs' \
+                    --exclude 'src/content' \
+                    --exclude 'public' \
+                    --exclude 'src/assets' \
+                    --exclude 'src/data' \
+                    --exclude 'src/utils/post.ts' \
+                    ${astro-blog-template.outPath}/ ./site
+                chmod -R +w ./site
+                cd ./site
                 yarn
                 yarn --check-files
               '';
@@ -91,6 +105,7 @@
           ];
           packages = [
             pkgs.getconf
+            pkgs.rsync
           ];
           env = [
             {

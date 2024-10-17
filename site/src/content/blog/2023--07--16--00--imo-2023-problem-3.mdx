@@ -1,0 +1,260 @@
+---
+layout_name: blog-post
+title: IMO 2023 problem 3
+description: My friend will buy me a coffee if I can solve this
+category:
+  name: blog
+date: 2023-07-16T00:00:00.00Z
+---
+
+I quoted a random tweet about IMO 2023 problem sheet.
+
+<blockquote className='twitter-tweet'>
+	<p lang='in' dir='ltr'>
+		wait, gw baru tahu kalau soalnya ditranslate dari sononya?
+		<a href='https://t.co/9oRqEy9Crs'>https://t.co/9oRqEy9Crs</a>
+	</p>
+	&mdash; Maulana 🌸 eiyuuden chronicle (@maulana_pcfre)
+	<a href='https://twitter.com/maulana_pcfre/status/1680090723155329030?ref_src=twsrc%5Etfw'>
+		July 15, 2023
+	</a>
+</blockquote>
+<script async src='https://platform.twitter.com/widgets.js' charset='utf-8'></script>
+
+The thing that interests me, was that the problem sheets were officially translated in Indonesian.
+So these students read it in Indonesian instead of English. Initially I thought they read the problem in English.
+
+Then, a friend challenged me to solve problem number 3.
+
+Before you assume anything, I am no formal mathematician, so consider this article as amateur attempt in solving the problem
+
+# Problem statement
+
+Since the sheet I read is in Indonesian, I will try to translate back to English. But if you have the English sheet,
+you should probably refer to those.
+
+<blockquote>
+For every integer $k \ge 2$, determine every positive integer sequence $a_1,a_2,...$
+so that there is polynomial $P$ with form $P(x)=x^k+c_{k-1}x^{k-1}+...+c_1x+c_0$
+with $c_0,c_1,...,c_{k-1}$ each a non-negative integer, so that:
+
+$$
+P(a_n)=a_{n+1}a_{n+2}...a_{n+k}
+$$
+
+for every integer $n\ge1$
+
+</blockquote>
+
+# The proof (hopefully)
+
+## Initial guess
+
+I don't know exactly how I can prove it, lol.
+But the instant I saw this problem, I imagine something like this:
+
+There is no restriction with what the sequence will be. It can be monotonic, cyclic, or constants.
+It just needs to be an integer. Since it ends with $...$, I assume it is infinite.
+
+Assume that there exists a trivial sequence (so that we can learn the behaviour first).
+
+From this trivial sequence, if there exists an operator or function $f(x)$,
+there might be a whole class of sequence by applying $f(a_n)=b_n$. Thus,
+we can claim a whole class of sequence by finding this operator.
+
+Since the relation of $P$ is a factors of the sequence. It is natural to guess that
+the operator is scalars. Such that:
+
+$f(x)=sx$
+
+The relation becomes:
+
+$$
+P(f(a_n))=f(a_{n+1})f(a_{n+2})...f(a_{n+k})
+$$
+
+We can then pick $P(x)=x^k$. So we got relation:
+
+$$
+\begin{align}
+s^ka_n^k=sa_{n+1}sa_{n+2}...sa_{n+k} &= s^ka_{n+1}a_{n+2}...a_{n+k} \\
+a_n^k &= a_{n+1}a_{n+2}...a_{n+k}
+\end{align}
+$$
+
+Which is consistent with our initial statements:
+
+$$
+\begin{align}
+P(a_n) = a_{n+1}a_{n+2}...a_{n+k}\\
+a_n^k = a_{n+1}a_{n+2}...a_{n+k}
+\end{align}
+$$
+
+Since it was consistent, if we find just one sequence, we will find a whole class of them.
+
+The first thing came to mind is just a sequence of zero. Since any $a_n$ will just be zero, because of the products.
+
+The next thing is a sequence of 1. Since any $a_n$ will just be 1.
+
+So, this whole class of solutions is **any** $a_n=s$ which is a constants for every sequence indices, and it will span infinitely.
+
+Some examples are $1,1,1,1...$ or $2,2,2,2,...$, basically all integers.
+
+## How to scan all solutions?
+
+Well, I basically told my friend that the solution would be a constant integer sequence.
+
+But he demand that I found all possible solution. Not just the trivial class.
+
+Actually, I'm not sure if the Indonesian wording are descriptive enough.
+I thought it was obvious if we just pick any polynomial and then using the recurrence relation
+to find the sequence, forward or backward. It is like a construction, so I'm not really sure what else to proof.
+
+Anyway, in my opinion, there is two different way to approach the problem.
+Either we define the sequence first and then define which polynomial obey the sequence.
+Or, we define the polynomial and then find the sequence.
+
+But then again, going from the sequence, it was almost implies that the $P(a_n)$ doesn't have to be a polynomial at all.
+It can just be any function and the recurrence relation of number $(3)$ is just going to be the same.
+
+So the key here is guessing what the sequence looks like. It is probably convenient if we use real number (I mean actual numbers like 1,2,3) to illustrate.
+
+Suppose $k=3$ (because $k=2$ is too simple, it might not reveal the real behaviour). Then any $P(a_n)$ has to be factorized into product of 3 numbers.
+Using the simplest $P(x)=x^3$, we have a hint that any $a_n$ is a cube root average of the factors.
+
+$$
+\begin{align}
+a_n^3&=a_{n+1}a_{n+2}a_{n+3}\\
+a_n&=\sqrt[3]{a_{n+1}a_{n+2}a_{n+3}}
+\end{align}
+$$
+
+This is funny because $a_n$ then has to be in the middle if we order the sequence.
+If we follow this behaviour, then it implies that the sequence is not monotonic.
+If it is not monotonic, then it will just ends in cycle, because we can always swaps the order.
+
+To illustrate, let's use $a_1=3$, then the $P(a_1)=27$. Factors of $27$ can be $1$, $3$, and $9$.
+If $a_2=1$ sequence will stop, so we have to pick 3. But if we pick $3$ it will just be the trivial sequence.
+
+So we have no other way, besides modifying the $P$ function.
+If we assume that the sequence always increase (we have to, because integer products always increases),
+then there is a certain bound with the polynomial function in order to make sure that $a_n$ is always less than $a_{n+1}$.
+
+Let's just say that $P_k(x)= x^k + P_{k-1}(x)$ with $P_{k-1}$ means a polynomial with degree $k-1$.
+This guarantees that $a_n < a_{n+1}$. In order for $P_{k-1}$ to be always positives, then the coefficient of the polynomial has to be non-negative.
+This satisfies the problem statements as well.
+
+Although this does proves the sequence exists, my friend probably demands me to show how exactly to construct the sequence.
+
+It's quite bothersome to write, but the general idea is to just find $k$ different numbers.
+This is going to be a subset of the sequence, it doesn't have to be at the start, it can be in the middle.
+From the middle of the sequence, using $P$ relation, we can just iterate backward until it can't be factorized again.
+The thing that we need to prove is how to make $P$ relation shows that it can always be iterated forward, to infinity.
+(because otherwise, it will just ends in trivial sequence again).
+
+## The case if $P$ can't be factorized
+
+Since $P$ was declared to be polynomials. If it can't be factored into exactly $k$ integer factors then the sequence will stop, since you have to put $1$ as the factor in the sequence.
+
+Not sure if this requires further proof?
+But to illustrate, let's say $P(x)=x^2+1$, which can't be factored.
+Well, I guess it can be factored into two complex polynoms, but we are dealing with integer here.
+
+For example, $x=3$, then $P(3)=10=2.5$. Sequence already breaks, since 3 is bigger than 2.
+If we swap the order, then $P(2)=1.5$. Sequence breaks again, since you need to put $1$, because there's no other integer factors.
+
+Increasing the polynomials to, let's say $P(x)=x^2+100$ has no effect because we can always found such counterexample. You can't forward the sequence because it can't span infinitely.
+
+There's no sequence to find if $P$ can't be factored.
+
+## The case if $P$ has the same roots
+
+Suppose that $P(x)=(x+s)^k$. This will not form infinite sequence since the sequence will stop when the factors is the same.
+This is basically the same with how we proves $x^k$ except the graph is translated to the left.
+
+## The case if $P$ has different roots
+
+Intuitively for any degree $k$, and if the polynomial has $k$ root, intersected with the x-axis,
+then we can imagine the graph to be curved up and down, and eventually goes up forever.
+
+Our sequence then must be on the right side of the graph, since we already proves that it must be monotonically increasing.
+
+We will then need a minimum spacing between these sequence, since each member of the sequence has to be integer (difference can't be less than 1).
+
+Using the same operator concept we use earlier, assume that there exists a basic sequence. Other sequences with the same class is obtained by applying
+$f(x)$ operator to each member of the sequence, so that $f(a_n)=b_n$ with $b_n$ being the new sequence.
+
+Since we need a certain interval between sequences, let's just use $f(x)=x+d$. I'm running out of variable, we already uses $a,b,c$ and $s$, lol.
+
+Also notice that we can't use (for now) $f(x)=sx+d$ because the product of the factors then becomes $sx^k$ in the highest degree, meanwhile we want to focus on the polynomial
+$x^k$ with the coefficient being one. Don't worry though, this is just so that $d$ becomes integer. If we use scalar $s$ later, then $d$ just needs to be divisible by $s$.
+
+Anyway, start with the simplest one first.
+
+$$
+\begin{align}
+P(f(a_n))&=f(a_{n+1})f(a_{n+2})...f(a_{n+k})\\
+P(a_n+d)&=(a_{n+1}+d)(a_{n+2}+d)...(a_{n+k}+d)\\
+P(a_n+d)&=(a_n+2d)(a_n+3d)...(a_n+(k+1)d)\\
+P(a_{n+1})&=(a_{n+2})(a_{n+3})...(a_{n+k+1})\\
+\end{align}
+$$
+
+Now this has become interesting. The operator creates a new sequence, but it ended up shifting the indices by one.
+So, essentially this is the same sequence, it's just that we start at different indices if we shift by $d$ interval.
+For a given $d$, if we find $k$ numbers that is the member of the sequence, then we can use recurrence to find the whole sequence.
+
+Step (8) to step (9) and (10) is intuitive because $a_{n+1}=a_n+d$ and there should be no preference to $n$, so this should be applicable to any $n$.
+It means $a_{n+2}=a_{n+1}+d=a_n+2d$, and so on.
+
+We can check if this statement is true for very large number $a_n$, since we want infinite sequence. We already defined that $d$ is the smallest integer for the particular operator $f(x)$. Applying $a_n$ and $a_{n+1}$ to $P(x)$ we have:
+
+$$
+\begin{align}
+\frac{P(a_{n+1})}{P(a_n)}&=\frac{a_{n+1+k}}{a_{n+1}} \\
+a_{n+1+k}&=a_{n+1} \frac{P(a_{n+1})}{P(a_n)} \\
+a_{n+1+k}-a_{n+1}&=a_{n+1} \left( \frac{P(a_{n+1})-P(a_n)}{P(a_n)} \right) \\
+\end{align}
+$$
+
+Now that previously we already establish for any polynomial, we can define $s$ such that $P(x)=(x+s)^k$. Since in the right side we have a fraction of
+polynomial with the same $k$ degree, there is a limit when we use very large number $a_n$. In this situation, the sequence is so large that $\frac{a_{n+1}}{a_n} \approx 1$ is some relatively small difference.
+Using an upper bound of $P(x)\le(x+s)^k=x^k+ksx^{k-1}+...$.
+Then the term $\frac{P(a_{n+1})-P(a_n)}{P(a_n)}$ can be written as $\frac{ksa_{n+1}^{k-1}+...}{a_n^k+...}$ when approaching this limit. (I'm too lazy to write the full expression).
+
+$$
+\begin{align}
+a_{n+1+k}-a_{n+1} &\le a_{n+1} \frac{ksa_{n+1}^{k-1}+...}{a_n^k+...}=ks \\
+\end{align}
+$$
+
+But remember that we said $d$ is the smallest distance for this sequence. If there are $k$ numbers, then the lower bound gap between the smallest and biggest number is simply $kd$.
+Then the lower bound of $a_{n+1+k}-a_{n+1} \ge kd$. Combine this both we have
+
+$$
+\begin{align}
+kd \le a_{n+1+k}-a_{n+1} &\le ks \\
+\end{align}
+$$
+
+From this, we can see that the choice of $d$ and $s$ is arbitrary, as long as it works in $P(x)$. So why not just set $s=d$? Thus, explains the intuition behind step (8), (9), (10).
+
+As a sanity check, let's try again with $k=3$, with $d=1$.
+
+Our polynomial then consists of 3 factors like this $P(x)=(x+1)(x+2)(x+3)$.
+However, it is quite obvious now, that we can set $a_1=1$ then, the rests will follow $a_2=2$, $a_3=3$, $a_4=4$.
+
+So, we have found another class of sequences. For any positive integer value of $d$, we can construct a polynomial $P(x)=(x+d)(x+2d)(x+3d)...(x+kd)$,
+such that there exists $a_n$ that becomes the solutions. It also spans infinitely.
+
+From this sequence, we can also find another sequence using the previous operator/function $f(x)=sx+d$. Suppose $s=2$, so $d$ needs to be divisible by 2. Suppose $d=6$.
+The new sequence $b_1=8$, $b_2=10$, $b_3=12$, $b_4=14$. The polynomial becomes: $P(x+1)=(x+3)(x+5)(x+7)$ or can also be written as $P(x)=(x+2)(x+4)(x+6)$
+
+The formula for the sequence then became $a_n=a_1+(n-1)d$. It is also nicely covers our previous sequence, since if $d=0$, the sequence is a constant sequence.
+
+So far this is then only possible polynomial roots with always increasing sequence. Any other factorization will lead to a breaking sequence again.
+We can try to define $d$ such that it is a function of $n$ (not a constant gap). The operator function $f(x)=x+d$ still works for arbitrary factorization function $P(x)$.
+However, in the case of polynomials, the roots are fixed. That's why the gap has to be constant if the factors need to extend infinitely.
+
+There might be an interesting solution if $P(x)$ is some infinite taylor series or some function that has a transform with infinite series, like a Fourier series.

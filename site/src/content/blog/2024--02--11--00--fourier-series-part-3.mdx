@@ -1,0 +1,293 @@
+---
+layout_name: blog-post
+title: 'Fourier Series: part 3'
+description: Fourier Transform and its identities
+date: 2024-02-11T00:00:00.00Z
+category:
+  name: blog
+---
+
+# Fourier Transform Identities and Properties
+
+As we already described in the [previous article of part 2](../2024--02--04--00--fourier-series-part-2/), we can perform Fourier Transform
+on most functions, be it periodic or non-periodic.
+
+We are now going to explore the basic properties and identities of FT.
+
+## A function that is its own Fourier Transform
+
+As I chuckled when writing this, my default instinct when learning a certain operators or transform,
+is of course to question: "is there any object that is invariant if we apply this rule?".
+
+To put it simply for a Fourier Transform, is there any function that is exactly its own time domain and frequency domain representation?
+
+Such function would have been written like this:
+
+$$
+g(t) = F(f) = \int g(t) \, e^{-i \tau f t} \, dt = \int F(f) \, e^{i \tau f t} \, df
+$$
+
+It would be pretty funny if this does exist. Because to decompose the function to its frequencies, is equally hard to compose the function itself.
+
+So let's try to figure it out.
+
+First, we would notice that the range of the function is the same, be it in time or frequency domain.
+It should span to infinity, and it would imply that the function itself is non-periodic.
+Because, if it is periodic, the span can be reduced into its smallest non-zero period interval.
+
+Second, the function needs to be symmetric (even function). This is because an FT of an even function is an even function.
+So, it is already a good candidate.
+
+Third, the "zero-th" frequency must be normalized, so that repeated FT will yield no change to the total area. It will always be normalized.
+
+Now, the third criteria is very special and limiting. The zero-th frequency is essentially the usual integral under the curve.
+So, whatever the function may be, it has to satisfy this very limiting constraints.
+
+We already found such class of function, [in part 1](../2024--01--29--00--fourier-series-part-1/) we have already shown from using Taylor Series expansion.
+The function $\exp(x)$ is its own derivative. So, with some proper scaling, it could become a function that is its own integrals.
+
+Note, that $e^x$ function is not even-symmetric, and not convergent over all domain of $x$.
+So we should modify it. But basically, the form of the function is likely in the form of $\frac{1}{N} \, e^{p(x)}$.
+Where we can assume $p(x)$ as some kind of polynomial, and $N$ is a normalization factors.
+
+The first immediate guess is to assume that $p(x) = -ax^2$.
+The polynomial has degree 2, so that it is symmetric. It also has negative coefficient $-a$, so that its integrals converges.
+
+Assume that the function were normalized over all ranges of $x$, so that repeated integrals yields invariant magnitude.
+
+$$
+\begin{align*}
+g(t) &= \frac{1}{N} \, e^{-at^2} \\
+\int_{-\infty}^{\infty} \, g(t) \, dt &= \frac{1}{N} \int_{-\infty}^{\infty} \, e^{-at^2} \, dt \\
+F(0) &= \frac{1}{N \sqrt{a}} \int_{-\infty}^{\infty} \, e^{-x^2} \, dx \\
+1 &= \frac{1}{N} \, \sqrt{\frac{\pi}{a}}
+\end{align*}
+$$
+
+Note that the integral $\int_{-\infty}^{\infty} \, e^{-x^2} \, dx = \sqrt{\pi}$ has been discussed in previous [Gaussian Integral article](../2023--07--26--00--gaussian-integral/)
+
+Now, let's try to do the FT.
+
+$$
+\begin{align*}
+F(f) &= \int_{-\infty}^{\infty} \sqrt{\frac{a}{\pi}} \, e^{-at^2} \, e^{-i\tau f t} \, dt \\
+&= \sqrt{\frac{a}{\pi}} \int_{-\infty}^{\infty} \exp{\left( -a \left(t^2 +\frac{i\tau f}{a}\,t + (\frac{i \tau f}{2a})^2 \right) + a\,(\frac{i \tau f}{2a})^2 \right)} \, dt \\
+&= \sqrt{\frac{a}{\pi}} \, e^{-\frac{\tau^2 f^2}{4a}} \int_{-\infty}^{\infty} \exp{\left( -a \left(t + \frac{i \tau f}{2a} \right)^2\right)} \, dt \\
+&= e^{-\frac{\tau^2 f^2}{4a}}
+\end{align*}
+$$
+
+By comparing $F(f)$ with $g(t)$ and $F(0)$. It implies that $a=\pi$, and that $N=1$.
+
+We then found:
+
+$$
+\begin{align*}
+\tag{E1}
+g(t)&=e^{-\pi t^2}=\exp{\left(-\pi t^2 \right)} \\
+F(f)&=e^{-\pi f^2}=\exp{\left(-\pi f^2 \right)} \\
+\end{align*}
+$$
+
+## Repeated Fourier Transform on a Gaussian
+
+We found another interesting result from doing an FT for the above Gaussian.
+Suppose that we have a gaussian $g(t)$ as defined below:
+
+$$
+\begin{align*}
+g(t) = \frac{1}{N_0} \, e^{-a_0t^2}
+\end{align*}
+$$
+
+Its FT: $F(f)$
+
+$$
+\begin{align*}
+F(f) = \frac{1}{N_0} \sqrt{\frac{\pi}{a_0}} \, e^{-\frac{\tau ^2 f^2}{4a}}
+\end{align*}
+$$
+
+Above function is also a Gaussian but with different parameters. Suppose that for this second function has index.
+
+$$
+\frac{1}{N_1}=\frac{1}{N_0} \sqrt{\frac{\pi}{a_0}}
+$$
+
+and
+
+$$
+a_1 = \frac{\tau^2}{4a_0} = \frac{\pi^2}{a_0}
+$$
+
+Doing an FT again means we have $N_2$ and $a_2$.
+
+$$
+\frac{1}{N_2}=\frac{1}{N_1} \sqrt{\frac{\pi}{a_1}}=\frac{1}{N_0}
+$$
+
+$$
+a_2 =\frac{\tau^2}{4a_1} = a_0
+$$
+
+So apparently, in general if we do FT twice for that gaussian function, it will return back to its original form.
+Other than this being an awesome fact. If we remember that FT is basically an integral transform, that means it is linear.
+If we then think about Gaussian as some kind of basis, then it has two basis. The first is the original basis, the second one is the basis from doing the first FT.
+
+So, basically we can construct a sum of Gaussian that is swapped under Fourier Transform, so it is invariant under FT.
+
+Say we have a gaussian function $G_n(t)$. Then if we have $g(t)$ as a linear combination:
+
+$$
+g(t) = G_0(t) + G_1(t)
+$$
+
+Then its FT, is just the same function, but the addition were swapped.
+
+$$
+F(f) = G_1(f) + G_0(f)
+$$
+
+The full form of the function, if we use just the zero-th index:
+
+$$
+\tag{E2}
+g(t, a, N) = \frac{1}{N}\left( e^{-at^2} + \sqrt{\frac{\pi}{a}} \, e^{-\frac{\pi^2 t^2}{a}} \right)
+$$
+
+There might be some more with the same class of functions.
+
+# Basic Properties of the transform
+
+I'm going to write down basic properties and its quick outline of the proof, for future reference.
+The lists might increase in the future.
+
+## Notation
+
+Fourier dual pair usually use parameter $t$ and $f$ for time and frequency domain respectively.
+Other convention is to use $x$ (alphabet x) and $\xi$ greek xi.
+
+As an operator, FT is usually written as $\mathcal{F}$. The following notation were all equivalent of doing FT on function $g(t)$
+
+$$
+\begin{align*}
+\int_{-\infty}^{\infty} g(t) \, e^{-i\tau f t} \, dt &= \mathcal{F}\left[g\right](f) \\
+&= \mathcal{F}\left\{ g(t) \right\} \\
+&= \widehat{g}(f) \\
+\end{align*}
+$$
+
+## Linearity
+
+Integral is a linear operator, so FT is linear as well. Actually on part 1 we rely on this so much.
+
+$$
+\begin{align*}
+\tag{P1}
+g(t) &= a \, m(t) + b \, n(t) \\
+\widehat{g}(f) &= \int_{-\infty}^{\infty} \left( a\,m(t) + b\,n(t) \right) \, e^{-i \tau f t} \, dt \\
+&= a \, \int_{-\infty}^{\infty} \, m(t) \, e^{-i \tau f t} \, dt + b \, \int_{-\infty}^{\infty} \, n(t) \, e^{-i \tau f t} \, dt \\
+\widehat{g}(f)&= a \, \widehat{m}(f) + b \,\widehat{n}(f)
+\end{align*}
+$$
+
+## Time domain shifting
+
+Translating the center of time domain function on $t$ axis to the right will result in a counter-clockwise rotation of the frequency domain function.
+The counter-clockwise direction is due to FT using counter-clockwise rotation when sampling the function to a unit circle.
+
+$$
+\begin{align*}
+\tag{P2}
+g(\phi) &= g(t-t_0) \\
+\widehat{g}(f) &= \int_{-\infty}^{\infty} g(\phi) \, e^{-i\tau f \phi} \, d\phi \\
+&= \int_{-\infty}^{\infty} g(t-t_0) \, e^{-i\tau f (t-t_0)} d(t-t_0) \\
+&= e^{i\tau f t_0} \, \int_{-\infty}^{\infty} g(t-t_0) \, e^{-i\tau f t} dt \\
+&= e^{i\tau f t_0} \, \widehat{g}(t-t_0) \\
+\mathcal{F}\left\{g(t-t_0)\right\} &= e^{-i\tau f t_0} \, \widehat{g}(f) \\
+\end{align*}
+$$
+
+## Frequency domain shifting
+
+An inverse result of time domain shifting.
+Shifting principal/fundamental frequency of the frequency domain function to the right. Will result in a clockwise rotation wrapping of the function in time domain, with frequency equal to the shift.
+
+The statement might look complicated, but an example might ease it up.
+Suppose that we can draw a straight signal from left to right (for example a constant value).
+If we multiply it with $e^{i \tau f_0 t}$, we essentially create a unit circle and overlay the value of the function along the arc of the circle.
+The frequency $f_0$ determine the stretching of the overlay. Bigger frequency means for a given original length $\Delta x$, it was stretched by a factor of $f_0$ along the arc of the circle.
+
+$$
+\begin{align*}
+\tag{P3}
+\widehat{g}(\xi) &= \widehat{g}(f-f_0) \\
+g(t) &= \int_{-\infty}^{\infty} \widehat{g}(f-f_0) \, e^{i\tau (f-f_0) t} \, d(f-f_0) \\
+&= e^{-i\tau f_0 t} \int_{-\infty}^{\infty} \widehat{g}(f-f_0) \, e^{i\tau f t} \, df \\
+&= e^{-i\tau f_0 t} \mathcal{F}^{-1}\left\{ \widehat{g}(f-f_0) \right\} \\
+\mathcal{F}\left\{ e^{i\tau f_0 t} \, g(t) \right\} &= \widehat{g}(f-f_0)
+\end{align*}
+$$
+
+## Time scaling
+
+An immediate interpretation is to recognize that this is essentially how a sampling works.
+
+Scaling the input time on time domain means there are longer delay on each sampling. So, obviously
+the frequency is slower. Then another direct result is the intensity of the pitch is weaker.
+
+Maybe another intuitive example is how radio tape cassette works. If you spin the tape too fast, the pitch is higher (frequency increase),
+and it hurts your ear (intensity increase). Spinning it faster means a scale with value between 0 and 1, because now the sampling uses shorter distance.
+
+$$
+\begin{align*}
+\tag{P4}
+g(\phi) &= g(a\, t) \\
+\widehat{g}(f) &= \int_{-\infty}^{\infty} g(\phi) \, e^{-i\tau f \phi} \, d\phi \\
+&= \int_{-\infty}^{\infty} g(a t) \, e^{-i\tau f a t} \, d(at) \\
+\widehat{g}(\frac{\xi}{a})&= \int_{-\infty}^{\infty} g(a t) \, e^{-i\tau \xi t} \, d(at) \\
+&= \left|a\right| \int_{-\infty}^{\infty} g(a t) \, e^{-i\tau \xi t} \, dt \\
+\widehat{g}(\frac{f}{a})&= \left|a\right| \, \mathcal{F}\left\{ g(at)\right\} \\
+\mathcal{F}\left\{ g(at)\right\} &= \frac{1}{\left|a\right|} \, \widehat{g}(\frac{f}{a})
+\end{align*}
+$$
+
+Note that the scaling by $\left|a\right|$ is because if $a$ is negative, then the integral boundary only flips.
+The sign itself doesn't affect the function.
+The integral result still has the same positive value.
+
+## Time Reversal
+
+As a direct consequence of the time scaling property. If we reverse the sampling direction, the frequency domain function also flips direction.
+
+$$
+\begin{align*}
+\tag{P5}
+\mathcal{F}\left\{ g(at)\right\} &= \frac{1}{\left|a\right|} \, \widehat{g}(\frac{f}{a}) \\
+\mathcal{F}\left\{ g(-t)\right\}&= \frac{1}{\left|-1\right|} \, \widehat{g}(\frac{f}{-1}) \\
+\mathcal{F}\left\{ g(-t)\right\}&= \widehat{g}(-f) \\
+\end{align*}
+$$
+
+## The Zero-th Frequency
+
+We heavily (ab)used this property throughout the second article. When we set the frequency to 0 for non-periodic FT,
+we have two ways of calculating the results.
+
+If we set the frequency to 0 before doing the integral transform, it is essentially the total area under the curve of the function we want to transform.
+For periodic function, this becomes the average area in the span of the period.
+
+If we calculate the integral transform first, then substitute $f=0$, this should directly reduce/simplify the frequency domain function.
+
+By having two-way of approaching the problem, the zero-th frequency is an essential tool to simplify complicated equation.
+
+We can check the periodicity of the whole function from using the zero-th frequency, as what we did in the in previous article.
+If the function is periodic, there exists smallest non-zero interval $T$ in which the average of the zero-th frequency coefficients remain constants.
+
+$$
+\begin{align*}
+\tag{P6}
+\widehat{g}(0) &= \mathcal{F}\left[ g\right](f=0) \\
+&= \int_{-\infty}^\infty \, g(t) \, e^{-i\tau f t} \, dt = \int_{-\infty}^\infty \, g(t) \, e^{-i\tau 0 t} \, dt = \int_{-\infty}^\infty \, g(t) \, dt\\
+\end{align*}
+$$

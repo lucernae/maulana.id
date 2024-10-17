@@ -1,0 +1,44 @@
+---
+layout_name: blog-post
+title: Using a resized block volume in Longhorn.IO
+category:
+  name: soft-dev
+description: Resizing cloud volume and use it in Longhorn
+date: 2020-12-19T07:57:19.089Z
+---
+
+This one is more for my personal notes.
+
+Lately I was tasked to manage our company’s Nextcloud instance. It was used as internal tools to share files, as replacement from Google Drive.
+
+I deployed it using Rancher and Helm chart recipe. However since it needs huge storage size, I assign the pods to be scheduled in a specific node. The storage engine we used is [longhorn.io](https://longhorn.io). I choose this because it has built-in support of snapshot abilities. The storage itself where provisioned using Hetzner EBS (Elastic Block Storage). We provision 130 GB at first. The storage were attached to our specified node as a device. So I had to mount it to our node. Then since we use Longhorn, I specify in the node settings that I add a new disk with the specified mount point.
+
+This is also the first time for me to set something like this, so I there’s some bit of gotchas I had to learn.
+
+First, this is a kind of storage _virtualization_, because longhorn will create the disk and attach it to the pod as volume. However, actually longhorn store the data (blocks) as files in the mount point in the original node. So, if you look at the original mount point, you wont’s see files, but rather and obfuscated folders of hash that corresponds to the blocks of the filesystem used by pod. You might think that this is not important, but you need to consider this because to reconstruct the actual files/folders used by pods you need to use longhorn to reconstruct the blocks into real files.
+
+Second, the reason longhorn work like this is because it’s easier for it to create snapshots of **blocks**. I don’t understand it at first, however it seems that the snapshots were also stored in the same node mount point (same longhorn disk). Which means, if you Hetzner EBS were sized as 150GB, and then you provision the longhorn disk to be sized as 150GB, then you only have typically around 70 GB of storage that can be used by the pods. The rest of the storage were used to store the snapshots. The size of the snapshots depending on how many snapshots you want to store. On another note, longhorn snapshots works by diffing between snapshots. So it’s somewhat efficient. If you have 10 snapshots but the files are not different by each snapshots, you only store 1 real snapshots in total.
+
+I didn’t know this at first so I setup 150 GB longhorn disk, expecting it to be used fully 150 GB by the pods. So, yesterday when kubelet report disk pressure, I was confused on why the storage is not enough given that we only uses around 70 GB. It turns out I have so many snapshots, around 20 and everyday we sync new files so there are many changes everyday. For instance if we upload 20 GB of files, and then deletes it, the snapshot will still remember (kind of like git).
+
+The first thing I do to try to recover from this situation is to remove the pod, so the volume can be detached and safe from possible race condition or bad state.
+
+Kubelet report the node with disk pressure, so longhorn will report the node as **down**. However we can mount the longhorn disk in maintenance mode. I mount it so I can delete snapshots (the older one). However this proves to be not effective. If I deleted oldest snapshots, longhorn kind of rebuild the diff to all subsequent snapshots. I have 20 snapshots so this is a very slow process, but I have to recover the service (nextcloud) quickly because our company uses it. So, instead of deleting the snapshots, I choose to increase twice the size of the Hetzner EBS.
+
+Fortunately Hetzner allow us to hot resize the storage volume, even while the volume is still mounted. So, I did just that and resize to 300 GB. But Hetzner gave us warning that I also need to resize it from within the node so that the OS recognize it.
+
+Whoopsie, I knew that dealing with partition might cause data loss. We have a problem here, Houston. First, in effect we actually double or triple mount the disk at this point in time. Hetzner EBS exposed as a device then we mount it to the node. Longhorn mount the block file inside the node mount point as longhorn disk. Longhorn mount the longhorn disk in maintenance mode as filesystem in kubelet. If we resize this device will that cause ripple effect to the longhorn disk????
+
+I don’t have any option other than just DO IT.
+
+![Just Do It](https://media.giphy.com/media/UqZ4imFIoljlr5O2sM/giphy.gif)
+
+So, from inside the node, I search thru the device name. You can see the entry using `/etc/fstab` or from `df`. Using `resize2fs` I let the Linux kernel recognize the new size (hot or online resize, without unmounting)
+
+```
+resize2fs <device name>
+```
+
+Fortunately that works magically. The new size were recognized in the node, and subsequently in longhorn. Then, in longhorn I specify the new size of the disk. This time I change the longhorn disk size accordingly. Since the pod‘s volume size will still be 150 GB, I set the disk size to be 300 GB.
+
+In the future, I will need to set up a separate hot backup where I store the pod’s files/folders for a quick copy in case we need it.

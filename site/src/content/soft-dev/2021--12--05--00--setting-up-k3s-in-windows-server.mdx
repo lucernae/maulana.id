@@ -1,0 +1,285 @@
+---
+layout_name: blog-post
+title: Setting up Kubernetes in Windows Server
+category:
+  name: soft-dev
+description: There are plenty of support and articles about how to install Kubernetes in Windows Desktop, but not in Windows Server. The following guide documents my personal notes on how to set this up.
+date: 2021-12-05T00:00:00.00Z
+---
+
+One of my clients insists on using bare metal Windows Server in their infra. Meanwhile, I insists on using Kubernetes to deploy the stack to make it reliable and less maintenance burden.
+This weird situation is why I have to set up Kubernetes on top of Windows Server to run my workload
+
+# A brief recap about the difference between Windows Desktop and Windows Server
+
+By the time I wrote this article, we have Windows 10 Desktop Pro. Installing Kubernetes stack with Linux worker nodes is trivial for development purposes.
+There are many ways to do that with everything preconfigured. Here are some of them:
+
+1. Install Docker for Desktop for WSL 2 then activate Kubernetes support (it will use minikube)
+2. Install Ubuntu WLS 2 then install Microk8s
+3. Install Ubuntu Multipass, then create Ubuntu Hyper-V (via Multipass) then install Microk8s
+4. Install Ubuntu Microk8s from Ubuntu's provided installer on Windows (it will use Multipass anyway)
+5. Install Rancher Desktop (somewhat experimental at the moment)
+6. Install minikube directly and choose your driver (can be KVM2, Docker, Virtual Box, etc)
+
+Now for some reasons and the other, above approach don't work nicely if we are talking about self-hosted production deployment using Windows Server on prem.
+
+The cause is:
+
+1. Windows Server Standard Edition (2019) don't have WSL2 support
+2. Ubuntu Multipass works for the recent Windows 10 Pro Hyper-V manager but not Windows Server Hyper-V manager
+3. Minikube is not production ready and to my experience contains many wierd bug unsuitable for production environment
+4. Rancher Desktop needs WSL 2
+5. Docker for Desktop and Virtual Box license prevent us to use this for production deployment (I think)
+
+There is also Docker Enterprise Edition, but we won't use that because it only deals with Windows container. We need Linux containers.
+
+Given these constraint, then my chosen approach would be:
+
+1. Install Ubuntu manually using Hyper-V manager bundled with Windows Server
+2. Install K3s on top of Ubuntu (for some reason Microk8s have poor performance)
+3. Setup extra things such as service management, port-forward, and networking.
+
+# Install GNU/Linux OS using Hyper-V
+
+Hyper-V is basically a Windows Hypervisor. You can use Hyper-V to share your bare metal computer resources to be used by your VM. The VM can be a Linux VM.
+Windows Server Standard Edition have this feature but you need to enable it. Just follow this [instruction](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/get-started/install-the-hyper-v-role-on-windows-server)
+
+The important settings from the role installation:
+
+1. In the `Hyper-V > Virtual Switches` step, make sure you **do not select** your physical network device, so that Windows will configure a Default Switch for the VM to use.
+2. Restart after installing
+
+Once you enable Hyper-V, you can open Hyper-V manager. Just search the program from the search bar.
+
+From the Hyper-V manager window, choose your server then click menu `Action > New > Virtual Machine`.
+You will then see a new VM creation Wizard. Proceed normally, but take notice of the following settings:
+
+1. Choose Generation 2
+2. Allocate a decent chunk of memory because we are going to use it as Kubernetes nodes.
+3. For the networking, choose `Default Switch` because we want the VM to have internet access. If for some reason the `Default Switch` is missing. Then we need to set up NAT later. I will talk about it later.
+4. Download your Ubuntu server ISO and select the ISO for the media installation option.
+
+Once you created your VM profile, you need to tweak more settings. Settings page is available after you click your VM. The options is in your right panel.
+
+1. Disable Secure Boot
+2. Add more resources if necessary, like CPU and RAM
+3. If you have problem with `Default Switch` missing, then go to [NAT networking](#nat-networking) section first, then go back here.
+4. In the Network Adapter section, choose `Default Switch` or `Internal` virtual adapter that you set up with NAT in step 3.
+
+Then start your VM and proceed with a standard Ubuntu installation.
+In my current case, I installed minimal Ubuntu Server LTS 20.04 version.
+I had to setup networking and user password within the installation step in order to get access to the machine.
+
+Now, assuming you already have either `Default Switch` or NAT networking ready, the following network configuration is the same in principle.
+The difference is just **the subnet** you are going to work at.
+
+With the `Default Switch`, it is highly likely that your Windows Server is inside a LAN or NAT by themselves (physically). Then you already
+have a subnet. Your VM then be part of this subnet, which can mean it is bridged with your physical interface... or not...
+¯\_(ツ)\_/¯
+Depending on what Windows will decide for this Default Switch.
+Anyway, if your LAN or NAT in your physical interface already has DHCP server in the network, then your guest VM will have dynamic IP.
+I recommended for the first VM we setup to have **static IP**, since it is going to be the k8s controlplane, or Load Balancer of the controlplane,
+depending if you want to setup HA (High Availability) or not. Get the subnet information from `ipconfig` or Network and Sharing properties of your
+physical interface/adapter that is named `Default Switch`. This might be confusing, but Windows can split your physical adapter so it can have
+a virtual adapter for the VMs subnet called `Default Swith` and this can be connected using bridge mechanism by Windows... or not...
+I can't really tell how it decides which method is going to be used, so you need to explore yourself.
+Let's say the adapter is bridged, then you will have the same subnet for both your physical interface and your VM virtual interface `Default Switch`.
+For example, prefix is 192.168.1.0 with subnet 255.255.0.0, then your static IP must be in this range.
+Let's say your physical interface uses 192.168.1.2 and it uses gateway 192.168.1.1. That means your VM static IP cannot use 192.168.1.2.
+You can choose 192.168.1.3 for your VM eth0 address, netmask 255.255.0.0 and gateway 192.168.1.1 (the same with your physical interface).
+
+If Windows create `Default Switch` not as a bridge but rather NAT, then your physical interface and this `Default Switch` will have different subnet.
+In this case, take note of the subnet, let's say 192.200.10.0 with 255.255.255.0 mask, meanwhile your physical interface is in 192.168.1.0 with netmask 255.255.255.0.
+For these type of network, you need to set static IP to the `Default Switch` (in the host) so that it became the gateway of the VM subnet.
+In the example previously, the static IP of the `Default Switch` then has to be 192.200.10.1. Then you can set eth0 in the VM to have static IP
+192.200.10.2, with mask 255.255.255.0 and gateway 192.200.10.1. I hope this is clear enough.
+
+If Windows don't have `Default Switch`, that means you already setup NAT in the previous step. Simply uses your `Internal` interface subnet.
+If you follow exactly the step above, then you know I choose 192.168.100.1 as the gateway (set in the vEthernet Internal in the host).
+So, I choose 192.168.100.2 as the VM eth0 static IP.
+
+After configuring the network, I recommend testing these things to check connection:
+
+1. Ping from inside the VM to the host with the `Default Switch` or `Internal` static IP as the target
+2. Ping from the host to the VM using VM eth0 static IP as the target
+3. Ping from the VM to your network DNS (or public DNS)
+4. Check if any website in the internet is reachable from inside the VM.
+
+# NAT Networking
+
+Skip this step if you already have `Default Switch` in the Virtual Switch Manager of Hyper-V menu and go straight to [Installing k8s distro](#install-kubernetes-distro)
+
+Windows Hyper-V manager gives you the `Default Switch` by default (pardon the pun). This is used to allow your guest VM to access internet using your physical
+interface. For some reason, in some version of Windows or Windows Server, it maybe missing. For example, when I tested it in Windows Server 2019 Standard Edition
+in Hetzner, it doesn't have a Default Switch. In this case, we have to setup NAT by ourselves.
+
+From the Server Manager interface, Add Role, and choose `Remote and Routing` roles. This article is a good [tutorial](https://msftwebcast.com/2020/02/configure-windows-server-2019-as-a-nat-router.html)
+on that. For some reason, in my case, it had to setup IIS which I don't need. But I can't disable it, so I will have to do another work around later.
+For now, just focus on installing the roles.
+
+Once the role is added, you will have new tools called `Routing and Remote` access in the Tools menu of Server Manager UI. Click that, we are going to configure NAT.
+The steps is also described in above article.
+
+Key point to look out for:
+
+1. In Hyper-V manager, there is a Virtual Switch Manager action. Click that and create a new Virtual Switch with type `Internal` (not External, not Private).
+   Give it a name `Internal` for clarity.
+2. In the Routing and Remote Access manager, right click on your server and choose `Configure and Enable Routing and Remote Access`. Choose NAT.
+3. In the interface selection, there will be at least two interface. Your physical interface connected with internet, in my case it is called Ethernet,
+   internet public IPv4 address. Then the second one is our virtual interface `Internal`. The selection asked you to choose which interface is connected
+   with **public internet access**, so choose that interface. Then let the process finished.
+
+Note that a misconfiguration will likely cause you to not be able to access your Windows Server remotely. In my case, I set it up in Hetzner and whenever I
+misconfigured my network, I had to clean install the server (I tried different things before settling on this approach). So, make sure you choose the correct interface.
+
+Next, we are going to configure the network your VM will use, which is the `Internal` subnet.
+This is a standard LAN setup (but virtual), the key points are:
+
+1. In your host machine (the Windows Server), Open Network and Sharing Center. Choose virtual interface, it is likely to be named as `vEthernet (Internal)`
+   with type Hyper-V Virtual Ethernet Adapter.
+2. Right click adapter > Properties > IPv4 > Properties. Configure your subnet. I am using 192.168.100.1 as IP address with netmask 255.255.255.0.
+   This is because Kubernetes usually uses 10.x.x.x IP adresses. I just want these two subnets can be easily recognized at a glance. I mean, if I saw
+   192.x.x.x somewhere in the guest VM, that means it is the Hyper-V network interface and not K8s Cluster Network interface. I can easily recognized it.
+3. Also setup DNS if you use non-default one.
+
+Now once you completed this step, go back to the previous step of Ubuntu installation.
+
+# Install Kubernetes Distro
+
+Depending on which k8s distro you choose, install it yourself. If you use microk8s in Ubuntu server, then usually the option is presented in the installation steps.
+
+In my case, I'm using k3s. Simply download the binary and run it.
+
+```bash
+curl -sfL https://get.k3s.io | sh -
+```
+
+This will add single node k3s server.
+
+# Extra steps for convenience
+
+You may want to guard the controlplane to be accessible only by you, from the host. Here's the plan:
+Enable SSH, but disable password authentication.
+Put strong password for the normal user and disallow sudo for this user.
+Instead of accessing the VM via Hyper-V manager, I recommend to access the VM via SSH as root to reduce ways of access, because after all the
+controlplane is only used as controlplane.
+This is how I do it. Each step has indicator on where the task should be executed.
+
+1. **host** Download Visual Studio Code and Install
+2. **host** In Visual Studio Code, enable Remote Development Extension Pack from Microsoft
+3. **guest** Enable SSH with password authentication (temporarily): edit `/etc/ssh/sshd_config` as root and add `PasswordAuthentication yes` in the last line.
+   Restart ssh using `sudo systemctl restart sshd`
+4. **host** Connect to the VM using Visual Studio Code "connect via SSH" as described [here](https://code.visualstudio.com/docs/remote/ssh)
+5. **guest** Once you are inside the VM. Open VSCode terminal window. Generate new ssh key pair and use it as credentials to access the VM as root.
+
+   ```bash
+   ssh-keygen
+   sudo mkdir -p /root/.ssh
+   cat ~/.ssh/id_rsa.pub | sudo tee -a /root/.ssh/authorized_keys
+   # Open the private key in VSCode tab
+   code ~/.ssh/id_rsa
+   ```
+
+6. From the newly opened window of `id_rsa` file, copy the content of the file into your host/Windows user directory. This is your SSH private key. Keep it safe and
+   delete it from the guest VM.
+7. **guest** Configure your SSHD config (in `/etc/ssh/sshd_config`) to disable password authentication by setting `PasswordAuthentication no` for the line we set in previous step.
+   Restart SSHD: `sudo systemctl restart sshd`
+8. **host** Redo connection to the VM using Visual Studio Code, this time, make sure that it doesn't ask for password, and you log in as `root`.
+9. **guest** From your VSCode window that is _remote connecting_ to the guest VM, install Kubernetes extension made by Microsoft. This will allow you to do
+   a quick K8s operation via VSCode GUI.
+
+By now, whenever you want to access the guest VM (let's call this controlplane), use VSCode from the host machine.
+A more sophisticated method (if you are familiar) is to use Visual Studio Code in your local computer to access the controlplane via your Windows Server host
+as the bastion host. This requires you to do SSH tunnel/forward in your config file.
+
+# Customize networking
+
+With k8s operations, you want to have at least these ports exposed:
+
+1. Port 22 of the controlplane to Windows Server public IP for SSH access to controlplane (or for more security)
+2. Port 6443 (depending on the distro) of the controlplane to Windows Server public IP 6443 for Kubernetes API Server access
+3. Port 80/443 of the Load Balancer VM to be exposed to the port 80/443 of the Windows Server public IP so that we can expose HTTP/S service
+
+It depends if your Kubernetes distro is using another layer of virtualization or not. With k3s, the controlplane is accessible in the guest VM.
+So the controlplane internal IP address is just the VM internal IP. You can just get it via `ifconfig eth0`. Let's call this address, `VM_IP`.
+
+With k3s, since the port is exposed in the VM. We can refer to the `VM_IP:PORT` directly. With other distro such as RKE (Rancher Kubernetes Engine),
+the controlplane is running as a container, so you need to expose the container port itself. However this is out of topic for now.
+
+## Make sure VM has static IPs and can connect over to the internet
+
+The network topology we uses is that the Windows Server host has the interface that has public IP (internet addressable).
+The VM uses network interface called the `Default Switch` or `Internal` that has shared outgoing and ingoing connection with the server physical network interface.
+Despite the difference between `Default Switch` (NAT or bridged) or `Internal` (NAT), as explained before, we set the controlplane to have static IP address
+accessible from the host.
+
+## Forward VM port to the host
+
+We are forwarding the port using `netsh` Windows CLI tools.
+
+For each port we want to forward, do:
+
+```powershell
+netsh interface portproxy add v4tov4 listenport=<port in host> connectport=<port in VM> connectaddress=<VM_IP> listenaddress=<host IP>
+```
+
+For some reason, the forwarding rules doesn't work after machine restart. Even though, the rules appears when I do `netsh interface portproxy show all`.
+To avoid this problem, we add some hacky things. Create a powershell script. If the connectaddres is `192.168.100.2` and listenaddress is `192.168.1.2`,
+then we make a powershell script like this:
+
+```powershell
+# in a file called `port-proxy.ps1`
+netsh interface portproxy reset
+# For http
+netsh interface portproxy add v4tov4 listenport=80 connectport=80 connectaddres=192.168.100.2 listenaddress=192.168.1.2
+# For https
+netsh interface portproxy add v4tov4 listenport=443 connectport=443 connectaddres=192.168.100.2 listenaddress=192.168.1.2
+# For k8s controlplane
+netsh interface portproxy add v4tov4 listenport=6443 connectport=6443 connectaddres=192.168.100.2 listenaddress=192.168.1.2
+# For SSH
+netsh interface portproxy add v4tov4 listenport=22 connectport=22 connectaddres=192.168.100.2 listenaddress=192.168.1.2
+netsh interface show all
+```
+
+You can check by doing SSH or access the HTTP/S endpoint using the public host IP interface.
+
+## Allow Inbound Firewall Rule
+
+For the port to be able to be accessed from outside the Windows Server host, you need to declare inbound rules in the Windows Firewall settings.
+Just allow port 80,443,6443,22.
+
+## Create a scheduled task
+
+You want the forwarding rule to be automatically applied if the server restarts. Create a scheduled task and schedule it for every after system startup
+to execute the previous `port-proxy.ps1` powershell script.
+
+## (Optional) tweak Kube API Server certificate to accept a new SAN (Subject Alternative Names)
+
+This depends on your k8s distro.
+
+In the case of K3s, the certificate was setup with the default SAN: 127.0.0.1 and internal IP address, which in this case the `VM_API`.
+However when we expose controlplane port 6443 in the step above, we are going to access it using the host IP address.
+We need to rotate the new TLS certificate. Execute this command from the controlplane (k3s server).
+
+```bash
+# Save our current tls config
+cd /var/lib/rancher/k3s/server
+mkdir -p .tls-backup
+k3s kubectl -n kube-system get secret k3s-serving -o yaml > .tls-backup/k3s-serving.yaml
+mv tls .tls-backup/
+
+# Delete current certificate
+k3s kubectl -n kube-system delete secret k3s-serving
+rm -rf tls
+
+# restart k3s
+systemctl restart k3s
+```
+
+## Check host/guest VM reboot settings
+
+For production instance, we want our k8s cluster to be up immediately when the machine is up.
+
+Check your Hyper-V VM Settings. Under the `Management` panel inside the setting window, make sure that the automatic start action is enabled
+and set to `automatically start if it was running when the service stopped`

@@ -1,0 +1,195 @@
+---
+layout_name: blog-post
+title: Gaussian integral
+description: Using symmetry to simplify problems
+category:
+  name: blog
+date: 2023-07-26T00:00:00.00Z
+---
+
+In the previous post [Deriving probability distribution from entropy](../2023--07--21--00--deriving-probability-distribution-from-entropy),
+I mentioned about [Gaussian integral](https://en.wikipedia.org/wiki/Gaussian_integral) and said it deserves its own post.
+So here it is, and hopefully a short article as well.
+
+# Gaussian integral as an introductary "integral" trick
+
+The integral is quite famous for being an example of an expression that doesn't have elementary indefinite form, but it does
+converge to a certain value in the definite form. Moreover, the result involves $\pi$ which is usually related with
+a circle.
+
+$$
+\begin{align*}
+\tag{E1} \int _{-\infty }^{\infty }e^{-x^{2}}\,dx={\sqrt {\pi }}
+\end{align*}
+$$
+
+The integral (E1) doesn't have elementary indefinite expression. But we can still calculate it using circular symmetry.
+The exact proof needs formal justification, but the idea is as follow.
+
+Let the integral (E1) has convergent value, and we call it $L$.
+
+$$
+\begin{align*}
+L&=\int _{-\infty }^{\infty }e^{-x^{2}}\,dx
+\end{align*}
+$$
+
+Note that, if we change the variable from $x$ to $y$, the value should be the same.
+However, if both $x$ and $y$ is a perpendicular axis, then by Pythagorean Theorem, $r^2=x^2+y^2$ with $r$ being the hypotenuse.
+
+The trick is to realize that $L^2=L_x \, L_y$.
+
+$$
+\begin{align}
+L^2&=L_x\,L_y \\
+&=\int _{-\infty }^{\infty }e^{-x^{2}}\,dx \int _{-\infty }^{\infty }e^{-y^{2}}\,dy \\
+&=\int _{-\infty }^{\infty }\int _{-\infty }^{\infty }e^{-\left(x^{2}+y^{2}\right)}\,dx\, dy \\
+&=\int _{-\infty }^{\infty }\int _{-\infty }^{\infty }e^{-r^2}\,dx\, dy \\
+\end{align}
+$$
+
+Step (2) to step (3) is justified because we kind of assume that $L$ is converged, so we can swap and mix the integral,
+just like a sum. This is known as [Fubini's Theorem](https://en.wikipedia.org/wiki/Fubini%27s_theorem).
+
+Step (3) to (4) is just circle identity we mentioned earlier.
+
+Now this equation becomes a double integral. In other words, it measures an area or volume with the function $e^{-r^2}$ as its density.
+The integral with respect to Cartesian coordinate $dx\,dy$ differentials can be integrated the same way using
+a polar coordinate with $r\,dr\,d\theta$ differentials. Technically, the conversion is done using Jacobian matrix.
+But we can accept it as fact for now.
+
+$$
+\begin{align}
+L^2&=\int _{-\infty }^{\infty }\int _{-\infty }^{\infty }e^{-r^2}\,dx\, dy \\
+&=\int _{-\pi }^{\pi }\int _{0 }^{\infty }e^{-r^2}r\,dr\, d\theta \\
+&=\int _{-\pi }^{\pi }\, d\theta \, \int _{0 }^{\infty }\frac{1}{2}e^{-s}\,ds \\
+&=2\pi \, \frac{1}{2} \\
+&=\pi \\
+L&=\sqrt{\pi}
+\end{align}
+$$
+
+Step (5) to (6) is due the differentials changes. So the integration boundaries also changes.
+
+Step (6) to (7) is applying Fubini's Theorem again, since $dr$ and $d\theta$ is independent. We also substitute $s=r^2$.
+
+The rests just follows.
+
+We now understand that there is a circle symmetry at works, which is why the constant $\pi$ appears.
+
+# Interpreting Gaussian integral as flux
+
+An alternative way of interpreting Gaussian integral can be perceived using [Gauss's Law](https://en.wikipedia.org/wiki/Gauss%27s_law).
+
+If you haven't already know, an alternative of formulation for Coulomb's Law and Newton's Universal Gravitation is by using Gauss Law
+with spherical symmetry for constant electric flux. In the original derivation, it was known from observation/experimental results
+that the magnitude of electric field from a point charge in vacuum is a constant $E$.
+If we take the flux along a spherical area $\mathrm{d}\mathbf{A}$, we got:
+
+$$
+\begin{align}
+\Phi_E &= \oiint_{\mathrm{S}} \mathbf{E} \cdot \mathrm{d}\mathbf{A} = \frac{q}{\varepsilon_0} \\
+E\,4\pi r^2 &= \frac{q}{\varepsilon_0}\\
+E&= \frac{q}{4\pi\varepsilon_0 r^2}\\
+\end{align}
+$$
+
+If we observe above equation, we know that $E(r)$ is a function of $r$, and it measures the strength of the
+electric field. The above formulation has an equivalent expression using [divergence theorem](https://en.wikipedia.org/wiki/Divergence_theorem).
+
+$$
+\begin{align}
+\nabla\cdot\mathbf{E} = \frac{\rho}{\varepsilon_0}
+\end{align}
+$$
+
+Where $\rho$ is the density of the charge.
+
+Now if we use some kind of analogy, given this gaussian integral:
+
+$$
+L^2 =\int _{-\infty }^{\infty }\int _{-\infty }^{\infty }e^{-r^2}\,dx\, dy \\
+$$
+
+We can imagine that it is equivalent of a surface integral for a flat circle $S$, with $E$ is a vector field along the $z$ axis direction,
+so that it was integrated with parameter $dx\,dy$. So $E=e^{-r^2}$.
+
+Since a total flux of zero means there are no charge inside, we can imagine that if the boundary contains charge inside, then
+we can choose a cylindrical shape. So we have two circle surface, and one surface wraps around the cylinder. Suppose that
+field $\mathbf{E}$ is completely in the direction of $z$ axis, then the flux around the cylinder (along the $r$ direction) is zero.
+The total flux is then:
+
+$$
+\begin{align}
+\Phi_E &= \oiint_{\mathrm{S}} \mathbf{E} \cdot \mathrm{d}\mathbf{A} = \frac{q}{\varepsilon_0} \\
+&= 2 \int _{-\pi }^{\pi }\, d\theta \, \int _{0 }^{s }\frac{1}{2}e^{-s}\,ds \\
+&= 2 \pi (1 - e^{-r^2}) \\
+\end{align}
+$$
+
+What is interesting with above equation is that the total flux is capped at $2 \pi$ when $s$ is very large.
+The total flux is proportional with the charge quantity contained inside the surface.
+
+If we follow along the divergence theorem, then equivalently we can construct the $\mathbf{E}$ field vector in cylindrical coordinate.
+
+$$
+\mathbf{E} = e^{-r^2}\,\mathbf{\hat{z}}
+$$
+
+Interestingly, the divergence becomes zero this way because there are no $z$ parameter in $\hat{z}$ direction. Meanwhile if the total flux is non-zero
+then the divergence must be proportional to the density of the volume.
+
+If we inspect the flux equation in more detail, in order for the flux to not be zero then the sign of the vector must change.
+Thus, if we "patched" the vector function $\mathbf{E}$, then it was supposed to be like this:
+
+$$
+\begin{align*}
+\tag{E2} \mathbf{E} = sgn (z) \,e^{-r^2}\,\mathbf{\hat{z}}
+\end{align*}
+$$
+
+Here, $sgn (z)$ is a function that returns the sign of variable z. It will be -1 if $z \lt 0$, 1 if $z \gt 0$, and 0 if $z=0$.
+
+We have an interesting connection that the divergence now non-zero and involves the derivative of the sign function $sgn(z)$.
+
+$$
+\begin{align}
+\nabla\cdot\mathbf{E} = \frac{\rho}{\varepsilon_0} \\
+e^{-r^2}\,\frac{\partial }{\partial z}\,sgn(z) = \frac{\rho}{\varepsilon_0} \\
+e^{-r^2}\,sgn'(z) = \frac{\rho}{\varepsilon_0} \\
+\end{align}
+$$
+
+If we treat $\varepsilon_0$ as just a unit constant (to make sure the unit dimension is correct in electromagnetic theory), then
+the general connection directly follows from divergence theorem that the density is the amount of charge contained in the cylindrical volume
+we decided earlier.
+
+Now if we consider a step function $sgn(z)$, we can intuitively imagine that the value of $sgn'(z)$ is zero everywhere, except around 0.
+So, let's just suppose we are inspecting the charge density around $z=0$ only. The density of the charge is proportional to the derivative.
+
+The volume element $dV$ for a cylindrical coordinate is $dV=2\pi r\,dr \,dz$. Substituting this for density:
+
+$$
+\begin{align}
+\frac{\rho}{\varepsilon_0} &= \frac{d}{dV} \left[ 2\pi(1-e^{-r^2}) \right] \\
+&= \frac{2 \pi 2 r e^{-r^2}\,dr\,dz}{2 \pi r\,dr\,dz }\\
+&=2 e^{-r^2}
+\end{align}
+$$
+
+Combining both results confirms that $sgn'(z) = 2$ for some region near $z=0$.
+
+But the question then remains on how to formally express this region?
+
+Why there is such a strange connection from an entirely different perspectives? If we consider $e^{-r^2}$ as field vector that
+penetrates an area, then calculate it using gaussian integral, we got a certain factor $2 \pi$.
+This factor, coincidentally be the same factor needed in order for us to have the correct divergence, by the divergence theorem.
+
+In other words, the factor $\pi$ appears because on Divergence theorem we observed shows circular symmetry.
+Then since it is proportional to the surface integral (power of two), then the gaussian integral along one single axis/dimension is $\sqrt\pi$.
+
+Isn't it fascinating? If the distribution $\rho$ has a factor of $e^{-r^2}$, then total flux is $2\pi$, implying that the total amount
+of charge contained inside the volume when $r$ goes to infinity, is $2\pi$. It doesn't care about the unit.
+
+If you are interested, you can also try using the same distribution, but apply it in all 3 axis.
+To calculate the flux, either use spherical or cylindrical coordinates, the result has to be the same.

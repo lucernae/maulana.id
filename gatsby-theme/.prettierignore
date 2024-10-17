@@ -1,9 +1,0 @@
-.cache
-.direnv
-.yarn
-.vscode
-.idea
-result
-package.json
-package-lock.json
-public

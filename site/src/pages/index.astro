@@ -1,0 +1,69 @@
+---
+import ListCategories from '@/components/ListCategories'
+import ListPosts from '@/components/ListPosts'
+import TitlePage from '@/components/TitlePage'
+import BaseLayout from '@/layouts/BaseLayout'
+import { getPosts } from '@/utils'
+import { siteConfig } from '@/data/site.config.js'
+import { Image } from 'astro:assets'
+import avatar from '../assets/images/avatar.png'
+const author = siteConfig.author
+const social = siteConfig.social
+
+const MAX_POSTS = siteConfig.config.paginationPageSize // max number of posts to show on the home page
+const posts = await getPosts(MAX_POSTS)
+---
+
+<BaseLayout title='Home'>
+	<TitlePage title="Maulana's Personal Blog" />
+	<div class='flex justify-start items-center gap-2'>
+		<picture>
+			<Image src={avatar} width='64' height='64' alt={author?.name} />
+		</picture>
+		<p>
+			Written by <strong>{author.name}</strong>
+			<br />
+			{author?.summary || null}
+			<br />
+			<a href={`https://twitter.com/${social.twitter}`}>
+				<img
+					alt='Twitter Follow'
+					src={`https://img.shields.io/twitter/follow/${social.twitter}?style=social`}
+				/></a
+			>
+		</p>
+		<a href={`https://github.com/${social.github}`}>
+			<img
+				alt='GitHub followers'
+				src={`https://img.shields.io/github/followers/${social.github}?style=social`}
+			/></a
+		>
+	</div>
+	<ListCategories />
+	<p>
+		Welcome to my personal blogs. I write multiple things regarding works, hobby, and opinionated
+		theme.
+	</p>
+	<div>
+		<h2 class='text-lg font-medium tracking-wide text-end'>Latest Posts</h2>
+		<ListPosts FirstBig={true} posts={posts} />
+	</div>
+</BaseLayout>
+
+<script>
+	import { animate } from 'motion'
+	const showAnimations = localStorage.getItem('animations') === 'true'
+
+	if (showAnimations) {
+		animate(
+			'.title',
+			{ y: [80, 0], opacity: [0, 1] },
+			{
+				duration: 2.5,
+				opacity: { duration: 3 },
+
+				offset: [0, 0.55, 0.75]
+			}
+		)
+	}
+</script>
