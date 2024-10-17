@@ -20,6 +20,7 @@ jobs:
         # Bun doesn't work now due to "sharp" package failed to build
         #   - bun
           - yarn
+          - pnpm
     steps:
       - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
       - uses: cachix/install-nix-action@6a9a9e84a173d90b3ffb42c5ddaf9ea033fad011 # v23
@@ -28,7 +29,7 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      - name: Build Gatsby
+      - name: Build Astro
         env:
           GATSBY_ALGOLIA_APP_ID: ${{ secrets.GATSBY_ALGOLIA_APP_ID }}
           GATSBY_ALGOLIA_SEARCH_KEY: ${{ secrets.GATSBY_ALGOLIA_SEARCH_KEY }}
@@ -36,5 +37,5 @@ jobs:
           GATSBY_ALGOLIA_DRY_RUN: true
           GATSBY_ALGOLIA_CONTINUE_ON_FAILURE: true
         run: |
-          nix develop --command ${{matrix.run_time}} install
-          nix develop --command ${{matrix.run_time}} gatsby-build
+          nix develop --command "cd site && ${{matrix.run_time}} install"
+          nix develop --command "cd site && ${{matrix.run_time}} build"
