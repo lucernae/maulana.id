@@ -1,0 +1,450 @@
+---
+layout_name: blog-post
+title: 'Fourier Series: part 1'
+description: Fourier series and how to define them
+date: 2024-01-29T00:00:00.00Z
+category:
+    name: blog
+---
+
+# Taylor Series
+
+You are probably already familiar with [Taylor series](https://en.wikipedia.org/wiki/Taylor_series).
+Taylor series is an approximate expansion of a function around $x_0$ using polynomials.
+It was usually recognized as:
+
+$$
+\begin{align*}
+\tag{E1}
+f(x) = \sum_{n=0}^\infty a_n (x-x_0)^n
+\end{align*}
+$$
+
+The property of Taylor series is that it is a **local** approximation. So the function $f$ can be replaced by the series
+as long as it converges and the function has derivatives. Each of the coefficient of the series $a_n$, corresponds to the value
+of the n-th derivative at point $x_0$.
+
+$$
+\begin{align*}
+\tag{E2}
+\frac{f^{(n)}(x_0)}{n!} = a_n
+\end{align*}
+$$
+
+In other words, the Taylor series expansion can be understood as a set of the derivative's value that defines the function.
+
+But what if the n-th derivative can be inferred from the function? For example, suppose that there exists a function whose its own derivatives?
+
+# A function whose its own derivatives
+
+Making a statement: "function whose its own derivatives" is equivalent of defining function $f(x)$ that is invariant under the derivative operator.
+
+$$
+f(x) = f'(x) = f''(x) = f^{(n)}(x)
+$$
+
+Suppose that it has a Taylor expansion. Since derivative operator is linear, we can operate on it term by term.
+The derivative of the n-th term:
+
+$$
+D_x \left[ a_n\, (x-x_0)^n \right]= a_n\, n\, (x-x_0)^{n-1} = a_{n-1} \, (x-x_0)^{n-1}
+$$
+
+We now have a recurrent relation:
+
+$$
+a_n \, n = a_{n-1}
+$$
+
+However, at $n=0$, then $a_0=1$. This is because the value of the derivative at $x-x_0=0$ must be the same for any n-th derivative.
+It is the smallest integer possible.
+Consequently:
+
+$$
+a_n = \frac{a_{n-1}}{n} = \frac{1}{n!}
+$$
+
+Thus we found our special function:
+
+$$
+\exp(x) = \sum_{n=0}^\infty \frac{x^n}{n!}
+$$
+
+This function is so special, we called it the "exponential" function. Since it also exhibits properties of exponential form:
+
+$$
+\exp(a+b)=\exp(a)\,\exp(b)
+$$
+
+We will elaborate this on a separate article. But for now, we realized that there exists a function like this.
+
+Now, what if we replaced $x$ with $\exp(x)$. What is this function?
+
+
+$$
+f(x) = \sum_{n=0}^\infty \frac{(e^x)^n}{n!} = \sum_{n=0}^\infty \frac{e^{nx}}{n!}
+$$
+
+This would of course blow up to infinity since $e^x$ would be a very big number if $x$ is positive.
+But what about this function?
+
+$$
+f(x) = \sum_{n=0}^\infty \frac{(e^{-x})^n}{n!} = \sum_{n=0}^\infty \frac{e^{-nx}}{n!}
+$$
+
+It will converge really fast.
+
+# A function with alternating derivatives
+
+Note that if we swap $x$ with $-x$. We will have this function $f(x)=e^{-x}$.
+
+The Taylor series will have its terms alternating between positive and negative.
+The n-th derivative will be:
+
+$$
+\begin{align*}
+f^{(n)}(x)=D_x^n\, e^{-x} &= (-1)^n \, f(x) \\
+D_x^1\, e^{-x} &= -f(x) \\
+D_x^2\, e^{-x} &= f(x) \\
+D_x^3\, e^{-x} &= -f(x) \\
+D_x^4\, e^{-x} &= f(x) \\
+\end{align*}
+$$
+
+As you can see, the sign alternates for every multiple of 2.
+
+If we swap $x$ with $ix$ or $-ix$. With $i$ is the imaginary number unit. We will have alternating derivatives with every multiple of 4.
+
+$$
+\begin{align*}
+f^{(n)}(x)=D_x^n\, e^{ix} &= (i)^n \, f(x) \\
+D_x^1\, e^{ix} &= if(x) \\
+D_x^2\, e^{ix} &= -f(x) \\
+D_x^3\, e^{ix} &= -if(x) \\
+D_x^4\, e^{ix} &= f(x) \\
+\end{align*}
+$$
+
+# Fourier Series
+
+We will now began to extend our ideas into something that is known as "Fourier Series".
+Instead of swapping $x$ with $e^{ix}$ and confuse ourselves, we renamed the parameter to perform substitution $x=r\,e^{i t}$
+
+Suppose that we have a well-behaved Taylor Series of a function $f(x)$ around $x_0=0$. let us swap $x=r\,e^{it}$ and tries to see what happened.
+We will have:
+
+$$
+f(x)=f(re^{i t}) = \sum_{n=0}^\infty a_n\frac{r^n e^{i\,n t}}{n!}
+$$
+
+If we use $\frac{1}{x}$, conveniently we have:
+
+$$
+f(\frac{1}{x})=f(r^{-1} e^{-i t})=\sum_{n=0}^\infty a_n \frac{r^{-n} e^{-i\,n t}}{n!}
+$$
+
+Now, we might be tempted to perform substitution $-n=k$. This series is similar with $f(x)$, except the indices comes from the negative integers.
+The only reason we won't be able to do that is because $(-k)!$ doesn't make sense.
+
+So let's use the property of derivative to see the Taylor expansion. One nice property of function $e^{-it}$ is that it is differentiable everywhere.
+Keeping in mind that the derivative will be around $f(0)$, we tried to simplify our derivative expression like below.
+If we use the full chain, it will be very long.
+
+$$
+D_t^n \, f(r^{-1} e^{-it}) = f^{(n)}(0) \, (-i)^n\, r^{-1} e^{-it}
+$$
+
+However $D_t^n \, f(r^{-1} e^{-it})$ around $x_0=0$ is the coefficient of that Taylor series.
+If we directly match the coefficient, we will have:
+
+$$
+f^{(n)}(0) \, (-i)^n = \frac{a_n}{n!}
+$$
+
+Now, if we want to make some kind of replacement for negative factorial $(-k)!$ by doing substitution $-n=k$, then
+the left hand side must also makes sense.
+
+The term $(-i)^{-k}$ can still make sense and defined.
+
+$$
+(-i)^{-k} = \frac{1}{(-i)^{k}} = \frac{i^k}{(-i \cdot i)^{k}} = i^k
+$$
+
+But the interesting part is $f^{(-k)}(0)$. What does it mean to have a negative n-th derivative?
+You might guess intuitively that it is an anti-derivative. Suppose that $f^{(n)}(0)$ is defined when $n=-1$.
+If $F(x)$ is the anti-derivative of $f(x)$, then $F'(x)$ (the first derivative of $F(x)$), has to be $f(x)$ by definition.
+So, in order for a function to have n-th derivative with negative $n$, then it must have an anti-derivative.
+You can get the anti-derivative using integral.
+
+In summary, the notion of this negative factorial can be completely replaced, if the function itself has anti-derivative, infinitely.
+Or in other words, you can integrate the function infinitely, and its values on $x_0=0$ is defined.
+
+Here comes the good part. If a function have alternating derivative, like $e^{it}$, consequently we can integrate it infinitely.
+The function $e^{it}$ and $e^{-it}$, is a little bit more special because both of them have cycle of multiple of 4.
+This relation is different from $e^x$ (cycle of 1) and $e^{-x}$ (cycle of 2).
+
+Now back to our previous series. We have justification to write $\frac{a_n}{n!}$ as $A_n$, another constants. Even though $n$ is a negative number.
+
+We will then have this pair of series:
+
+$$
+\begin{align*}
+\tag{E3}
+f(x)=f(re^{i t}) = \sum_{n=0}^\infty A_n r^n e^{i\,n t}
+\end{align*}
+$$
+
+$$
+\begin{align*}
+\tag{E4}
+f(\frac{1}{x})=f(r^{-1} e^{-i t}) = \sum_{k=-\infty}^0 B_k r^{k} e^{i\,k t}
+\end{align*}
+$$
+
+The above rearrangement is possible by swapping $-n=k$ and then renaming $A_n$ to $B_k$. We got a series with the same term representation, but the index counts from negative infinity.
+
+Adding those two together, we have a series that spans from $-\infty$ to $\infty$, a much larger spans than the Taylor series!
+
+$$
+\begin{align*}
+f(x)+f(\frac{1}{x}) &= \sum_{n=0}^\infty A_n r^n e^{i\,n t} + \sum_{k=-\infty}^0 B_k r^{k} e^{i\,k t} \\
+f(x)+f(\frac{1}{x}) &= \sum_{n=-\infty}^\infty (A_n + B_n) e^{i\,n t}
+\end{align*}
+$$
+
+Now, let's ponder a bit. If the right side converges, then any function that is invariant under its input reciprocals can be represented like this.
+In a much more general sense, even the coefficient can just be combined and renamed as $C_n$.
+
+Let's define a new function $g(t)$, based on this series.
+
+$$
+g(t) = \sum_{n=-\infty}^\infty C_n \, e^{i\,n t}
+$$
+
+We will call the right hand side, the Fourier Series with complex coefficient. This is because there are other equivalent
+representation of Fourier Series, but for now let's just use this.
+
+# Example of Fourier Series
+
+There is a very straightforward example of a function that is invariant under its input reciprocals.
+
+Suppose that $f(x)=f(\frac{1}{x})=\frac{x+x^{-1}}{2}$. Now suppose $x=e^{it}$. We have a function
+
+$$
+g(t)=\frac{e^{it}+e^{-it}}{2}
+$$
+
+This is actually a representation of the $\cos(t)$ function as complex exponent. If we express it using Fourier Series/Sums,
+we will have coefficient set of $C_1=\frac{1}{2}$, $C_{-1}=\frac{1}{2}$, and any other $C_n=0$.
+
+From this example, we can intuitively understand that not all function can be locally expressed as Taylor series, because by
+definition the series doesn't have negative $n$ terms.
+
+However, a Fourier series has index $n$ that spans from negative infinity to infinity. This made us possible to express
+function as linear combination of circular complex function.
+
+# Fourier Series as linear terms
+
+From the form of the Fourier Series (and Taylor series as well), we can see that a function $g(t)$ might be represented
+as infinite sums with each term from something like this $C_n \, e^{i\,n t}$.
+
+The term conveniently use the same index $n$, as if it was a part of vector.
+
+Let's say that we **can** represent $e^{i\,n t}$ as a basis vector. As a notational convenience let's write it as:
+
+$$
+e^{i\,n t} \equiv \mathbf{e_n}
+$$
+
+In this case, the right hand side $e_n$ was meant to be the "basis" $\mathbf{e}$ vector of index $n$.
+Rather than $e$ as in the exponential function.
+
+Then $C_n$ is also a component of vector $\mathbf{C}$.
+
+So, it "might" behaves like a vector, but with one important detail.
+Usually a vector have finite components, or finite index $n$. However, if we thought of Fourier Series as vector, then it has
+infinite components $n$.
+
+Interestingly, when we see term $C_n \, e^{i\,n t}$, there is no real preference whether if we choose $\mathbf{C}$ as the basis, or if we choose $\mathbf{e}$ as the basis.
+If we choose complex number $C_n$ as the components of the basis, then it is a basis that is **fixed**. It doesn't evolve over parameter $t$ (which conveniently can be thought of as **time**).
+If we choose complex number $e^{i\,n t}$ as the components of the basis, then it is a basis that is **evolving** over input parameter time $t$.
+
+All the above notation can also be expressed in terms of Tensor notation.
+But, this is a much more advanced topic, and need more grounds to cover.
+However, I just think it was worth to mention that if we use Einstein summation convention, we can write tensor $g(t)$ as $C_\nu \, e^\nu$ or $C^\nu \, e_\nu$
+
+# Inner product within Fourier Series basis
+
+From the analogy of using vectors, given terms such as $C^\nu \, e_\nu$, or $C_n\, \mathbf{e_n}$. It is possible to recover $C_n$ using dot product (or inner product, in a more abstract term).
+
+Let's take a look at simple example of 3D vectors, with basis $\mathbf{e_0}=\mathbf{\hat{i}}$, $\mathbf{e_1}=\mathbf{\hat{j}}$, $\mathbf{e_2}=\mathbf{\hat{k}}$.
+A vector $\mathbf{A}$ can be written as
+
+$$
+\mathbf{A} = \sum_{n=0}^2 A_n \, \mathbf{e_n} = A_0 \, \mathbf{\hat{i}} + A_1 \, \mathbf{\hat{j}} + A_2 \, \mathbf{\hat{k}}
+$$
+
+The result of a dot product of $\mathbf{A}$ with one of the basis, like $\mathbf{\hat{i}}$, will result in its component.
+This is because a dot product of orthogonal basis will result in $1$ if the index is the same, and $0$ otherwise.
+As an example:
+
+$$
+\begin{align*}
+\mathbf{\hat{i}} \cdot \mathbf{\hat{i}} &= 1 \\
+\mathbf{\hat{i}} \cdot \mathbf{\hat{j}} &= 0 \\
+\mathbf{\hat{j}} \cdot \mathbf{\hat{k}} &= 0
+\end{align*}
+$$
+
+So, expanding a dot product of $\mathbf{A}$ with $\mathbf{\hat{i}}$, will result something like this:
+
+$$
+\begin{align*}
+\mathbf{A} \cdot \mathbf{\hat{i}} &= ( A_0 \, \mathbf{\hat{i}} + A_1 \, \mathbf{\hat{j}} + A_2 \, \mathbf{\hat{k}}) \cdot (\mathbf{\hat{i}}) \\
+&=  A_0 \, \mathbf{\hat{i}} \cdot \mathbf{\hat{i}} + A_1 \, \mathbf{\hat{j}} \cdot \mathbf{\hat{i}} + A_2 \, \mathbf{\hat{k}}  \cdot \mathbf{\hat{i}} \\
+&= A_0
+\end{align*}
+$$
+
+We got the corresponding component of the basis $\mathbf{\hat{i}}$. Which is $A_0$.
+
+Now we want to know if Fourier Series has similar properties. We have two problem at the moment. First, a Fourier Series has infinite basis like what we understand before.
+Second, the basis evolve over time. Let's tackle the problem one by one.
+
+Assume the position and direction of the basis at specific time $t$ from the function of $g(t)$.
+The term $C_n \, \mathbf{e_n}$ has component $C_n$ and basis $\mathbf{e_n}$.
+Suppose we want to recover only the component from multiplicative rule.
+Then, since the basis is a complex number, we must multiply it with the reciprocal of the number, so that we got $1$.
+
+$$
+\begin{align*}
+e^{int} \cdot e^{-int} &= 1 \\
+\mathbf{e_n} \cdot \mathbf{e_{-n}} &= 1
+\end{align*}
+$$
+
+From this, we got some general rule that if any Fourier basis $\mathbf{e_n}$ has its inverse basis $\mathbf{e_{-n}}$ such that its product were 1.
+
+So, if we want to retrieve the component of $C_1$, we can start by multiplying the function with $\mathbf{e_{-1}}$.
+
+$$
+\begin{align*}
+g(t) \cdot \mathbf{e_{-1}} &= \sum_n C_n \, \mathbf{e_n} \cdot \mathbf{e_{-1}} \\
+&= C_1 + \sum_{n \ne -1} C_n \, \mathbf{e_n} \cdot \mathbf{e_{-1}}
+\end{align*}
+$$
+
+The problem now, if $n \ne -1$, then the basis still exists for the rests of the component!
+Let's say if $n=2$, then the basis for $C_2$ becomes $e^{i(2-1)t} = e^{it}$. This is not zero like the case in vector above.
+It is only shifted.
+
+Now, since the basis *evolve* over time, we might want to evaluate the basis in the span of time $T$.
+We want to see if we can do any specific transform in this time interval/period that causes the basis term to become zero and make the constant term $C_n$ vanish for other $n \ne -1$.
+
+If we transform the equation using derivative, the component $C_1$ that we figured out before, will vanish because it is a constant term.
+So, rather than using derivative/differential, we will try to use integral transform.
+
+As a proposition, let's say there exists interval $T$, in which the terms we are trying to integrate becomes zero.
+Let's take a look at the basis term, adjacent to $n=1$, which is $n=2$. The integral when we are trying to evaluate the component of $C_k$ with $k=1$ is:
+
+$$
+\begin{align*}
+C_n e^{int} &= C_2 e^{i2t} \\
+\int_T C_n e^{int}\, e^{-ikt} dt &= \int_T C_2 e^{i2t} \, e^{-it} dt \\
+&= \int_T C_2 e^{it} dt \\
+0 &= \frac{1}{i} C_2 e^{it} |_T = \frac{1}{i} C_2 \left[ e^{i T_{final}} - e^{i T_{initial}} \right] \\
+\end{align*}
+$$
+
+We can be sure from the definition of Fourier Series we established before that $C_2$, or rather in general $C_n$, were all coefficient without $t$ parameter. So the only way possible for the left hand side to become 0,
+is if the right hand side uses interval where $e^{i T_{final}} - e^{i T_{initial}} = 0$. This interval can be $-\pi$ to $\pi$ or $0$ to $2\pi$.
+To attain symmetry around $0$, let's use interval $T_{initial}=-\pi$ to $T_{final}=\pi$.
+
+Now note that the integral above can be successfully evaluated to zero because $e^{i(n-k)t}=e^{it}$. But every possible $(n-k)$ will be an integer. Also, it just really convenient that
+$e^{i (n-k) T_{final}} - e^{i (n-k) T_{initial}} = 0$ for any integer $(n-k)$. Except when $n-k=0$, something special with the integral happens.
+
+For our target component which is $n-k=0$, the integral becomes:
+
+$$
+\begin{align*}
+C_n e^{int} &= C_1 e^{it} \\
+\int_T C_n e^{int}\, e^{-ikt} dt &= \int_T C_1 e^{it} \, e^{-it} dt \\
+&= \int_T C_1 dt \\
+&= C_1 \, T \\
+\end{align*}
+$$
+
+With this integral transform, the result were scaled by $T$. So, if we want to have the result $C_1$, then the integral itself must be normalized by the span/interval $T$.
+
+From this result, we conclude that there exists specific integral transform such that we can extract the component $C_k$ from the function using operation, just like an inner product.
+To summarize:
+
+$$
+\begin{align*}
+\tag{E5}
+C_k &= \frac{1}{T} \, \sum_n^N C_n  \int_T e^{i(n-k)t} \, dt \\
+&= \frac{1}{T} \,  \int_T \left( \sum_n^N C_n \,  e^{int} \right) \, e^{-ikt} \, dt \\
+&= \frac{1}{T} \,  \int_T g(t) \, e^{-ikt} \, dt \\
+\end{align*}
+$$
+
+With some rearrangement, (and some more fundamental proof needed, regarding how we can swap sums and integral around), we obtain the kind of transform needed to extract the component/coefficient $C_k$.
+
+As a test, let's use it against $\cos(t)$ function that we happened to know has components for $n=-1$ and $n=1$.
+
+$$
+\begin{align*}
+C_1 &= \frac{1}{T} \,  \int_T \cos(t) \, e^{-it} \, dt \\
+&= \frac{1}{T} \,  \int_T \cos(t) \, e^{-ict} \, dt \\
+\end{align*}
+$$
+
+First, we must solve this indefinite integral. If we use integration by parts, the parts will cycle, so we can't represent it as a closed form.
+We will slightly modify the integral by adding a parameter $c$.
+
+$$
+\begin{align*}
+\int \cos(t) \, e^{-ict} \, dt &= \sin(t)\, e^{-ict} + i c\int \sin(t) \, e^{-ict} \, dt \\
+&= \sin(t)\, e^{-ict} - i c \cos(t) \, e^{-ict} + c^2 \int \cos(t) \, e^{-ict} \, dt \\
+(1-c^2) \int \cos(t) \, e^{-ict} \, dt &= \sin(t)\, e^{-ict} - i c \cos(t) \, e^{-ict} \\
+\int \cos(t) \, e^{-ict} \, dt &= \frac{\sin(t)\, e^{-ict} - i c \cos(t) \, e^{-ict}}{1-c^2}  \\
+\int_T \cos(t) \, e^{-ict} \, dt &= \left[ \frac{\sin(t)\, e^{-ict} - i c \cos(t) \, e^{-ict}}{1-c^2} \right]_{-\pi}^{\pi} \\
+\end{align*}
+$$
+
+If we evaluate above expression by substituting $c=1$, we got indeterminate form $\frac{0}{0}$. We will use [L'Hôpital's rule](https://en.wikipedia.org/wiki/L'Hôpital's_rule).
+We took the derivative of numerator and denumerator with respect to $c$. Then substitute $c=1$.
+
+$$
+\begin{align*}
+\int_T \cos(t) \, e^{-ict} \, dt &= \left[ \frac{-it\sin(t)\, e^{-ict} - i \cos(t) \, e^{-ict} - ct \cos(t) \, e^{-ict}}{-2c} \right]_{-\pi}^{\pi} \\
+&= \left[ \frac{t}{2} \cos(t) e^{-it} + \frac{ie^{-it}}{2} \left( t \sin(t) + \cos(t) \right) \right]_{-\pi}^{\pi}\\
+&= \pi
+\end{align*}
+$$
+
+We use it back to the previous expression:
+
+$$
+\begin{align*}
+C_1 &= \frac{1}{T} \,  \int_T \cos(t) \, e^{-it} \, dt \\
+&= \frac{1}{2\pi} \,  \pi = \frac{1}{2} \\
+\end{align*}
+$$
+
+The result is the same with what we have in the previous example.
+
+# Recap
+
+This article concluded the following section about Fourier Series. Stepping up from the ideas of Taylor Series/Expansion,
+we want to find similar Series by substituting $x=re^{it}$. Although it doesn't guarantee (yet) that such substitution preserves the function,
+we rediscovered the concept of Fourier Series.
+
+For now, the construction is rather from bottom to top. By combining multiple periodic function with basis $e^{i\,n\,t}$, we can represent it as function with a nice property.
+
+The construction seems to be in opposite direction of Taylor Series.
+
+For a Taylor Series/Expansion to work, we evaluate a function **locally** at point $x_0$, then we can take the coefficient from its subsequent derivative at that point.
+
+The Fourier Series on the other hand, kind of like the opposite. Given a periodic function in the span of $T$, if we integrate it **globally** over each value of $t$ within $T$, we can get the coefficient needed
+to construct the series.

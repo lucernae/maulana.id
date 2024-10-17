@@ -1,0 +1,67 @@
+---
+layout_name: blog-post
+title: Migrating from Python 2 to Python 3
+date: 2020-07-29T11:00:40.061Z
+category:
+    name: soft-dev
+description: "It turns out migrating my app doesn't take much effort"
+---
+I have an old python app lying around. It is in stable condition, perfectly pinned with the exact dependencies to make sure it will allways work. The app itself is a support background job and is a small cog in a bigger software. I'm on a break now and I thought I'm going to try port it into Python 3 and see how much time I need to do that.
+
+# Deciding if you need to migrate your app, and how
+
+The project is actually from almost 2 years ago. When we develop that, we knew that Python 2 will reach end of support and everyone need to use Python 3 ASAP. But we don't have too much budget to do that. So when we do the development, I architected in such a way that the app is perfectly sandboxed and dependencies were perfectly pinned to relate with the correct version. So we can just do development in Python 2 and leave it be.
+
+Before deciding to migrate. You need to consider how much of an effort and the impact from version migrations. My app here is just a small module that calls celery function and provide celery worker for remote executions. It depends on other modules, which is a python plugin executed by a C++ Desktop application called QGIS. The whole package is compiled as a docker image.
+
+Now the easier part for me is that the python plugin (called InaSAFE) were already ported to Python 3 and using QGIS API that are based on the latest version that uses Python 3. [Celery](https://docs.celeryproject.org/en/stable/index.html), a distributed task queue works in such a way that the agent who calls the function doesn't have to be using the same Python version as the worker who executes the function. This is because the function parameter and the results are passed via message broker and it is speaking the same data format.
+
+By designing these kind of things in the first place, we have a way to iteratively, bit by bit migrate the components. If your app is a big app, you need to decide how to cut off the dependencies chain so you can migrate module by module while still using Python 2. Then when every dependencies are using Python 3 compatible code, you switched the interpreter.
+
+# Module migration step by step
+
+The idea is to port existing code to be compatible with Python 2 and Python 3 at the same time while still using Python 2 interpreter.
+
+Python docs website actually describe a standard approach: [https://docs.python.org/3/howto/pyporting.html](https://docs.python.org/3/howto/pyporting.html)
+
+You can just follow that. Here's what I do in my case
+
+## Making sure you have coverage test
+
+A coverage test is a set of tests that executes all code in your codebase and make sure every line of codes are explored and executed. Combine this with unit tests, then you can have unit tests that generates also a coverage test.
+
+At the beginning, my friend and I would argue that we don't need unit tests and coverage tests. I can understand that reasoning. Creating a coverage tests for a distributed code execution is hard. Your test must collect stats both in the side of the function who calls the remote function, and also the side of the function who actally execute the code. Realistically this can be in a different machine. So it's hard to simulate, it's hard to connect, and it's hard to orchestrate. Our consensus at that time is for him to create unit tests and assume that it is executed in the same environment (not distributed, not using message broker). Meanwhile, I'm going to create an orchestration that simulate the real production architecture as close as possible using Travis CI and docker. Talking about these will need another article due to more specific context. But I just want to let you know that it is possible to remotely execute coverage test and combine it all together to get the full coverage report.
+
+Depending on how you develop your module, your case might be easier. If it's just a simple module and you already have unittests, then you can wrap it in coverage tests. An ideal code coverage is actually not 100%. A perfect code coverage is achieveable if the module is small or you have a big team. For small company like us, it's not realistic. So we usually aim for 50 to 70 percent coverage. Luckily for us, in this app we have reached 80% or so coverage. We didn't push further because there's no point in doing that. Most of the missing coverage comes from dead branching code to handle error.
+
+Once you have coverage test ready. Run your test in Python 2 and save the result before migrating
+
+## Migrate code to Python 3
+
+This is what the article focus on: https://docs.python.org/3/howto/pyporting.html
+
+1. Use `futurize` to make sure your code is using the latest compatible Python 2/3 code. It will make it work in both version. (We are talking about `print` needs to be written as `print()` function, `iteritems()` becomes `items()`, stuff like that)
+
+2. Target your `pylint` to also check Python 3 code convention
+
+3. Use `caniusepython3` to make sure you don't have dead dependencies, which is a module that is not compatible with Python 3. If you have dead dependencies, then you need to replace that module with other alternatives. This can be considered a significant effort
+
+4. Decide if you are going to support Python 2.7 or just drop the support. For me, it's way easier to just drop it, because I can control the dependencies in the production instance.
+
+## Porting old native dependencies
+
+Let me explain it for a bit.
+
+The app that I am trying to migrate, we call it `InaSAFE-headless`. It uses functionality in a python plugin called `InaSAFE` which runs on top of QGIS Desktop, a C++ native app.
+
+I need to move code that exists in `InaSAFE` python 2 branch to `InaSAFE` in python 3 branch. This is because some QGIS Python API is different between these versions.
+
+Swapping QGIS version from QGIS 2.18 to QGIS 3.14 is not easy because these uses native OS dependencies, like debian/ubuntu packages. We can't edit those. The most realistic solution is to also change the OS version. Fortunately I already setup our Travis CI to make use of the docker image. Two years ago, QGIS doesn't have official docker image to test, so we made our self QGIS 2.18 desktop in a docker image to test these things. We can run both coverage tests in Travis in parallel so we can use both QGIS 2.18 image from our old docker image archive and QGIS 3.14 now from the official repo. So, now, upgrading native dependencies is as easy as swapping the base image.
+
+The code migration is mostly trivial. I just check QGIS 3 documentation and see how the function that we use migrates, and then just use those. InaSAFE has proper unit tests and coverage architecture. Checking the migration is as easy as swapping the image and see it from Travis, which code are broken in the new native environment. Then just change the old QGIS API to use the new QGIS API.
+
+(Oh, and I deliberately try to get rid some functionality that depends on shapefile with geopackage as alternatives).
+
+# Conclusion
+
+Migrating Python code from Python 2 to Python 3 is relatively straightforward. The mess happens if you didn't manage the dependencies correctly. Your migration path should take into account on how to migrate part of the code in chunks. For the native dependencies, I heavily uses docker to have a packaged native dependencies both in the new system and the previous system.

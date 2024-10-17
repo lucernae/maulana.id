@@ -1,0 +1,7 @@
+---
+import { siteConfig } from '@/data/site.config'
+import Comments from './comments.jsx'
+const giscusConfig = siteConfig.config.commentsProps
+---
+
+<Comments client:only='react' enabled={Astro.props.enabled} {...giscusConfig} />

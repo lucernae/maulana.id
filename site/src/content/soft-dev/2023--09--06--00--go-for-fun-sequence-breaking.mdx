@@ -1,0 +1,203 @@
+---
+layout_name: blog-post
+title: 'Go For Fun: Sequence Breaking using For'
+description: Using for loop to break out early return
+category:
+    name: soft-dev
+date: 2023-09-06T00:00:00.00Z
+---
+
+Using early return is a well known Go programming language trait.
+
+A function must return early, as soon as possible whenever it encounters errors.
+That way, there is only one possible happy path, which is by reaching the end of the function.
+Thus, if you have multiple way of reaching that happy path, it is usually recommended to break 
+it apart into two different function.
+
+Consider this example snippet:
+
+```go
+func DoSequence(input Input) (result string, err error) {
+	// Do A
+    if input.FieldA == "nothing" {
+        return "", errors.New("Error A")
+    }
+	// Do B
+    if input.FieldB == "nothing" {
+        return "", errors.New("Error B")
+    }
+	// Do C
+    if input.FieldC == "nothing" {
+        return "", errors.New("Error C")
+    }
+	// All done!
+	return "success", nil
+}
+```
+
+In the above snippet, whenever the execution reaches a failure condition (the if statement for each Do A, Do B, etc),
+it returns early by sending the error message. So the end result, is only accessible if we passed all these early returns.
+As you can see, this gets very verbose quickly. But people like them because the execution order is flat and linear.
+
+However, things get really messy when the sequence is not linear or it contains several branches before converging 
+into the happy path. Whenever it happens, it is encouraged to break apart the flow into separate function. 
+That way, you set cognitive boundary by requiring the reader to understand one function as just one flat flow.
+
+In some cases, creating a function complicates things because you need to pass the context and variables of the 
+parent function into this child function. If the function also only used once, it adds little benefit since you 
+increase the callstack, but it is unnecessary because only one parent executes that function. To add to the confusion,
+when you are reading a package with many-many non-flat private function, it is not clear at which level those 
+private function is called. This made your code prone to refactor as well if the parent context changes and you need 
+to pass more variables to these functions. Basically, it is harder to review without actually jumping into the code.
+
+In the above example, consider a case where you need to do 3 things in `Do A`:
+
+1. For some errors, you return early (like usual)
+2. For a successful `Do A` with some condition, you return early with succesful result
+3. For a failed `Do A` with fallthru/fallback condition, you need to proceed into `Do C`
+
+Semantically, if `DoA` is a function, you would create the function in such a way that point 3, is the happy path of the function.
+That way, it is seen last in the code body. But, it is confusing because point 3 actually means that **you failed to execute `DoA`**,
+so you need to fallback to execute another function, which is `DoC`. A better way to read `DoA` is to put point 2 as the last return, 
+just like how Go function uses early return. We now realize that a semantic structure in `DoA` doesn't necessarily means 
+the same semantic structure makes sense for the parent `DoSequence`. Now add some nested ifs and functions, you suddenly have a spaghetti 
+code that is easy to write but hard to read. Especially if this is a business logic full of criterias/branch flows.
+
+In language like python, it is easily solved because they have `try except finally` control flow.
+You could wrap all of them in one `try` block, then let `Do A` block raise appropriate error if it needs to return early by throwing error.
+If it needs to return early with succesful result, just return as usual.
+Then if it needs to fallback to `Do C`, just put `Do C` in a `finally` block, and then let `Do A` block raise a handled error in `except` block.
+
+In Go this is not possible, so here's my preferred fun alternative.
+
+By using a `for` block, you have the abilities to `break` out of the block, while still being in the same function.
+This is a much conscise block rather than anonymous functions (which I actually prefer if the whole thing is functional),
+`switch` block (too verbose if the first condition has only one case), 
+`defer` block (you should not use this for control flow), or `goto` statement (can be a nightmare to manage).
+
+Here's how it looks like for these kind of cases:
+
+```go
+func DoSequence(input Input) (result string, err error) {
+	// Do A
+	for range [1]bool{} {
+		if input.FieldA == "nothing" {
+			return "", errors.New("Error A")
+		}
+		if input.FieldA == "something" {
+			// we want to fallback by continuing to Do B and Do C
+			break
+		}
+
+		// do some A stuff Here
+		resultA, err := mypackage.CallA(input)
+
+		// succesful result that needs early return
+		if resultA == "success" {
+			return resultA, nil
+		}
+
+		// other resultA that needs fallback to Do B and Do C
+		// will naturally exits this block
+	}
+	// Do B
+	if input.FieldB == "nothing" {
+		return "", errors.New("Error B")
+	}
+	// Do C
+	if input.FieldC == "nothing" {
+		return "", errors.New("Error C")
+	}
+	// All done!
+	return "success", nil
+}
+```
+
+The `for` block, basically executes only once by using `range [1]bool{}` statement to iterate a slice with one element.
+You could also use a more straightforward `for i:=0; i==0; i++`, but for me it is another case of "it is easier to write it than read it" thing.
+The `range` statement is easier to read and understand at a glance.
+
+As a remark note, if we have multiple pre-condition to check for the execution to enter `// Do A` block.
+Then just use `switch`. That's what it is used for.
+
+```go
+func DoSequence(input Input) (result string, err error) {
+	// Do A
+	switch {
+    case <condition-1>, <condition-2>, <condition-3>:
+		if input.FieldA == "nothing" {
+			return "", errors.New("Error A")
+		}
+		if input.FieldA == "something" {
+			// we want to fallback by continuing to Do B and Do C
+			break
+		}
+
+		// do some A stuff Here
+		resultA, err := mypackage.CallA(input)
+
+		// succesful result that needs early return
+		if resultA == "success" {
+			return resultA, nil
+		}
+
+		// other resultA that needs fallback to Do B and Do C
+		// will naturally exits this block
+	}
+	// Do B
+	if input.FieldB == "nothing" {
+		return "", errors.New("Error B")
+	}
+	// Do C
+	if input.FieldC == "nothing" {
+		return "", errors.New("Error C")
+	}
+	// All done!
+	return "success", nil
+}
+```
+
+If you didn't fancy `for` range that I told you before, then this is an alternatives:
+
+```go
+func DoSequence(input Input) (result string, err error) {
+	// Do A
+	switch {
+    case true:
+		if input.FieldA == "nothing" {
+			return "", errors.New("Error A")
+		}
+		if input.FieldA == "something" {
+			// we want to fallback by continuing to Do B and Do C
+			break
+		}
+
+		// do some A stuff Here
+		resultA, err := mypackage.CallA(input)
+
+		// succesful result that needs early return
+		if resultA == "success" {
+			return resultA, nil
+		}
+
+		// other resultA that needs fallback to Do B and Do C
+		// will naturally exits this block
+	}
+	// Do B
+	if input.FieldB == "nothing" {
+		return "", errors.New("Error B")
+	}
+	// Do C
+	if input.FieldC == "nothing" {
+		return "", errors.New("Error C")
+	}
+	// All done!
+	return "success", nil
+}
+```
+
+Frankly, I wish people just use `switch` more. But most programmers (probably?) has been hardwired to think that 
+`switch` is used as a kind of map or pattern match rather than statement blocks. 
+So perhaps "for once" semantic is more acceptable for them.
+
+What do you think? `For once` or `switch true`?

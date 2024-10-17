@@ -1,0 +1,105 @@
+---
+layout_name: blog-post
+title: Lesson learned on deploying Minio with CIFS backend. Part 2
+description: Separating the buckets to use different FS backend.
+category:
+    name: soft-dev
+date: 2021-05-07T10:20:21.083Z
+---
+Continuation of [Part 1](/soft-dev/2021--05--07--10--lesson-learned-on-deploying-minio-with-cifs-backend-part-1), we are going to revise the architecture a bit.
+
+# Edit Notes
+
+I made the draft article in February, at that time, the approach didn't work because object upload always fails in the middle for big files.
+But, for the recent MinIO version, this is now works.
+
+# Problem
+
+Previously, overlay mounts doesn't work. So, the simple solution is to just separate the minio instance and let each one of them holds a group of buckets.
+ Since we are able to run MinIO bucket with Longhorn storage just fine, we are going to focus again on the MinIO instance with CIFS storage backend.
+
+# Architecture
+
+Now, the diagram looks like this:
+
+![](/images/uploads/backup-architecture.part-2.png)
+
+The difference is just there will be two pods or deployment.
+The first one just mounts the regular PVC, the other one is a pod of MinIO that only served the flex volume.
+Since access was done via HTTP URL and routing were managed by Ingress, as long as the buckets are separated, I don't see anything's wrong with that.
+
+# Implementation
+
+I installed another MinIO charts that is dedicated to serve this CIFS share. To make things more organized, this time we are declaring PV and PVC 
+beforehand, and then let the charts use existing claim.
+
+We already defined the `cifs-secret` resource in the previous article. Now, we define a PV that mounts from the CIFS share, using the flexVolume.
+
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: kartoza-infra-cifs-buckets-flex-volume
+spec:
+  accessModes:
+  - ReadWriteOnce
+  - ReadOnlyMany
+  - ReadWriteMany
+  capacity:
+    storage: 500Gi
+  claimRef:
+    name: kartoza-infra-cifs-buckets-flex-volume
+    namespace: minio
+  flexVolume:
+    driver: fstab/cifs
+    fsType: cifs
+    options:
+      mountOptions: dir_mode=0755,file_mode=0644,noperm,uid=1001,gid=1001
+      networkPath: //<share location>/<share path>
+    secretRef:
+      name: cifs-secret
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+```
+
+We also create corresponding PVC.
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kartoza-infra-cifs-buckets-flex-volume
+  namespace: minio
+spec:
+  accessModes:
+  - ReadWriteOnce
+  - ReadOnlyMany
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 500Gi
+  storageClassName: ''
+  volumeMode: Filesystem
+  volumeName: kartoza-infra-cifs-buckets-flex-volume
+```
+
+Then in the helm charts, I arrange that the volume used by minio is using this `PersistentVolumeClaim`.
+
+It runs nicely, but then we need to check the performance. To test it, I send backup from longhorn with big volumes, because sending small files 
+from the web interface doesn't put much strain on it. Back in february, this setup doesn't work. I check it again and upgrading the MinIO docker image.
+Now it works!
+
+Keep in mind, that even though it works, it relies on node volume plugin. One of the drawback from this approach is that you have to install the 
+flex volume plugin (fstab/cifs) manually to each and every node. This can be troublesome because your setup is not resilient to disruption
+since you have to target the node that runs your MinIO instance. We already have network mounted FS backend via CIFS, so it will be nice if we 
+can mount the FS **regardless** of where the node is. 
+
+We are going to try to tackle this by using a CSI (Container Storage Interface) plugin from OpenShift for Samba, called [CSI Driver SMB](https://github.com/kubernetes-csi/csi-driver-smb).
+CIFS is using a similar protocol with Samba, so if we are lucky, the plugin might work.
+
+We are going to try this in the next article, the [part 3](/soft-dev/2021--05--14--10--lesson-learned-on-deploying-minio-with-cifs-backend-part-3/)
+
+# Conclusion
+
+ - ~~Mounting works but sending big objects randomly fails~~ Now works with the recent MinIO version
+ - FlexVolume requires that every nodes has volume plugin installed and is not quite **flexible** in terms of scale.

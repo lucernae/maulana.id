@@ -1,0 +1,122 @@
+---
+layout_name: blog-post
+title: Recovering from boot loop crash in Windows 10
+category:
+    name: soft-dev
+description: Don't be like me. Have a backup system in place. However if you don't and your Windows crashed, you might want to try this.
+date: 2020-12-25T11:45:18.825Z
+---
+Honestly, this event nearly gave me mental breakdown.
+
+# The story
+
+It all began after finally I got myself two weeks of leave. As a gamer, normally I want to play something in the meantime. All those game backlogs that I have lying in my Windows, finally I will have time to finish some of it. Like every normal person, I press F11 in boot phase to switch to Windows (I set my Linux boot entry on default for work), set it as a default then I boot into Windows. In Windows, I update Steam and let Windows do it's update thingy. I don't want it to do it's famous **Windows Update** while I'm playing my games, so I want it to be updated overnight and ready to be used tomorrow.
+
+What happens after that is a nightmare. When I came back, I saw my monitor shows Windows recovery mode screen. I hit **Boot normally** then the PC reboot. To my surprises it's checking disks with automatic repair. It decided that it can't boot, so it presents me the recovery mode screen again. I let out a scream in my head. "WHAT THE HELL IS HAPPENING!???"
+
+Early guess, it's probably the following:
+
+1. Power failures happens while the PC is updating.
+2. SSD is faulty
+
+I explored the first possibility. Power Failures. I have a UPS and my PC is connected to the said UPS. However, I just recently moved to a new place. For some reason, the power link inside my house is pretty dodgy. There are some occasion where the power went down and up very quickly, less than a second. Lights went blinking for a bit. Normally my UPS can handle the surge and my PC will be fine. However, in all 3 occasion, my PC just dies. So maybe my UPS had failed to do the job, or it needs a battery replacement. I don't know. I had to check later. However the point is, my PC did have some power failures. In all those failures, normally I was using my Linux. So I will never expects that it will affect my Windows disk, after all they were on a different disk. It could be that power failures happen while the Windows were updating.
+
+The second possibility which is not likely, is that my SSD had fails. I already said that Windows and Linux are on a separate disk and power failures happens while I'm using Linux. So is it possible that it also damage other SSD? I don't know. I have no knowledge in that area, so I can't rule it out either.
+
+Regardless, I am pretty sad. It means that I will waste a couple of days to fix this in my leave days. Days that I were supposed to be having fun of. I also just realized, how unfamiliar I am with the Windows 10. If this happens to my Linux, I probably chill, bought a new harddisk, copy the partition over, etc. Anyway, I will know what I need to do to get it working the same way again (most of my work related settings are persisted in a private Git repo). The most troublesome things were probably to reinstall all the apps in my Linux as I go along. However, all the settings were mostly safe.
+
+With Windows, I have no idea. Ideally I want to use the same partition because all the apps and settings usually tightly coupled in the OS partition. Even if I have data partition somewhere else. Fixing this OS partition usually means doing a fresh install or reset to factory default. All apps and settings will be lost. I don't want that. If only there is an option to just reinstall the OS folder (Windows folder). Kind of like what we usually do in Linux for the root partition.
+
+# Checking the Boot
+
+First things, check that you are able to boot.
+
+I use UEFI, because it's very resilient and can be re-added whenever you need. If the boot process is working, your PC will boot to the Windows Boot Manager firmware, then boot to the windows loader firmware (normal boot). In the case of failure, it will attempt automatic startup repair (which you can't control), then if it fails, it will remember the state. In next boot, it will boot up to Windows Boot Manager, then Windows OS Recovery firmware, instead of Windows Loader firmware. We should at least be able to go into Windows OS Recovery.
+
+In the case that you can't go into Windows OS Recovery, then let's assume boot process failed. The following process is needed:
+
+## Requirements
+
+* Another working PC, I prefer to use Linux/Ubuntu as it is easier to deal with raw disk using Linux.
+* 8GB/16GB USB flash disk to flash Windows 10 Installation ISO image
+
+## Procedures
+
+1. Prepare/use another PC (I prefer to use Linux)
+2. Download [Windows 10 ISO](https://www.microsoft.com/en-us/software-download/windows10ISO)
+3. Flash Windows 10 ISO to USB. In Windows, use [Rufus](https://rufus.ie/), in Linux use [WoeUSB](https://github.com/WoeUSB/WoeUSB)
+4. Plug your USB to your broken PC. Boot to your USB using UEFI
+5. Try Troubleshoot > Advanced Option > Startup Repair. If failed, use Command Prompt
+
+   ![](/images/uploads/screen-shot-2020-12-27-at-20.04.56.png)
+6. If previously you were not able to boot at all, recreate your boot entry.
+
+   1. Check if your OS partition are recognized using diskpart
+
+      ```
+      diskpart
+      ```
+   2. From inside diskpart prompt, list the volumes
+
+      ```
+      list volume
+      ```
+   3. Check if the drive letter exists. For example:
+
+      ![](/images/uploads/screen-shot-2020-12-27-at-20.16.03.png)
+   4. If the drive letter don't exists. You have a greater problem. That means the hardware (the disk) were disconnected or unreadable and there's nothing you can do beside checking the socket.
+   5. In the case the drive letter exists, create a boot entry to the windows location, normally in C:\Windows. Don't forget to exit diskpart first.
+
+      ```
+      bcdboot C:\Windows
+      ```
+   6. Check the entry created using `bcdedit` command
+
+      ![](/images/uploads/screen-shot-2020-12-27-at-20.36.52.png)
+7. Now check that you are able to boot into Windows without using the USB recovery disk
+
+# Checking disk corruptions
+
+After you are sure that you can boot, you can then check the file integrity. If the boot entry exists but you can't boot (always bootloop to the recovery screen), then you need to perform file check.
+
+## Requirements
+
+* Your broken PC, but now with recovery mode booted (either via USB flash disk or your PC disk)
+* Choose from recovery menu: Troubleshoot > Advanced Options > Command Prompt
+
+## Procedures
+
+1. Given that your OS partition is in `C:`, do `chkdsk` command
+
+   ```
+   chkdsk /f /r C:
+   ```
+2. Check other partition/volume as well as you see fit (`D:` or `E:`)
+3. Try a reboot. If failed, do a System File Checker scan from command prompt again.
+
+   ```
+   sfc /scannow
+   ```
+4. See the output. If the process failed, we have to do it from Windows Safe Mode. Exit Command Prompt. From Advanced Options, pick Startup Settings, then Restart.
+5. In the next boot like below, pick Safe Mode
+
+   ![](/images/uploads/screen-shot-2020-12-27-at-21.02.05.png)
+6. In the Safe Mode. Run Powershell as Administrator (Right click Windows Logo to open the context menu).
+7. Do System File Checker scan again
+
+   ```
+   sfc /scannow
+   ```
+8. Verify that SFC success. Note that 100% Verification complete
+
+   ![](/images/uploads/screen-shot-2021-01-04-at-16.12.12.png)
+9. In the case that you can't boot into safe mode. Then the last resort will be to mount your disk into another working Windows PC. The easiest way would be to get your disk out of your PC and attach it into your friend's PC. In the case that you don't have friends (I mean PC), alternatively you can mount the disk as VirtualBox Raw Disk and mount it to Windows PC running inside virtualbox. Then we do the offline SFC. You can see how to mount raw disk in VirtualBox [here](/2021--01--04--15--raw-disk-access-in-virtualbox)
+10. Run offline SFC (with parameter to specify Windows location to check). Same as before, open Powershell with admin privileges. Your host PC normally has Windows installed in `C:`. Then, your mounted disk will be on another drive letter. Check that. For this example, assume the volume is in `D:`. Then the command becomes:
+
+    ```
+    sfc /scannow /offbootdir=d:\ /offwindir=d:\
+    ```
+
+# What to do if that still doesn't solve the problem
+
+If doing SFC still not allows you to boot, like in my case (sadly). Then all hope is lost. You now focus on figuring out if your disk is faulty or not. If you have any important data, buy a second harddisk and do disk imaging, or just copy the data directly. It is possible that windows can't do SFC because the disk are badly damaged. You can attempt to image your partition and then restore the image to a new disk, then perform the SFC again to recover all your Windows OS + application + settings + data. If you only care about the data, simply just extract the data you need in a separate computer.

@@ -1,0 +1,708 @@
+---
+layout_name: blog-post
+title: 'Fourier Series: part 5'
+description: 'Common Fourier Transform and how it looks like'
+date: 2024-03-06T00:00:00.00Z
+category:
+    name: blog
+---
+
+# Common Fourier Transform Pairs and how it looks like
+
+In this article, let's have some fun and see how the function and its Fourier Transform corresponds to.
+
+PS: the content maybe updated over time for my personal notes
+
+For the rests of the sections, we use Fourier transform definition that is normalized with oscillatory factor/unit $\tau=2\pi$
+
+## For Any applicable function
+
+### Cycling property
+
+Fourier transform behaves in such a way that applying it twice is the same as flipping the argument.
+Applying it 4-th times will recover the original function.
+
+Suppose we have a dual $g(t)$ and $G(f)$.
+
+$$
+\begin{align*}
+\mathcal{F^0}\left\{ g(t) \right\}(t) &= g(t) \\
+\mathcal{F}\left\{ g(t) \right\}(f) &= G(f) \\
+\mathcal{F^2}\left\{ g(t) \right\}(t) &= g(-t) \\
+\mathcal{F^3}\left\{ g(t) \right\}(f) &= G(-f) \\
+\mathcal{F^4}\left\{ g(t) \right\}(t) &= g(t) \\
+\end{align*}
+$$
+
+Due to this cycle rules, a special function $g(t)$ has to be an **even** function if the function doesn't change after being transformed twice.
+This is because the flipped sign has no effect for this function (invariant).
+
+Because of this, we also have a special relationship since the cycle is modulo 4.
+Performing inverse Fourier Transform is the same as doing Fourier Transform 3 times.
+
+$$
+\begin{align*}
+\mathcal{F^{-1}}\left\{ G(f) \right\}(t) &= \mathcal{F^3}\left\{ G(f) \right\}(t) = g(t) \\
+\end{align*}
+$$
+
+For even function (function that is the same under flipped parameters), its inverse Fourier Transform is the same as its Fourier Transform,
+because the transform cycles in modulo 2.
+
+$$
+\begin{align*}
+\mathcal{F^{-1}}\left\{ G(f) \right\}(t) &= \mathcal{F}\left\{ G(f) \right\}(t) = g(t) \\
+\end{align*}
+$$
+
+## Dirac Delta function and constants
+
+Just to recap from the previous articles.
+We have defined a "function" (in quotes, because it is not a true function) called Dirac Delta which is used
+as a dual of a constant values/function.
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ 1 \right\}(f) &= \delta(f) \\
+\mathcal{F^2}\left\{ 1 \right\}(t) &= \mathcal{F}\left\{ \delta(f) \right\}(t) = 1 \\
+\mathcal{F^3}\left\{ 1 \right\}(f) &= \mathcal{F}\left\{ 1 \right\}(f) = \delta(f) \\
+\mathcal{F^4}\left\{ 1 \right\}(f) &= \mathcal{F^2}\left\{ \delta(f) \right\}(t) = 1 \\
+\end{align*}
+$$
+
+As you can see that $\delta(t)$ is an even symmetric function. So it doesn't matter if it's inverse or forward transform, it is always a pair from a constant.
+
+Because any function can be thought of as product between a function and constants, dirac delta function can be seen everywhere.
+
+## Harmonics
+
+A harmonic or as we can say a natural periodic signals can be decomposed easily using delta function.
+
+We can proof the duality using forward or inverse transform, but for me it is easier to proof it backward.
+
+### Single frequency
+
+Suppose that a harmonic is defined to be a signal with singular frequency $f_k$. That means, in the Frequency domain,
+it can be viewed as a singular jump in value using delta function.
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ G(f) \right\}(t) &= \mathcal{F}\left\{ a\, \delta(f-f_k) \right\}(t)  \\
+&= \int_{-\infty}^\infty a\, \delta(f-f_k) \, e^{-i \tau f t} \, df \\
+&= a \, e^{-i \tau f_k t} \int_{-\infty}^\infty \, \delta(f-f_k) \, e^{-i \tau (f-f_k) t} \, df \\
+&= a \, e^{-i \tau f_k t} \, 1 = a \, e^{-i \tau f_k t}
+\end{align*}
+$$
+
+This yields the following relationship:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \delta(t-t_k) \right\}(f) &= e^{-i \tau f t_k} \\
+\mathcal{F^2}\left\{ \delta(t-t_k) \right\}(t) &= \mathcal{F}\left\{ e^{-i \tau f t_k} \right\}(t)=\delta(t+t_k) \\
+\mathcal{F^3}\left\{ \delta(t-t_k) \right\}(f) &= \mathcal{F}\left\{ \delta(t+t_k) \right\}(f)=e^{i \tau f t_k} \\
+\end{align*}
+$$
+
+The second (and fourth) Fourier transform from above implies that:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ e^{i \tau f_k t} \right\}(f) &= \delta(f-f_k) \\
+\end{align*}
+$$
+
+Basically the transform just cycles between these four.
+
+### Multiple frequencies
+
+If a signal consists of multiple frequencies in Frequency domain, we can think of it as a spectrum of sums of multiple delta functions.
+
+Suppose we have spectrum $s(f)$, by linearity, we can treat it as sums and apply Fourier Transform to recover the time domain signals.
+Since Fourier Transform is a linear operator, applying it multiple times doesn't affect the sums (superposition principle).
+
+$$
+\begin{align*}
+s(f) &= \sum_k c_k \delta(f-f_k) \\
+\mathcal{F}\left\{ s(f) \right\}(t) &= \sum_k c_k \, e^{-i \tau f_k t} \\
+\mathcal{F^2}\left\{ s(f) \right\}(f) &= \mathcal{F}\left\{ \sum_k c_k \, e^{-i \tau f_k t} \right\}(f)=\sum_k c_k \delta(f+f_k) = s(-f) \\
+\mathcal{F^3}\left\{ s(f) \right\}(t) &= \mathcal{F}\left\{ \sum_k c_k \delta(f+f_k) \right\}(t)= \sum_k c_k \, e^{i \tau f_k t} \\
+\end{align*}
+$$
+
+### Sinusoidal frequencies
+
+Using Euler's formula, we know that:
+
+$$
+\begin{align*}
+\sin(\tau f_k t ) &= \frac{e^{i \tau f_k t} - e^{-i \tau f_k t}}{2i} \\
+\cos(\tau f_k t ) &= \frac{e^{i \tau f_k t} + e^{-i \tau f_k t}}{2} \\
+\end{align*}
+$$
+
+It immediately follows from multiple frequencies relationship that the FT is something like this:
+
+$$
+\begin{align*}
+\sin(\tau f_k t ) &= \frac{e^{i \tau f_k t} - e^{-i \tau f_k t}}{2i} \\
+\mathcal{F}\left\{ \sin(\tau f_k t)\right\}(f) &= \frac{\delta(f-f_k) - \delta(f+f_k)}{2i} \\
+\end{align*}
+$$
+
+$$
+\begin{align*}
+\cos(\tau f_k t ) &= \frac{e^{i \tau f_k t} + e^{-i \tau f_k t}}{2} \\
+\mathcal{F}\left\{ \cos(\tau f_k t)\right\}(f) &= \frac{\delta(f-f_k) + \delta(f+f_k)}{2} \\
+\end{align*}
+$$
+
+## Gaussian
+
+We already derive it before. So to summarize, given a Gaussian $g(t)$
+
+$$
+\begin{align*}
+g(t) &= e^{- a t^2} = \exp(- a t^2) \\
+\mathcal{F}\left\{ g(t) \right\}(f) &= \sqrt{\frac{\pi}{a}} \exp({-\frac{\pi^2}{a} f^2}) \\
+\mathcal{F^2}\left\{ g(t) \right\}(t) &= \mathcal{F}\left\{ \sqrt{\frac{\pi}{a}} \exp({-\frac{\pi^2}{a} f^2}) \right\}(t) = \exp(- a t^2) = g(t) \\
+\end{align*}
+$$
+
+As you can see, the cycle is only modulo 2. This is because a Gaussian is an even-symmetric function.
+
+## Discrete signals
+
+We refer to a discrete signals as signals that is discontinuous and can have jump in its amplitude.
+
+One interesting thing to note is that a discrete signals may have continuous representation in the Fourier domain or the other way around.
+A simple example would be the Dirac delta function when it can be thought as a sudden impulse (discrete) on a specific values of frequency only.
+However, it is actually continuous (constant function) in its temporal domain.
+
+### Rectangular function and Sinc function
+
+Rectangular function is any function that is constant, but has sudden jump in amplitude in specific time period.
+
+Previously we described Dirac delta function as a limit of sinc function when the integral of constant function approach infinity.
+
+The rectangular function is the opposite. We can think of it as being only constant in a certain length, but zero value for the rest.
+
+Let us define rectangle function $r(t)$ in which it only has value 1 on the span $t=-T/2$ to $t=T/2$.
+From there, we proceed to find the Fourier Transform.
+
+
+$$
+\begin{align*}
+r(\frac{t}{T}) &= \left\{
+{\begin{array}{rl}
+1, & {\text{if }} |t|<{\frac{T}{2}} \\
+0, &{\text{everywhere else}}.\end{array}}\right. \\
+\mathcal{F}\left\{ r(\frac{t}{T}) \right\}(f) &= \int_{-\infty}^{\infty} r(\frac{t}{T}) \, e^{-i \tau ft} \, dt \\
+&= \int_{-\frac{T}{2}}^{\frac{T}{2}} 1 \, e^{-i \tau f t} \, dt \\
+&= \frac{i}{\tau f} \left( \exp({-i \tau f \frac{T}{2}}) - \exp({i \tau f \frac{T}{2}})\right) \\
+&= \frac{\sin(\pi f T)}{\pi f} \\
+&= T \operatorname{sinc}(\pi f T)
+\end{align*}
+$$
+
+We actually already derived this before. The Fourier transfrom of Sine Cardinal function (sinc) is a rectangular function.
+However, previously in our case, we try to increase the limit of $T$ to approach infinity to approximate a constant function, and then we get the delta function.
+
+This time, if we set $T=1$. We got the following relationship
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \operatorname{rect}(t) \right\}(f) &= \operatorname{sinc}(\pi f) \\
+\mathcal{F^2}\left\{ \operatorname{rect}(t) \right\}(t) &= \mathcal{F}\left\{ \operatorname{sinc}(\pi f) \right\}(t) = \operatorname{rect}(t) \\
+\end{align*}
+$$
+
+Note that in some text book, the $\pi$ constant inside the sinc function is kind of annoying so sometimes the sinc function is defined like this:
+
+$$
+\begin{align*}
+\operatorname{sinc}(x) &= \frac{\sin(\pi x)}{\pi x} \\
+\end{align*}
+$$
+
+The key difference to watch out for, is the integral. From the Fourier transform above, we got:
+
+$$
+\begin{align*}
+\int_{-\infty}^{\infty} \frac{\sin(\pi x)}{\pi x} \, dx = \operatorname{rect}(0) = 1
+\end{align*}
+$$
+
+So the sinc definition above is the "normalized" version. Because the integral adds up to 1.
+If you use the following definition, the value of the integral changes accordingly:
+
+$$
+\begin{align*}
+\int_{-\infty}^{\infty} \frac{\sin(x)}{x } \, dx = \pi \int_{-\infty}^{\infty} \frac{\sin(\pi t)}{\pi t } \, dt = \pi
+\end{align*}
+$$
+
+Suppose if we use the "normalized" version, then the Fourier transform duals have a nice form like this:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \operatorname{rect}(at) \right\}(f) &= \frac{1}{|a|}\operatorname{sinc}(\frac{f}{|a|}) \\
+\mathcal{F}\left\{ \operatorname{sinc}(at) \right\}(f) &= \frac{1}{|a|}\operatorname{rect}(\frac{f}{|a|}) \\
+\end{align*}
+$$
+
+## Polynomials
+
+Of course, it would be interesting to see if polynomials can be transformed, becase Taylor series depends on polynomials.
+
+There is just a catch though. A polynomial most likely approach infinity rather than vanishing (a property needed by Fourier Transform).
+So, how do we even define this?
+
+The more rigor approach would be to use tempered distribution and Schwartz function to define the transform. However, the building block will be too long for a short article.
+
+In this section, we are going to assume that the transform exists (via handwaving, haha). If it does exists, it must be consistent with another class of problems.
+So, we are going to use differential equation to derive it.
+
+Suppose that we have a nice function that is differentiable called $u(t)$.
+
+Suppose as well, that we have another function $g(t)$ with differential equation that shows the relationship between these two:
+
+$$
+\begin{align*}
+\frac{d u(t)}{dt} &= g(t) \\
+\mathcal{F}\left\{ \frac{d u(t)}{dt}  \right\} &= \mathcal{F}\left\{ g(t) \right\} \\
+i \tau f U(f) &= G(f) \\
+U(f) &= \frac{-i}{\tau f} G(f)
+\end{align*}
+$$
+
+After Fourier transforming left side and right side, we have the equation above.
+Suppose that $G(f)$ exists and the function is such a way that it eliminates variable $f$.
+So we choose $G(f)=f$.
+Rearranging the equation and transforming it back:
+
+$$
+\begin{align*}
+U(f) &= \frac{-i}{\tau f} G(f) = \frac{-i}{\tau f} f \\
+&=\frac{-i}{\tau} \\
+\mathcal{F^{-1}}\left\{ U(f)  \right\} &= \mathcal{F^{-1}}\left\{ \frac{-i}{\tau}  \right\} \\
+u(t) &= \frac{-i}{\tau} \delta(t) \\
+\frac{d u(t)}{dt} &= \frac{-i}{\tau} \delta'(t) \\
+g(t) = \frac{-i}{\tau} \delta'(t) \\
+\end{align*}
+$$
+
+Thus, we obtain the following Fourier pairs:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \delta'(t) \right\} &= i \tau f \\
+\mathcal{F}\left\{ t \right\} &= \frac{i}{\tau} \delta'(f) \\
+\end{align*}
+$$
+
+We can extend to other powers of the polynomial by just repeating the steps in the above equation. So instead of choosing $G(f)=f$,
+we can choose $G(f)=f^n$ for arbitrary power. You will then need to do inverse Fourier transform of $f^{n-1}$ which you already have in previous iteration.
+The base case is when $n=1$.
+
+To summarize:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \delta^{(n)}(t) \right\} &= (i \tau f)^n \\
+\mathcal{F}\left\{ t^n \right\} &= \left( \frac{i}{\tau} \right)^n \delta^{(n)}(f) \\
+\end{align*}
+$$
+
+Notice that the pairs contains derivative of the delta function, which doesn't makes sense yet until we defined Fourier transform over tempered distribution,
+and treat delta function as distribution.
+
+
+## Reciprocal and signum
+
+What we will define as reciprocal is the function in the form $\frac{1}{x}$.
+
+Same with the polynomials, we can't compute the transform directly because the values blew up at $x=0$.
+We are going to assume it exists, then work from there.
+The approach is the same with how we found the polynomials Fourier transform.
+
+We start with defining $g(t)=\delta(t)$ such that $G(f)=1$. This is because we want the following equation:
+
+$$
+\begin{align*}
+\frac{d u(t)}{dt} &= g(t) = \delta(t) \\
+\end{align*}
+$$
+
+To become this: after doing the transform:
+
+$$
+\begin{align*}
+U(f) &= \frac{-i}{\tau f} G(f) = \frac{-i}{\tau f} 1 \\
+\end{align*}
+$$
+
+When we do the inverse transform, we had to transform back $\frac{1}{f}$. Since we don't know yet what is this now, just assume it is a function called $s(t)$.
+
+The equation after inverse transform becomes:
+
+$$
+\begin{align*}
+u(t) &= \frac{-i}{\tau} s(t) \\
+\frac{d u(t)}{dt} &= \frac{-i}{\tau} s'(t) \\
+\delta(t) &= \frac{-i}{\tau} s'(t) \\
+s'(t) &= i \tau \delta(t) \\
+s(t) &= i \tau \int_{-\infty}^t \delta(t) \, dt + C
+\end{align*}
+$$
+
+Because delta function is not legit function (sorry), the integral doesn't make any sense.
+So, obviously $s(t)$ is also some special function as well.
+We need to define it based on its behaviour.
+
+Let's figure out some key properties.
+
+1. If $t$ less than zero, the integral evaluates to $C$ because the integral of delta function is zero for $t$ less than zero
+2. We can't define properly what happens when $t=0$ because the delta function has peak undefined value there.
+3. For $t$ greater than zero, we can treat the integral as $1 - \int_t^\infty \, \delta(t)$ because the total integral of delta function had to be 1.
+
+$$
+\begin{align*}
+s(t) &= i \tau (1- \int_{t}^\infty \delta(t) \, dt + C \\
+s(-t) &= i \tau \int_{-\infty}^{-t} \, \delta(-t) \, d(-t) + C = i \tau \int^{\infty}_{t} \, \delta(t) \, dt + C \\
+s(t) + s(-t) &=i \tau + 2C
+\end{align*}
+$$
+
+From this, we know that the right hand side somewhat unaffected by parameter $t$, even though the range can be increased forever.
+We can then conclude that $s(t)$ is constant function. It just doesn't have any defined value at $t=0$.
+
+4. Because of how delta function curved, it is easy to see that the integral jumps in value.
+
+We can then understood that $s(t)$ is a some kind of step function. The last key is now to realize that $s(t)$ jumps from
+value $a$ to value $b$. But how to know if it jumps from what to what?
+
+5. If we set $t=\infty$ that means we can have the value $b$ the upper bound. If we set $t<0$ we get the lower bound $a$.
+
+Meaning $a=C$ and $b=i\tau +C$.
+
+But notice that $s(t)$ is an inverse Fourier transform of $\frac{1}{x}$. The sign must also correspond, so it is reasonable
+if we set $C=-i \pi$ so that $a=-b=-i\pi$.
+
+Another justification on why $a=-b$, is from how $\delta(t)$ function behaves.
+If we take another derivative of $s'(t)$ we will have:
+
+$$
+\begin{align*}
+s'(t) &= i \tau \delta(t) \\
+s''(t) &= i \tau \delta'(t) \\
+\end{align*}
+$$
+
+Since $\delta(t)$ is an even symmetric function at $t=0$ (mirrored using y-axis), then it must be true that $\delta'(t)=-\delta'(-t)$.
+This is because the first derivative corresponds to the tangent of the curve, so the absolute value between left and right must be the same, but the sign must flips (since it will have peak at $t=0$).
+
+For $t<0$, the delta function curve is climbing, so the first derivative of the delta function must be positive.
+This implies that the second derivative of $s(t)$ at that point has to be positive as well, so $s(t)$ must have curved upwards near $t=0$.
+Which imply that its current value is less than 0: $s(t)<0$.
+With the same reasoning, we see that when $t>0$ then $s(t)>0$. Thus, $a=-b$ to make sure the curvature is the same and symmetric.
+
+With this, we conclude that the function $s(t)$ is function that has value $-i\pi$ when $t<0$. But $i\pi$ when $t>0$.
+
+To make it easier, we define a primitive function called sign function, that returns only the sign of the argument.
+
+This way:
+
+$$
+\begin{align*}
+s(t) = i\pi \operatorname{sgn}(t)
+\end{align*}
+$$
+
+We now have the following Fourier pair
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \frac{1}{t} \right\} &= - i \pi \operatorname{sgn}(f) \\
+\mathcal{F}\left\{ \operatorname{sgn}(t) \right\} &= \frac{1}{i \pi f} \\
+\end{align*}
+$$
+
+## Fourier Transform of derivative
+
+We used this multiple times because it has been discussed [here](../2024--02--23--00--fourier-series-part-4/#fourier-transform-of-a-derivative)
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ g(t) \right\} &= G(f) \\
+\mathcal{F}\left\{ g'(t) \right\} &= i \tau f G(f) \\
+\mathcal{F}\left\{ D_t^n g(t) \right\} &= (i \tau f)^n G(f) \\
+\end{align*}
+$$
+
+## Fourier Transform of integral
+
+The way we calculate sign function [here](#reciprocal-and-signum) gives us an idea on how to do a Fourier transform for an integral.
+
+As a sketch, assume function $s(t)$ and $g(x)$, such that:
+
+$$
+\begin{align*}
+s(t) &= \int_{-\infty}^t \, g(x) \, dx + C
+\end{align*}
+$$
+
+This would imply that a derivative exists like this:
+
+$$
+\begin{align*}
+s'(t) &= g(t)
+\end{align*}
+$$
+
+Applying A Fourier transform on both sides yields:
+
+$$
+\begin{align*}
+i\tau f S(f) &= G(f) \\
+S(f) &= \frac{G(f)}{i\tau f} \\
+\end{align*}
+$$
+
+However, a Fourier transform is a linear operator. If we consider the integral part to be $r(t)$, then:
+
+$$
+\begin{align*}
+s(t) &= \int_{-\infty}^t \, g(x) \, dx + C \\
+s(t) &= r(t) + C \\
+S(f) &= R(f) + C\delta(f) \\
+\frac{G(f)}{i\tau f} &= R(f) + C \delta(f) \\
+R(f) &= \frac{G(f)}{i\tau f} - C\delta(f)
+\end{align*}
+$$
+
+We now have an expression for the Fourier transform of the integral.
+Assuming $r(t)$ only consists of the definite integral, then $R(f)$ is its Fourier transform.
+
+The problem is, we need to figure out the value of $C$. The strategy is similar with previous section.
+If we use the fact that $s(-\infty)$ must be the lower bound, so it is equal to $C$.
+The $s(\infty)$ is the upperbound, so it is equal to $G(0) + C$.
+
+We can calculate $R(0)$, as this is the Fourier transform values on $f=0$ for $r(t)$ function. This is also the average
+values of $r(t)$ over all its domain. Just a recap:
+
+$$
+\begin{align*}
+R(0) &= \int_{-\infty}^{\infty} \int_{-\infty}^{t} g(x) \, dx \, dt \\
+\end{align*}
+$$
+
+From here we can calculate $C$, by using the Fourier transform at $f=0$
+
+$$
+\begin{align*}
+C\delta(f) &= \frac{G(f)}{i\tau f} - R(f) \\
+C &= \frac{G(f)}{i\tau f} - R(0) \\
+\end{align*}
+$$
+
+Note that $\frac{G(f)}{i\tau f}$ has indeterminate form at $f=0$ when $G(0)=0$. But, the value **must** exists. So we should apply
+L'Hôpital's rule.
+
+$$
+\begin{align*}
+C &= \frac{G(f)}{i\tau f} - R(0) \\
+C &= \frac{G'(0)}{i\tau} - R(0) \\
+\end{align*}
+$$
+
+Let's check if we can simplify $G'(f)$:
+
+$$
+\begin{align*}
+G'(f)&=\frac{d}{df} \int_{-\infty}^{\infty} g(t) \, e^{-i\tau f t} \, dt \\
+&=\int_{-\infty}^{\infty} g(t) \frac{d e^{-i\tau f t}}{df} \, dt \\
+&=-i \tau \int_{-\infty}^{\infty} g(t) \, t \, e^{-i\tau f t} \, dt \\
+G'(0) &= -i \tau \int_{-\infty}^{\infty} g(t) \, t \, dt \\
+&= -i \tau \mu_{g(t)}
+\end{align*}
+$$
+
+From above criteria, it is necessary that we are able to evaluate said limit.
+
+The term $\int_{-\infty}^{\infty} g(t) \, t \, dt$ is the average value of function $g(t)$.
+So, if $G(0)=0$ and $\mu$ converges, substituting back to previous condition:
+
+$$
+\begin{align*}
+C &= \frac{G'(0)}{i\tau} - R(0) \\
+C &= -\mu_{g(t)} - R(0) \\
+&= -\mu_{g(t)} - R(0) \\
+\end{align*}
+$$
+
+Consider the following case. When $C=0$, that means $R(0) = -\mu_{g(t)}$.
+
+It would imply that if $g(t)$ is a distribution (vanish at both infinities, and the total integral is exists), then both
+$\mu$ and $R(0)$ just depend each other. It was an offset of the same thing. We could just use one constant for the whole thing.
+So we will use $-\mu_{g(t)}$.
+
+Rewriting our Fourier transform:
+
+$$
+\begin{align*}
+R(f) &= \frac{G(f)}{i\tau f} + \mu_{g(t)} \delta(f) \\
+\end{align*}
+$$
+
+With the condition that $g(t)$ is such a function that its average value is 0, $G(0)=0$
+
+The condition regarding the average values is already a limiting criteria. The function $g(t)$ needs to vanish in infinities.
+
+Now consider the reverse when $G(0)\ne 0$. To make it simpler, let's say that $g(t)=\delta(t)$.
+
+It means, $r(t)$ is a step function that evaluates to 0 when $t<0$ and evaluates to 1 when $t>0$.
+
+The value of $R(0)$ is the average of $r(t)$, so we can predict that it would be $\mu_{g(t)}=\frac{1}{2}$.
+Because half the real line it has value 0, and half the real line it has value of 1.
+
+Applying above formula would mean:
+
+$$
+\begin{align*}
+R(f) &= \frac{G(f)}{i\tau f} + \mu_{g(t)} \delta(f) \\
+R(f) &= \frac{1}{i\tau f} + \frac{1}{2} \delta(f)
+\end{align*}
+$$
+
+As you can see, we are unable to evaluate $R(0)$ from the expression because the first term $\frac{1}{i\tau f}$ blow up to infinities.
+
+However, coincidentally, we know how to compute inverse Fourier transform of $\frac{1}{i\tau f}$ from our previous derivation of signum.
+Applying inverse Fourier transform:
+
+$$
+\begin{align*}
+R(f) &= \frac{1}{i\tau f} + \frac{1}{2} \delta(f) \\
+r(t) &= \frac{\operatorname{sgn}(t)}{2} + \frac{1}{2} \\
+\end{align*}
+$$
+
+Surprisingly the function above behaves the same way with our predicted step function.
+So we actually got the correct answer even though we can't evaluate $R(0)$ from the solution due to inapplicable L'Hôpital's rule.
+
+In summary because we have two method on calculating $R(0)$ for the correcting term above, we need to make sure which one is correct.
+
+Since evaluating the $R(0)$ from the Fourier transform probably won't work everytime, we can use:
+
+$$
+\begin{align*}
+R(0) &= \int_{-\infty}^{\infty} \int_{-\infty}^{t} g(t) \, dt
+\end{align*}
+$$
+
+To find the average at frequency $f=0$.
+
+Assuming some notion of average. We can also see that the total integral of the function is zero, if we offset the original function by the average.
+Basically:
+
+$$
+\begin{align*}
+\int_{-\infty}^{\infty} \left( r(t) - \mu_{g(t)} \right) \, dt = 0
+\end{align*}
+$$
+
+Finally, we can conclude that given:
+
+$$
+\begin{align*}
+r(t) &= \int_{-\infty}^{t} g(t) \, dt \\
+\int_{-\infty}^{\infty} \left( r(t) - \mu_{g(t)} \right) \, dt &= 0 \\
+\mathcal{F}\left\{ r(t) \right\} = R(f) &= \frac{G(f)}{i\tau f} + \mu_{g(t)} \delta(f) \\
+\end{align*}
+$$
+
+Alternatively, the form that I used to remember this relationship easily, is this one:
+
+$$
+\begin{align*}
+s(t) &= \int_{-\infty}^{t} g(t) \, dt + C \\
+\int_{-\infty}^{\infty} \left( s(t) - C \right) \, dt &= 0 \\
+\mathcal{F}\left\{ \int_{-\infty}^{t} g(t) \, dt + C \right\} &= \frac{G(f)}{i\tau f} + C \delta(f) \\
+\end{align*}
+$$
+
+It looks pretty much similar with the usual integral rule.
+
+## Negative power
+
+Now that we have some rules for the Fourier transform of integral, consider the following function:
+
+$g(t)= \frac{1}{x^2}$
+
+With another function
+
+$r(t)= \int_{-\infty}^{t} g(t)\, dt + C = - \frac{1}{t} + C$
+
+Because $g(t)$ is an even function, the average value over all its domain is zero. We set $C=0$.
+
+Using the method of Fourier Transform over integral:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \int_{-\infty}^{t} g(t) \, dt + C \right\} &= \frac{G(f)}{i\tau f} + C \delta(f) \\
+\mathcal{F}\left\{ -\frac{1}{t} \right\} &= \frac{G(f)}{i\tau f} \\
+i\pi \operatorname{sgn}(f) &= \frac{G(f)}{i\tau f} \\
+G(f) &= - 2 \pi^2 f \operatorname{sgn}(f)
+\end{align*}
+$$
+
+In summary:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \frac{1}{t^2} \right\} &= - 2 \pi^2 f \operatorname{sgn}(f) \\
+\end{align*}
+$$
+
+We can then build iteratively to the next negative power. Consider
+
+$g(t)= \frac{1}{x^3}$
+
+With another function
+
+$r(t)= \int_{-\infty}^{t} g(t)\, dt + C = - \frac{1}{2t^2} + C$
+
+We know that $R(0)=0$ since $r(t)$ has negative power.
+In fact, all the negative power like such function should have $C=0$, so that its $R(0)=0$.
+
+Doing the same thing again using Fourier Transform over integral:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \int_{-\infty}^{t} g(t) \, dt + C \right\} &= \frac{G(f)}{i\tau f} + C \delta(f) \\
+\mathcal{F}\left\{ - \frac{1}{2t^2} \right\} &= \frac{G(f)}{i\tau f} \\
+\pi^2 f \operatorname{sgn}(f) &= \frac{G(f)}{i\tau f} \\
+G(f) &= i 2 \pi^3 f^2 \operatorname{sgn}(f)
+\end{align*}
+$$
+
+In summary:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \frac{1}{t^3} \right\} &= i 2 \pi^3 f^2 \operatorname{sgn}(f) \\
+\end{align*}
+$$
+
+We can see the pattern now:
+
+$$
+\begin{align*}
+\mathcal{F}\left\{ \frac{1}{t^n} \right\} &=  \frac{(-i \tau f)^n}{(n-1)! 2 f} \operatorname{sgn}(f) \\
+&= \frac{(-i \pi)^n (2f)^{n-1}}{(n-1)!} \operatorname{sgn}(f) \\
+&= -i \pi \operatorname{sgn}(f) \frac{(-i\tau f)^{n-1}}{(n-1)!} \\
+&= \mathcal{F}\left\{ \frac{1}{t} \right\}\frac{(-i\tau f)^{n-1}}{(n-1)!} \\
+\end{align*}
+$$
+
+Several expressions listed above is used to have an easier time memorizing the transform. Just pick the most intuitive one.

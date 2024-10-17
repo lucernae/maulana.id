@@ -1,0 +1,108 @@
+---
+layout_name: blog-post
+title: Custom filesystem formatting for kubernetes persistent volume
+description: "Hint: you need a block device driver first"
+category:
+    name: soft-dev
+date: 2021-01-20T15:07:12.512Z
+---
+# The Problem
+
+I encountered a rather specific problem. I have a tile caching container that produces lots of tile caches using [Mapproxy](https://mapproxy.org/). It uses 64k inodes while only using around 300 MB size of 1GB volume allocation. So, 70% space are wasted just because the inodes ran out. I tried to double the size and it seems the inodes were doubled. The problem still scale linearly. With 16GB volume size, we only have around 1 million inodes consumed, while only using around 5 GB size, again linear scale.
+
+**Note**
+If you are not familiar with what a tile cache is, it is basically a small patch of tile, square in shape, of PNG image type. But we have lots of them in order to serve a GIS layer efficiently without recomputing the layer.
+
+
+**Note**
+To check how many inodes available, run `df -hi`. It will show a table of inodes per device name.
+
+As you can see, the problem scale linearly, but think about all those wasted space. We wasted 11 GB size and as we use more and more storage (because we need more caches), more will be wasted. So we need to have a bigger ratio between inodes vs bytes used. But inodes itself uses some bytes. Technically it's not possible to have the inodes block size lower then the block size itself. So there is some limit on how big the ratio can be.
+
+# The Solution
+
+Finding how to allocate inodes is easy enough. All you had to do is format the device using `mkfs.ext4` and supply the desired inodes parameters. There is a tutorial on that too, over the [internet](https://www.tecmint.com/increase-disk-inode-number-in-linux/).
+
+The not so obvious part of the problem is how to format the device if the device is a k8s volume mounted to the container?
+
+I'm just a k8s user and not too deeply understand about the foundation behind k8s mechanism. So, I tried some experiments using a simple logic.
+
+Basically, we can't format the volume if the volume itself is already a file system, since `mkfs` input is a Linux raw device. Luckily my volume provisioner in my cluster is [longhorn.io](longhorn.io), which is a block storage volume. My reasoning is, longhorn creates a block device out of existing filesystem, then mount it to k8s container as a volume filesystem. There is a chance for me to format that block storage before it is being used by the container.
+
+From flipping thru the docs page, I found what I need from totally unrelated [article](https://longhorn.io/docs/1.1.0/advanced-resources/data-recovery/export-from-replica/) about disaster recovery. At some parts, the docs explains how to assemble the block device out of existing longhorn replica sitting in the node host.
+
+To combine the approach, here's the gist:
+
+1. Log in to the node via ssh. We need root/sudo access. The node needs to be the node who have the replica of your PV.
+2. Find the name of your PV and the location of the Longhorn disk. 
+
+To get the PV, simply use `kubectl get pv` command or figure it out by backtracking from your deployment to PVC to PV. The Longhorn disk location can be found from the Longhorn UI interface under the Nodes menu. By default it will be in /var/lib/longhorn
+
+3. Find the replica.
+
+For example, the PV name is `pvc-06b4a8a8-b51d-42c6-a8cc-d8c8d6bc65bc-d890efb2` located under `/var/lib/longhorn/replicas` directory.
+
+4. Check that no one is using the directory.
+
+We want to format the block replica, so there should not be any process accessing it. Check it with `lsof` and make sure the output is empty.
+
+```bash
+lsof /var/lib/longhorn/replicas/pvc-06b4a8a8-b51d-42c6-a8cc-d8c8d6bc65bc-d890efb2
+```
+
+5. Check the volume metadata
+
+The metadata is in `volume.meta` file of the replica directory.
+
+```bash
+cat pvc-06b4a8a8-b51d-42c6-a8cc-d8c8d6bc65bc-d890efb2/volume.meta 
+# output:
+ {"Size":1073741824,"Head":"volume-head-000.img","Dirty":true,"Rebuilding":false,"Parent":"","SectorSize":512,"BackingFileName":""}
+
+```
+
+Take note of the size.
+
+6. Run the storage engine (the engine that assembles the block storage)
+
+```bash
+docker run -v /dev:/host/dev -v /proc:/host/proc -v <data_path>:/volume --privileged longhornio/longhorn-engine:v1.0.0 launch-simple-longhorn <volume_name> <volume_size>
+
+```
+
+For example in our case above
+
+```bash
+docker run -v /dev:/host/dev -v /proc:/host/proc -v /var/lib/longhorn/replicas/pvc-06b4a8a8-b51d-42c6-a8cc-d8c8d6bc65bc-d890efb2:/volume --privileged longhornio/longhorn-engine:v1.0.0 launch-simple-longhorn pvc-06b4a8a8-b51d-42c6-a8cc-d8c8d6bc65bc 1073741824 
+```
+
+**Note** The `launch-simple-longhorn` is not a container name, but rather the command name. Also make sure the engine image: `longhornio/longhorn-engine:v1.0.0` is the same with the engine your replica is using (can be seen from Longhron UI in Volume page).
+
+You can run it using `--rm` or `-d` argument, but I prefer to do it like that to let it run in the foreground of the shell then CTRL+C when I'm done.
+
+7. Use the block device to do formatting
+
+**Caution** This step will erase any content your volume has. Backup if necessary.
+
+Once you let the storage container engine runs, your block device of the volume will appear in `/dev/longhorn/<volume_name>`. If you run the engine in foreground, then let it run and use separate shell to access the block device.
+
+You can do whatever you want with the block device, like mount it to your node. However what I want to do is to format the device. So I was planning to do a reformat (existing data will be empty).
+
+```bash
+sudo mkfs.ext4 -T <template> <device>
+```
+
+To look at possible ext4 filesystem template, see `/etc/mke2fs.conf`. I opt to use `small` template, which is 128 inode block size,  and 1024 block size. This will give approximately 4MB per one inode ratio. The command example is like this:
+
+```bash
+sudo mkfs.ext4 -T small /dev/longhorn/pvc-06b4a8a8-b51d-42c6-a8cc-d8c8d6bc65bc-d890efb2
+```
+
+8. Cleanup
+
+Once reformatting succeeded (destroying all the data inside). Stop the storage engine container using CTRL+C in it's shell. Then mount the PV to your pod. Now with 8GB volume size, I have 2 million inodes. 
+
+
+# Conclusion/How do we know we solved the problem?
+
+Let's calculate the improvements. Previously with 8GB volume size, usage around 2.4GB we reached 100% inodes at 512K inodes. Now with 8GB volume size we have up to 4 times the inodes at 2M inodes. Meanwhile, 2.4 times 4 is more than 8GB, so we will ran out of disk size, way before we ran out of inodes. Which is what we want. The ratio now, for each 4MB of data we use 1 inode in average.
