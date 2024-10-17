@@ -8,12 +8,11 @@
     };
     devshell.url = "github:numtide/devshell";
 
-    # flake location for the gatsby theme
-    gatsby-theme.url = "github:lucernae/gatsby-starter-lucernae";
+    # flake location for the astro template
     astro-blog-template.url = "github:lucernae/astro-blog-template";
   };
 
-  outputs = { self, nixpkgs, flake-utils, devshell, gatsby-theme, astro-blog-template, ... }:
+  outputs = { self, nixpkgs, flake-utils, devshell, astro-blog-template, ... }:
     flake-utils.lib.eachDefaultSystem (system: {
       apps.devshell = self.outputs.devShell.${system}.flakeApp;
       formatter = nixpkgs.legacyPackages.${system}.nixpkgs-fmt;
@@ -92,6 +91,8 @@
                 rsync -avP \
                     --exclude 'astro.config.mjs' \
                     --exclude 'src/content' \
+                    --exclude 'public' \
+                    --exclude 'src/assets' \
                     --exclude 'src/data' \
                     --exclude 'src/utils/post.ts' \
                     ${astro-blog-template.outPath}/ ./site
