@@ -6,7 +6,7 @@ const currentPath = Astro.url.pathname
 const categoryTitle = getCategoryTitleFromSlug(name.toLowerCase())
 
 const isActive =
-	activeCategory?.toLocaleLowerCase() === categoryTitle ||
+	activeCategory?.toLocaleLowerCase() === name?.toLocaleLowerCase() ||
 	(currentPath === '/' && name === 'View All')
 ---
 

@@ -1,7 +1,10 @@
 ---
+import { siteConfig } from '@/data/site.config.ts'
 const today = new Date()
+const name = siteConfig.author.name || 'Your Name'
 ---
 
 <footer class='flex justify-center items-center w-full px-16 h-28 border-t-2'>
-	&copy; {today.getFullYear()} Your Name. All rights reserved.
+	&copy; {today.getFullYear()}
+	{name}. All rights reserved.
 </footer>
