@@ -35,7 +35,7 @@
 	"dependencies": {
 		"@astrojs/check": "^0.9.4",
 		"@astrojs/react": "^3.6.2",
-		"@astrojs/rss": "4.0.1",
+		"@astrojs/rss": "4.0.9",
 		"@astrojs/starlight": "^0.28.3",
 		"@astrojs/starlight-docsearch": "^0.2.0",
 		"@emotion/react": "^11.13.3",
@@ -62,9 +62,9 @@
 	},
 	"devDependencies": {
 		"@astrojs/markdown-remark": "^5.3.0",
-		"@astrojs/mdx": "2.0.3",
-		"@astrojs/sitemap": "3.0.4",
-		"@astrojs/tailwind": "5.1.0",
+		"@astrojs/mdx": "2.3.1",
+		"@astrojs/sitemap": "3.2.1",
+		"@astrojs/tailwind": "5.1.2",
 		"@garmin/fitsdk": "^21.141.0",
 		"@pagefind/default-ui": "^1.0.4",
 		"@shikijs/transformers": "^1.22.0",
