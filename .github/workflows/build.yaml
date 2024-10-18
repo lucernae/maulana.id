@@ -1,4 +1,4 @@
-name: Gatsby Build
+name: Site Build
 on:
   workflow_dispatch:
   pull_request:

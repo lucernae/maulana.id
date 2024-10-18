@@ -1,17 +1,17 @@
 import rss from '@astrojs/rss'
 import { getCollection } from 'astro:content'
-import { getAllCollection } from '@/utils'
+import { getCategoryName, getPosts } from '@/utils'
 import { siteConfig } from '@/site-config'
 
-export async function get() {
-	const posts = await getAllCollection()
+export async function GET() {
+	const posts = await getPosts()
 	return rss({
 		title: siteConfig.title,
 		description: siteConfig.description,
 		site: import.meta.env.SITE,
 		items: posts.map((post) => ({
 			...post.data,
-			link: `post/${post.slug}/`
+			link: `${getCategoryName(post.data.category)}/${post.slug}/`
 		}))
 	})
 }
