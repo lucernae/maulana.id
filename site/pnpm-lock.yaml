@@ -98,7 +98,7 @@ importers:
         version: 3.2.1
       '@astrojs/tailwind':
         specifier: 5.1.2
-        version: 5.1.2(astro@4.16.6(@types/node@22.7.6)(rollup@3.29.5)(terser@5.36.0)(typescript@5.6.3))(tailwindcss@3.3.5)
+        version: 5.1.2(astro@4.16.6(@types/node@22.7.6)(rollup@3.29.5)(terser@5.36.0)(typescript@5.6.3))(tailwindcss@3.4.14)
       '@garmin/fitsdk':
         specifier: ^21.141.0
         version: 21.141.0
@@ -110,7 +110,7 @@ importers:
         version: 1.22.0
       '@tailwindcss/typography':
         specifier: 0.5.10
-        version: 0.5.10(tailwindcss@3.3.5)
+        version: 0.5.10(tailwindcss@3.4.14)
       '@tinacms/cli':
         specifier: ^1.5.31
         version: 1.5.31(@babel/core@7.25.8)(@babel/template@7.25.7)(@types/node@22.7.6)(@types/react-dom@18.3.1)(@types/react@18.3.11)(encoding@0.1.13)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(rollup@3.29.5)(terser@5.36.0)
@@ -166,8 +166,8 @@ importers:
         specifier: 2.5.4
         version: 2.5.4
       tailwindcss:
-        specifier: 3.3.5
-        version: 3.3.5
+        specifier: 3.4.14
+        version: 3.4.14
       tinacms:
         specifier: ^1.5.22
         version: 1.5.22(@babel/core@7.25.8)(@babel/template@7.25.7)(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -1495,24 +1495,12 @@ packages:
   '@internationalized/string@3.1.1':
     resolution: {integrity: sha512-fvSr6YRoVPgONiVIUhgCmIAlifMVCeej/snPZVzbzRPxGpHl3o1GRe+d/qh92D8KhgOciruDUH8I5mjdfdjzfA==}
 
-  '@jridgewell/gen-mapping@0.3.3':
-    resolution: {integrity: sha512-HLhSWOLRi875zjjMG/r+Nv0oCW8umGb0BgEhyX3dDX3egwZtB8PqLnjz3yedt8R5StBrzcg4aBpnh8UA9D1BoQ==}
-    engines: {node: '>=6.0.0'}
-
   '@jridgewell/gen-mapping@0.3.5':
     resolution: {integrity: sha512-IzL8ZoEDIBRWEzlCcRhOaCupYyN5gdIK+Q6fbFdPDg6HqX6jpkItn7DFIpW9LQzXG6Df9sA7+OKnq0qlz/GaQg==}
     engines: {node: '>=6.0.0'}
 
-  '@jridgewell/resolve-uri@3.1.1':
-    resolution: {integrity: sha512-dSYZh7HhCDtCKm4QakX0xFpsRDqjjtZf/kjI/v3T3Nwt5r8/qz/M19F9ySyOqU94SXBmeG9ttTul+YnR4LOxFA==}
-    engines: {node: '>=6.0.0'}
-
   '@jridgewell/resolve-uri@3.1.2':
     resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
-    engines: {node: '>=6.0.0'}
-
-  '@jridgewell/set-array@1.1.2':
-    resolution: {integrity: sha512-xnkseuNADM0gt2bs+BvhO0p78Mk762YnZdsuzFV018NoG1Sj1SCQvpSqa7XUaTam5vAGasABV9qXASMKnFMwMw==}
     engines: {node: '>=6.0.0'}
 
   '@jridgewell/set-array@1.2.1':
@@ -1527,9 +1515,6 @@ packages:
 
   '@jridgewell/sourcemap-codec@1.5.0':
     resolution: {integrity: sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ==}
-
-  '@jridgewell/trace-mapping@0.3.20':
-    resolution: {integrity: sha512-R8LcPeWZol2zR8mmH3JeKQ6QRCFb7XgUhV9ZlGhHLGyg4wpPiPZNQOOWhFZhxKw8u//yTbNGI42Bx/3paXEQ+Q==}
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
@@ -5556,8 +5541,8 @@ packages:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
 
-  jiti@1.20.0:
-    resolution: {integrity: sha512-3TV69ZbrvV6U5DfQimop50jE9Dl6J8O1ja1dvBbMba/sZ3YBEQqJ2VZRoQPVnhlzjNtU1vaXRZVrVjU4qtm8yA==}
+  jiti@1.21.6:
+    resolution: {integrity: sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==}
     hasBin: true
 
   jotai@1.13.1:
@@ -6755,9 +6740,6 @@ packages:
   pick-by-alias@1.2.0:
     resolution: {integrity: sha512-ESj2+eBxhGrcA1azgHs7lARG5+5iLakc/6nlfbpjcLl00HuuUOIuORhYXN4D1HfvMSKuVtFQjAlnwi1JHEeDIw==}
 
-  picocolors@1.0.0:
-    resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
-
   picocolors@1.1.0:
     resolution: {integrity: sha512-TQ92mBOW0l3LeMeyLV6mzy/kWr8lkd/hp3mTg7wYK7zJhuBStmGMBG0BdeDZS/dZx1IukaX6Bk11zcln25o1Aw==}
 
@@ -6813,18 +6795,6 @@ packages:
     engines: {node: ^12 || ^14 || >= 16}
     peerDependencies:
       postcss: ^8.4.21
-
-  postcss-load-config@4.0.1:
-    resolution: {integrity: sha512-vEJIc8RdiBRu3oRAI0ymerOn+7rPuMvRXslTvZUKZonDHFIczxztIyJ1urxM1x9JXEikvpWWTUUqal5j/8QgvA==}
-    engines: {node: '>= 14'}
-    peerDependencies:
-      postcss: '>=8.0.9'
-      ts-node: '>=9.0.0'
-    peerDependenciesMeta:
-      postcss:
-        optional: true
-      ts-node:
-        optional: true
 
   postcss-load-config@4.0.2:
     resolution: {integrity: sha512-bSVhyJGL00wMVoPUzAVAnbEoWyqRxkjv64tUl427SKnPrENtq6hJwUojroMz2VB+Q1edmi4IfrAPpami5VVgMQ==}
@@ -7896,8 +7866,8 @@ packages:
   tailwind-merge@2.5.4:
     resolution: {integrity: sha512-0q8cfZHMu9nuYP/b5Shb7Y7Sh1B7Nnl5GqNr1U+n2p6+mybvRtayrQ+0042Z5byvTA8ihjlP8Odo8/VnHbZu4Q==}
 
-  tailwindcss@3.3.5:
-    resolution: {integrity: sha512-5SEZU4J7pxZgSkv7FP1zY8i2TIAOooNZ1e/OGtxIEv6GltpoiXUqWvLy89+a10qYTB1N5Ifkuw9lqQkN9sscvA==}
+  tailwindcss@3.4.14:
+    resolution: {integrity: sha512-IcSvOcTRcUtQQ7ILQL5quRDg7Xs93PdJEk1ZLbhhvJc7uj/OAhYOnruEiwnGgBvUtaUAJ8/mhSw1o8L2jCiENA==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -9230,13 +9200,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@astrojs/tailwind@5.1.2(astro@4.16.6(@types/node@22.7.6)(rollup@3.29.5)(terser@5.36.0)(typescript@5.6.3))(tailwindcss@3.3.5)':
+  '@astrojs/tailwind@5.1.2(astro@4.16.6(@types/node@22.7.6)(rollup@3.29.5)(terser@5.36.0)(typescript@5.6.3))(tailwindcss@3.4.14)':
     dependencies:
       astro: 4.16.6(@types/node@22.7.6)(rollup@3.29.5)(terser@5.36.0)(typescript@5.6.3)
       autoprefixer: 10.4.20(postcss@8.4.47)
       postcss: 8.4.47
       postcss-load-config: 4.0.2(postcss@8.4.47)
-      tailwindcss: 3.3.5
+      tailwindcss: 3.4.14
     transitivePeerDependencies:
       - ts-node
 
@@ -9259,7 +9229,7 @@ snapshots:
   '@babel/code-frame@7.25.7':
     dependencies:
       '@babel/highlight': 7.25.7
-      picocolors: 1.0.0
+      picocolors: 1.1.0
 
   '@babel/compat-data@7.25.8': {}
 
@@ -10243,7 +10213,7 @@ snapshots:
       '@graphql-tools/merge': 8.4.2(graphql@15.8.0)
       '@graphql-tools/utils': 9.2.1(graphql@15.8.0)
       graphql: 15.8.0
-      tslib: 2.6.2
+      tslib: 2.8.0
       value-or-promise: 1.0.12
 
   '@graphql-tools/utils@10.0.7(graphql@15.8.0)':
@@ -10401,23 +10371,13 @@ snapshots:
     dependencies:
       '@swc/helpers': 0.5.3
 
-  '@jridgewell/gen-mapping@0.3.3':
-    dependencies:
-      '@jridgewell/set-array': 1.1.2
-      '@jridgewell/sourcemap-codec': 1.4.15
-      '@jridgewell/trace-mapping': 0.3.20
-
   '@jridgewell/gen-mapping@0.3.5':
     dependencies:
       '@jridgewell/set-array': 1.2.1
       '@jridgewell/sourcemap-codec': 1.5.0
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@jridgewell/resolve-uri@3.1.1': {}
-
   '@jridgewell/resolve-uri@3.1.2': {}
-
-  '@jridgewell/set-array@1.1.2': {}
 
   '@jridgewell/set-array@1.2.1': {}
 
@@ -10429,11 +10389,6 @@ snapshots:
   '@jridgewell/sourcemap-codec@1.4.15': {}
 
   '@jridgewell/sourcemap-codec@1.5.0': {}
-
-  '@jridgewell/trace-mapping@0.3.20':
-    dependencies:
-      '@jridgewell/resolve-uri': 3.1.1
-      '@jridgewell/sourcemap-codec': 1.4.15
 
   '@jridgewell/trace-mapping@0.3.25':
     dependencies:
@@ -11428,21 +11383,21 @@ snapshots:
     dependencies:
       tslib: 2.8.0
 
-  '@tailwindcss/aspect-ratio@0.4.2(tailwindcss@3.3.5)':
+  '@tailwindcss/aspect-ratio@0.4.2(tailwindcss@3.4.14)':
     dependencies:
-      tailwindcss: 3.3.5
+      tailwindcss: 3.4.14
 
-  '@tailwindcss/line-clamp@0.3.1(tailwindcss@3.3.5)':
+  '@tailwindcss/line-clamp@0.3.1(tailwindcss@3.4.14)':
     dependencies:
-      tailwindcss: 3.3.5
+      tailwindcss: 3.4.14
 
-  '@tailwindcss/typography@0.5.10(tailwindcss@3.3.5)':
+  '@tailwindcss/typography@0.5.10(tailwindcss@3.4.14)':
     dependencies:
       lodash.castarray: 4.4.0
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
-      tailwindcss: 3.3.5
+      tailwindcss: 3.4.14
 
   '@tinacms/app@1.2.29(@babel/core@7.25.8)(@babel/template@7.25.7)(@types/node@22.7.6)(@types/react-dom@18.3.1)(@types/react@18.3.11)(yup@0.32.11)':
     dependencies:
@@ -11457,11 +11412,11 @@ snapshots:
       graphiql: 3.0.0-alpha.1(@codemirror/language@6.0.0)(@types/node@22.7.6)(@types/react-dom@18.3.1)(@types/react@18.3.11)(graphql@15.8.0)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       graphql: 15.8.0
       monaco-editor: 0.31.0
-      postcss: 8.4.31
+      postcss: 8.4.47
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
       react-router-dom: 6.3.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
-      tailwindcss: 3.3.5
+      tailwindcss: 3.4.14
       tinacms: 1.5.22(@babel/core@7.25.8)(@babel/template@7.25.7)(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       typescript: 4.9.5
       zod: 3.22.4
@@ -11501,9 +11456,9 @@ snapshots:
       '@graphql-tools/load': 7.8.14(graphql@15.8.0)
       '@rollup/pluginutils': 5.0.5(rollup@3.29.5)
       '@svgr/core': 6.3.1
-      '@tailwindcss/aspect-ratio': 0.4.2(tailwindcss@3.3.5)
-      '@tailwindcss/line-clamp': 0.3.1(tailwindcss@3.3.5)
-      '@tailwindcss/typography': 0.5.10(tailwindcss@3.3.5)
+      '@tailwindcss/aspect-ratio': 0.4.2(tailwindcss@3.4.14)
+      '@tailwindcss/line-clamp': 0.3.1(tailwindcss@3.4.14)
+      '@tailwindcss/typography': 0.5.10(tailwindcss@3.4.14)
       '@tinacms/app': 1.2.29(@babel/core@7.25.8)(@babel/template@7.25.7)(@types/node@22.7.6)(@types/react-dom@18.3.1)(@types/react@18.3.11)(yup@0.32.11)
       '@tinacms/datalayer': 1.2.27(react@17.0.2)
       '@tinacms/graphql': 1.4.27(react@17.0.2)
@@ -11547,7 +11502,7 @@ snapshots:
       prompts: 2.4.2
       readable-stream: 4.4.2
       rollup-plugin-visualizer: 5.9.2(rollup@3.29.5)
-      tailwindcss: 3.3.5
+      tailwindcss: 3.4.14
       tinacms: 1.5.22(@babel/core@7.25.8)(@babel/template@7.25.7)(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       typanion: 3.13.0
       url-pattern: 1.0.3
@@ -11607,7 +11562,7 @@ snapshots:
       date-fns: 2.30.0
       encoding-down: 7.1.0
       estree-walker: 3.0.3
-      fast-glob: 3.3.1
+      fast-glob: 3.3.2
       fs-extra: 9.1.0
       glob-parent: 6.0.2
       graphql: 15.8.0
@@ -16235,7 +16190,7 @@ snapshots:
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
-  jiti@1.20.0: {}
+  jiti@1.21.6: {}
 
   jotai@1.13.1(@babel/core@7.25.8)(@babel/template@7.25.7)(react@17.0.2):
     dependencies:
@@ -18064,8 +18019,6 @@ snapshots:
 
   pick-by-alias@1.2.0: {}
 
-  picocolors@1.0.0: {}
-
   picocolors@1.1.0: {}
 
   picomatch-browser@2.2.6: {}
@@ -18155,24 +18108,17 @@ snapshots:
       style-value-types: 5.0.0
       tslib: 2.8.0
 
-  postcss-import@15.1.0(postcss@8.4.31):
+  postcss-import@15.1.0(postcss@8.4.47):
     dependencies:
-      postcss: 8.4.31
+      postcss: 8.4.47
       postcss-value-parser: 4.2.0
       read-cache: 1.0.0
       resolve: 1.22.8
 
-  postcss-js@4.0.1(postcss@8.4.31):
+  postcss-js@4.0.1(postcss@8.4.47):
     dependencies:
       camelcase-css: 2.0.1
-      postcss: 8.4.31
-
-  postcss-load-config@4.0.1(postcss@8.4.31):
-    dependencies:
-      lilconfig: 2.1.0
-      yaml: 2.3.4
-    optionalDependencies:
-      postcss: 8.4.31
+      postcss: 8.4.47
 
   postcss-load-config@4.0.2(postcss@8.4.47):
     dependencies:
@@ -18201,11 +18147,6 @@ snapshots:
     dependencies:
       icss-utils: 5.1.0(postcss@8.4.47)
       postcss: 8.4.47
-
-  postcss-nested@6.0.1(postcss@8.4.31):
-    dependencies:
-      postcss: 8.4.31
-      postcss-selector-parser: 6.0.13
 
   postcss-nested@6.0.1(postcss@8.4.47):
     dependencies:
@@ -19483,7 +19424,7 @@ snapshots:
 
   sucrase@3.34.0:
     dependencies:
-      '@jridgewell/gen-mapping': 0.3.3
+      '@jridgewell/gen-mapping': 0.3.5
       commander: 4.1.1
       glob: 7.1.6
       lines-and-columns: 1.2.4
@@ -19551,27 +19492,27 @@ snapshots:
 
   tailwind-merge@2.5.4: {}
 
-  tailwindcss@3.3.5:
+  tailwindcss@3.4.14:
     dependencies:
       '@alloc/quick-lru': 5.2.0
       arg: 5.0.2
       chokidar: 3.5.3
       didyoumean: 1.2.2
       dlv: 1.1.3
-      fast-glob: 3.3.1
+      fast-glob: 3.3.2
       glob-parent: 6.0.2
       is-glob: 4.0.3
-      jiti: 1.20.0
+      jiti: 1.21.6
       lilconfig: 2.1.0
-      micromatch: 4.0.5
+      micromatch: 4.0.8
       normalize-path: 3.0.0
       object-hash: 3.0.0
-      picocolors: 1.0.0
-      postcss: 8.4.31
-      postcss-import: 15.1.0(postcss@8.4.31)
-      postcss-js: 4.0.1(postcss@8.4.31)
-      postcss-load-config: 4.0.1(postcss@8.4.31)
-      postcss-nested: 6.0.1(postcss@8.4.31)
+      picocolors: 1.1.0
+      postcss: 8.4.47
+      postcss-import: 15.1.0(postcss@8.4.47)
+      postcss-js: 4.0.1(postcss@8.4.47)
+      postcss-load-config: 4.0.2(postcss@8.4.47)
+      postcss-nested: 6.0.1(postcss@8.4.47)
       postcss-selector-parser: 6.0.13
       resolve: 1.22.8
       sucrase: 3.34.0
@@ -20188,7 +20129,7 @@ snapshots:
   vite@4.5.0(@types/node@22.7.6)(terser@5.36.0):
     dependencies:
       esbuild: 0.18.20
-      postcss: 8.4.31
+      postcss: 8.4.47
       rollup: 3.29.5
     optionalDependencies:
       '@types/node': 22.7.6
