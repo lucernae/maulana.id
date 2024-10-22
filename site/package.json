@@ -62,7 +62,7 @@
 	},
 	"devDependencies": {
 		"@astrojs/markdown-remark": "^5.3.0",
-		"@astrojs/mdx": "2.3.1",
+		"@astrojs/mdx": "3.1.8",
 		"@astrojs/sitemap": "3.2.1",
 		"@astrojs/tailwind": "5.1.2",
 		"@garmin/fitsdk": "^21.141.0",
