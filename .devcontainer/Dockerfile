@@ -2,7 +2,7 @@ FROM ghcr.io/lucernae/devcontainer-nix:flake---latest
 
 ENV USE_DIRENV="true"
 ENV USE_FLAKE="true"
-ENV INSTALL_ROOT_PACKAGES=""
+ENV INSTALL_ROOT_PACKAGES="nixpkgs#ps nixpkgs#getconf"
 ENV PREBUILD_DEFAULT_PACKAGE=""
 ENV PREBUILD_NIX_SHELL="shell.nix"
 ENV PREBUILD_FLAKE=""
