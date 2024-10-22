@@ -1,0 +1,116 @@
+---
+layout_name: blog-post
+title: Migrating my personal blog from GatsbyJS to Astro - Part 1
+description: Why I need to move out of GatsbyJS
+category:
+  name: soft-dev
+date: 2024-10-23T01:00:00.00Z
+---
+
+# Why I use GatsbyJS
+
+This site were previously built using GatsbyJS framework. The reason why I used GatsbyJS:
+
+1. Support for [MDX JS](https://mdxjs.com) which is an extension of Markdown syntax with JSX component support
+
+By using MDX, I can inject my markdown content with interactivity component made possible using JSX, while also making sure that my MDX file is **framework agnostic**.
+By framework agnostic, I mean the content is semantically readable and have the same meaning, suppose that it was read in Raw, rather than rendered using any framework.
+
+2. Static site generators
+
+Means I can use free or cheap hosting servers, because I essentially served static files without any server side process.
+I can deploy using various vendor-agnostic approach. It can be to Netlify, NextJS, Github Pages, or can even self serve using my own VPS.
+
+3. Decoupling the content with the technology to serve it
+
+GatsbyJS has an excellent vision of entirely separating the content with the CMS or the engine itself.
+This way, I can build/improve the engine independently with the content.
+I don't have to rely on existing engine like Wordpress, or CMS web framework like Joomla or Django.
+
+Based on above 3 key principles, at that time it was only GatsbyJS that ticks all boxes.
+Frankly, I want to spend my entire time writing more content, rather than making fancy blog engine.
+So I want to reduce time learning all these JS framework that often changes very often.
+
+# Why it's not feasible for me to use GatsbyJS anymore
+
+Throughout using GatsbyJS, I stumbled upon problems:
+
+1. JS ecosystem is not the most stable ecosystem
+
+Things very often changes, and it was very flaky. I hate it when you want to write content weekly and suddenly every other week
+your build in Netlify just suddenly doesn't work anymore. Eventually I have to bring my own solution to keep the entire thing buildable and stable:
+
+- I used Nix to pin the crucial dependencies such as Node JS version and whatever native dependencies Node needed
+- I used dependabot and renovate bot to keep my CI/CD pipeline always tested with the latest applicable npm packages listed in the `package.json`
+- I used Nix to setup CI/CD so I can test major version upgrade of packages on separate branches. If it is not easy to fix, I abandoned it and won't upgrade
+
+2. Core GatsbyJS plugins has become a mess and less improved
+
+When I have issues, I check if the next version fix the issues. But I feel overwhelmed with how crazy the JS ecosystem is for casual user!
+In the past, I upgraded Katex package or remark packages, and suddenly things don't work because some import that uses `require` now must use ESM `import` statements.
+Not too mention I also need to know whether the package were made for client side rendering (in the browser) or server side (run via Node JS).
+This is insanely difficult to track.
+
+At some point, I rely on Nix again to keep things stable on the version that was guaranteed to work. It was a pain to migrate from Gatsby 3 to Gatsby 5.
+I'm not even sure if I can migrate iteratively to v5 without using Nix.
+
+3. Build and Development mode has become increasingly slow
+
+As my content grew, it becomes increasingly painful to run dev mode and see my local changes, because Gatsby will need to recompile everything.
+My biggest bottleneck is because I have many static images for my blogs, and Gatsby source systems requires these static assets to run against its "image sharp" tools
+which basically optimizes image loading time. It is a good feature on prod mode, but useless on dev mode because at most I will only edit one article at a time.
+So I don't need all my images to be rebuilt. But there is no option to toggle it off!
+
+4. Adding my latest component break the build completely
+
+This is the last straw. When I tried to integrate [MUI X Charts](https://mui.com/x/react-charts/), even dev mode failed to build.
+It just stopped without any recommendation on what to fix.
+The error were just the process received **SIGSEGV**, which can be from anything.
+This is after I increased node virtual memory to 4GB. Which is ridiculous since it still not being able to build it.
+
+Reason 1 to 3 is somewhat manageable, because we can have workaround using Nix.
+
+Reason 4, is just dead end. Because I can't build and run dev mode at all. Which is why I need to change my blog engine.
+
+# Why I choose Astro
+
+I choose [Astro](https://astro.build) for the following simple reason:
+
+1. It must be able to compile MDX, and can use React/JSX to inject interactive component
+2. It must be able to integrate with $KaTeX$, since I wrote math equation in my blog
+3. It should be still be able to build as static sites
+4. The new engine must be able to handle the same routing, so that my existing blogs doesn't change content URLs
+5. Must be vendor-agnostic
+
+Frankly speaking, requirement 1 excludes most options like Hugo or other engines using other programming languages.
+It needs to be using JS. In the future, if I can transpile Python or Go to JSX, perhaps there could be more choices.
+
+I also knew about Astro from Gatsby reddit community. Most redditor mentioned that Gatsby are dead now, and we should move to Astro.
+
+After checking out Astro a little bit, I identified several key challenges:
+
+1. In a conceptual level, Astro and Gatsby is really different
+
+Gatsby uses webpack to transpile all the content into SPA. Astro uses vite to target only serving static HTML + CSS components, but not Javascript.
+This caused all my custom functionality I have been built in Gatsby unusable out of the box, because it requires client side JS.
+
+2. Astro file has its own syntax
+
+I get the idea that Astro uses its own syntax to segregate its `*.astro` files to be transpiled differently.
+This is useful so that they don't associate Astro's key ideas as JSX, because the rendering method is different.
+
+However, frankly I don't want to commit on using other separate syntax for my contents. So I will keep using MDX, but probably
+made several Astro files as a glue. I will treat this Astro files as expendable in case I have to migrate to other stacks.
+
+3. Astro islands requires different handling
+
+Some key principles of Astro like Astro islands requires me to modify my existing MDX content. Even though I had hoped those files
+will stay the same, even if the engine changes.
+
+For client side activity, the component I refer to in markdown needs to have special `client:only="react"` attribute in it.
+
+Although all those 3 challenges were solvable. It turns out I need to spent more time than I estimate to completely solved it.
+
+# Next article
+
+In the next article we can focus on the migration strategy.
