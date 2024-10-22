@@ -18,26 +18,28 @@ const posts = await getPosts(MAX_POSTS)
 	<TitlePage title="Maulana's Personal Blog" />
 	<div class='flex justify-start items-center gap-2'>
 		<picture>
-			<Image src={avatar} width='64' height='64' alt={author?.name} />
+			<Image src={avatar} width='64' height='64' alt={author?.name}
+			    style={{borderRadius: '32px'}}
+			/>
 		</picture>
 		<p>
 			Written by <strong>{author.name}</strong>
 			<br />
 			{author?.summary || null}
 			<br />
-			<a href={`https://twitter.com/${social.twitter}`}>
-				<img
-					alt='Twitter Follow'
-					src={`https://img.shields.io/twitter/follow/${social.twitter}?style=social`}
-				/></a
-			>
+            <a href={`https://github.com/${social.github}`}>
+                <img
+                    alt='GitHub followers'
+                    src={`https://img.shields.io/github/followers/${social.github}?style=social`}
+                /></a
+            >
+            <a href={`https://twitter.com/${social.twitter}`}>
+                <img
+                    alt='Twitter Follow'
+                    src={`https://img.shields.io/twitter/follow/${social.twitter}?style=social`}
+                /></a
+            >
 		</p>
-		<a href={`https://github.com/${social.github}`}>
-			<img
-				alt='GitHub followers'
-				src={`https://img.shields.io/github/followers/${social.github}?style=social`}
-			/></a
-		>
 	</div>
 	<ListCategories />
 	<p>
