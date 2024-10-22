@@ -42,6 +42,9 @@ interface SiteConfig {
 			continueOnFailure: boolean
 			queries: string
 		}
+		googleAnalyticsProps: {
+			trackingID: string
+		}
 	}
 	lang: string
 	ogLocale: string
@@ -88,6 +91,9 @@ export const siteConfig: SiteConfig = {
 			dryRun: process.env.GATSBY_ALGOLIA_DRY_RUN === 'true',
 			continueOnFailure: process.env.GATSBY_ALGOLIA_CONTINUE_ON_FAILURE === 'true',
 			queries: queries
+		},
+		googleAnalyticsProps: {
+			trackingID: 'G-1F37WJ9JDF'
 		}
 	},
 	lang: 'en-US',
