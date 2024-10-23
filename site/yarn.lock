@@ -5732,7 +5732,7 @@ astro-font@^0.0.72:
   integrity sha512-FUjIerovSg2lsfJfvvqY23hgvc++gHi69ikFkxm0mqO3MPFykK5ppeUuROUjhNbE6vwdD8MpiJOy1CR5S0g/lQ==
 
 astro@^4.16.4:
-  version "4.16.6"
+  version "4.16.7"
   dependencies:
     "@astrojs/compiler" "^2.10.3"
     "@astrojs/internal-helpers" "0.4.1"
