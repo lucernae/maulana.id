@@ -1,4 +1,4 @@
-import { Decoder, Stream, Profile, Utils } from '@garmin/fitsdk'
+import { Decoder, Stream } from '@garmin/fitsdk'
 
 export class FITReader {
 	constructor(filePath, mesgListener) {

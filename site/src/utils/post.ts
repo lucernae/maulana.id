@@ -7,8 +7,8 @@ export const getAllCollection = async () => {
 	const allPosts = [
 		await getCollection('blog'),
 		await getCollection('soft-dev'),
-		await getCollection('llm')
-		// await getCollection('sandbox'),
+		await getCollection('llm'),
+		await getCollection('sandbox')
 	]
 	const filteredPosts = allPosts.flat().filter((c) => {
 		return c.data.title !== undefined

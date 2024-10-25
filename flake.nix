@@ -54,6 +54,19 @@
           name = "maulana.id";
           commands = [
             {
+              name = "python";
+              package =
+                let
+                  python3Packages = pkgs.python3Packages;
+                in
+                with python3Packages;
+                pkgs.python3.withPackages (ps: [
+                  numpy
+                  scipy
+                  matplotlib
+                ]);
+            }
+            {
               name = "yarn";
               package = pkgs.yarn.override {
                 nodejs = pkgs.nodejs;

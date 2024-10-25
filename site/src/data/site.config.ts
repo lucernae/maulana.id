@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
+
 dotenv.config()
-import { queries } from '../utils/algolia-queries'
 
 interface SiteConfig {
 	author: {
@@ -33,14 +33,6 @@ interface SiteConfig {
 			theme: string
 			lang: string
 			loading: string
-		}
-		algoliaProps: {
-			indexName: string
-			appId: string
-			apiKey: string
-			dryRun: boolean
-			continueOnFailure: boolean
-			queries: string
 		}
 		googleAnalyticsProps: {
 			trackingID: string
@@ -83,14 +75,6 @@ export const siteConfig: SiteConfig = {
 			theme: 'preferred_color_scheme',
 			lang: 'en',
 			loading: 'lazy'
-		},
-		algoliaProps: {
-			indexName: 'Pages',
-			appId: process.env.GATSBY_ALGOLIA_APP_ID ?? '',
-			apiKey: process.env.GATSBY_ALGOLIA_WRITE_KEY ?? '',
-			dryRun: process.env.GATSBY_ALGOLIA_DRY_RUN === 'true',
-			continueOnFailure: process.env.GATSBY_ALGOLIA_CONTINUE_ON_FAILURE === 'true',
-			queries: queries
 		},
 		googleAnalyticsProps: {
 			trackingID: 'G-1F37WJ9JDF'
