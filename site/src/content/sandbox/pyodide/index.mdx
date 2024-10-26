@@ -1,0 +1,147 @@
+---
+layout_name: blog-post
+title: Pyodide
+description: Pyodide demo
+category:
+  name: sandbox
+date: 2024-10-25T02:00:00.00Z
+---
+
+The page uses [Pyodide](https://pyodide.org/en/stable/) to make it possible to run Python code in a browser via WebAssembly.
+
+# Demo
+
+<script is:inline type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script is:inline type="text/javascript" src="https://cdn.jsdelivr.net/pyodide/v0.26.3/full/pyodide.js">
+</script>
+
+import { PythonRunner } from "./python-runner.jsx"
+
+<PythonRunner client:only="react" pythonScriptSelector="#pythonScript" plotScriptSelector="#plotScript"  />
+
+# Explanation
+
+The demo basically does numerical integration to generate characteristic function of a Normal Distribution.
+It does so using Python libraries `numpy` and `scipy` because doing these in javascript is somewhat very limited.
+The Python script is executed in WebAssembly context using Pyodide.
+
+If you click the button above, it will execute the following Python block:
+
+<div id="pythonScript">
+
+```python
+import numpy as np
+from scipy.integrate import quad
+from scipy.stats import norm
+
+
+def complex_quad(func, a, b, **kwargs):
+    def real_func(x):
+        return func(x).real
+
+    def imag_func(x):
+        return func(x).imag
+
+    real_integral = quad(real_func, a, b, **kwargs)
+    imag_integral = quad(imag_func, a, b, **kwargs)
+    return real_integral[0] + 1j * imag_integral[1], real_integral[1:], imag_integral[1:]
+
+
+def characteristic_function(pdf):
+    def _c(t):
+        integrand = lambda x: np.exp(1j * t * x) * pdf(x)
+        return complex_quad(integrand, -np.inf, np.inf)[0]
+
+    return _c
+
+
+# Example usage with Standard Normal distribution
+norm_pdf = norm().pdf
+dist = norm(loc=0, scale=0.001)
+neg_freq = norm(loc=-1, scale=0.001).pdf
+pos_freq = norm(loc=1, scale=0.001).pdf
+
+
+def binomial_pdf(x):
+    return (neg_freq(x) + pos_freq(x)) / 2
+
+
+t_values = np.arange(-100, 100) / 100  # array of t from 0 to 100
+cf = np.vectorize(characteristic_function(norm_pdf))
+original_distribution = (np.vectorize(norm_pdf))(t_values)
+complex_results = cf(t_values)
+# Return t-values and results as list of list
+real_parts = list(map(np.real, complex_results))
+imag_parts = list(map(np.imag, complex_results))
+
+# Return t-values and parts as list of list
+results = [t_values.tolist(), original_distribution.tolist(), real_parts, imag_parts]
+results
+```
+
+</div>
+
+After that the following javascript block will read the result. We then use [Plotly](https://plotly.org) to render the
+data in JavaScript, so that we can interact with the chart.
+
+<div id="plotScript">
+
+```javascript
+function generatePlot() {
+  const result = window.pythonResult
+  const generatedID = window.pyodideElementID
+  const plotID =`${generatedID}-plot`
+  let plotDiv = document.getElementById(plotID)
+  console.log(plotDiv)
+  if(!plotDiv) {
+    plotDiv = document.createElement('div')
+    plotDiv.id = plotID
+    const parentDiv = document.getElementById(generatedID)
+    console.log(parentDiv)
+    parentDiv.prepend(plotDiv)
+  }
+  const t = result[0].map((i) => i)
+  const o = result[1].map((i) => i)
+  const r = result[2].map((i) => i)
+  const im = result[3].map((i) => i)
+  Plotly.newPlot(
+    plotDiv,
+    [
+      {
+        x: t,
+        y: o,
+        name: 'Normal Distribution',
+        type: 'scatter',
+        mode: 'lines',
+        marker: { color: 'green' }
+      },
+      {
+        x: t,
+        y: r,
+        name: 'Characteristic function - Real part',
+        type: 'scatter',
+        mode: 'lines',
+        marker: { color: 'blue' }
+      },
+      {
+        x: t,
+        y: im,
+        name: 'Characteristic function - Imaginary part',
+        type: 'scatter',
+        mode: 'lines',
+        marker: { color: 'red' }
+      }
+    ],
+    {
+      title: 'Characteristic Function',
+      xaxis: { title: 't' },
+      yaxis: { title: 'Value' }
+    }
+  )
+  document.getElementById(`${generatedID}-spinner`).classList.add('hidden')
+}
+
+generatePlot()
+```
+
+</div>
