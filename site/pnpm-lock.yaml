@@ -13,16 +13,16 @@ importers:
         version: 0.9.4(prettier-plugin-astro@0.14.1)(prettier@3.0.3)(typescript@5.6.3)
       '@astrojs/react':
         specifier: ^3.6.2
-        version: 3.6.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.4.10(@types/node@22.8.0)(terser@5.36.0))
+        version: 3.6.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.4.10(@types/node@22.8.1)(terser@5.36.0))
       '@astrojs/rss':
         specifier: 4.0.9
         version: 4.0.9
       '@astrojs/starlight':
         specifier: ^0.28.3
-        version: 0.28.3(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
+        version: 0.28.3(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
       '@astrojs/starlight-docsearch':
         specifier: ^0.2.0
-        version: 0.2.0(@algolia/client-search@5.10.2)(@astrojs/starlight@0.28.3(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.17.2)
+        version: 0.2.0(@algolia/client-search@5.10.2)(@astrojs/starlight@0.28.3(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.17.2)
       '@emotion/react':
         specifier: ^11.13.3
         version: 11.13.3(@types/react@18.3.12)(react@18.3.1)
@@ -52,10 +52,10 @@ importers:
         version: 5.10.2
       astro:
         specifier: ^4.16.4
-        version: 4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
+        version: 4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
       astro-embed:
         specifier: ^0.7.4
-        version: 0.7.4(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
+        version: 0.7.4(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
       astro-font:
         specifier: ^0.1.0
         version: 0.1.81
@@ -92,13 +92,13 @@ importers:
         version: 5.3.0
       '@astrojs/mdx':
         specifier: 3.1.8
-        version: 3.1.8(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
+        version: 3.1.8(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
       '@astrojs/sitemap':
         specifier: 3.2.1
         version: 3.2.1
       '@astrojs/tailwind':
         specifier: 5.1.2
-        version: 5.1.2(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))(tailwindcss@3.4.14)
+        version: 5.1.2(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))(tailwindcss@3.4.14)
       '@garmin/fitsdk':
         specifier: ^21.141.0
         version: 21.141.0
@@ -113,7 +113,7 @@ importers:
         version: 0.5.15(tailwindcss@3.4.14)
       '@tinacms/cli':
         specifier: ^1.5.31
-        version: 1.6.10(@codemirror/language@6.0.0)(@types/node@22.8.0)(@types/react-dom@18.3.1)(@types/react@18.3.12)(abstract-level@1.0.3)(encoding@0.1.13)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.0)(scheduler@0.19.0)(sucrase@3.34.0)(terser@5.36.0)
+        version: 1.6.10(@codemirror/language@6.0.0)(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(abstract-level@1.0.4)(encoding@0.1.13)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.0)(scheduler@0.19.0)(sucrase@3.34.0)(terser@5.36.0)
       '@typescript-eslint/parser':
         specifier: ^8.0.0
         version: 8.11.0(eslint@8.57.1)(typescript@5.6.3)
@@ -131,7 +131,7 @@ importers:
         version: 0.34.0(eslint@8.57.1)(typescript@5.6.3)
       eslint-plugin-jsx-a11y:
         specifier: ^6.8.0
-        version: 6.10.1(eslint@8.57.1)
+        version: 6.10.2(eslint@8.57.1)
       husky:
         specifier: ^8.0.3
         version: 8.0.3
@@ -2984,8 +2984,8 @@ packages:
   '@types/node@22.7.6':
     resolution: {integrity: sha512-/d7Rnj0/ExXDMcioS78/kf1lMzYk4BZV8MZGTBKzTGZ6/406ukkbYlIsZmMPhcR5KlkunDHQLrtAVmSq7r+mSw==}
 
-  '@types/node@22.8.0':
-    resolution: {integrity: sha512-84rafSBHC/z1i1E3p0cJwKA+CfYDNSXX9WSZBRopjIzLET8oNt6ht2tei4C7izwDeEiLLfdeSVBv1egOH916hg==}
+  '@types/node@22.8.1':
+    resolution: {integrity: sha512-k6Gi8Yyo8EtrNtkHXutUu2corfDf9su95VYVP10aGYMMROM6SAItZi0w1XszA6RtWTHSVp5OeFof37w0IEqCQg==}
 
   '@types/parse-json@4.0.1':
     resolution: {integrity: sha512-3YmXzzPAdOTVljVMkTMBdBEvlOLg2cDQaDhnnhT3nT9uDbnJzjWhKlzb+desT12Y7tGqaN6d+AbozcKzyL36Ng==}
@@ -4396,8 +4396,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  axe-core@4.10.1:
-    resolution: {integrity: sha512-qPC9o+kD8Tir0lzNGLeghbOrWMr3ZJpaRlCIb6Uobt/7N4FiEDvqUMnxzCHRHmg8vOg14kr5gVNyScRmbMaJ9g==}
+  axe-core@4.10.2:
+    resolution: {integrity: sha512-RE3mdQ7P3FRSe7eqCWoeQ/Z9QXrtniSjp1wUjt5nRC3WIpz5rSCve6o3fsZ2aCpJtrZjSZgjwXAoTO5k4tEI0w==}
     engines: {node: '>=4'}
 
   axobject-query@4.1.0:
@@ -5458,10 +5458,6 @@ packages:
     resolution: {integrity: sha512-Zf5H2Kxt2xjTvbJvP2ZWLEICxA6j+hAmMzIlypy4xcBg1vKVnx89Wy0GbS+kf5cwCVFFzdCFh2XSCFNULS6csw==}
     engines: {node: '>= 0.4'}
 
-  es-iterator-helpers@1.1.0:
-    resolution: {integrity: sha512-/SurEfycdyssORP/E+bj4sEu1CWw4EmLDsHynHwSXQ7utgbrMRWW195pTrCjFgFCddf/UkYm3oqKPRq5i8bJbw==}
-    engines: {node: '>= 0.4'}
-
   es-module-lexer@1.5.4:
     resolution: {integrity: sha512-MVNK56NiMrOwitFB7cqDwq0CQutbw+0BvLshJSse0MUNU+y1FC3bUS/AQg7oUng+/wKrrki7JfmwtVHkVfPLlw==}
 
@@ -5547,8 +5543,8 @@ packages:
     peerDependencies:
       eslint: '>=7.0.0'
 
-  eslint-plugin-jsx-a11y@6.10.1:
-    resolution: {integrity: sha512-zHByM9WTUMnfsDTafGXRiqxp6lFtNoSOWBY6FonVRn3A+BUwN1L/tdBXT40BcBJi0cZjOGTXZ0eD/rTG9fEJ0g==}
+  eslint-plugin-jsx-a11y@6.10.2:
+    resolution: {integrity: sha512-scB3nz4WmG75pV8+3eRUQOHZlNSUhFNq37xnpgRkCCELU3XMvXAxLk1eqWWyE22Ki4Q01Fnsw9BA3cJHDPgn2Q==}
     engines: {node: '>=4.0'}
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9
@@ -6345,10 +6341,6 @@ packages:
   is-arrayish@0.3.2:
     resolution: {integrity: sha512-eVRqCvVlZbuw3GrM63ovNSNAeA1K16kaR/LRY/92w0zxQ5/1YzwblUX652i4Xs9RwAGjW9d9y6X88t8OaAJfWQ==}
 
-  is-async-function@2.0.0:
-    resolution: {integrity: sha512-Y1JXKrfykRJGdlDwdKlLpLyMIiWqWvuSd17TvZk68PLAOGOoF4Xyav1z0Xhoi+gCYjZVeC5SI+hYFOfvXmGRCA==}
-    engines: {node: '>= 0.4'}
-
   is-bigint@1.0.4:
     resolution: {integrity: sha512-zB9CruMamjym81i2JZ3UMn54PKGsQzsJeo6xvN3HJJ4CAsQNB6iRutp2To77OfCNuoxspsIhzaPoO1zyCEhFOg==}
 
@@ -6406,9 +6398,6 @@ packages:
     resolution: {integrity: sha512-SbKbANkN603Vi4jEZv49LeVJMn4yGwsbzZworEoyEiutsN3nJYdbO36zfhGJ6QEDpOZIFkDtnq5JRxmvl3jsoQ==}
     engines: {node: '>=0.10.0'}
 
-  is-finalizationregistry@1.0.2:
-    resolution: {integrity: sha512-0by5vtUJs8iFQb5TYUHHPudOR+qXYIMKtiUzvLIZITZUjknFmziyBJuLhVRc+Ds0dREFlskDNJKYIdIzu/9pfw==}
-
   is-finite@1.1.0:
     resolution: {integrity: sha512-cdyMtqX/BOqqNBBiKlIVkytNHm49MtMlYyn1zxzvJKWmFMlGzm+ry5BBfYyeY9YmNKbRSo/o7OX9w9ale0wg3w==}
     engines: {node: '>=0.10.0'}
@@ -6428,10 +6417,6 @@ packages:
   is-fullwidth-code-point@5.0.0:
     resolution: {integrity: sha512-OVa3u9kkBbw7b8Xw5F9P+D/T9X+Z4+JruYVNapTjPYZYUznQ5YfWeFkOj606XYYW8yugTfC8Pj0hYqvi4ryAhA==}
     engines: {node: '>=18'}
-
-  is-generator-function@1.0.10:
-    resolution: {integrity: sha512-jsEjy9l3yiXEQ+PsXdmBwEPcOxaXWLspKdplFUVI9vq1iZgIekeC0L167qeu86czQaxed3q/Uzuw0swL0irL8A==}
-    engines: {node: '>= 0.4'}
 
   is-glob@4.0.3:
     resolution: {integrity: sha512-xelSayHH36ZgE7ZWhli7pW34hNbNl8Ojv5KVmkJD4hBdD3th8Tfk9vYasLM+mXWOZhFkgZfxhLSnrwRr4elSSg==}
@@ -6464,10 +6449,6 @@ packages:
 
   is-lower-case@2.0.2:
     resolution: {integrity: sha512-bVcMJy4X5Og6VZfdOZstSexlEy20Sr0k/p/b2IlQJlfdKAQuMpiv5w2Ccxb8sKdRUNAG1PnHVHjFSdRDVS6NlQ==}
-
-  is-map@2.0.3:
-    resolution: {integrity: sha512-1Qed0/Hr2m+YqxnM09CjA2d/i6YZNfF6R2oRAOj36eUdS6qIV/huPJNSEpKbupewFs+ZsJlxsjjPbc0/afW6Lw==}
-    engines: {node: '>= 0.4'}
 
   is-mobile@4.0.0:
     resolution: {integrity: sha512-mlcHZA84t1qLSuWkt2v0I2l61PYdyQDt4aG1mLIXF5FDMm4+haBCxCPYSr/uwqQNRk1MiTizn0ypEuRAOLRAew==}
@@ -6527,10 +6508,6 @@ packages:
     resolution: {integrity: sha512-Kw/ReK0iqwKeu0MITLFuj0jbPAmEiOsIwyIXvvbfa6QfmN9pkD1M+8pdk7Rl/dTKbH34/XBFMbgD4iMJhLQbGA==}
     engines: {node: '>=0.10.0'}
 
-  is-set@2.0.3:
-    resolution: {integrity: sha512-iPAjerrse27/ygGLxw+EBR9agv9Y6uLeYVJMu+QNCoouJ1/1ri0mGrcWpfCqFZuzzx3WjtwxG098X+n4OuRkPg==}
-    engines: {node: '>= 0.4'}
-
   is-shared-array-buffer@1.0.3:
     resolution: {integrity: sha512-nA2hv5XIhLR3uVzDDfCIknerhx8XUKnstuOERPNNIinXG7v9u+ohXF67vxm4TPTEPU6lm61ZkwP3c9PCB97rhg==}
     engines: {node: '>= 0.4'}
@@ -6576,16 +6553,8 @@ packages:
   is-upper-case@2.0.2:
     resolution: {integrity: sha512-44pxmxAvnnAOwBg4tHPnkfvgjPwbc5QIsSstNU+YcJ1ovxVzCWpSGosPJOZh/a1tdl81fbgnLc9LLv+x2ywbPQ==}
 
-  is-weakmap@2.0.2:
-    resolution: {integrity: sha512-K5pXYOm9wqY1RgjpL3YTkF39tni1XajUIkawTLUo9EZEVUFga5gSQJF8nNS7ZwJQ02y+1YCNYcMh+HIf1ZqE+w==}
-    engines: {node: '>= 0.4'}
-
   is-weakref@1.0.2:
     resolution: {integrity: sha512-qctsuLZmIQ0+vSSMfoVvyFe2+GSEvnmZ2ezTup1SBse9+twCCeial6EEi3Nc2KFcf6+qz2FBPnjXsk8xhKSaPQ==}
-
-  is-weakset@2.0.3:
-    resolution: {integrity: sha512-LvIm3/KWzS9oRFHugab7d+M/GcBXuXX5xZkzPmN+NxihdQlZUQ4dWuSV1xR/sq6upL1TJEDrfBgRepHFdBtSNQ==}
-    engines: {node: '>= 0.4'}
 
   is-windows@1.0.2:
     resolution: {integrity: sha512-eXK1UInq2bPmjyX6e3VHIzMLobc4J94i4AWn+Hpq3OU5KkrRC96OAcR3PRJ/pGu6m8TRnBHP9dkXQVsT/COVIA==}
@@ -6626,10 +6595,6 @@ packages:
     resolution: {integrity: sha512-X32ph5zIWfT75QAqW2l3JCIqnx9/GWd17bRRehmn3qmWc34OYbSXY6Cxv0o9bIIY+CWugoN4nQFHNA+2uYf2nA==}
     engines: {node: '>=12'}
     hasBin: true
-
-  iterator.prototype@1.1.3:
-    resolution: {integrity: sha512-FW5iMbeQ6rBGm/oKgzq2aW4KvAGpxPzYES8N4g4xNXUKpL1mclMvOe+76AcLDTvD+Ze+sOpVhgdAQEKF4L9iGQ==}
-    engines: {node: '>= 0.4'}
 
   javascript-natural-sort@0.7.1:
     resolution: {integrity: sha512-nO6jcEfZWQXDhOiBtG2KvKyEptz7RVbpGP4vTD2hLBdmNQSsCiicO2Ioinv6UI4y9ukqnBpy+XZ9H6uLNgJTlw==}
@@ -8439,10 +8404,6 @@ packages:
   redux@4.2.1:
     resolution: {integrity: sha512-LAUYz4lc+Do8/g7aeRa8JkyDErK6ekstQaqWQrNRW//MY1TvCEpMtpTWvlQ+FPbWCx+Xixu/6SHt5N0HR+SB4w==}
 
-  reflect.getprototypeof@1.0.6:
-    resolution: {integrity: sha512-fmfw4XgoDke3kdI6h4xcUz1dG8uaiv5q9gcEwLS4Pnth2kxT+GZ7YehS1JTMGBQmtV7Y4GFGbs2re2NqhdozUg==}
-    engines: {node: '>= 0.4'}
-
   regenerator-runtime@0.14.0:
     resolution: {integrity: sha512-srw17NI0TUWHuGa5CFGGmhfNIeja30WMBfbslPNhf6JrqQlLN5gcrvig1oqPxiVaXb0oW0XRKtH6Nngs5lKCIA==}
 
@@ -9914,14 +9875,6 @@ packages:
   which-boxed-primitive@1.0.2:
     resolution: {integrity: sha512-bwZdv0AKLpplFY2KZRX6TvyuN7ojjr7lwkg6ml0roIy9YeuSr7JS372qlNW18UQYzgYK9ziGcerWqZOmEn9VNg==}
 
-  which-builtin-type@1.1.4:
-    resolution: {integrity: sha512-bppkmBSsHFmIMSl8BO9TbsyzsvGjVoppt8xUiGzwiu/bhDCGxnpOKCxgqj6GuyHE0mINMDecBFPlOm2hzY084w==}
-    engines: {node: '>= 0.4'}
-
-  which-collection@1.0.2:
-    resolution: {integrity: sha512-K4jVyjnBdgvc86Y6BkaLZEN933SwYOuBFkdmBu9ZfkcAbdVbpITnDmjvZ/aQjRXQrv5EPkTnD1s39GiiqbngCw==}
-    engines: {node: '>= 0.4'}
-
   which-module@2.0.1:
     resolution: {integrity: sha512-iBdZ57RDvnOR9AGBhML2vFZf7h8vmBjhoaZqODJBFWHVtKkDmKuHai3cx5PgVMrX5YDNp27AofYbAwctSS+vhQ==}
 
@@ -10325,38 +10278,38 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@astro-community/astro-embed-integration@0.7.2(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))':
+  '@astro-community/astro-embed-integration@0.7.2(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))':
     dependencies:
       '@astro-community/astro-embed-link-preview': 0.2.2
-      '@astro-community/astro-embed-twitter': 0.5.6(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
-      '@astro-community/astro-embed-vimeo': 0.3.10(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
-      '@astro-community/astro-embed-youtube': 0.5.5(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
+      '@astro-community/astro-embed-twitter': 0.5.6(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
+      '@astro-community/astro-embed-vimeo': 0.3.10(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
+      '@astro-community/astro-embed-youtube': 0.5.5(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
       '@types/unist': 2.0.9
-      astro: 4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
-      astro-auto-import: 0.4.4(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
+      astro: 4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
+      astro-auto-import: 0.4.4(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
       unist-util-select: 4.0.3
 
   '@astro-community/astro-embed-link-preview@0.2.2':
     dependencies:
       '@astro-community/astro-embed-utils': 0.1.3
 
-  '@astro-community/astro-embed-twitter@0.5.6(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))':
+  '@astro-community/astro-embed-twitter@0.5.6(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))':
     dependencies:
       '@astro-community/astro-embed-utils': 0.1.3
-      astro: 4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
+      astro: 4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
 
   '@astro-community/astro-embed-utils@0.1.3':
     dependencies:
       linkedom: 0.14.26
 
-  '@astro-community/astro-embed-vimeo@0.3.10(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))':
+  '@astro-community/astro-embed-vimeo@0.3.10(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))':
     dependencies:
       '@astro-community/astro-embed-utils': 0.1.3
-      astro: 4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
+      astro: 4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
 
-  '@astro-community/astro-embed-youtube@0.5.5(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))':
+  '@astro-community/astro-embed-youtube@0.5.5(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))':
     dependencies:
-      astro: 4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
+      astro: 4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
       lite-youtube-embed: 0.3.3
 
   '@astrojs/check@0.9.4(prettier-plugin-astro@0.14.1)(prettier@3.0.3)(typescript@5.6.3)':
@@ -10423,12 +10376,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@astrojs/mdx@3.1.8(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))':
+  '@astrojs/mdx@3.1.8(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))':
     dependencies:
       '@astrojs/markdown-remark': 5.3.0
       '@mdx-js/mdx': 3.0.1
       acorn: 8.13.0
-      astro: 4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
+      astro: 4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
       es-module-lexer: 1.5.4
       estree-util-visit: 2.0.0
       gray-matter: 4.0.3
@@ -10447,11 +10400,11 @@ snapshots:
     dependencies:
       prismjs: 1.29.0
 
-  '@astrojs/react@3.6.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.4.10(@types/node@22.8.0)(terser@5.36.0))':
+  '@astrojs/react@3.6.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.4.10(@types/node@22.8.1)(terser@5.36.0))':
     dependencies:
       '@types/react': 18.3.12
       '@types/react-dom': 18.3.1
-      '@vitejs/plugin-react': 4.3.2(vite@5.4.10(@types/node@22.8.0)(terser@5.36.0))
+      '@vitejs/plugin-react': 4.3.2(vite@5.4.10(@types/node@22.8.1)(terser@5.36.0))
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       ultrahtml: 1.5.3
@@ -10470,9 +10423,9 @@ snapshots:
       stream-replace-string: 2.0.0
       zod: 3.23.8
 
-  '@astrojs/starlight-docsearch@0.2.0(@algolia/client-search@5.10.2)(@astrojs/starlight@0.28.3(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.17.2)':
+  '@astrojs/starlight-docsearch@0.2.0(@algolia/client-search@5.10.2)(@astrojs/starlight@0.28.3(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.17.2)':
     dependencies:
-      '@astrojs/starlight': 0.28.3(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
+      '@astrojs/starlight': 0.28.3(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
       '@docsearch/css': 3.6.2
       '@docsearch/js': 3.6.2(@algolia/client-search@5.10.2)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.17.2)
     transitivePeerDependencies:
@@ -10482,15 +10435,15 @@ snapshots:
       - react-dom
       - search-insights
 
-  '@astrojs/starlight@0.28.3(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))':
+  '@astrojs/starlight@0.28.3(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))':
     dependencies:
-      '@astrojs/mdx': 3.1.8(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
+      '@astrojs/mdx': 3.1.8(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
       '@astrojs/sitemap': 3.2.1
       '@pagefind/default-ui': 1.0.4
       '@types/hast': 3.0.4
       '@types/mdast': 4.0.4
-      astro: 4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
-      astro-expressive-code: 0.35.6(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
+      astro: 4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
+      astro-expressive-code: 0.35.6(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
       bcp-47: 2.1.0
       hast-util-from-html: 2.0.1
       hast-util-select: 6.0.3
@@ -10510,9 +10463,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@astrojs/tailwind@5.1.2(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))(tailwindcss@3.4.14)':
+  '@astrojs/tailwind@5.1.2(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))(tailwindcss@3.4.14)':
     dependencies:
-      astro: 4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
+      astro: 4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
       autoprefixer: 10.4.20(postcss@8.4.47)
       postcss: 8.4.47
       postcss-load-config: 4.0.2(postcss@8.4.47)
@@ -11361,9 +11314,9 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@graphiql/react@0.18.0(@codemirror/language@6.0.0)(@types/node@22.8.0)(@types/react-dom@18.3.1)(@types/react@18.3.12)(graphql@15.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@graphiql/react@0.18.0(@codemirror/language@6.0.0)(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(graphql@15.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@graphiql/toolkit': 0.8.4(@types/node@22.8.0)(graphql@15.8.0)
+      '@graphiql/toolkit': 0.8.4(@types/node@22.8.1)(graphql@15.8.0)
       '@headlessui/react': 1.7.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-dialog': 1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-dropdown-menu': 2.1.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -11388,11 +11341,11 @@ snapshots:
       - '@types/react-dom'
       - graphql-ws
 
-  '@graphiql/toolkit@0.8.4(@types/node@22.8.0)(graphql@15.8.0)':
+  '@graphiql/toolkit@0.8.4(@types/node@22.8.1)(graphql@15.8.0)':
     dependencies:
       '@n1ru4l/push-pull-async-iterable-iterator': 3.2.0
       graphql: 15.8.0
-      meros: 1.3.0(@types/node@22.8.0)
+      meros: 1.3.0(@types/node@22.8.1)
     transitivePeerDependencies:
       - '@types/node'
 
@@ -13093,21 +13046,21 @@ snapshots:
 
   '@tanstack/virtual-core@3.10.8': {}
 
-  '@tinacms/app@2.1.10(@codemirror/language@6.0.0)(@types/node@22.8.0)(@types/react-dom@18.3.1)(@types/react@18.3.12)(abstract-level@1.0.3)(encoding@0.1.13)(immer@10.1.1)(scheduler@0.19.0)(sucrase@3.34.0)(yup@0.32.11)':
+  '@tinacms/app@2.1.10(@codemirror/language@6.0.0)(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(abstract-level@1.0.4)(encoding@0.1.13)(immer@10.1.1)(scheduler@0.19.0)(sucrase@3.34.0)(yup@0.32.11)':
     dependencies:
-      '@graphiql/toolkit': 0.8.4(@types/node@22.8.0)(graphql@15.8.0)
+      '@graphiql/toolkit': 0.8.4(@types/node@22.8.1)(graphql@15.8.0)
       '@headlessui/react': 2.1.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@heroicons/react': 1.0.6(react@18.3.1)
       '@monaco-editor/react': 4.4.5(monaco-editor@0.31.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tinacms/mdx': 1.5.0(react@18.3.1)(typescript@5.6.3)(yup@0.32.11)
       final-form: 4.20.10
-      graphiql: 3.0.0-alpha.1(@codemirror/language@6.0.0)(@types/node@22.8.0)(@types/react-dom@18.3.1)(@types/react@18.3.12)(graphql@15.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      graphiql: 3.0.0-alpha.1(@codemirror/language@6.0.0)(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(graphql@15.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       graphql: 15.8.0
       monaco-editor: 0.31.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-router-dom: 6.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      tinacms: 2.3.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(abstract-level@1.0.3)(encoding@0.1.13)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.19.0)(sucrase@3.34.0)(typescript@5.6.3)
+      tinacms: 2.3.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(abstract-level@1.0.4)(encoding@0.1.13)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.19.0)(sucrase@3.34.0)(typescript@5.6.3)
       typescript: 5.6.3
       zod: 3.23.8
     transitivePeerDependencies:
@@ -13125,7 +13078,7 @@ snapshots:
       - supports-color
       - yup
 
-  '@tinacms/cli@1.6.10(@codemirror/language@6.0.0)(@types/node@22.8.0)(@types/react-dom@18.3.1)(@types/react@18.3.12)(abstract-level@1.0.3)(encoding@0.1.13)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.0)(scheduler@0.19.0)(sucrase@3.34.0)(terser@5.36.0)':
+  '@tinacms/cli@1.6.10(@codemirror/language@6.0.0)(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(abstract-level@1.0.4)(encoding@0.1.13)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.0)(scheduler@0.19.0)(sucrase@3.34.0)(terser@5.36.0)':
     dependencies:
       '@graphql-codegen/core': 2.6.8(graphql@15.8.0)
       '@graphql-codegen/plugin-helpers': 5.0.4(graphql@15.8.0)
@@ -13140,12 +13093,12 @@ snapshots:
       '@tailwindcss/aspect-ratio': 0.4.2(tailwindcss@3.4.14)
       '@tailwindcss/container-queries': 0.1.1(tailwindcss@3.4.14)
       '@tailwindcss/typography': 0.5.15(tailwindcss@3.4.14)
-      '@tinacms/app': 2.1.10(@codemirror/language@6.0.0)(@types/node@22.8.0)(@types/react-dom@18.3.1)(@types/react@18.3.12)(abstract-level@1.0.3)(encoding@0.1.13)(immer@10.1.1)(scheduler@0.19.0)(sucrase@3.34.0)(yup@0.32.11)
+      '@tinacms/app': 2.1.10(@codemirror/language@6.0.0)(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(abstract-level@1.0.4)(encoding@0.1.13)(immer@10.1.1)(scheduler@0.19.0)(sucrase@3.34.0)(yup@0.32.11)
       '@tinacms/graphql': 1.5.6(react@18.3.1)(typescript@5.6.3)
       '@tinacms/metrics': 1.0.7(encoding@0.1.13)(fs-extra@11.2.0)
       '@tinacms/schema-tools': 1.6.6(react@18.3.1)(yup@0.32.11)
-      '@tinacms/search': 1.0.33(abstract-level@1.0.3)(react@18.3.1)(sucrase@3.34.0)(typescript@5.6.3)(yup@0.32.11)
-      '@vitejs/plugin-react': 3.1.0(vite@4.5.5(@types/node@22.8.0)(terser@5.36.0))
+      '@tinacms/search': 1.0.33(abstract-level@1.0.4)(react@18.3.1)(sucrase@3.34.0)(typescript@5.6.3)(yup@0.32.11)
+      '@vitejs/plugin-react': 3.1.0(vite@4.5.5(@types/node@22.8.1)(terser@5.36.0))
       altair-express-middleware: 7.3.6
       auto-bind: 4.0.0
       body-parser: 1.20.3
@@ -13171,10 +13124,10 @@ snapshots:
       prompts: 2.4.2
       readable-stream: 4.5.2
       tailwindcss: 3.4.14
-      tinacms: 2.3.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(abstract-level@1.0.3)(encoding@0.1.13)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.19.0)(sucrase@3.34.0)(typescript@5.6.3)
+      tinacms: 2.3.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(abstract-level@1.0.4)(encoding@0.1.13)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.19.0)(sucrase@3.34.0)(typescript@5.6.3)
       typanion: 3.13.0
       typescript: 5.6.3
-      vite: 4.5.5(@types/node@22.8.0)(terser@5.36.0)
+      vite: 4.5.5(@types/node@22.8.1)(terser@5.36.0)
       yup: 0.32.11
       zod: 3.23.8
     transitivePeerDependencies:
@@ -13423,12 +13376,12 @@ snapshots:
       - supports-color
       - yup
 
-  '@tinacms/search@1.0.33(abstract-level@1.0.3)(react@18.3.1)(sucrase@3.34.0)(typescript@5.6.3)(yup@0.32.11)':
+  '@tinacms/search@1.0.33(abstract-level@1.0.4)(react@18.3.1)(sucrase@3.34.0)(typescript@5.6.3)(yup@0.32.11)':
     dependencies:
       '@tinacms/graphql': 1.5.6(react@18.3.1)(typescript@5.6.3)
       '@tinacms/schema-tools': 1.6.6(react@18.3.1)(yup@0.32.11)
       memory-level: 1.0.0
-      search-index: 4.0.0(abstract-level@1.0.3)
+      search-index: 4.0.0(abstract-level@1.0.4)
       sqlite-level: 1.2.0(sucrase@3.34.0)
       stopword: 3.1.1
     transitivePeerDependencies:
@@ -13439,12 +13392,12 @@ snapshots:
       - typescript
       - yup
 
-  '@tinacms/search@1.0.33(abstract-level@1.0.3)(react@18.3.1)(sucrase@3.34.0)(typescript@5.6.3)(yup@1.4.0)':
+  '@tinacms/search@1.0.33(abstract-level@1.0.4)(react@18.3.1)(sucrase@3.34.0)(typescript@5.6.3)(yup@1.4.0)':
     dependencies:
       '@tinacms/graphql': 1.5.6(react@18.3.1)(typescript@5.6.3)
       '@tinacms/schema-tools': 1.6.6(react@18.3.1)(yup@1.4.0)
       memory-level: 1.0.0
-      search-index: 4.0.0(abstract-level@1.0.3)
+      search-index: 4.0.0(abstract-level@1.0.4)
       sqlite-level: 1.2.0(sucrase@3.34.0)
       stopword: 3.1.1
     transitivePeerDependencies:
@@ -13629,7 +13582,7 @@ snapshots:
     dependencies:
       undici-types: 6.19.8
 
-  '@types/node@22.8.0':
+  '@types/node@22.8.1':
     dependencies:
       undici-types: 6.19.8
 
@@ -15603,25 +15556,25 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitejs/plugin-react@3.1.0(vite@4.5.5(@types/node@22.8.0)(terser@5.36.0))':
+  '@vitejs/plugin-react@3.1.0(vite@4.5.5(@types/node@22.8.1)(terser@5.36.0))':
     dependencies:
       '@babel/core': 7.25.9
       '@babel/plugin-transform-react-jsx-self': 7.25.9(@babel/core@7.25.9)
       '@babel/plugin-transform-react-jsx-source': 7.25.9(@babel/core@7.25.9)
       magic-string: 0.27.0
       react-refresh: 0.14.2
-      vite: 4.5.5(@types/node@22.8.0)(terser@5.36.0)
+      vite: 4.5.5(@types/node@22.8.1)(terser@5.36.0)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitejs/plugin-react@4.3.2(vite@5.4.10(@types/node@22.8.0)(terser@5.36.0))':
+  '@vitejs/plugin-react@4.3.2(vite@5.4.10(@types/node@22.8.1)(terser@5.36.0))':
     dependencies:
       '@babel/core': 7.25.9
       '@babel/plugin-transform-react-jsx-self': 7.25.7(@babel/core@7.25.9)
       '@babel/plugin-transform-react-jsx-source': 7.25.7(@babel/core@7.25.9)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.4.10(@types/node@22.8.0)(terser@5.36.0)
+      vite: 5.4.10(@types/node@22.8.1)(terser@5.36.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -15992,20 +15945,20 @@ snapshots:
 
   astring@1.8.6: {}
 
-  astro-auto-import@0.4.4(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)):
+  astro-auto-import@0.4.4(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)):
     dependencies:
       '@types/node': 18.19.55
       acorn: 8.13.0
-      astro: 4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
+      astro: 4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
 
-  astro-embed@0.7.4(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)):
+  astro-embed@0.7.4(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)):
     dependencies:
-      '@astro-community/astro-embed-integration': 0.7.2(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
+      '@astro-community/astro-embed-integration': 0.7.2(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
       '@astro-community/astro-embed-link-preview': 0.2.2
-      '@astro-community/astro-embed-twitter': 0.5.6(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
-      '@astro-community/astro-embed-vimeo': 0.3.10(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
-      '@astro-community/astro-embed-youtube': 0.5.5(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
-      astro: 4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
+      '@astro-community/astro-embed-twitter': 0.5.6(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
+      '@astro-community/astro-embed-vimeo': 0.3.10(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
+      '@astro-community/astro-embed-youtube': 0.5.5(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3))
+      astro: 4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
 
   astro-eslint-parser@0.17.0(typescript@5.6.3):
     dependencies:
@@ -16025,14 +15978,14 @@ snapshots:
       - supports-color
       - typescript
 
-  astro-expressive-code@0.35.6(astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)):
+  astro-expressive-code@0.35.6(astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)):
     dependencies:
-      astro: 4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
+      astro: 4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3)
       rehype-expressive-code: 0.35.6
 
   astro-font@0.1.81: {}
 
-  astro@4.16.7(@types/node@22.8.0)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3):
+  astro@4.16.7(@types/node@22.8.1)(rollup@4.24.0)(terser@5.36.0)(typescript@5.6.3):
     dependencies:
       '@astrojs/compiler': 2.10.3
       '@astrojs/internal-helpers': 0.4.1
@@ -16088,8 +16041,8 @@ snapshots:
       tsconfck: 3.1.4(typescript@5.6.3)
       unist-util-visit: 5.0.0
       vfile: 6.0.3
-      vite: 5.4.10(@types/node@22.8.0)(terser@5.36.0)
-      vitefu: 1.0.3(vite@5.4.10(@types/node@22.8.0)(terser@5.36.0))
+      vite: 5.4.10(@types/node@22.8.1)(terser@5.36.0)
+      vitefu: 1.0.3(vite@5.4.10(@types/node@22.8.1)(terser@5.36.0))
       which-pm: 3.0.0
       xxhash-wasm: 1.0.2
       yargs-parser: 21.1.1
@@ -16140,7 +16093,7 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  axe-core@4.10.1: {}
+  axe-core@4.10.2: {}
 
   axobject-query@4.1.0: {}
 
@@ -17313,23 +17266,6 @@ snapshots:
 
   es-errors@1.3.0: {}
 
-  es-iterator-helpers@1.1.0:
-    dependencies:
-      call-bind: 1.0.7
-      define-properties: 1.2.1
-      es-abstract: 1.23.3
-      es-errors: 1.3.0
-      es-set-tostringtag: 2.0.3
-      function-bind: 1.1.2
-      get-intrinsic: 1.2.4
-      globalthis: 1.0.4
-      has-property-descriptors: 1.0.2
-      has-proto: 1.0.3
-      has-symbols: 1.0.3
-      internal-slot: 1.0.7
-      iterator.prototype: 1.1.3
-      safe-array-concat: 1.1.2
-
   es-module-lexer@1.5.4: {}
 
   es-object-atoms@1.0.0:
@@ -17470,17 +17406,16 @@ snapshots:
       - supports-color
       - typescript
 
-  eslint-plugin-jsx-a11y@6.10.1(eslint@8.57.1):
+  eslint-plugin-jsx-a11y@6.10.2(eslint@8.57.1):
     dependencies:
       aria-query: 5.3.2
       array-includes: 3.1.8
       array.prototype.flatmap: 1.3.2
       ast-types-flow: 0.0.8
-      axe-core: 4.10.1
+      axe-core: 4.10.2
       axobject-query: 4.1.0
       damerau-levenshtein: 1.0.8
       emoji-regex: 9.2.2
-      es-iterator-helpers: 1.1.0
       eslint: 8.57.1
       hasown: 2.0.2
       jsx-ast-utils: 3.3.5
@@ -17773,6 +17708,16 @@ snapshots:
       browser-level: 1.0.1
       charwise: 3.0.1
       level-read-stream: 1.1.0(abstract-level@1.0.3)
+      memory-level: 1.0.0
+      traverse: 0.6.7
+    transitivePeerDependencies:
+      - abstract-level
+
+  fergies-inverted-index@12.0.0(abstract-level@1.0.4):
+    dependencies:
+      browser-level: 1.0.1
+      charwise: 3.0.1
+      level-read-stream: 1.1.0(abstract-level@1.0.4)
       memory-level: 1.0.0
       traverse: 0.6.7
     transitivePeerDependencies:
@@ -18168,10 +18113,10 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  graphiql@3.0.0-alpha.1(@codemirror/language@6.0.0)(@types/node@22.8.0)(@types/react-dom@18.3.1)(@types/react@18.3.12)(graphql@15.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  graphiql@3.0.0-alpha.1(@codemirror/language@6.0.0)(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(graphql@15.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      '@graphiql/react': 0.18.0(@codemirror/language@6.0.0)(@types/node@22.8.0)(@types/react-dom@18.3.1)(@types/react@18.3.12)(graphql@15.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@graphiql/toolkit': 0.8.4(@types/node@22.8.0)(graphql@15.8.0)
+      '@graphiql/react': 0.18.0(@codemirror/language@6.0.0)(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(graphql@15.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@graphiql/toolkit': 0.8.4(@types/node@22.8.1)(graphql@15.8.0)
       graphql: 15.8.0
       graphql-language-service: 5.3.0(graphql@15.8.0)
       markdown-it: 12.3.2
@@ -18637,10 +18582,6 @@ snapshots:
 
   is-arrayish@0.3.2: {}
 
-  is-async-function@2.0.0:
-    dependencies:
-      has-tostringtag: 1.0.2
-
   is-bigint@1.0.4:
     dependencies:
       has-bigints: 1.0.2
@@ -18684,10 +18625,6 @@ snapshots:
 
   is-extglob@2.1.1: {}
 
-  is-finalizationregistry@1.0.2:
-    dependencies:
-      call-bind: 1.0.7
-
   is-finite@1.1.0: {}
 
   is-firefox@1.0.3: {}
@@ -18699,10 +18636,6 @@ snapshots:
   is-fullwidth-code-point@5.0.0:
     dependencies:
       get-east-asian-width: 1.3.0
-
-  is-generator-function@1.0.10:
-    dependencies:
-      has-tostringtag: 1.0.2
 
   is-glob@4.0.3:
     dependencies:
@@ -18727,8 +18660,6 @@ snapshots:
   is-lower-case@2.0.2:
     dependencies:
       tslib: 2.6.3
-
-  is-map@2.0.3: {}
 
   is-mobile@4.0.0: {}
 
@@ -18771,8 +18702,6 @@ snapshots:
     dependencies:
       is-unc-path: 1.0.0
 
-  is-set@2.0.3: {}
-
   is-shared-array-buffer@1.0.3:
     dependencies:
       call-bind: 1.0.7
@@ -18809,16 +18738,9 @@ snapshots:
     dependencies:
       tslib: 2.6.3
 
-  is-weakmap@2.0.2: {}
-
   is-weakref@1.0.2:
     dependencies:
       call-bind: 1.0.7
-
-  is-weakset@2.0.3:
-    dependencies:
-      call-bind: 1.0.7
-      get-intrinsic: 1.2.4
 
   is-windows@1.0.2: {}
 
@@ -18863,19 +18785,11 @@ snapshots:
       sha.js: 2.4.11
       simple-get: 4.0.1
 
-  iterator.prototype@1.1.3:
-    dependencies:
-      define-properties: 1.2.1
-      get-intrinsic: 1.2.4
-      has-symbols: 1.0.3
-      reflect.getprototypeof: 1.0.6
-      set-function-name: 2.0.2
-
   javascript-natural-sort@0.7.1: {}
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 22.8.0
+      '@types/node': 22.8.1
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -19002,11 +18916,23 @@ snapshots:
     optionalDependencies:
       abstract-level: 1.0.3
 
+  level-read-stream@1.1.0(abstract-level@1.0.4):
+    dependencies:
+      readable-stream: 3.6.2
+    optionalDependencies:
+      abstract-level: 1.0.4
+
   level-read-stream@1.1.1(abstract-level@1.0.3):
     dependencies:
       readable-stream: 3.6.2
     optionalDependencies:
       abstract-level: 1.0.3
+
+  level-read-stream@1.1.1(abstract-level@1.0.4):
+    dependencies:
+      readable-stream: 3.6.2
+    optionalDependencies:
+      abstract-level: 1.0.4
 
   level-supports@2.1.0: {}
 
@@ -19709,9 +19635,9 @@ snapshots:
       stylis: 4.3.4
       uuid: 9.0.1
 
-  meros@1.3.0(@types/node@22.8.0):
+  meros@1.3.0(@types/node@22.8.1):
     optionalDependencies:
-      '@types/node': 22.8.0
+      '@types/node': 22.8.1
 
   methods@1.1.2: {}
 
@@ -21368,16 +21294,6 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.26.0
 
-  reflect.getprototypeof@1.0.6:
-    dependencies:
-      call-bind: 1.0.7
-      define-properties: 1.2.1
-      es-abstract: 1.23.3
-      es-errors: 1.3.0
-      get-intrinsic: 1.2.4
-      globalthis: 1.0.4
-      which-builtin-type: 1.1.4
-
   regenerator-runtime@0.14.0: {}
 
   regenerator-runtime@0.14.1: {}
@@ -21809,6 +21725,20 @@ snapshots:
       charwise: 3.0.1
       fergies-inverted-index: 12.0.0(abstract-level@1.0.3)
       level-read-stream: 1.1.1(abstract-level@1.0.3)
+      lru-cache: 10.0.0
+      memory-level: 1.0.0
+      ngraminator: 3.0.2
+      p-queue: 7.3.4
+      term-vector: 1.0.0
+    transitivePeerDependencies:
+      - abstract-level
+
+  search-index@4.0.0(abstract-level@1.0.4):
+    dependencies:
+      browser-level: 1.0.1
+      charwise: 3.0.1
+      fergies-inverted-index: 12.0.0(abstract-level@1.0.4)
+      level-read-stream: 1.1.1(abstract-level@1.0.4)
       lru-cache: 10.0.0
       memory-level: 1.0.0
       ngraminator: 3.0.2
@@ -22472,7 +22402,7 @@ snapshots:
       - react-native
       - supports-color
 
-  tinacms@2.3.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(abstract-level@1.0.3)(encoding@0.1.13)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.19.0)(sucrase@3.34.0)(typescript@5.6.3):
+  tinacms@2.3.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(abstract-level@1.0.4)(encoding@0.1.13)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.19.0)(sucrase@3.34.0)(typescript@5.6.3):
     dependencies:
       '@ariakit/react': 0.4.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@floating-ui/dom': 1.6.11
@@ -22492,7 +22422,7 @@ snapshots:
       '@react-hook/window-size': 3.1.1(react@18.3.1)
       '@tinacms/mdx': 1.5.0(react@18.3.1)(typescript@5.6.3)(yup@1.4.0)
       '@tinacms/schema-tools': 1.6.6(react@18.3.1)(yup@1.4.0)
-      '@tinacms/search': 1.0.33(abstract-level@1.0.3)(react@18.3.1)(sucrase@3.34.0)(typescript@5.6.3)(yup@1.4.0)
+      '@tinacms/search': 1.0.33(abstract-level@1.0.4)(react@18.3.1)(sucrase@3.34.0)(typescript@5.6.3)(yup@1.4.0)
       '@udecode/cn': 33.0.0(@types/react@18.3.12)(class-variance-authority@0.7.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(tailwind-merge@2.5.4)
       '@udecode/plate': 36.5.9(@types/react@18.3.12)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.19.0)(slate-history@0.100.0(slate@0.103.0))(slate-hyperscript@0.100.0(slate@0.103.0))(slate-react@0.107.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(slate@0.103.0))(slate@0.103.0)
       '@udecode/plate-autoformat': 36.5.6(@udecode/plate-common@36.5.9(@types/react@18.3.12)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.19.0)(slate-history@0.100.0(slate@0.103.0))(slate-hyperscript@0.100.0(slate@0.103.0))(slate-react@0.107.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(slate@0.103.0))(slate@0.103.0))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(slate-history@0.100.0(slate@0.103.0))(slate-hyperscript@0.100.0(slate@0.103.0))(slate-react@0.107.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(slate@0.103.0))(slate@0.103.0)
@@ -23077,29 +23007,29 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
 
-  vite@4.5.5(@types/node@22.8.0)(terser@5.36.0):
+  vite@4.5.5(@types/node@22.8.1)(terser@5.36.0):
     dependencies:
       esbuild: 0.18.20
       postcss: 8.4.47
       rollup: 3.29.5
     optionalDependencies:
-      '@types/node': 22.8.0
+      '@types/node': 22.8.1
       fsevents: 2.3.3
       terser: 5.36.0
 
-  vite@5.4.10(@types/node@22.8.0)(terser@5.36.0):
+  vite@5.4.10(@types/node@22.8.1)(terser@5.36.0):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
       rollup: 4.24.0
     optionalDependencies:
-      '@types/node': 22.8.0
+      '@types/node': 22.8.1
       fsevents: 2.3.3
       terser: 5.36.0
 
-  vitefu@1.0.3(vite@5.4.10(@types/node@22.8.0)(terser@5.36.0)):
+  vitefu@1.0.3(vite@5.4.10(@types/node@22.8.1)(terser@5.36.0)):
     optionalDependencies:
-      vite: 5.4.10(@types/node@22.8.0)(terser@5.36.0)
+      vite: 5.4.10(@types/node@22.8.1)(terser@5.36.0)
 
   volar-service-css@0.0.61(@volar/language-service@2.4.6):
     dependencies:
@@ -23284,28 +23214,6 @@ snapshots:
       is-number-object: 1.0.7
       is-string: 1.0.7
       is-symbol: 1.0.4
-
-  which-builtin-type@1.1.4:
-    dependencies:
-      function.prototype.name: 1.1.6
-      has-tostringtag: 1.0.2
-      is-async-function: 2.0.0
-      is-date-object: 1.0.5
-      is-finalizationregistry: 1.0.2
-      is-generator-function: 1.0.10
-      is-regex: 1.1.4
-      is-weakref: 1.0.2
-      isarray: 2.0.5
-      which-boxed-primitive: 1.0.2
-      which-collection: 1.0.2
-      which-typed-array: 1.1.15
-
-  which-collection@1.0.2:
-    dependencies:
-      is-map: 2.0.3
-      is-set: 2.0.3
-      is-weakmap: 2.0.2
-      is-weakset: 2.0.3
 
   which-module@2.0.1: {}
 
