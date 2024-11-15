@@ -5188,9 +5188,9 @@ astro-font@^0.1.0:
   integrity sha512-rbrv/+ZSYdgyjBlhkAqfCjMxqqo6iEwnSo/rAdDt/POILsF0ChxMFhefIIzKEukrRGtVjEj1lrLRYk+AdV9scQ==
 
 astro@^4.16.4:
-  version "4.16.12"
-  resolved "https://registry.yarnpkg.com/astro/-/astro-4.16.12.tgz#884177fd8a2bd6dac80ac55147534df7a6cb253b"
-  integrity sha512-NnFeIKhGW6MdXCQT2hRariUwfxqJUIRs6qKqaovaQkTojzxh2r1L8C49qanKc+huH9wK2C94VZB2T/tosyRl1A==
+  version "4.16.13"
+  resolved "https://registry.yarnpkg.com/astro/-/astro-4.16.13.tgz#2d723348651ed1cff5936cc3e077104846a7befc"
+  integrity sha512-Mtd76+BC0zLWqoXpf9xc731AhdH4MNh5JFHYdLRvSH0Nqn48hA64dPGh/cWsJvh/DZFmC0NTZusM1Qq2gyNaVg==
   dependencies:
     "@astrojs/compiler" "^2.10.3"
     "@astrojs/internal-helpers" "0.4.1"
