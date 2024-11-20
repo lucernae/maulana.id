@@ -64,7 +64,7 @@ importers:
         version: 1.0.2(react@18.3.1)
       mathjs:
         specifier: ^13.2.0
-        version: 13.2.2
+        version: 13.2.3
       nanostores:
         specifier: ^0.11.3
         version: 0.11.3
@@ -6482,8 +6482,8 @@ packages:
     resolution: {integrity: sha512-9W0yGtkaMAkf74XGYVy4Dqw3YUMnTNB2eeiw9aQbUl4A3KmuCEHTt2DgAB07ENzOYAjsYSAYufkAq0Zd+jU7zA==}
     engines: {node: '>=0.10.0'}
 
-  mathjs@13.2.2:
-    resolution: {integrity: sha512-tBNMmwNsLMjD7xGHSF9IEuuzNVG8xPDgshDBY1eQ5ZS1HQr5O+bY8eG2peZYSkIsw79y2QcPkGMcQL5ZqtLu5A==}
+  mathjs@13.2.3:
+    resolution: {integrity: sha512-I67Op0JU7gGykFK64bJexkSAmX498x0oybxfVXn1rroEMZTmfxppORhnk8mEUnPrbTfabDKCqvm18vJKMk2UJQ==}
     engines: {node: '>= 18'}
     hasBin: true
 
@@ -17952,7 +17952,7 @@ snapshots:
 
   math-log2@1.0.1: {}
 
-  mathjs@13.2.2:
+  mathjs@13.2.3:
     dependencies:
       '@babel/runtime': 7.26.0
       complex.js: 2.4.2
