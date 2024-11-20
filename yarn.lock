@@ -10168,9 +10168,9 @@ math-log2@^1.0.1:
   integrity sha512-9W0yGtkaMAkf74XGYVy4Dqw3YUMnTNB2eeiw9aQbUl4A3KmuCEHTt2DgAB07ENzOYAjsYSAYufkAq0Zd+jU7zA==
 
 mathjs@^13.2.0:
-  version "13.2.2"
-  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-13.2.2.tgz#22b6e2a86217325e79baf052266f37aaf2a10a4d"
-  integrity sha512-tBNMmwNsLMjD7xGHSF9IEuuzNVG8xPDgshDBY1eQ5ZS1HQr5O+bY8eG2peZYSkIsw79y2QcPkGMcQL5ZqtLu5A==
+  version "13.2.3"
+  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-13.2.3.tgz#775a030684ee15a36ad29138f28707667bb623ed"
+  integrity sha512-I67Op0JU7gGykFK64bJexkSAmX498x0oybxfVXn1rroEMZTmfxppORhnk8mEUnPrbTfabDKCqvm18vJKMk2UJQ==
   dependencies:
     "@babel/runtime" "^7.25.7"
     complex.js "^2.2.5"
