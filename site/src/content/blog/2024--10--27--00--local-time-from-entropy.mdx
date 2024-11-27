@@ -1,0 +1,398 @@
+---
+layout_name: blog-post
+title: 'Local time from entropy'
+description: 'Raising the concept of time from information exchange'
+date: 2024-10-27T00:00:00.00Z
+category:
+  name: blog
+---
+
+> Disclaimer:
+>
+> I don't have any theoretical physic degree. The posts below are purely my personal opinion and does not reflect any contemporary academic view. Read it for your own amusement.
+
+As a followup from my article in 2020: [Do information entropy closely related with physical thermodynamics?](./2020--09--05--08--do-information-entropy-closely-related-with-physical-thermodynamics/),
+I want to understand more about time.
+
+The idea that time was related with entropy has long since discussed. In thermodynamics, entropy is a quantity that
+can only increase, so it is naturally irreversible. This is understood as The Second Law of Thermodynamics.
+
+This idea is quite different from the usual equation or formula in mechanics. In mechanics, mostly all of the Physics equation
+has time symmetry. Meaning, the same equation can be used be it forward in time or backwards. However, only Second Law
+of Thermodynamics implies a certain direction.
+
+In the pursuit of trying to understand, what generates time, I'm going to try to start from information principle.
+
+# Information entropy and mutual understanding
+
+Consider two entities in a closed systems, Alice and Bob. It is humanly familiar to start using human names, but if we
+want to build bottom up, we can't do it using human analogy. Human are complex. We need to start from simpler structure.
+So let's say Alica and Bob as a hypothetical blackbox structure.
+
+Both Alice and Bob were devices that can communicate with each other. There is no notion of space and time in the beginning.
+But we accept a notion of communication. These devices can send messages or signals to each other. They can also "records"
+previous messages. However, there is no concept of time defined here. Only "communication" and "recording".
+
+We start with the following postulate:
+
+1. Each device can send signal/information, noise free, one at a time.
+2. Each device can send signal/information instantaneously
+3. Each device can record messages sent and received as "information"
+4. Each device will keep communicating with each other, until mutual information has been achieved
+
+With these 4 postulates, we are going to arrive at a concept of continuous and discrete time as independent parameters
+to track order of events and evolution of information.
+
+We now described the interaction. First let's take a look at the concept of clock, albeit the classical one.
+
+Throughout history, human invented clock based on different definition. From clock, we invented the notion of time to track events.
+
+The simplest original clock is using astronomical bodies, such as movements of sun, moon, and stars. However, none of this
+produces linear time. There always a need to some adjustment. To illustrate, we can divide a day into 24 sections based on Sun's movement.
+However, at some of the time, the sections has different length. For example, daytime in summer has different length compared with winter.
+Also, seasons changes over the year. Not to mention that the total number of days also changes in a year. Essentially we
+defined sections of times based on periodicity of something (in this case, astronomical bodies).
+
+Later on, people invented pendulum clock. The length of time is decided by periodicity of pendulum movements.
+
+Then, people began to standardize clock using atomic oscillation.
+
+As we noticed, we keep making smaller things to define "a second", in order to make time the most independent definition from all.
+This is because time is used as the independent parameter to describe other physical quantities.
+
+Things however become a little bit wierd when Relativistic time were introduced. It turns out that time (and space), is
+a byproduct of gravitational interaction. So geometrically, gravity caused spacetime to count/measure differently depending on the observer.
+Which means, the definition of "proper time" were reintroduced as the time shown by a clock that is locally within the same
+geometrical/gravitational coordinate with the observer. Then clock became relative.
+
+From there, I have trouble understanding the concept of time in Quantum Mechanics. Time is usually explained with [Schrödinger Equation](https://en.wikipedia.org/wiki/Schrödinger_equation) or SE.
+But in this SE, time is described as an independent parameter that affects the Wave function. However it doesn't tells us what and how wave function
+needs to be described, and why it was affected by time.
+
+Not to mention that SE is usually referred to for the Non-relativistic condition. For the relativistic equation,
+Physicist uses a slightly different approximation.
+
+Back to topic at hand. We don't want to start by using oscillation directly. We are going to use probability to generate time.
+
+We are going to treat Alice and Bob as a closed local systems. That means, relativistic interaction will be ignored.
+
+Postulate 1 implies that energy is conserved in this systems.
+
+Postulate 2 implies that we ignore relativistic speed limit because the concept of speed doesn't exists yet, since concept of time doesn't exists.
+
+Postulate 3 implies that to record information, we need two states. "Send" and "Receive".
+
+The interaction is as follows. Now we switch our PoV to Alice.
+
+Alice keeps a "counter" (implementing counter itself needs resources and energy, but we are going to skip this explanation until later). Assume Alice
+has ideal counter that can always count to arbitrary integer number, even if it is big. She will need one counter for each states.
+Each time Alice sends message to Bob, she counts 1 for "Send" state. Each time Alice receive message from Bob, she counts 1 for "Receive" state.
+
+It is important to note, that there is no concept of time. So even if hypothetically there is another clock that we have, and it measures delay
+between Send and Receive. For Alice, the delay between Send and Receive is non-existent. Because for her, time doesn't tick until she either send or receive.
+Basically, she can only recognize changes in information, if the counter moves. If it doesn't move, she essentially doesn't experience "her time" ticking.
+
+In other words, for Alice, each consecutive Send/Receive events were spaced in equal sections.
+
+We now assume that the signal she sent to Bob is essentially an energy package.
+
+To reduce the model even further to the most simplest model. We assume that we are using the smallest non-zero energy package possible, that
+can't be divided further into several package. By this, we ensure that Alice can only send single package one at a time and can only receive one from Bob,
+because postulate 1 implies that the system's energy is conserved, so that the total doesn't change.
+
+Essentially, Alice and Bob plays ball catching.
+
+This solves our counter issue, because both Alice and Bob now only needs one slot of energy to store this.
+
+Finally for postulate 4, assume that Alice has no information at all about Bob (and how many Bob there is in existence). She only knows that
+someone is giving her a package of energy after she sends out one. So eventually, Bob and Alice will understand that there only exists one other recipient in the system,
+based on increasing mutual information each of them have.
+
+Now that we established the interaction, let's do some simulation.
+
+## Simulating order of events
+
+Alice has 0 information at the beginning. Assume that she holds no package. The probability of her holding a package is 0.
+Inversely, the probability of her **not holding** a package is one (a certainty). The average of information (the entropy) is 0.
+
+Then she had one. The probability of her holding a package now becomes $\frac{1}{2}$.
+The probability of her **not holding** a package is also $\frac{1}{2}$. Because there are only two possible state she was in.
+The average of information is now $\ln(2)$. It increases.
+
+By now Alice will realize that her entropy is at max, because so far she can only "Send" and "Receive" package. It only covers two possibilities.
+So from her PoV, the chain of events is only two events at max. She doesn't experience time when she keeps holding the package. But she experienced
+time if she do something, even though there are only two possible action she can take. So where does the time came in?
+
+My understanding is that Alice perceive the time abstractly. For this kind of interaction, there are two options for her to "perceive time".
+The first time, is to accept that she has discrete cyclic time. Which means her clock is a type of clock that tick-tocking from one state to the other.
+After each cycle, the information is destroyed.
+
+The second time, is to develop a continuous independent definition of "time". Which means her clock can be a real number, rather than integer,
+and it can describe how many cycle she already has.
+
+### A discrete time evolution
+
+For the first approach, notice that Alice developed a discrete probability function $p(x)$ where $X$ is the random number variable
+that corresponds to the state she was in. We only have two. For a mathematical convenience later on, let's use $X=1$ as **Send** event
+and $X=-1$ as **Receive** event. Since Alice is unable to differentiate the gap between event, it means for her that the probability or frequency
+between these two states are equally likely (she has no other choice to compare to). Thus $p(x)=\frac{1}{2}$ is a discrete uniform distribution.
+
+The entropy $H(p)$, is essentially an expectance value, the average information: $E[I(p)]$. Enumerating it into formula becomes:
+
+$$
+\begin{align*}
+H(p) &= E[I(p)] \\
+&=-\sum_X \, p(X) \, \ln(p(X)) \\
+&= -\frac{1}{2} \, \ln(\frac{1}{2}) -\frac{1}{2} \, \ln(\frac{1}{2}) \\
+&= \ln(2)
+\end{align*}
+$$
+
+Since it is the max possible for Alice in this given condition, the entropy only evolves by jumping from $0$ to $\ln(2)$.
+A discrete jump. Thus Alice perceive a discrete time. Let's call this notion of time as $N$. In other words, $N$ is a value
+that generates different probability distribution. We can write it as $p(X, N)$.
+
+### A continuous time evolution
+
+We can develop a notion of continuous time by introducing a continuous time parameter.
+One way to do that is to realize that Probability is a normalized function. It guarantees to converge.
+The probability that Alice measures is a discrete probability. However, by mathematical theorem, any square integrable function
+will have unique mapping to another function via Fourier Transform. It means, this distribution will have a uniquely corresponding function
+in its dual Fourier Domain. Moreover, since the probability function is a discrete distribution. The corresponding Fourier transform is a continuous distribution.
+
+In probability theory the Fourier Transform of a probability distribution is called [Characteristic Function](https://en.wikipedia.org/wiki/Characteristic_function_(probability_theory)).
+It is defined by the expectance of a certain operation $\varphi(t) = E[e^{itX}]$ this is essentially the same as Fourier Transform that usually been described as integral transform.
+
+In this situation, since $X$ is countable sets of states. We can enumerate it to build the characteristic function.
+We apply that **Send** event is $X=1$ and **Receive** event is $X=-1$.
+
+$$
+\begin{align*}
+\varphi(t) &= E[e^{itX}] \\
+&= p(X=1) \, e^{it\cdot 1} + p(X=-1) \, e^{it\cdot -1} \\
+&= \frac{1}{2}\, e^{it} + \frac{1}{2}\, e^{-it} \\
+&= \frac{e^{it}+e^{-it}}{2} \\
+&= \cos(t)
+\end{align*}
+$$
+
+The characteristic function eventually can be rewritten as simply $\varphi(t) = \cos(t)$. Since both characteristic function and its probability
+density function is a one to one mapping, we can see that the evolution in $t$ will imply the same entropy changes in its original distribution.
+
+Do we have justification to treat $t$ as time?
+
+Here's one way to look at it.
+
+We have two different ways on observing the interaction between Alice and Bob. The original one we propose, is to measure the energy difference, which is
+essentially a quantum phenomenon, since the energy package is quantized (has non-zero discrete value).
+This is like directly detecting the energy.
+
+The other way is to use $t$ from the characteristic function as the generator for the frequency of the distribution.
+This is like sampling the distribution.
+
+If we are using $t$, we have the characteristic function $\varphi(t)$ behaves as the generator of the sampling.
+As an example, we can generate the **observed** frequency of **Send** event, by reverse transforming with the given parameter.
+Notice that **Send** events, correspond to the random variable $X=1$. We are going to use this parameter.
+
+$$
+\begin{align*}
+p(X) &= \frac{1}{2\pi}\int_0^{2\pi} \varphi(t) \, e^{-itX} \, dt \\
+p(X=1) &= \frac{1}{2\pi}\int_0^{2\pi} \cos(t) \, e^{-it} \, dt \\
+&= \frac{1}{2\pi} \left[ \frac{t}{2} + \frac{i e^{-i2t}}{4} \right]_0^{2 \pi} \\
+&= \frac{1}{2}
+\end{align*}
+$$
+
+We got the same frequency of the probability.
+
+A characteristic function, however, is an abstract quantity not directly related with the measurement itself. It is however
+refer to the same collection of events. So, if we truly perceive the variable $t$ in the characteristic function as literally **time**,
+we have this weird unintuitive notion that the span of the integrals directly affecting the frequency measurement!
+
+The longer the span of the integral, the more precise the frequency measurement will be. More over, this notion of time
+is independent, continuous, and linear as opposed to $p(X, N)$. It is still possible for Alice to experience these as her **time** definition.
+Suppose that she has an abstract clock to measure whether she is in a **Send** or **Receive** state, she must simultaneously
+evaluate the characteristic function as the continuous time in her clock ticking. Between $0$ to $2\pi$, the frequency measurement
+is not entirely real, and it contains imaginary parts. Check these out:
+
+$$
+\begin{align*}
+p(X) &= \frac{2}{\pi}\int_0^{\frac{\pi}{2}} \varphi(t) \, e^{-itX} \, dt \\
+p(X=1) &= \frac{2}{\pi} \left[ \frac{t}{2} + \frac{i e^{-i2t}}{4} \right]_0^{\frac{\pi}{2}} \\
+&= \frac{2}{\pi} \left[ \frac{t}{2} + \frac{i e^{-i2t}}{4} \right]_0^{\frac{\pi}{2}} \\
+&= \frac{2}{\pi} \left[ \frac{\pi}{4} - \frac{i}{2} \right] \\
+&= \frac{1}{2} -  \frac{i}{\pi}
+\end{align*}
+$$
+
+The real part is essentially the same frequency but the imaginary part exists.
+Which means, we can't interpret the probability distribution as it is. This way, even though we generate a new parameter $t$, the result is not
+entirely physical, in the meaning that imaginary numbers can't be directly observed.
+
+
+### Adding physical constraint to our models
+
+Although we are able to generate a notion of "continuous time" for the duration of our sampling, we still have several
+problem when transforming back from characteristic function to the distribution.
+Our goal is to want a local independent definition of time, that can generate the event distribution.
+
+My interpretation in this is to consider that the act of observation in this scenario is basically a two-way interaction.
+if Alice and Bob pass around energy as the signals/information medium, each of them maintain their own probability distribution.
+These distribution doesn't necessarily the same. In fact, it must be the other way around. If the distribution is the same,
+then we can conclude that Alice and Bob is in a closed systems, because they were only interacting with each other.
+
+Suppose Alice's distribution of events is symbolized as $p(X)$, and Bob's distribution as $p(Y)$. Then we have
+a conditional probability: $p(X,Y)$ meaning the probability of $X$ and $Y$ happens at the same time.
+
+Assuming that Alice and Bob is only interacting locally, and notion of spacetime doesn't exists yet. Both $p(X)$ and $p(Y)$
+needs to be symmetric. Meaning, it doesn't matter if we swap the observer, both must have observed the same local events.
+Thus $p(X,Y)=p(X)\,p(Y)$, and it implies that from Bob and Alice's PoV, the probability distribution were independent of each other.
+
+If we enforce the condition that an interaction must happen between **Sender** and **Receiver**, and it can't be only one way.
+We have a really interesting consequences. $p(X,Y)$ is the joint probability, so the state is a combination of random variable
+of $X$ and $Y$, so in this case, there are 4 possible combinations. But really, if Alice is sending a message, then Bob must receive the message.
+It can't be that both are receiving or both are sending. So it must be either $p(X=1,Y=-1)=\frac{1}{2}$ or $p(X=-1,Y=1)=\frac{1}{2}$,
+while $p(X=1,Y=1)=0$ and $p(X=-1,Y=-1)=0$. Because the total probability of $p(X,Y)$ must summed up to 1.
+
+The problem is, we stated that $p(X)$ and $p(Y)$ must be symmetric.
+
+In the classical sense, if it were an analog of putting a ball in two boxes. As an outsider, it is easy for us to conclude $p(X=1,Y=-1)=\frac{1}{2}$.
+But for Alice, the value of $p(X)$ can't be evaluated, because it is tied with the information from $p(Y)$. From Alice, point of view, it is a certainty
+that $p(X)$ is a uniform distribution with $\frac{1}{2}$ frequency each. But that is only because Bob's distribution is a certainty from Alice PoV.
+If Alice observed her state to be $X=1$ (Sending) with probability $\frac{1}{2}$, then it is a certainty that Bob's state is $Y=-1$ (Receiving).
+It would mean the classical joint probability is correct $p(X,Y)=p(X)\,p(Y)=\frac{1}{2}\,1$.
+
+But to satisfy the symmetric nature of physical equation, we are not allowed to evaluate $p(X)$ yet from Alice PoV.
+
+If we borrow the concept from geometry, this is when the concept of linear algebra and basis come into play.
+
+Remember that in geometry, the notion of product (multiplication) is provided by the distance function.
+That is why in geometry we have inner product as a measure of distance. The distance is measured according to the basis being used in the local geometry.
+
+However, we have a problem here in quantum level because the notion of **basis** itself doesn't exists.
+There is no spatial or temporal coordinate to measure into. We need an abstract basis. Something that is independent with the spatial/temporal dimension that we want to observe.
+
+Neatly, probability function is a converged density, so it has a Fourier dual that is also converging.
+We then extend the idea that, what if the quantity $p(X)$ doesn't necessarily mean "a distribution" in classical sense?
+What if it is just a function that is constructed from linear combination in the Fourier domain?
+As long as the interaction didn't happen yet (the probability hasn't been evaluated), $p(X)$ should take a form that is symmetric with $p(Y)$.
+
+The simplest route we can take now, is by treating both $p(X)$ and $\varphi(t)$ as a function in the same Fourier space.
+So, we allow both to be constructed from a complex number with Fourier basis as its linear combination.
+
+One important consequence of using Fourier Transform with both function and its dual being square integrable, is that we can use
+[Plancherel Theorem](https://en.wikipedia.org/wiki/Plancherel_theorem).
+If we choose this definition of Plancherel Theorem:
+
+$$
+\begin{align*}
+\int_{-\infty}^\infty |p(X)|^2 \, dx = \int_{-\infty}^\infty |\varphi(t)|^2 \, dt
+\end{align*}
+$$
+
+They were both equal in length! So if we treat $|p(X)|^2$ as a distribution, then we can also treat $|\varphi(t)|^2$ as
+a distribution, simply because it sums up to 1.
+
+From here, the entropy of the observation is $E[I(X,Y)]$ can be broken down to:
+
+$$
+\begin{align*}
+H(X,Y)&=-\int_{-\infty}^\infty |p(X)|^2 \, \ln(|p(X)|^2)\, dx
+\end{align*}
+$$
+
+As we can see, if the entropy were maximized, it implies that $p(X)$ and $p(Y)$ were independent and symmetric distribution.
+The entropy must evolve to a maximum value as Alice gain more information from her surrounding.
+
+In its dual space, since we can treat $|\varphi(t)|^2$ as distribution, we can also quantify some notion of entropy in this domain:
+
+$$
+\begin{align*}
+H(t)&=-\int_{-\infty}^\infty |\varphi(t)|^2 \, \ln(|\varphi(t)|^2)\, dt
+\end{align*}
+$$
+
+If we treat $t$ as time parameter, notice that $H(t)$ is actually the action. If we want the entropy of $H(t)$ to evolve physically,
+we can apply the stationary action principle, in which entropy increase by moving in the path min/maxed by $t$.
+We can then conclude the term inside the integral is the Lagrangian.
+
+Applying the Euler Lagrangian method, assuming some sort of constraints exists:
+
+$$
+\begin{align*}
+\frac{d}{d\tau}\left(\frac{\partial L}{\partial \varphi}\right) &= \lambda \\
+\frac{d}{d\tau}\frac{\partial}{\partial \left|\varphi\right|} \left( -|\varphi(t)|^2 \, \ln(|\varphi(t)|^2) \right)&= \\
+\frac{d}{d\tau}\left( -2\left|\varphi\right|\,\ln(|\varphi|^2) - |\varphi|^2 \, \frac{2 \left|\varphi\right|}{|\varphi|^2} \right) &= \\
+\frac{d}{d\tau}\left( 2\left|\varphi\right|\,\ln(|\varphi|^2) + 2 \left|\varphi\right| \right) &= -\lambda \\
+\left|\varphi\right| \, \left( \ln(|\varphi|^2) + 1 \right)&= - \frac{\lambda \tau}{2} + C
+\end{align*}
+$$
+
+We arrive at an interesting results. How we define the function constraint $\lambda$ defines how $\varphi$ works for some new independent parameter $\tau$.
+We can treat this new parameter as the proper time of this system.
+
+The simplest constraint is if $\lambda = 0$, which means the Lagrangian is free to move, as long as the entropy action is stationary.
+From there, we derive:
+
+$$
+\begin{align*}
+\left|\varphi\right| \, \left( \ln(|\varphi|^2) + 1 \right)&= - \frac{\lambda \tau}{2} + C \\
+\left|\varphi\right| \, \left( \ln(|\varphi|^2) + 1 \right)&= C \\
+\end{align*}
+$$
+
+Suppose that $p(X)$ (which is now, not the probability density), is a function with Fourier basis with $|p(X)|^2$ as the probability density of the event.
+We are going to use the delta function $\delta(x)$ as a basis. Since we have two events for $X$, we can define:
+
+$$
+\begin{align*}
+|p(x)|= \frac{\delta(x-1)}{\sqrt{2}} + \frac{\delta(x+1)}{\sqrt{2}}
+\end{align*}
+$$
+
+The intention is clear, when we try to calculate the squared norm.
+
+$$
+\begin{align*}
+|p(x)| &= \frac{\delta(x-1)}{\sqrt{2}} + \frac{\delta(x+1)}{\sqrt{2}} \\
+|p(x)|^2 &= \frac{\delta(x-1)}{\sqrt{2}} \frac{\delta(x-1)}{\sqrt{2}} + \frac{\delta(x+1)}{\sqrt{2}}\frac{\delta(x+1)}{\sqrt{2}} + 2 \frac{\delta(x-1)}{\sqrt{2}} \frac{\delta(x+1)}{\sqrt{2}}
+\end{align*}
+$$
+
+The delta basis has important property, that it is zero everywhere except at $\delta(0)$.
+This implies that $\delta(x-1) \delta(x+1)$ is always zero, because $(x-1)$ and $(x+1)$ cannot both be zero at the same time.
+The above expression can then be simplified:
+
+$$
+\begin{align*}
+|p(x)|^2 &= \frac{\delta(x-1)^2}{2} + \frac{\delta(x+1)^2}{2}
+\end{align*}
+$$
+
+So, the above expression works for our distribution which is $|p(X=1)|^2=\frac{1}{2}$ and $|p(X=-1)|^2=\frac{1}{2}$
+
+Then the Fourier transform of $|p(x)|$:
+
+$$
+\begin{align*}
+|p(x)| &= \frac{\delta(x-1)}{\sqrt{2}} + \frac{\delta(x+1)}{\sqrt{2}} \\
+\mathcal{F}\left\{|p(x)|\right\} &= \mathcal{F}\left\{\frac{\delta(x-1)}{\sqrt{2}}\right\} + \mathcal{F}\left\{\frac{\delta(x+1)}{\sqrt{2}}\right\}
+\varphi(t) &= \frac{e^{-i\tau t}}{\sqrt{2}} + \frac{e^{i\tau t}}{\sqrt{2}} \\
+&= \sqrt{2} \cos(\tau t)
+\end{align*}
+$$
+
+With this interpretation, the parameter $t$ can be thought of as the local clock "experienced" by Alice (or Bob) in this systems.
+Whenever the clock reached a full cycle, new information gained by Alice, thus changing the information entropy.
+This solves our previous issue when transforming back this time function back to event probability, but now we beg another different question.
+
+# Remarks
+
+If we treat $H(t)$ as information entropy over time, there is two possible way to observe physical events.
+Track the probability of the event, then measure the entropy of the Fourier Transformed function (the $\varphi(t)$).
+Or treat the time entropy as "Action" then from the Lagrangian predict the $\varphi(t)$ function to get the $p(X)$ function.
+
+The latter seems to be far more general, but we need to put more constraint to make it more "physically" possible.
+
+Note that since this is only an "interpretation" and models. You actually need to have actual physical observation to make it a theory.
+So take this interpretation as just a rambling, or a fun way to make a toy model of alternate universes.

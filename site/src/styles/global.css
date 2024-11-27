@@ -25,6 +25,10 @@
         color: var(--shiki-dark) !important;
         background-color: theme(colors.gray.900) !important;
     }
+
+    .prose p {
+        text-align: justify;
+    }
 }
 
 /*katex related*/
