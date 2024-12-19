@@ -47,7 +47,7 @@
 		"@mui/x-charts": "^7.20.0",
 		"@nanostores/react": "^0.8.0",
 		"algoliasearch": "^5.8.1",
-		"astro": "^4.16.4",
+		"astro": "^4.16.18",
 		"astro-embed": "^0.7.4",
 		"astro-font": "^0.1.0",
 		"htmr": "^1.0.2",
