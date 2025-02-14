@@ -46,3 +46,13 @@
 .shadow {
     box-shadow: -5px 3px 8px 1px rgba(0, 0, 0, 0.12);
 }
+
+/* make rotating rectangle with center */
+.rotate-center {
+    transition: all 0.5s ease;
+}
+
+/* summary element will appear clickable */
+summary {
+    cursor: pointer;
+}

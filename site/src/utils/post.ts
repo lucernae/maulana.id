@@ -54,6 +54,9 @@ export const getPosts = async (max?: number) => {
 			if (post.data.comments === undefined) {
 				post.data.comments = siteConfig.config.commentsEnabled
 			}
+			if (post.data.features === undefined) {
+				post.data.features = []
+			}
 			return post
 		})
 		.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
@@ -66,7 +69,7 @@ export const getTags = async () => {
 	const posts = await getPosts()
 	const tags = new Set()
 	posts.forEach((post) => {
-		post.data.tags.forEach((tag) => {
+		post.data.tags.forEach((tag: any) => {
 			tags.add(tag.toLowerCase())
 		})
 	})
@@ -85,7 +88,7 @@ export const getPostByTag = async (tag: string) => {
 	const posts = await getPosts()
 	const lowercaseTag = tag.toLowerCase()
 	return posts.filter((post) => {
-		return post.data.tags.some((postTag) => postTag.toLowerCase() === lowercaseTag)
+		return post.data.tags.some((postTag: any) => postTag.toLowerCase() === lowercaseTag)
 	})
 }
 

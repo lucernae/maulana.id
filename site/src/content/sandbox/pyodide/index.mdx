@@ -5,17 +5,15 @@ description: Pyodide demo
 category:
   name: sandbox
 date: 2024-10-25T02:00:00.00Z
+features:
+  - python-runner
 ---
 
 The page uses [Pyodide](https://pyodide.org/en/stable/) to make it possible to run Python code in a browser via WebAssembly.
 
 # Demo
 
-<script is:inline type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script is:inline type="text/javascript" src="https://cdn.jsdelivr.net/pyodide/v0.26.3/full/pyodide.js">
-</script>
-
-import { PythonRunner } from "./python-runner.jsx"
+import { PythonRunner} from "../../../components/python-runner.jsx"
 
 <PythonRunner client:only="react" pythonScriptSelector="#pythonScript" plotScriptSelector="#plotScript"  />
 

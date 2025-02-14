@@ -30,7 +30,8 @@ const post = defineCollection({
 			tags: z.array(z.string()).default([]),
 			layout_name: z.string().optional(),
 			comments: z.boolean().default(siteConfig.config.commentsEnabled),
-			draft: z.boolean().default(false)
+			draft: z.boolean().default(false),
+			features: z.array(z.string()).default([])
 		})
 })
 

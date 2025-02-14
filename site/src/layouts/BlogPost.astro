@@ -6,6 +6,8 @@ import Tag from '@/components/Tag'
 import Giscus from '@/components/Giscus'
 import type { MarkdownHeading } from 'astro'
 import { Image } from 'astro:assets'
+import React from 'react'
+import { parseKatexString } from '../utils/katexTitle'
 
 type Props = {
 	id: CollectionEntry<'post'>['id']
@@ -15,9 +17,9 @@ type Props = {
 }
 
 const { data, readTime, headings, id } = Astro.props
-const { title, description, pubDate, heroImage, tags, comments } = data
-
+const { title, description, pubDate, heroImage, tags, comments, features } = data
 const articleDate = pubDate.toISOString()
+const parsedTitle = await parseKatexString(title)
 ---
 
 <BaseLayout
@@ -38,9 +40,10 @@ const articleDate = pubDate.toISOString()
 						- {readTime}
 					</p>
 				</div>
-				<h1 class='text-center text-4xl md:text-6xl md:pb-2.5 font-semibold'>
-					{title}
-				</h1>
+				<h1
+					class='text-center text-4xl md:text-6xl md:pb-2.5 font-semibold'
+					set:html={parsedTitle}
+				/>
 			</div>
 
 			<div class='flex flex-wrap justify-center items-center gap-2 gap-y-4 md:gap-5'>
@@ -74,6 +77,18 @@ const articleDate = pubDate.toISOString()
 	<Giscus enabled={comments} />
 </BaseLayout>
 
+{
+	features.includes('python-runner') && (
+		<>
+			<script is:inline type='text/javascript' src='https://cdn.plot.ly/plotly-latest.min.js' />
+			<script
+				is:inline
+				type='text/javascript'
+				src='https://cdn.jsdelivr.net/pyodide/v0.26.3/full/pyodide.js'
+			/>
+		</>
+	)
+}
 <script src='https://platform.twitter.com/widgets.js' async></script>
 <script>
 	const fnObserver = () => {

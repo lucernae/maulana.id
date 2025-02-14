@@ -8,6 +8,7 @@ import {
 	PaceViewer,
 	CadenceViewer
 } from '../fit.jsx'
+import { PythonRunner } from '../python-runner.jsx'
 
 export const components = {
 	Tweet,
@@ -17,5 +18,6 @@ export const components = {
 	ActivityEmbedViewer,
 	HeartRateViewer,
 	PaceViewer,
-	CadenceViewer
+	CadenceViewer,
+	PythonRunner
 }
