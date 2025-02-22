@@ -371,10 +371,10 @@
     stream-replace-string "^2.0.0"
     zod "^3.23.8"
 
-"@astrojs/starlight-docsearch@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@astrojs/starlight-docsearch/-/starlight-docsearch-0.2.0.tgz#de03892075bdb5a7ef6dae9fe2f47a7239dc4fb7"
-  integrity sha512-jeZuJrcy0IX9qz7m4Emy/Vfr3hurjBByUFvcpqmvH7x48PCVYozCxEnLdDJzXU3vHWhvodtRCt51wcugCTGB5g==
+"@astrojs/starlight-docsearch@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@astrojs/starlight-docsearch/-/starlight-docsearch-0.6.0.tgz#d8fdecef1ecc7a090030e06f461595b38461b724"
+  integrity sha512-jTW/6SVU98/birzDCrYLVEKrgzdRzLlevGIhG6EDRmieLCAUnsKUk0q856fOJ7RJcuVLTlzg80rkwAgRINpyZQ==
   dependencies:
     "@docsearch/css" "^3.6.0"
     "@docsearch/js" "^3.6.0"
