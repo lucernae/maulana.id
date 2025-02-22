@@ -202,11 +202,27 @@
   dependencies:
     "@ariakit/react-core" "0.4.14"
 
-"@astro-community/astro-embed-integration@^0.7.2":
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-integration/-/astro-embed-integration-0.7.2.tgz#dbe016e22369d8dd392a694855cabbf925da0798"
-  integrity sha512-R5eyiA01pj400skp6sJY4t01oXtTY+Huv2uR4eWUagaPgOOadu135+UkPXo38+LgZ5voYzZkaGwfTaZj4R0AFg==
+"@astro-community/astro-embed-baseline-status@^0.1.0":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-baseline-status/-/astro-embed-baseline-status-0.1.2.tgz#dac405d72c1637108122ed6c623babfa2a9daa22"
+  integrity sha512-u+3BwXCSjBIVW29MGTbdusRhRBhqcjHyE6dgBCsUK/nZ0BohP1Nfih8dB7YltTVZxgECakKWQWoSHabDbYteyA==
   dependencies:
+    "@astro-community/astro-embed-utils" "^0.1.0"
+
+"@astro-community/astro-embed-bluesky@^0.1.0", "@astro-community/astro-embed-bluesky@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-bluesky/-/astro-embed-bluesky-0.1.3.tgz#d368e742dbb9a57ba4952113543559cecafc6d25"
+  integrity sha512-qOuIK2CYQfAjFePaxtko7yyS0rb94I3MgZ94kK02xqeonCzHNP95Q+jUCD/uelcvZK4u+VEh5zNkQ4BfjFm63w==
+  dependencies:
+    "@atproto/api" "^0.13.14"
+    ts-pattern "^5.5.0"
+
+"@astro-community/astro-embed-integration@^0.8.0":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-integration/-/astro-embed-integration-0.8.1.tgz#d5f694cee4e6bdfd9c4ebc741189601a38753f8d"
+  integrity sha512-lI5oekRcmRdNI0AWluAZuM8ZyIV2S64KDPsOo/bbR6diF//Vic5Jy6Tz0gAPjcNMlZSSGMjXBKuUCQZS338e7w==
+  dependencies:
+    "@astro-community/astro-embed-bluesky" "^0.1.3"
     "@astro-community/astro-embed-link-preview" "^0.2.0"
     "@astro-community/astro-embed-twitter" "^0.5.5"
     "@astro-community/astro-embed-vimeo" "^0.3.9"
@@ -436,6 +452,54 @@
   integrity sha512-GOfvSr5Nqy2z5XiwqTouBBpy5FyI6DEe+/g/Mk5am9SjILN1S5fOEvYK0GuWHg98yS/dobP4m8qyqw/URW35fQ==
   dependencies:
     yaml "^2.5.0"
+
+"@atproto/api@^0.13.14":
+  version "0.13.35"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.35.tgz#1e3a6c6e035c8e06302508983ed206effc92a7e8"
+  integrity sha512-vsEfBj0C333TLjDppvTdTE0IdKlXuljKSveAeI4PPx/l6eUKNnDTsYxvILtXUVzwUlTDmSRqy5O4Ryh78n1b7g==
+  dependencies:
+    "@atproto/common-web" "^0.4.0"
+    "@atproto/lexicon" "^0.4.6"
+    "@atproto/syntax" "^0.3.2"
+    "@atproto/xrpc" "^0.6.8"
+    await-lock "^2.2.2"
+    multiformats "^9.9.0"
+    tlds "^1.234.0"
+    zod "^3.23.8"
+
+"@atproto/common-web@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.4.0.tgz#b1407ae3f964f0ee23c2c3184f38041bac99d1f4"
+  integrity sha512-ZYL0P9myHybNgwh/hBY0HaBzqiLR1B5/ie5bJpLQAg0whRzNA28t8/nU2vh99tbsWcAF0LOD29M8++LyENJLNQ==
+  dependencies:
+    graphemer "^1.4.0"
+    multiformats "^9.9.0"
+    uint8arrays "3.0.0"
+    zod "^3.23.8"
+
+"@atproto/lexicon@^0.4.6", "@atproto/lexicon@^0.4.7":
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.4.7.tgz#f5d31615c21bcfd3e655f1e4f11a40a62fea9f86"
+  integrity sha512-/x6h3tAiDNzSi4eXtC8ke65B7UzsagtlGRHmUD95698x5lBRpDnpizj0fZWTZVYed5qnOmz/ZEue+v3wDmO61g==
+  dependencies:
+    "@atproto/common-web" "^0.4.0"
+    "@atproto/syntax" "^0.3.3"
+    iso-datestring-validator "^2.2.2"
+    multiformats "^9.9.0"
+    zod "^3.23.8"
+
+"@atproto/syntax@^0.3.2", "@atproto/syntax@^0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.3.3.tgz#6debe8983985378104822172a128e429931bf3f7"
+  integrity sha512-F1LZweesNYdBbZBXVa72N/cSvchG8Q1tG4/209ZXbIuM3FwQtkgn+zgmmV4P4ORmhOeXPBNXvMBpcqiwx/gEQQ==
+
+"@atproto/xrpc@^0.6.8":
+  version "0.6.9"
+  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.6.9.tgz#6e1effc42cdab40741a73ead5c276183284887d2"
+  integrity sha512-vQGA7++DYMNaHx3C7vEjT+2X6hYYLG7JNbBnDLWu0km1/1KYXgRkAz4h+FfYqg1mvzvIorHU7DAs5wevkJDDlw==
+  dependencies:
+    "@atproto/lexicon" "^0.4.7"
+    zod "^3.23.8"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.23.5", "@babel/code-frame@^7.25.9", "@babel/code-frame@^7.26.0":
   version "7.26.2"
@@ -5211,12 +5275,14 @@ astro-auto-import@^0.4.2:
     "@types/node" "^18.0.0"
     acorn "^8.8.0"
 
-astro-embed@^0.7.4:
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/astro-embed/-/astro-embed-0.7.4.tgz#eb4b25616c0ecad70f25ef8562c33099b862c687"
-  integrity sha512-meDmEpmwu1wcz1i1KT4yAPJhydq/C4iyh1Pn7sepSbtXF85C05nJoE0cTDJHf0cwM4zMoYTYDluqFIQIfsdhHA==
+astro-embed@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/astro-embed/-/astro-embed-0.9.0.tgz#a81a35fec194d07d45960fe320fd5bd41020686f"
+  integrity sha512-koBCZH8n1q7tyXW+s11mdwb5dFsv9kG8uMuF17CUIVFJWqwRxx7YCpa9o2P9PuPeWffsrwmdVJTl65kLLP2Uug==
   dependencies:
-    "@astro-community/astro-embed-integration" "^0.7.2"
+    "@astro-community/astro-embed-baseline-status" "^0.1.0"
+    "@astro-community/astro-embed-bluesky" "^0.1.0"
+    "@astro-community/astro-embed-integration" "^0.8.0"
     "@astro-community/astro-embed-link-preview" "^0.2.2"
     "@astro-community/astro-embed-twitter" "^0.5.6"
     "@astro-community/astro-embed-vimeo" "^0.3.10"
@@ -5367,6 +5433,11 @@ available-typed-arrays@^1.0.7:
   integrity sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==
   dependencies:
     possible-typed-array-names "^1.0.0"
+
+await-lock@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/await-lock/-/await-lock-2.2.2.tgz#a95a9b269bfd2f69d22b17a321686f551152bcef"
+  integrity sha512-aDczADvlvTGajTDjcjpJMqRkOF6Qdz3YbPZm/PyW6tKPkx2hlYBzxMhEywM/tU72HrVZjgl5VCdRuMlA7pZ8Gw==
 
 axe-core@^4.10.0:
   version "4.10.2"
@@ -9565,6 +9636,11 @@ isexe@^3.1.1:
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-3.1.1.tgz#4a407e2bd78ddfb14bea0c27c6f7072dde775f0d"
   integrity sha512-LpB/54B+/2J5hqQ7imZHfdU31OlgQqx7ZicVlkm9kzg9/w8GKLEcFfJl/t7DCEDueOyBAD6zCCwTO6Fzs0NoEQ==
 
+iso-datestring-validator@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/iso-datestring-validator/-/iso-datestring-validator-2.2.2.tgz#2daa80d2900b7a954f9f731d42f96ee0c19a6895"
+  integrity sha512-yLEMkBbLZTlVQqOnQ4FiMujR6T4DEcCb1xizmvXS+OxuhwcbtynoosRzdMA69zZCShCNAbi+gJ71FxZBBXx1SA==
+
 isobject@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
@@ -11794,6 +11870,11 @@ muggle-string@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/muggle-string/-/muggle-string-0.4.1.tgz#3b366bd43b32f809dc20659534dd30e7c8a0d328"
   integrity sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==
+
+multiformats@^9.4.2, multiformats@^9.9.0:
+  version "9.9.0"
+  resolved "https://registry.yarnpkg.com/multiformats/-/multiformats-9.9.0.tgz#c68354e7d21037a8f1f8833c8ccd68618e8f1d37"
+  integrity sha512-HoMUjhH9T8DDBNT+6xzkrd9ga/XiBI4xLr58LJACwK6G3HTOPeMz4nB4KJs33L2BelrIJa7P0VuNaVF3hMYfjg==
 
 mumath@^3.3.4:
   version "3.3.4"
@@ -15003,6 +15084,11 @@ title-case@^3.0.3:
   dependencies:
     tslib "^2.0.3"
 
+tlds@^1.234.0:
+  version "1.255.0"
+  resolved "https://registry.yarnpkg.com/tlds/-/tlds-1.255.0.tgz#53c2571766c10da95928c716c48dfcf141341e3f"
+  integrity sha512-tcwMRIioTcF/FcxLev8MJWxCp+GUALRhFEqbDoZrnowmKSGqPrl5pqS+Sut2m8BgJ6S4FExCSSpGffZ0Tks6Aw==
+
 to-float32@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/to-float32/-/to-float32-1.1.0.tgz#39bd3b11eadccd490c08f5f9171da5127b6f3946"
@@ -15085,6 +15171,11 @@ ts-interface-checker@^0.1.9:
   version "0.1.13"
   resolved "https://registry.yarnpkg.com/ts-interface-checker/-/ts-interface-checker-0.1.13.tgz#784fd3d679722bc103b1b4b8030bcddb5db2a699"
   integrity sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==
+
+ts-pattern@^5.5.0:
+  version "5.6.2"
+  resolved "https://registry.yarnpkg.com/ts-pattern/-/ts-pattern-5.6.2.tgz#aad9b4fe3c3f485dfad46e472e1203b688cc9bb4"
+  integrity sha512-d4IxJUXROL5NCa3amvMg6VQW2HVtZYmUTPfvVtO7zJWGYLJ+mry9v2OmYm+z67aniQoQ8/yFNadiEwtNS9qQiw==
 
 tsconfck@^3.1.4:
   version "3.1.4"
@@ -15289,6 +15380,13 @@ uhyphen@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/uhyphen/-/uhyphen-0.2.0.tgz#8fdf0623314486e020a3c00ee5cc7a12fe722b81"
   integrity sha512-qz3o9CHXmJJPGBdqzab7qAYuW8kQGKNEuoHFYrBwV6hWIMcpAmxDLXojcHfFr9US1Pe6zUswEIJIbLI610fuqA==
+
+uint8arrays@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/uint8arrays/-/uint8arrays-3.0.0.tgz#260869efb8422418b6f04e3fac73a3908175c63b"
+  integrity sha512-HRCx0q6O9Bfbp+HHSfQQKD7wU70+lydKVt4EghkdOvlK/NlrF90z+eXV34mUd48rNvVJXwkrMSPpCATkct8fJA==
+  dependencies:
+    multiformats "^9.4.2"
 
 ultrahtml@^1.5.3:
   version "1.5.3"
