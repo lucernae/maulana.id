@@ -2245,9 +2245,9 @@
   integrity sha512-3fkKj25kEjsfObL6IlKPAlHYPq/oYwUkkQ03zsTTiDjD7vg/RxjdiLeCydqtxHZP0JgsXL3D/X5oAkMGzuUp/Q==
 
 "@nanostores/react@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@nanostores/react/-/react-0.8.0.tgz#c81c907f92937ee6f22e64c9a95b27ccf6a1c4bd"
-  integrity sha512-MhbVB7NQLboq/Z9fRTDen9zib/YCffe6mn+3Xg5MOYByMX5Xx98SOZjk/Nd3yvOd/g7GjlQqwXj0KF2lPb6CEQ==
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/@nanostores/react/-/react-0.8.4.tgz#fc32d38311f5cbd63280cc28459e52596bbd5dae"
+  integrity sha512-EciHSzDXg7GmGODjegGG1VldPEinbAK+12/Uz5+MAdHmxf082Rl6eXqKFxAAu4pZAcr5dNTpv6wMfEe7XacjkQ==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
