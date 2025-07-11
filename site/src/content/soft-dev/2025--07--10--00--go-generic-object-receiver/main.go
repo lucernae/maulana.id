@@ -96,7 +96,7 @@ func (c *digitalCamera) Snapshot(pic string) {
 	c.picture = pic
 }
 
-func NewDigitalCamera() *digitalCamera {
+func NewDigitalCamera() PreviewableCamera {
 	return &digitalCamera{}
 }
 
@@ -109,6 +109,15 @@ func (c *analogCamera) Print() string {
 	return c.picture
 }
 
+type PreviewableCamera interface {
+	Camera
+	Preview() string
+}
+
+func (c *digitalCamera) Preview() string {
+	return c.picture
+}
+
 type PrintableCameraWithLens struct {
 	GenericCameraWithLens[PrintableCamera, Lens[Camera]]
 }
@@ -117,8 +126,16 @@ func (c *PrintableCameraWithLens) Print() string {
 	return c.GenericCameraWithLens.camera.Print()
 }
 
+type PreviewableCameraWithLens struct {
+	GenericCameraWithLens[PreviewableCamera, Lens[Camera]]
+}
+
+func (c *PreviewableCameraWithLens) Preview() string {
+	return c.GenericCameraWithLens.camera.Preview()
+}
+
 func NewCameraWithLensAsType[Target any, C Camera, L Lens[Camera]](camera C, newLens func() L) *Target {
-	genericCamera, ok := NewCameraWithLens[C, L](camera, newLens).(*GenericCameraWithLens[C, L])
+	genericCamera, ok := NewCameraWithLens(camera, newLens).(*GenericCameraWithLens[C, L])
 	if !ok {
 		panic("failed to create generic camera with lens")
 	}
@@ -168,18 +185,34 @@ func main() {
 		panic("generic object with extended method failed")
 	}
 
-	myPrintableCamera := NewCameraWithLensAsType[PrintableCameraWithLens, PrintableCamera](NewAnalogCamera(), NewZoomLens)
+	myPrintableCamera := NewCameraWithLensAsType[PrintableCameraWithLens](NewAnalogCamera(), NewZoomLens)
 	myPrintableCamera.Attach()
 	myPrintableCamera.Snapshot("hello")
 	fmt.Println(myPrintableCamera.Print())
 
 	var myTestCamera PrintableCamera
 	// with zoom lens
-	myTestCamera = NewCameraWithLensAsType[PrintableCameraWithLens, PrintableCamera](NewAnalogCamera(), NewZoomLens)
-	myTestCamera.Snapshot("hello")
+	if cam := NewCameraWithLensAsType[PrintableCameraWithLens](NewAnalogCamera(), NewZoomLens); cam != nil {
+		cam.Attach()
+		myTestCamera = cam
+	}
+	myTestCamera.Snapshot("my printable camera with lens")
 	fmt.Println(myTestCamera.Print())
 	// no lens
 	myTestCamera = NewAnalogCamera()
-	myTestCamera.Snapshot("hello")
+	myTestCamera.Snapshot("my printable camera without lens")
 	fmt.Println(myTestCamera.Print())
+
+	var myPreviewCamera PreviewableCamera
+	// with zoom lens
+	if cam := NewCameraWithLensAsType[PreviewableCameraWithLens](NewDigitalCamera(), NewZoomLens); cam != nil {
+		cam.Attach()
+		myPreviewCamera = cam
+	}
+	// no lens
+	myPreviewCamera.Snapshot("my preview camera with lens")
+	fmt.Println(myPreviewCamera.Preview())
+	myPreviewCamera = NewDigitalCamera()
+	myPreviewCamera.Snapshot("my preview camera without lens")
+	fmt.Println(myPreviewCamera.Preview())
 }

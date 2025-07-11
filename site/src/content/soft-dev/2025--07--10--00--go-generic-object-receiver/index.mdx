@@ -309,6 +309,19 @@ func (c *analogCamera) Print() string {
 }
 ```
 
+For the digital camera. We will have an interface to Preview the picture.
+
+```go
+type PreviewableCamera interface {
+    Camera
+    Preview() string
+}
+
+func (c *digitalCamera) Preview() string {
+    return c.picture
+}
+```
+
 Now we want to use it like this in the main function
 
 ```go
@@ -384,7 +397,7 @@ func main() {
 }
 ```
 
-So all is good right? Well it does run, but now the generic object does not have `Print()` function.
+So all is good right? Well it doesn't run. Now the generic object does not have `Print()` function.
 It was the internal camera that have it. How do we access it by still maintaining type safety?
 
 This is where the type embedding I mentioned before is useful.
@@ -536,6 +549,6 @@ With generics, you have power to do more things:
 
 # References
 
-- Final, runnable go codes can be seen in [github](https://github.com/lucernae/maulana.id/site/src/content/soft-dev/2025--07--10--00--go-generic-object-receiver/main.go)
+- Final, runnable go codes can be seen in [github](https://github.com/lucernae/maulana.id/tree/main/site/src/content/soft-dev/2025--07--10--00--go-generic-object-receiver/main.go)
 - Play golang version of the codes is [this](https://play.golang.com/p/cJRtdalQViL)
 
