@@ -1,0 +1,541 @@
+---
+layout_name: blog-post
+title: Using Go generic interface as wrapper
+description: Generic is still a pain in Go, but you need to understand how it works in order to use it correctly
+category:
+  name: soft-dev
+date: 2025-07-10T00:00:00.00Z
+---
+
+I'm not gonna explain what generics are. Ask your LLM agents for that. This is just intended as a short post to document
+how to make a good (and sane) code level API in Go with generics.
+
+Generics has been missing from Go, ever since the language first designed. It is also one of my pet peeves in the early days
+of go. They said it helps make the language simple to understand and use. Well, in my opinion it's just making everything
+hard, as if I'm using some old school Java 2 ME library.
+
+Anyway, generics were introduced in Go after Go 1.18. They finally admitted that they need to have some kind of generic type-specific implementation
+to make most problems simpler AND SAFE, as opposed to using type assertion acrobat.
+
+# When do you need generics?
+
+Go's favorite idiomatic principle is abandoning object oriented programming, and favoring more about "message-passing" architecture.
+This means when you declare "interface", it is not a Java OOP way of interface, but rather an interface for the client to operate.
+
+So, in the beginning when you design your code level API, you will start with the type struct.
+
+```go
+package main
+
+type analogCamera struct {
+    picture string
+}
+
+func (c *analogCamera) Snapshot(pic string) {
+    c.picture = pic
+}
+```
+
+You normally start with private lower-case struct. In this case `analogCamera`, because you want to hide the implementation
+details from whoever package that import your package. This `analogCamera` have "object receiver methods" called `Snapshot`.
+
+It's called object receiver method because the paradigm is that you invoke a method called `Snapshot` by sending the
+invocation command (the method name and its arguments) it to an object with type `*analogCamera`.
+If this object implement the "receiver" method, then it will do the command.
+
+In the main function, if you have these statements, then the compiler will validate the statement **at** compile time,
+because it knows immediately that the type implements the receiver.
+
+```go
+func main() {
+    c := &analogCamera{}
+    c.Snapshot("hello") // send command Snapshot with arguments "hello" to object c.
+}
+```
+
+Now suppose that someone imports this package. You want to give them ability to send message `Snapshot` to your types.
+But you don't want to give them the implementation details, so you can change it later along the way without breaking
+your userspace code.
+
+This is how you introduce interface. You declare an "interface", so that users can just hold onto an interface, rather
+than the concrete type.
+
+```go
+type Camera interface {
+    Snapshot(pic string)
+}
+```
+
+It's a public exported type, because you want your users to use this. This interface is actually not so useful for yourself,
+because there is no reason for your own package to use the interface. You **always** use the concrete type within your own package.
+I've seen many times already that someone declare an interface to be used form within their own package. That's not how you are supposed to do it in Go.
+That was an OOP way of things.
+
+Another Go's principle is to always return the struct, but accept interfaces. So when you create a public factory method
+for the users to get your types, you do this:
+
+```go
+func NewAnalogCamera() *analogCamera {
+    return &analogCamera{}
+}
+```
+
+But not everyone follows this kind of convention. So sometimes you have to deal with a library that only allows you to
+get the interface, rather than the full capabilities of the struct
+
+```go
+func NewAnalogCamera() Camera {
+    return &analogCamera{}
+}
+```
+
+This only makes sense if the author of library themselves intended to limit users to use their full-capabilities of the struct.
+They want you to use the interface. In this case, that is also a fine way to do things.
+
+Now when does generic is almost always needed? It's when you have multiple possible implementations, but you want user
+to have uniform way of using the interface without you having to reimplement everything.
+
+Let's say, when you handed an Analog Camera, you can hand the camera as is, or you can provide users the lenses.
+The lens does something to the camera. Here's a camera with zoomed lens:
+
+```go
+type zoomLensCamera struct {
+    camera *analogCamera
+}
+
+func (z *zoomLensCamera) Snapshot(pic string) {
+    pic := fmt.Sprintf("magnified 2x! :%s", pic)
+    camera.picture = pic
+}
+
+func NewZoomedAnalogCamera() Camera {
+    return &zoomLensCamera{
+        camera: &analogCamera{},
+    }
+}
+```
+
+Notice that in above implementation, the New factory method `NewZoomedAnalogCamera` still returns interface `Camera`.
+The compiler asserts at compile time that `&zoomLensCamera{}` has receiver `Snapshot` declared by `Camera` interface.
+
+Now suppose you have a digital camera. You also want the zoom lens to work with the digital camera. In go without generics
+it means all 2x2 matrix combination (lens or without lens times analog or digital camera) **needs*** to have implementation.
+It gets verbose quite a lot.
+
+# Wrapping type-specific interface in a generic interface
+
+With generics, you can design a much more robust data structure with type assertion. It might seems more complicated, but
+it is definitely a much safer method than just doing type-assertion at runtime. Because generics type-specifier are checked at compile time.
+
+Let's add an interface for the lens. A lens itself must be able to interact with the camera and transform a picture
+into some sort of "modified" picture.
+
+```go
+type Lens[C Camera] interface {
+    Transform(camera C, pic string) error
+}
+```
+
+See that we specify a "type-specifier" `C Camera` to have some sort of abstract constraints that a Lens can only be used
+on a camera. Whatever that camera is. Because we specify it, when we design the code API, we are forced to think that
+we have to use the type somewhere in the method receiver. It's why generic is better when designing a code level API.
+
+We then declare an interface combination that says camera with lenses. Remember that Lens can do more than just zoom.
+So there are quite number of different type of Lenses. A lens should be prepared first by the camera (adjusting settings etc),
+then it can be attached or detached to make the lens active or not.
+
+```go
+type CameraWithLens[C Camera, L Lens[C]] interface {
+    Camera
+    PrepareLens(lens L) error
+    Attach() error
+    Detach() error
+}
+```
+
+A couple of things to unpack here. First, why does the `Lens` itself depends on the camera here by specifying `L Lens[C]`?
+This is an additional constraint because we want the type of lenses that **can** interact with camera of type C.
+Because user can pass our most basic camera interface `Camera` or they can pass a concrete camera type here.
+Whatever that is must match with the lens type.
+
+In the body of the interface declaration, we can see that it must implements our core camera function, the `Camera` interface.
+It also have additional functions `PrepareLens` that accepts the lens with the type `L` we declared above. Not just any lens.
+
+Now we need to implement the lens functionality.
+
+```go
+type zoomLens struct {
+}
+
+func (l *zoomLens) Transform(camera Camera, pic string) error {
+    camera.Snapshot(fmt.Sprintf("magnified 2x! %s", pic))
+    return nil
+}
+
+func NewZoomLens() Lens[Camera] {
+	  return &zoomLens{}
+}
+```
+
+The returned interface in the method signature ensure that `Lens[Camera]` means a lens that can work with any basic `Camera`.
+
+Then we create the generic implementation.
+
+```go
+type genericCameraWithLens[C Camera, L Lens[C]] struct {
+    camera         C
+    lens           L
+    isLensAttached bool
+}
+
+func (c *genericCameraWithLens[C, L]) PrepareLens(lens L) error {
+    c.lens = lens
+    return nil
+}
+
+func (c *genericCameraWithLens[C, L]) Attach() error {
+    if any(c.lens) == nil {
+      return fmt.Errorf("lens not installed")
+    }
+    c.isLensAttached = true
+    return nil
+}
+
+func (c *genericCameraWithLens[C, L]) Detach() error {
+    if any(c.lens) == nil {
+      return fmt.Errorf("lens not installed")
+    }
+    c.isLensAttached = false
+    return nil
+}
+
+func (c *genericCameraWithLens[C, L]) Snapshot(pic string) {
+    if !c.isLensAttached {
+      c.camera.Snapshot(pic)
+      return
+    }
+    c.lens.Transform(c.camera, pic)
+}
+```
+
+So this is just an abstract generic implementation for the type combination. What we have different with the non-generic
+implementation is that we need to have a type placeholder that contains the specified type parameter.
+Hence we have `type genericCameraWithLens[C Camera, L Lens[C]] struct`, a struct declaration that will match our public `CameraWithLens` interface.
+In this struct, we are free to have any data structure that we actually needed to hold the object together.
+So we need a `camera` and the `lens`, and an extra `isLensAttached` bool flag to help track the `Attach` `Detach` method.
+
+Notice that for each object receiver method declaration, we can use the type parameter, as if it is a concrete type.
+So, when we wrote `func (c *genericCameraWithLens[C, L]) PrepareLens(lens L)` it can match all combination of camera and lenses of any `C` and `L`!
+
+Finally we create the object factory.
+
+```go
+func NewCameraWithLens[C Camera, L Lens[C]](camera C, newLens func() L) *genericCameraWithLens[C, L] {
+    genericCamera := &genericCameraWithLens[C, L]{
+      camera: camera,
+    }
+    genericCamera.PrepareLens(newLens())
+    return genericCamera
+}
+```
+
+You might be wondering why `newLens` is a function rather than just the type `L` directly.
+This is because it forces the user to use our exposed factory method for the lens, rather than instantiating lens directly.
+Remember the rule `return struct, accept interfaces`? by using a factory method for the lens, we ensure that factory works
+without having to handle very specific struct instantiation.
+Of course you could do the same with the `camera C` signature and change it into a factory.
+The example above just shows that both are possible.
+
+Now time to use it!
+
+```go
+func main() {
+    myCamera := NewCameraWithLens[Camera](NewAnalogCamera(), NewZoomLens)
+    myCamera.Attach()
+    myCamera.Snapshot("hello")
+}
+```
+
+You will then notice why we only specify `Camera` as the type arguments to `NewCameraWithLens`, even though it needs two types:
+`C Camera` and `L Lens[C]`?
+Well this is because in above example `L Lens[C]` is completely dependent on `C`, the first type. Go is smart enough to realize
+that we don't have to explicitly specify it. That's how to use it.
+
+# Implement type-specific functionality in generic types
+
+Previously we learn how to wrap common interface for multiple types into one generic interface.
+
+Now, what if we want to use the generic interface, but we still want to easily access specific types methods easily?
+
+In other type languages like Rust or TypeScript, you could specify something like a "Type Constraint".
+So, ideally in those language you can create more specific interface and assert at compile time if the resulting generic
+underlying types does implement those specific interface.
+
+In Go, you can't do this because the type constraint is just not flexible enough.
+
+After reading much from the Go docs, it seems what you can do is to do struct embedding, so that your struct is copied
+directly as the target struct. This has a downside though, because you have no compile time checks, you need to ensure your
+code wasn't broken at runtime. And you have to do type assertion again using Go reflect package.
+
+Anyway, to illustrate the issue and solution, consider the following scenario.
+
+You now have another type of camera called digital camera
+
+```go
+type digitalCamera struct {
+	  picture string
+}
+
+func (c *digitalCamera) Snapshot(pic string) {
+	  c.picture = pic
+}
+
+func NewDigitalCamera() *digitalCamera {
+	  return &digitalCamera{}
+}
+```
+
+At a glance, it's type implementation is similar with analog camera. But we are going to make some difference.
+With the analog camera, we will have an interface to Print the picture out, in addition with the basic functionality.
+
+```go
+type PrintableCamera interface {
+    Camera
+    Print() string
+}
+
+func (c *analogCamera) Print() string {
+	  return c.picture
+}
+```
+
+Now we want to use it like this in the main function
+
+```go
+func main() {
+    myPrintableCamera := NewCameraWithLens[PrintableCamera](NewAnalogCamera(), NewZoomLens)
+    myPrintableCamera.Attach()
+    myPrintableCamera.Snapshot("hello")
+    fmt.Println(myPrintableCamera.camera.Print())
+}
+```
+
+But it won't compile. Because the new contract resolution is to have `NewZoomLens` return `Lens[PrintableCamera]`.
+However it returns `Lens[Camera]`. Now if you think about it, the Lens pretty much does nothing to affect the printing
+method of the picture. It's the camera job. So in this case we want to relax the constraint, so that the Lens only
+depends on the basic `Camera` functionality, instead of arbitrary Camera type.
+
+So we update some signature.
+
+```go
+type CameraWithLens[C Camera, L Lens[Camera]] interface { // updated
+    Camera
+    PrepareLens(lens L) error
+    Attach() error
+    Detach() error
+}
+
+func NewZoomLens() Lens[Camera] { // updated
+	  return &zoomLens{}
+}
+
+type genericCameraWithLens[C Camera, L Lens[Camera]] struct { // updated
+    camera         C
+    lens           L
+    isLensAttached bool
+}
+
+func NewCameraWithLens[C Camera, L Lens[Camera]](camera C, newLens func() L) *genericCameraWithLens[C, L] { // updated
+    genericCamera := &genericCameraWithLens[C, L]{
+      camera: camera,
+    }
+    genericCamera.PrepareLens(newLens())
+    return genericCamera
+}
+```
+
+This will compile and works.
+
+We still have some problem, though. Accessing the inner un-exported fields will not work if the struct is used from other package.
+So this `myPrintableCamera.camera.Print()` is not good. But how do we prevent it from compiling?
+
+This is where the change in return signature is important. If you want to disallow this access, you need to change
+the return method of `NewAnalogCamera` from `*analogCamera` to just `PrintableCamera`.
+Consequently, the generic factory should also return the interface, rather than the concrete types.
+
+```go
+func NewAnalogCamera() PrintableCamera { // updated
+	  return &analogCamera{}
+}
+
+func NewCameraWithLens[C Camera, L Lens[Camera]](camera C, newLens func() L) CameraWithLens[C, L] { // updated
+    genericCamera := &genericCameraWithLens[C, L]{
+      camera: internalCamera,
+    }
+    genericCamera.PrepareLens(newLens())
+    return genericCamera
+}
+
+func main() {
+    myPrintableCamera := NewCameraWithLens[PrintableCamera](NewAnalogCamera(), NewZoomLens)
+    myPrintableCamera.Attach()
+    myPrintableCamera.Snapshot("hello")
+    fmt.Println(myPrintableCamera.Print()) // updated
+}
+```
+
+So all is good right? Well it does run, but now the generic object does not have `Print()` function.
+It was the internal camera that have it. How do we access it by still maintaining type safety?
+
+This is where the type embedding I mentioned before is useful.
+
+First create a new type that matches only the `PrintableCamera` as the receiver, but for the generic types.
+
+```go
+type PrintableCameraWithLens struct {
+  	genericCameraWithLens[PrintableCamera, Lens[Camera]]
+}
+
+func (c *PrintableCameraWithLens) Print() string {
+  	return c.genericCameraWithLens.camera.Print()
+}
+```
+
+The `Print` method above basically delegates the actual calls to the inner camera. It works because the type contract specifies
+the interface `PrintableCamera` for the camera, so it guarantees to have method `Print`.
+
+Now, under the hood, the principle that we relying on is the fact that Go support type embeddings.
+Check the below snippet
+
+```go
+// assume that we have this generic object
+genericObject := &genericCameraWithLens[PrintableCamera, Lens[Camera]]{
+    camera: &analogCamera{},
+}
+// we can reassign it into different types, if the fields are exactly the same
+genericObjectWithExtendedMethod := &PrintableCameraWithLens{
+    *genericObject,
+}
+genericObjectWithExtendedMethod.Snapshot("hello")
+if genericObjectWithExtendedMethod.Print() != "hello" {
+    panic("generic object with extended method failed")
+}
+```
+
+Above solution works, but it was expressed statically. We need a way to assign it for arbitrary types and names.
+
+So let's create a new factory function that will assign it using reflection.
+Because we are using reflection that will be resolved at runtime, all the types and structs that we are working as a base
+needs to be resolvable and exported.
+
+This means we need to change `genericCameraWithLens` into `GenericCameraWithLens`.
+Then here's our new factory function.
+
+```go
+func NewCameraWithLensAsType[Target any, C Camera, L Lens[Camera]](camera C, newLens func() L) *Target {
+    genericCamera, ok := NewCameraWithLens[C, L](camera, newLens).(*GenericCameraWithLens[C, L])
+    if !ok {
+      panic("failed to create generic camera with lens")
+    }
+    // direct assertion if available
+    if v, ok := any(genericCamera).(*Target); ok {
+      return v
+    }
+    // embed the struct to target type
+    // get the type info of the target type
+    targetType := reflect.TypeOf((*Target)(nil)).Elem()
+    if targetType.Kind() != reflect.Struct {
+      panic("target type must be a struct")
+    }
+    if targetType.NumField() != 1 {
+      panic("target type must have exactly one field")
+    }
+    field := targetType.Field(0)
+    if !field.Anonymous {
+      panic("target type must have an anonymous field")
+    }
+    if field.Type != reflect.TypeOf(*genericCamera) {
+      panic("target type must have a field of type GenericCameraWithLens")
+    }
+    vPtr := reflect.New(targetType)
+    vPtr.Elem().Field(0).Set(reflect.ValueOf(*genericCamera))
+    return vPtr.Interface().(*Target)
+}
+```
+
+You use it like this:
+
+```go
+func main() {
+    myPrintableCamera := NewCameraWithLensAsType[PrintableCameraWithLens, PrintableCamera](NewAnalogCamera(), NewZoomLens)
+    myPrintableCamera.Attach()
+    myPrintableCamera.Snapshot("hello")
+    fmt.Println(myPrintableCamera.Print())
+}
+```
+
+We supply two types. The first one `PrintableCameraWithLens` is the generic interface with extended method, and then `PrintableCamera` is the
+original specific interface.
+
+# Generic With Method extensions
+
+This approach is typically useful if you have some base generic containers, but then you need to extend the generic functionality
+to access some specific function that might be only exists on some types.
+For example, with or without lens, you can just contain a variable based on the interface:
+
+```go
+var myTestCamera PrintableCamera
+// with zoom lens
+myTestCamera = NewCameraWithLensAsType[PrintableCameraWithLens, PrintableCamera](NewAnalogCamera(), NewZoomLens)
+myTestCamera.Snapshot("hello")
+fmt.Println(myTestCamera.Print())
+// no lens
+myTestCamera = NewAnalogCamera()
+myTestCamera.Snapshot("hello")
+fmt.Println(myTestCamera.Print())
+```
+
+As you can see above, the user can just contain the data using the same interface `PrintableCamera`.
+
+The whole benefit is not yet seen if you only have one or two types. But imagine the amount of code you can reduce
+when you have to implement multiple combination.
+
+To implement new lens, you can do:
+
+1. Create new private concrete type for the lens (for example, `telephotoLens`)
+2. Implement the object receiver (`Transform`)
+3. Implement the lens factory (`NewTelephotoLens`)
+
+To implement new camera, you can do:
+
+1. Create new private concrete type for the camera (for example, `digitalCamera`)
+2. Implement the object receiver (`Snapshot`)
+3. Implement the camera factory (`NewDigitalCamera`)
+
+With generics, you don't need to do:
+
+1. **No need** to implement `Snapshot` again if the camera is with a Lens. If you don't use generics, you need to
+  implement for `digitalCamera` x `telephotoLens`, `digitalCamera` x `zoomLens`, `analogCamera` x `telephotoLens`, and `analogCamera` x `zoomLens`.
+  Why implement it 4 times if the logic is exactly the same regardless of the types?
+2. **No need** to implement `Print` function for `digitalCamera`, because it's only specific for `analogCamera`
+3. **No need** to create an entirely new implementation if you wish to stack the lens. For example, a cascaded Telephoto Lens with Zoom Lens
+  still behaves as a single lens. So you can just create a struct that handles cascading logic, but still expose it as a `Lens` interface.
+  It will work immediately with any camera.
+
+With generics, you have power to do more things:
+
+1. Restrict some combination of camera x lens. For example AI filter lens don't work in analog camera. So, in the
+   factory function, you can throw panic or error if you detect this combination.
+2. Freely extends specific implementation without having to extend the generic base implementation.
+   Your `digitalCamera` doesn't need to implement `Print` function. On the other hand, if `digitalCamera` is capable of `Preview` function,
+   your `analogCamera` doesn't need to implement it as well if it can't do that. However, just by using the same
+   factory method, you will be able to cast/convert the underlying interface so you can access this function immediately,
+   with or without lenses. It behaves as a black-box without having to care about the underlying concrete types.
+   You can then hide these glue code from the user, so they can just focus on using the library/API code rather
+   than glue-ing the code and polluting their business logic.
+
+# References
+
+- Final, runnable go codes can be seen in [github](https://github.com/lucernae/maulana.id/site/src/content/soft-dev/2025--07--10--00--go-generic-object-receiver/main.go)
+- Play golang version of the codes is [this](https://play.golang.com/p/cJRtdalQViL)
+
