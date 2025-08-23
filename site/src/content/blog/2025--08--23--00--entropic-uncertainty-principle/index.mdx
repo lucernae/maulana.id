@@ -1,0 +1,440 @@
+---
+layout_name: blog-post
+title: Entropic Uncertainty Principle
+description: A tale of beautifully emergent properties from a mathematical fact
+date: 2025-08-23T00:00:00.00Z
+category:
+  name: blog
+---
+
+Following up from [previous article about $L^p$ space](../2025--02--08--00--pi-as-the-optimum-solution-for-stationary-action-principle/),
+I want to discuss an interesting topic about Uncertainty Principle.
+When we are talking about "Uncertainty Principle", we usually link it to Heisenberg Uncertainty Principle, which is found
+from Quantum Mechanical observation in a deductive manner. But in this article we are going to derive it from bottom up.
+From just a minimal assumptions/axioms.
+
+# Start from "information"
+
+When we observe something, we gain information. So if we have a function, we can gain information from observing the function.
+Let's say we encode information from an event that has probability distribution $\rho$. Let's say it depends on a parameter $x$,
+which is usually a state (be it discrete or continuous) in the sense of statistics or random variables.
+
+We wrote $\rho(x)$.
+
+If this function is measurable and behave nice enough — it can be discrete or continuous, doesn't matter as long as it is measurable —,
+then it must have a corresponding dual in the Fourier frequency domain.
+This is due to Fourier Transform property, which is just a mathematical fact.
+Let's just say it is $\gamma(\xi)$.
+
+But we have several ways to choose on how to build the corresponding dual function. We can transform the function directly from $\rho(x)$,
+or we can do other transform and **then** do the Fourier Transform. The thing I want to suggest here is: what if we use
+[Plancherel Theorem](https://en.wikipedia.org/wiki/Plancherel_theorem), because we can further constraint the relation between
+the dual function. This is also discussed in my previous article about [local time entropy](../2024--10--27--00--local-time-from-entropy/#adding-physical-constraint-to-our-models)
+
+So we say $\rho(x)$ is in the $L^p$ space as square integrable function (means $p=2$). This means that there exists a function
+$\psi(x)$ where $\rho(x)=|\psi(x)|^2$.
+
+We then perform the Fourier Transform on $\psi(x)$. We get a dual function $\phi(\xi)$.
+
+This way, we can apply Plancherel Theorem like this:
+
+$$
+\begin{align*}
+\int |\psi(x)|^2 \, dx &= \int |\phi(\xi)|^2 \, d\xi \\
+\int \rho(x) \, dx &= \int \gamma(\xi) \, d\xi = 1
+\end{align*}
+$$
+
+The last line is just the sum total of the probability distribution, so it must equal to 1.
+Since Plancherel Theorem can be applied, then $\gamma(\xi)$ also equal 1, meaning it is also some sort of probability distribution.
+
+Now here's the crucial insight. Because both of $\rho$ and $\gamma$ is a probability distribution. It must have Shannon entropy.
+So, it has information.
+
+# Stating the inequalities from $L^p$ space
+
+As we have discussed in previous article regarding $L^p$ space. It turns out that $p=2$ is the only optimum solution to
+derive some sort of "circle" concept, where the distance and angle have uniform length. In this space, the triangle inequalities
+is a little bit unique. It become the most extremum bound for the inequalities. You can't get any better than that!
+
+Loosely speaking, in our 2D Cartesian coordinate (flat Euclidean geometry, where $L^2$ space is), any right-triangle will have
+natural inequalities, such that the hypothenuse length has to be smaller than the other two lengths combined.
+
+This simple idea is what formed another theorem called [Hausdorff-Young inequality](https://en.wikipedia.org/wiki/Hausdorff–Young_inequality)
+which I will call HY from now on. It is a direct corollary of the Plancherel Theorem.
+
+The full general statement of HY is like this:
+
+Suppose that $p$ (from the $L^p$ space) is in the range (inclusive) between $[1,2]$.
+There will be a corresponding (conjugate) called $q$ with the relation:
+
+$$
+\frac{1}{p}+\frac{1}{q} = 1
+$$
+
+Then the inequality has this form for multidimensional $n$:
+
+$$
+{\displaystyle {\Big (}\int _{\mathbb {R} ^{n}}{\big |}{\phi}(\xi ){\big |}^{q}\,d\xi {\Big )}^{1/q}\leq {\Big (}\int _{\mathbb {R} ^{n}}{\big |}\psi(x){\big |}^{p}\,dx{\Big )}^{1/p}}
+$$
+
+However, for our case, we already knew that $p=2$. Simplifying the notation (hiding the parameter and integral by using the norm notation):
+
+$$
+\begin{align*}
+\|\psi\|_p &= {\Big (}\int _{\mathbb {R} ^{n}}{\big |}\psi(x){\big |}^{p}\,dx{\Big )}^{1/p} \\
+\|\phi\|_q &= {\Big (}\int _{\mathbb {R} ^{n}}{\big |}{\phi}(\xi ){\big |}^{q}\,d\xi {\Big )}^{1/q}
+\end{align*}
+$$
+
+In a simple notation using functions we already defined above:
+
+$$
+\|\phi\|_q \leq \|\psi\|_p
+$$
+
+You might be wondering, since we can **choose any arbitrary function** to represent $\psi(x)$, then even if we flipped the inequalities, it should still be apply the same way.
+So how come this is correct?
+
+The reason why we can flip around the function (it is symmetric after all), is because the Fourier Transform normalization factor
+will ensure that one side is bigger than the other. However in the case of $p=2$, it is the most optimum, causing it to be equality due to Pancherel Theorem.
+
+The important insight from these inequalities is that it is not possible to make both sides as dense as possible. If you make one function dense/small, the inequality
+ensure that the Fourier dual be wider.
+
+In addition to that, [Beckner found an even tighter bound](https://en.wikipedia.org/wiki/Babenko–Beckner_inequality). We can introduce a constant:
+
+$$
+A(p)=\left( \frac{p^{\frac{1}{p}}}{q^{\frac{1}{q}}} \right)^\frac{1}{2}
+$$
+
+So that the inequality becomes:
+
+$$
+\|\phi\|_q \leq A(p)^n \|\psi\|_p
+$$
+
+Although in our case, we can easily set $p=2$ to apply Plancherel Theorem. But we will defer, and do it later.
+We are going to find the entropy first.
+
+# Linking inequalities to entropy
+
+We limit our class of function $\psi$ to have corresponding probability distribution $\rho$ in the $L^2$ space.
+We can calculate its entropy. We will use the general notion of entropy in information theory called the [Rényi entropy](https://en.wikipedia.org/wiki/Rényi_entropy)
+
+You will see why this is a natural choice, just from the form of it.
+
+Rényi entropy $R_\alpha(P)$ for a probability distribution $P(X)$ of random variables $X$ is defined:
+
+$$
+R_\alpha(P)=\frac{1}{1-\alpha}\operatorname{ln}{\left(\|P\|_\alpha^\alpha\right)}
+$$
+
+The above formula means for every state in random variables $X$, the probability $P(x)$ will have **total** norm of $\|P\|_\alpha$
+for the parameter $\alpha$. To remind that again:
+
+$$
+\begin{align*}
+\|P\|_\alpha &= {\Big (} \int P(x)^\alpha \, dx {\Big )}^\frac{1}{\alpha} \\
+\|P\|_\alpha^\alpha &= {\Big (} \int P(x)^\alpha \, dx {\Big )} \\
+\end{align*}
+$$
+
+Very appropriate link to the $L^p$ space HY inequality we used before.
+
+# Some little bit of algebra
+
+Because $|\psi(x)|^2 = \rho(x)$ and Rényi entropy uses $P(x)^\alpha$, we are going to substitute that $p=2\alpha$. So that:
+
+$$
+\begin{align*}
+|\psi(x)|^{2\alpha} &= \rho(x)^\alpha \\
+\|\psi(x)\|_{2\alpha}^{2\alpha} &= {\Big (} \int \rho(x)^\alpha \, dx {\Big )} \\
+R_\alpha(\rho) &= \frac{1}{1-\alpha} \operatorname{ln}{\left(\|\rho\|_\alpha^\alpha\right)} = \frac{1}{1-\alpha} \operatorname{ln}{\left(\|\psi\|_{2\alpha}^{2\alpha}\right)} \\
+\end{align*}
+$$
+
+We do similar thing for $\phi(\xi)$. Meaning, we choose $q=2\beta$. So that we have the following Rényi entropy $R_\beta(\gamma)$
+
+$$
+R_\beta(\gamma) = \frac{1}{1-\beta} \operatorname{ln}{\left(\|\gamma\|_\beta^\beta\right)} = \frac{1}{1-\beta} \operatorname{ln}{\left(\|\phi\|_{2\beta}^{2\beta}\right)}
+$$
+
+We have a symmetric relationship between $\psi$ and $\phi$ as its dual Fourier transform.
+We can apply HY inequality in either direction. Let's start with this:
+
+$$
+\|\phi\|_q \leq A(p)^n \|\psi\|_p
+$$
+
+We are going to modify this inequality so that it becomes entropy. Focus on making $\|\phi\|_q$ becomes $R_\beta(\gamma)$
+
+Substitute $p=2\alpha$ and $q=2\beta$
+
+$$
+\|\phi\|_{2\beta} \leq A(2\alpha)^n \|\psi\|_{2\alpha}
+$$
+
+Raise both sides to the power of $2\beta$
+
+$$
+\|\phi\|_{2\beta}^{2\beta} \leq A(2\alpha)^{2\beta n} \|\psi\|_{2\alpha} ^{2\beta}
+$$
+
+Take the logarithm
+
+$$
+\operatorname{ln}(\|\phi\|_{2\beta}^{2\beta}) \leq 2\beta (n \operatorname{ln}(A(2\alpha)) + \operatorname{ln}( \|\psi\|_{2\alpha}))
+$$
+
+Because $\operatorname{ln}(\|\phi\|_{2\beta}^{2\beta}) = (1-\beta) R_\beta(\gamma)$
+
+$$
+(1-\beta) R_\beta(\gamma) \leq 2\beta (n \operatorname{ln}(A(2\alpha)) + \operatorname{ln}( \|\psi\|_{2\alpha}))
+$$
+
+Now we want to modify $\operatorname{ln}( \|\psi\|_{2\alpha})$ to become $R_\alpha(\rho)$.
+
+Use $\frac{1-\alpha}{2\alpha} R_\alpha(\rho)=\operatorname{ln}( \|\psi\|_{2\alpha})$
+
+$$
+\begin{align*}
+(1-\beta) R_\beta(\gamma) &\leq 2\beta n \operatorname{ln}(A(2\alpha)) + \frac{\beta}{\alpha}\cdot(1-\alpha) R_\alpha(\rho) \\
+\frac{(1-\beta)}{\beta} R_\beta(\gamma) &\leq 2 n \operatorname{ln}(A(2\alpha)) + \frac{(1-\alpha)}{\alpha} R_\alpha(\rho) \\
+\end{align*}
+$$
+
+We have a relation: $\frac{1}{p}+\frac{1}{q} = 1$
+
+Meaning $\frac{1}{\alpha}+\frac{1}{\beta} = 2$
+
+So that:
+
+$$
+\begin{align*}
+\frac{1}{\alpha}+\frac{1}{\beta} &= 2 \\
+\frac{1}{\alpha} - 1 +\frac{1}{\beta} -1 &= 0 \\
+\frac{1-\alpha}{\alpha} + \frac{1-\beta}{\beta} &= 0 \\
+\end{align*}
+$$
+
+Using this relation. We add $\frac{(1-\alpha)}{\alpha} R_\beta(\gamma)$ to the inequality, on both sides
+
+$$
+\begin{align*}
+\frac{(1-\beta)}{\beta} R_\beta(\gamma) + \frac{(1-\alpha)}{\alpha} R_\beta(\gamma) &\leq 2 n \operatorname{ln}(A(2\alpha)) + \frac{(1-\alpha)}{\alpha} R_\alpha(\rho) + \frac{(1-\alpha)}{\alpha} R_\beta(\gamma) \\
+R_\beta(\gamma) (\frac{1-\alpha}{\alpha} + \frac{1-\beta}{\beta}) &\leq 2 n \operatorname{ln}(A(2\alpha)) + \frac{(1-\alpha)}{\alpha} (R_\alpha(\rho) +R_\beta(\gamma)) \\
+0 &\leq 2 n \operatorname{ln}(A(2\alpha)) + \frac{(1-\alpha)}{\alpha} (R_\alpha(\rho) +R_\beta(\gamma)) \\
+\frac{(1-\alpha)}{\alpha} (R_\alpha(\rho) +R_\beta(\gamma)) &\ge - 2 n \operatorname{ln}(A(2\alpha)) \\
+\end{align*}
+$$
+
+To move the term $\frac{(1-\alpha)}{\alpha}$ to right hand side, remember that $p$ is in the range $[1,2]$. Which means $1-\alpha$ is always a positive number.
+So if we multiply both terms by $\frac{\alpha}{(1-\alpha)}$, we got
+
+$$
+\begin{align*}
+R_\alpha(\rho) +R_\beta(\gamma) &\ge n \cdot \frac{2 \alpha}{\alpha-1}\operatorname{ln}(A(2\alpha)) \\
+\end{align*}
+$$
+
+In the right hand side, we got $n$, representing the number of dimension of the space.
+
+We also have $\frac{2 \alpha}{\alpha-1}\operatorname{ln}(A(2\alpha))$ which is a constant that depends on our choice of $\alpha$.
+
+Because we establish that $p=2$, it means $\alpha=1$, so we can't evaluate the right side immediately because it will be divided by $\alpha-1=0$.
+
+# Taking the limit into Shannon Entropy
+
+The constant of the bounds $C(\alpha)= \frac{2 \alpha}{\alpha-1}\operatorname{ln}(A(2\alpha))$ had to be calculated by taking its limit when $\alpha \to 1$.
+When $\alpha\to 1$. Both the entropy $R_\alpha$ and $R_\beta$ conveniently becomes the Shannon entropy.
+
+$$
+\begin{align*}
+\lim_{\alpha\to 1} C(\alpha) &= \lim_{\alpha\to 1}\frac{2 \alpha}{\alpha-1}\operatorname{ln}(A(2\alpha)) \\
+&= \lim_{\alpha\to 1} \frac{2 \alpha \operatorname{ln}(A(2\alpha))}{\alpha -1} \\
+\end{align*}
+$$
+
+We already know above, the value of $\lim_{\alpha\to 1}A(2\alpha)=1$ from HY inequality matched to Plancherel Theorem. This causes the limit to be in the form of $\frac{0}{0}$.
+So let's apply [L'Hôpital's rule](https://en.wikipedia.org/wiki/L'Hôpital's_rule).
+
+But before that, let's expand the expression by substituting $A(2\alpha) = \frac{(2\alpha)^{\frac{1}{4\alpha}}}{(2\beta)^{\frac{1}{4\beta}}}$
+
+$$
+\begin{align*}
+C(\alpha) &= \frac{2 \alpha}{\alpha-1}\operatorname{ln}(A(2\alpha)) \\
+&= \frac{2 \alpha}{\alpha-1}\operatorname{ln}{\Big (}\frac{(2\alpha)^{\frac{1}{4\alpha}}}{(2\beta)^{\frac{1}{4\beta}}}{\Big )} \\
+&= \frac{1}{2}\cdot\frac{\operatorname{ln}(2\alpha)}{\alpha-1} - \frac{1}{2}\cdot\frac{\alpha}{\beta}\cdot\frac{\operatorname{ln}(2\beta)}{\alpha -1}\\
+&= \frac{1}{2}\cdot\frac{\operatorname{ln}(2\alpha)}{\alpha-1} + \frac{1}{2}\cdot\frac{\operatorname{ln}(2\beta)}{\beta-1} \\
+&= \frac{1}{2}\cdot\left[ \frac{\operatorname{ln}(\alpha)}{\alpha-1} + \frac{\operatorname{ln}(\beta)}{\beta-1} \right] + \frac{1}{2}\cdot\operatorname{ln}(2) \left[\frac{1}{\alpha-1}+\frac{1}{\beta-1}\right] \\
+&= \frac{1}{2}\cdot\left[ \frac{\operatorname{ln}(\alpha)}{\alpha-1} + \frac{\operatorname{ln}(\beta)}{\beta-1} \right] + \frac{1}{2}\cdot\operatorname{ln}(2) \left[\frac{1}{\alpha-1}+\frac{1}{\beta-1} -\frac{\alpha}{\alpha-1}-\frac{\beta}{\beta-1}\right] \\
+&= \frac{1}{2}\cdot\left[ \frac{\operatorname{ln}(\alpha)}{\alpha-1} + \frac{\operatorname{ln}(\beta)}{\beta-1} \right] + \frac{1}{2}\cdot\operatorname{ln}(2) \left[-2\right] \\
+&= \frac{1}{2}\cdot\left[ \frac{\operatorname{ln}(\alpha)}{\alpha-1} + \frac{\operatorname{ln}(\beta)}{\beta-1} \right] - \operatorname{ln}(2) \\
+\end{align*}
+$$
+
+We then apply [L'Hôpital's rule](https://en.wikipedia.org/wiki/L'Hôpital's_rule) to both terms that still has variables, because both have indeterminate form of $\frac{0}{0}$.
+
+$$
+\begin{align*}
+\lim_{\alpha\to 1} C(\alpha) &= \lim_{\alpha\to 1 , \beta\to 1} \frac{1}{2}\cdot\left[ \frac{\operatorname{ln}(\alpha)}{\alpha-1} + \frac{\operatorname{ln}(\beta)}{\beta-1} \right] - \operatorname{ln}(2) \\
+&= \frac{1}{2}\cdot\left[\lim_{\alpha\to 1}  \frac{\operatorname{ln}(\alpha)}{\alpha-1} + \lim_{\beta\to 1} \frac{\operatorname{ln}(\beta)}{\beta-1} \right] - \operatorname{ln}(2) \\
+&= \frac{1}{2}\cdot\left[ \lim_{\alpha\to 1} \frac{\frac{1}{\alpha}}{1} +  \lim_{\beta\to 1} \frac{\frac{1}{\beta}}{1} \right] -\operatorname{ln}(2) \\
+&= 1 - \operatorname{ln}(2) = \operatorname{ln}(\frac{e}{2}) \\
+\end{align*}
+$$
+
+# The final form of Entropic Uncertainty Principle
+
+Combining all that, we substitute all the results we have so far:
+
+$$
+\begin{align*}
+\lim_{\alpha\to 1 , \beta\to 1} R_\alpha(\rho) +R_\beta(\gamma) &\ge \lim_{\alpha\to 1} n \cdot \frac{2 \alpha}{\alpha-1}\operatorname{ln}(A(2\alpha)) \\
+H(\rho) + H(\gamma) &\ge n \operatorname{ln}(\frac{e}{2}) \\
+\end{align*}
+$$
+
+This is what we re-derive, to state [Entropic Uncertainty Principle](https://en.wikipedia.org/wiki/Entropic_uncertainty).
+
+This has such a profound connection. **Any function**, that has a corresponding probability distribution in $L^2$ will have information such that it is fundamentally limited entropic uncertainty.
+
+Just from a mathematical observation alone, we can know that any function can't have its information be certain in both its domain and its Fourier dual domain.
+You can only make certain of it in one domain. But you can't make both certain **at the same time**. There is a mathematical limit on how certain you can be, if you want to know both of them.
+The limiting entropy is exactly $\operatorname{ln}\frac{e}{2}$ at the very minimum.
+
+# Testing Entropic Uncertainty Principle
+
+In the previous article, we derived that a normal/Gaussian distribution is the best possible probability distribution
+with least possible amount of information needed to guess it.
+We figure that out using Action principle and Lagrangian method [to derive normal distribution](../2023--07--21--00--deriving-probability-distribution-from-entropy/#normal-distribution)
+
+Normal distribution is also a [distribution that is its own Fourier Transform](../2024--02--11--00--fourier-series-part-3/#a-function-that-is-its-own-fourier-transform)
+
+In conclusion, a Normal distribution is a good candidate to test Uncertainty Principle.
+
+Suppose that we have our function defined as a Gaussian, with $N$ as the normalization parameter:
+
+$$
+\psi(x) = N \exp(-\pi x^2)
+$$
+
+The corresponding Fourier dual has exactly the same expression:
+
+$$
+\phi(\xi) = N \exp(-\pi\xi^2)
+$$
+
+We have the distribution
+
+$$
+\rho(x)=|\psi(x)|^2 = N^2 \exp(-\pi x^2)^2= N^2 \exp(-2\pi x^2)
+$$
+
+Because probability density has to sum up to 1. Then $N=2^{\frac{1}{4}}$ to make it normalized.
+
+And
+
+$$
+\gamma(\xi)=|\phi(\xi)|^2 = N^2 \exp(-\pi \xi^2)^2 = N^2 \exp(-2\pi\xi^2)
+$$
+
+The standard formula for a normal distribution is in the form:
+
+$$
+p(x) = \frac{1}{\sigma \sqrt{2\pi}} \exp(-\frac{1}{2} (\frac{x-\mu}{\sigma})^2)
+$$
+
+By matching the parameter, we know that $\mu_\rho=0$ and $\sigma_\rho=\frac{1}{2\sqrt{\pi}}$.
+
+The corresponding variance for $\gamma$ is also the same $\sigma_\gamma=\frac{1}{2\sqrt{\pi}}$.
+
+Then, the Shannon entropy of the Normal distribution is defined by:
+
+$$
+H(p(x))=\frac{1}{2} \operatorname{ln}(2 \pi e \sigma^2)
+$$
+
+Inserting the value of $\sigma$, we got:
+
+$$
+H(\rho)=H(\gamma)=\frac{1}{2} \operatorname{ln}(2 \pi e \frac{1}{4\pi})=\frac{1}{2} \operatorname{ln}(\frac{e}{2})
+$$
+
+If we substitute it to the uncertainty principle, we got the smallest bound possible correctly:
+
+$$
+\begin{align*}
+H(\rho)+H(\gamma) &\ge n \operatorname{ln}(\frac{e}{2}) \\
+\frac{1}{2} \operatorname{ln}(\frac{e}{2}) + \frac{1}{2} \operatorname{ln}(\frac{e}{2}) &\ge n \operatorname{ln}(\frac{e}{2}) \\
+\operatorname{ln}(\frac{e}{2}) &\ge \operatorname{ln}(\frac{e}{2})
+\end{align*}
+$$
+
+One remarkable thing from this Entropic Uncertainty Principle is that how you can intuitively say that for **any** Gaussian/Normal probability
+distribution. The total entropy between the function and its dual Fourier transform, has to be always $\operatorname{ln}(\frac{e}{2})$.
+
+Because, by the Maximum Entropy principle, Gaussian/Normal distribution is the **best** distribution you can guess with very limited information.
+It's the **highest** entropy you can get, but it's also the **smallest** total entropy bound possible, because of Entropic Uncertainty Principle.
+Combining both principle, the inequality has to become an equality for every Gaussian, just by definition alone.
+
+It's very easy to derive it mathematically too.
+
+Let's say that that our probability distribution is a Normal distribution in the form of
+
+$$
+\rho(x)=N^2 exp(-2\alpha x^2)
+$$
+
+Such that
+
+$$
+\psi(x)=N \exp(-\alpha x^2)
+$$
+
+This caused
+
+$$
+\phi(x)= N \sqrt{\frac{\pi}{\alpha}} \exp(-\frac{\pi^2}{\alpha} \xi^2)
+$$
+
+And
+
+$$
+\gamma(x) = N^2 \frac{\pi}{\alpha}\exp(-\frac{2\pi^2}{\alpha} \xi^2)
+$$
+
+The variance:
+
+$$
+\sigma_x^2 =\frac{1}{4\alpha}
+$$
+
+$$
+\sigma_\xi^2 = \frac{\alpha}{4\pi^2}
+$$
+
+So whatever the original function is, if it is a Gaussian, then the product of the variances is:
+
+$$
+\sigma_x^2 \sigma_\xi^2 = \frac{1}{4\alpha} \cdot \frac{\alpha}{4\pi^2} = \frac{1}{16\pi^2}
+$$
+
+The $\alpha$ parameter that controls how dense the Gaussian is, just cancel out each other.
+
+We can then uses above product to calculate the entropy.
+
+$$
+\begin{align*}
+H(\rho)+H(\gamma) &= \frac{1}{2} \operatorname{ln}(2 \pi e \sigma_x^2) + \frac{1}{2} \operatorname{ln}(2 \pi e \sigma_\xi^2) \\
+&= \frac{1}{2} \operatorname{ln}(4 \pi^2 e^2 \sigma_x^2 \sigma_\xi^2) \\
+&= \frac{1}{2} \operatorname{ln}(4 \pi^2 e^2 \frac{1}{16\pi^2}) \\
+&= \frac{1}{2} \operatorname{ln}(\frac{e^2}{4}) \\
+&= \operatorname{ln}(\frac{e}{2}) \\
+\end{align*}
+$$
+
+So whatever the original parameter of $N$ and $\alpha$, the entropy will be always $\operatorname{ln}(\frac{e}{2})$ for single dimensional Gaussian/Normal distribution.
+
+In essence, this is the best possible entropy or information we can get out of a function and its Fourier dual. You can't get any lower than this.
