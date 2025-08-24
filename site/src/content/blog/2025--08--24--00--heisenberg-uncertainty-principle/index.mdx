@@ -1,0 +1,185 @@
+---
+layout_name: blog-post
+title: Heisenberg Uncertainty Principle
+description: Deriving Heisenberg Uncertainty Principle from Entropy
+date: 2025-08-24T00:00:00.00Z
+category:
+  name: blog
+---
+
+This is it.
+
+All of my previous articles about Fourier Transform has been made, bit by bit, step by step, to build logical foundation for this
+last article of the Fourier Series posts.
+
+Historically, Heisenberg's famous Uncertainty Principle (HUP) were deducted from a statistical facts/observation from Quantum Mechanics.
+In the beginning, it is such a bizarre concept, and people wondering **why it was there at the hearts of Quantum Mechanics**.
+
+In some early understanding of HUP, it was thought that QM uses wave function to represent quantum state evolution,
+then the HUP is the next logical consequences. Because any wave equation will inherently exhibit HUP inequality.
+From the field of waves and electromagnetic, it was already understood that you can't locally sample frequency at the same time with arbitrary accuracy.
+Fourier Transform/Fourier Analysis forces a trade-off. If you try to measure precise frequency, you need to sample with a very long time window.
+The converse is also true. If you use a short time window, then the frequency will be blurry or less precise.
+
+But then, an alternative explanation exists from Information theory.
+
+# We can measure entropy from probability distribution
+
+The act of "observing" can be interpreted as gaining information. If you can gain information, then you can measure a change in entropy.
+
+Naturally, any statistical observation will correspond to evolution of probability distribution, and thus an evolution of entropy.
+
+For classical mechanics, an "observable" is almost always be measured deterministically. Meaning its "expectation" value is very precise. It has a very low variance.
+Two common observables related with classical mechanic theory (like Newton's law), are **position** and **momentum**.
+
+In the classical observation, both of measurements can have significantly low entropy, because it can be very precise.
+But why in Quantum Mechanics it is not the case?
+
+Before answering that, let us take a look at how probability distribution works.
+
+Essentially, probability distribution were derived after collecting observation of events. The state events will slowly build up a distribution.
+With more and more data, we can guess if the data collection approaches a certain "kind" of distribution.
+To determine if a distribution is the same "kind", we can generate a "characteristic function". If the characteristic function is of the same kind,
+then it has the same kind of distribution.
+
+The key catch is, the way to compute characteristic function
+(even though the original idea came from a completely different motivation and methods), is exactly the same with how you compute a Fourier Transform.
+So both "waves" and "distribution" can be thought of from the same fundamental ideas.
+
+This is what becomes the crucial point in Quantum Mechanics. In QM, we can only "observe" from the measurement result.
+For big objects, you measure it indirectly. For example, you measure "air pressure" not by calculating each individual molecule, but from the volume change exerted by the pressure.
+Similarly, you determine object position from the light signal originated from the object.
+
+In QM, however, when you want to measure a photon, you need to capture the photon. There is just one photon per one measurement outcome.
+If you measure it by "locating" where the photon is captured, you measure its position.
+If you measure it by "colliding" it with a detector or change its trajectory, you measure its momentum.
+But you have to choose. Because there is only one photon to measure at any given moment.
+The statistical distribution is what you get if you repeat the measurements for some numbers of photons.
+
+But just as any statistical distribution, there will be corresponding entropy.
+
+# Position and Momentum were Fourier Dual
+
+The next key insight is that in QM, position is a Fourier dual of momentum. This means they are the same thing, just expressed in a different bases.
+
+Supposes that you have position wave function $\psi(x)$, then the probability of observing the position is expressed as
+$\rho(x)=|\psi(x)|^2$.
+
+The corresponding momentum is then $\phi(\xi)$ which were taken by Fourier transforming $\psi(x)$. The probability of observing
+the momentum is then $\gamma(\xi)= |\phi(\xi)|^2$.
+
+# Applying Entropic Uncertainty Principle
+
+Because both position and momentum is just two representation of one single function, this is the same prerequisite with
+how we define Entropic Uncertainty Principle. [Which I already explained in previous article](../2025--08--23--00--entropic-uncertainty-principle/).
+
+$$
+H(\rho)+H(\gamma) \ge \operatorname{ln}(\frac{e}{2})
+$$
+
+We have a little bit of problem, though. In the derivation from the previous article, we use Hausdorff-Young inequality.
+HY inequality, by definition uses standard unitary Fourier Transform convention, so that Plancherel Theorem can be applied easily.
+
+However, in the physicist's convention, the Fourier Transform is usually non-unitary. This is because they already uses existing unit to work with.
+But, no worries we can resolve it by changing the variable.
+
+Recall that we define $\gamma(\xi)=|\phi(\xi)|^2$ and $\phi(\xi)$ a Fourier transform of $\psi(x)$.
+
+That means $\xi$ is the unitary Fourier dual of $x$, not exactly the momentum in Physics. Rather, $\xi$ is usually called the **spatial frequency**.
+Or in another familiar term, it is the reciprocal of **wave length**, usually denoted by $\lambda$.
+
+Momentum itself can be related by wavelength like this $p=\frac{h}{\lambda}$, where $h$ is the Planck's constant.
+Which can then be re-substituted as $p=h\xi$. This comes from de Broglie proposals.
+
+Because we want to express the relation in terms of statistical distribution of $p$, the momentum, then we need
+to transform $\gamma(\xi)$ into $\gamma(p)$. We use the fact that the probability distribution should both be summed up to 1.
+Then the distribution were just rescaled by some factors.
+
+$$
+\begin{align*}
+\int \gamma(\xi) \, d\xi&=\int \gamma(p) \, dp = 1 \\
+\gamma(\xi) &= \gamma(p) \, \frac{dp}{d\xi} = \gamma(p) \, h \\
+\end{align*}
+$$
+
+We now calculate the entropy of the momentum.
+
+$$
+\begin{align*}
+H_\xi(\gamma) &= - \int \gamma(\xi) \operatorname{ln}(\gamma(\xi)) d\xi \\
+&= - \int h \gamma(p) \operatorname{ln}(h \gamma(p)) \frac{dp}{h} \\
+&= - \int \gamma(p) dp \operatorname{ln}(h) - \int \gamma(p) \operatorname{ln}(\gamma(p)) dp \\
+&= - \operatorname{ln}(h) + H_p(\gamma) \\
+\end{align*}
+$$
+
+Substituting back to the to the Entropic Uncertainty inequality:
+
+$$
+\begin{align*}
+H_x(\rho)+H_\xi(\gamma) &\ge \operatorname{ln}(\frac{e}{2}) \\
+H_x(\rho)+H_p(\gamma)  - \operatorname{ln}(h)  &\ge \operatorname{ln}(\frac{e}{2}) \\
+H_x(\rho)+H_p(\gamma) &\ge \operatorname{ln}(\frac{e}{2}) + \operatorname{ln}(h) \\
+&\ge \operatorname{ln}(\frac{eh}{2}) \\
+\end{align*}
+$$
+
+# Variance of position and momentum
+
+The original Heisenberg Uncertainty Principle, actually express it using a multiplication for variance between position and momentum.
+But our current Uncertainty inequality uses addition. How come it will change into a product?
+
+First. Let's define what a variance is. Given repeated observation of position and momentum, the variance is that how far apart each outcomes ends up in the distribution.
+
+If we have no other information, by Maximum Entropy Principle, the best possible distribution to match this is just the Normal distribution (again).
+
+Suppose the Normal distribution for each position and momentum distribution has corresponding variance $\sigma_x$ and $\sigma_p$.
+
+The entropy of Normal distribution is completely determined by its variance.
+
+$$
+H_x = \frac{1}{2} \operatorname{ln}(2\pi e \sigma_x^2)
+$$
+
+# Combining all together
+
+If the position/momentum uses **any** distribution other than the Normal distribution, its entropy can't be higher than the Normal distribution.
+
+So we have
+
+$$
+\begin{align*}
+H_x &\le\frac{1}{2} \operatorname{ln}(2\pi e \sigma_x^2) \\
+H_p &\le\frac{1}{2} \operatorname{ln}(2\pi e \sigma_p^2) \\
+\end{align*}
+$$
+
+Adding it together to get the upper bound:
+
+$$
+\begin{align*}
+H_x(\rho) + H_p(\gamma) &\le \frac{1}{2} \operatorname{ln}(2\pi e \sigma_x^2) + \frac{1}{2} \operatorname{ln}(2\pi e \sigma_p^2) \\
+&\le \frac{1}{2}  \operatorname{ln}(2^2 \pi^2 e^2 \sigma_x^2 \sigma_p^2) \\
+&\le \operatorname{ln}(2\pi e \sigma_x \sigma_p) \\
+\end{align*}
+$$
+
+Then combine with the lower bound from Entropic Uncertainty Principle
+
+$$
+\begin{align*}
+\operatorname{ln}(2\pi e \sigma_x \sigma_p) &\ge H_x(\rho) + H_p(\gamma) \ge \operatorname{ln}(\frac{eh}{2}) \\
+\operatorname{ln}(2\pi e \sigma_x \sigma_p) \ge \operatorname{ln}(\frac{eh}{2}) \\
+\sigma_x \sigma_p \ge \frac{h}{4\pi} \\
+\end{align*}
+$$
+
+So that's the Heisenberg Uncertainty Principle. As we can see, it turns out that the product between the variance came
+from the logarithmic nature of the expression, that changes addition into multiplication.
+
+Other alternative famous notation is to use $\Delta$ to express the standard deviation   and uses **reduced Planck's constant** (h-bar)
+$\hbar=\frac{h}{2\pi}$. The expression becomes:
+
+$$
+\Delta{x} \cdot \Delta p \ge \frac{\hbar}{2}
+$$
