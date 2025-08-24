@@ -7,6 +7,7 @@ import { remarkReadingTime } from './src/utils/readTime.ts'
 import { RemarkMermaidClient } from './src/plugins/mermaid'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
+import { remarkMathHeadings } from './src/plugins/remark-math-headings.js'
 
 // https://astro.build/config
 export default defineConfig({
@@ -15,8 +16,8 @@ export default defineConfig({
 		assetsInclude: ['**/*.fit']
 	},
 	markdown: {
-		remarkPlugins: [remarkReadingTime, RemarkMermaidClient, remarkMath],
-		rehypePlugins: [rehypeKatex],
+		remarkPlugins: [remarkReadingTime, RemarkMermaidClient, remarkMath, remarkMathHeadings],
+		rehypePlugins: [[rehypeKatex, { strict: false, throwOnError: false }]],
 		drafts: true,
 		shikiConfig: {
 			theme: 'material-theme-palenight',
@@ -40,6 +41,8 @@ export default defineConfig({
 		// }),
 		mdx({
 			syntaxHighlight: 'shiki',
+			remarkPlugins: [remarkReadingTime, RemarkMermaidClient, remarkMath, remarkMathHeadings],
+			rehypePlugins: [[rehypeKatex, { strict: false, throwOnError: false }]],
 			shikiConfig: {
 				themes: {
 					light: 'material-theme-lighter',

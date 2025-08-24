@@ -8,11 +8,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1729153885,
-        "narHash": "sha256-XA/rCv2APc7bpQNdY08PjW/lWfFRyXWlejIf3xUB6dw=",
+        "lastModified": 1756057764,
+        "narHash": "sha256-JmzBALpb8pJ7QAjZkh784dFwTKQcQDSQFxsiwEsiEEA=",
         "owner": "lucernae",
         "repo": "astro-blog-template",
-        "rev": "3f0ca0989293cb8b6aa6e59cd0d67a9cb1f58d9f",
+        "rev": "dcb012f701c460be39746fa712ba45f6a5da15fd",
         "type": "github"
       },
       "original": {

@@ -21,7 +21,7 @@ const processedHeadings = await Promise.all(
 	})
 )
 
-const toc = buildToc(headings)
+const toc = buildToc(processedHeadings)
 function buildToc(headings: TableOfContent[]) {
 	let toc: TableOfContent[] = []
 	let parentHeadings = new Map()
