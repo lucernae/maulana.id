@@ -1,0 +1,626 @@
+---
+layout_name: blog-post
+title: Vector and basis transformations
+description: Introduction to vector in mathematics, physics, biology, and computer science
+date: 2025-09-05T00:00:00.00Z
+category:
+  name: blog
+---
+
+A Vector, is an overly overloaded terms.
+
+In mathematics, one can jokingly define that `A vector is an element in the Vector Space`.
+
+In physics, I remembered vector as defined by `A quantity that has direction and magnitude`.
+
+In biology, a "vector" is used to describe `Something that carry things from one point to another`.
+
+In computer science, a vector generally means an ordered collection of numbers.
+
+We shall go with the most abstract definitions, the mathematical formalism, to understand what a vector really is. From there,
+we could apply the same thinking and see that it fits how each domain describes vectors for their use case.
+
+# Algebraically defining Vector
+
+Getting to the heart of this, for me, is difficult. Not only it uses English term (I'm non native), it also uses the term
+that is far from its everyday use and meaning.
+
+The following paragraphs were basically my own opinion to try to understand this. So it's not a formal Mathematical description.
+
+We first define a "Vector Space". Meaning, the space or room, where Vectors can live.
+
+In this space, obviously, it must contains the vectors, which is a set of element of vector.
+
+The space then must have **two operations**, and exactly two needed. A vector addition and scalar multiplication.
+
+The scalar multiplication needs one other set, which is called a **field of scalars**. Let's stop first to describe these.
+
+A **Field** in mathematics, refers to a kind of algebraic structure that also has its rules. Between **Field**, **Rings**, and **Groups**,
+Field has more rules. So basically if something is called a Field, then it is definitely satisfy Ring and Group rules as well.
+
+If something is called a Field, then it will have:
+
+1. Addition and multiplication operation that are commutative
+2. Has multiplicative inverse, for non-zero elements
+3. It's multiplication has associative and distributive rules
+
+Now back to the **Field of scalars**. It means: `A Field where its element can be used to scale the vectors`.
+
+So in essence, all above rules that defines Vector Space, will define what are the things that can be treated as Vectors.
+In other words, if something behaves like a vectors and obey vector rules, then it must be a vector.
+
+# Linear Algebra
+
+Linearity historically refers to a "Line". But it evolves into a much more broader subject.
+
+A line is usually described as something like this $y=m x + c$. However, over time, mathematician recognize that both
+$x$ and $y$ can be replaced with any other objects, but the properties surrounding linear equation can still be applied.
+
+Additivity and Distributivity also resemblance linear form. For example if $y$ and $x$ is a vector space, or function,
+the same form can still be used.
+
+Traditionally mathematician uses linear algebra using matrix notation. So, for example, a vector can be written as column or rows.
+Then the operation such as addition and multiplication follow the same notational convention. An example, a row vector
+can't be added with a column vector, because they are a different type of vectors. But a row vector can be added with another
+row vector in the same space.
+
+As a concrete example, imagine that a "Vector" represent an entity or data. We can then assume that however we want to represent,
+or view, or describe it, the Vector itself should not change. But it's really tricky to call something changeable and unchangeable.
+So we usually called it "invariant", meaning that the "meaning" itself doesn't change.
+
+So even though a Vector can be seen as rows or columnar representation, it must not change the real meaning of Vector we are trying to represent.
+
+Let's say, in the vector space, we have something called a "basis". A basis is the independent unit that can span the vector in the space.
+Let's say we have two basis in this vector space $e_1$ and $e_2$. You can make any vector by scaling these basis with a linear combination.
+So a vector is basically a linear formula like this:
+
+$\mathbf{v} = s_1\mathbf{e_1} + s_2 \mathbf{e_2}$
+
+Now here's why it is caled a "scalars", because it is used to scale the basis vectors. This means $s_1$ and $s_2$ is the field scalar.
+This scalars is what we called: "vector components". So essentially a vector is a linear combination between vector components and basis vectors.
+
+"Oh hey, bro, this is confusing. You define a "vector", but the definition also said vector in it, like
+vector components and basis vectors. This doesn't make any sense."
+
+Well, true. That's what I thought at first. So we must steel ourselves and understand the core concept. Even though we called it "vector components",
+it is not a vector. One should say it as "vector's components". But I very often see it called vector components, because someone would argue
+that a "vector" is its own terms. That's why "vector components" becomes a technical term in its own right. Just like
+how we are supposed to say "car's wheel", but we ended up saying car wheel as something that is a wheel of a car, and not a car that has form of a wheel.
+
+Now repeat after me! **Vector components is not a vector**!
+
+What about basis vector? Is it a vector? Yes it is, because I write it bold in the equation above, just like a vector.
+
+Actually, the real reason why basis vector is a vector is because it's an independent unit of vector in that space. So it is still a vector
+because it satisfy Vector space rules/axioms. You can even think that a single basis is just a linear combination of all basis with the other basis scaled with 0.
+
+$\mathbf{e_1} = 1 \cdot \mathbf{e_1} + 0 \cdot \mathbf{e_2}$
+
+Now repeat after me! **Basis vector is a vector**!
+
+# Basis transformation
+
+Now that you understand that a vector is essentially a linear combination of the basis vector. The natural thing to think of
+next, is that: **What if the basis changes**?
+
+As we have said previously, this Vector must be invariant and represent the same thing, even if its basis or components changed.
+
+So why does a basis can change?
+
+Naturally, human tend to think about it geometrically. So if the basis vector represent coordinate axis.
+Then if the axis or measuring stick (basis vectors) changes, the measurement number (vector components) itself will change.
+But how do we write it in a consistent way/conventional?
+
+In standard convention, we wrote vectors as columns. We will see why later.
+So if we have basis vector $e_1$ and $e_2$, we will write it as:
+
+$$
+\begin{align*}
+\mathbf{e_1} = \begin{bmatrix} 1 \\ 0 \end{bmatrix} \\
+\mathbf{e_2} = \begin{bmatrix} 0 \\ 1 \end{bmatrix} \\
+\end{align*}
+$$
+
+The reason why we uses column, is because later on we could use matrix multiplication to represent the vector.
+So usually this is called column vector notation. But remember that it is indeed written inside a column, but **the number inside
+the column is not vector**! I know it is confusing. I wish we have better language. But for now think of it as "column representation of a vector", which becomes shortened as "column vector".
+
+If we use this notation, we can rewrite the previous linear combination into a matrix form (which usually has concrete number inside).
+Notice that we can also write the vector components as column.
+
+$$
+\begin{align*}
+\mathbf{v} &=  s_1\mathbf{e_1} + s_2 \mathbf{e_2}\\
+&= \begin{bmatrix} \mathbf{e_1} & \mathbf{e_2} \end{bmatrix} \begin{bmatrix} s_1 \\ s_2 \end{bmatrix} \\
+&= \begin{bmatrix} \begin{bmatrix} 1 \\ 0 \end{bmatrix} & \begin{bmatrix} 0 \\ 1 \end{bmatrix} \end{bmatrix} \begin{bmatrix} s_1 \\ s_2 \end{bmatrix} \\
+&= \begin{bmatrix} 1 & 0 \\ 0 & 1\end{bmatrix} \begin{bmatrix} s_1 \\ s_2 \end{bmatrix} \\
+\end{align*}
+$$
+
+From the derivation above, basically line 1 to line 2 is possible due to matrix multiplication definition. So we have to put the column vector of the vector components in the right side, not left of the basis vector.
+The basis vector itself contains vector components, right? So each basis is a column vector. That's why if it is expanded, the entire rows of basis vector can be written as 2 by 2 matrix.
+
+Now usually the basis vector matrix here will depend on the coordinate the vector currently uses. So sometimes, the matrix itself is omitted and shortened as just $\mathbf{e}$ subscript.
+You can write it like this:
+
+$$
+\begin{align*}
+\mathbf{v} &= \begin{bmatrix} s_1 \\ s_2 \end{bmatrix}_{\mathbf{e}}
+\end{align*}
+$$
+
+But remember that the vector components itself don't mean a thing without the basis. If you don't specify a basis, just writing the components
+doesn't necessarily means a "vector".
+And this is why the scalar number is called "vector components", because it is the component that makes up the vector in the corresponding basis.
+
+In physics, usually these notation were abused, which is why students forget that what they write as columns were just the component, not the vector.
+Largely because in physics, it is assumed that the basis is the standard unit in cartesian coordinates, so you only need to write the components.
+
+When we change the basis, the component will change as well, to counteract the basis so that the vector itself remains invariant.
+
+Let's apply a simple transformation. What if we scale each basis vectors by two. So there is a linear transformation functions that
+operates on each basis $\mathbf{e}$ into its corresponding transformed basis $\mathbf{e'}$.
+
+Speaking about it in a functional way, we can write it like this:
+
+$$
+\begin{align*}
+\mathbf{e_1'} = f_1(\mathbf{e_1}, \mathbf{e_2}) \\
+\mathbf{e_2'} = f_2(\mathbf{e_1}, \mathbf{e_2})
+\end{align*}
+$$
+
+Let's do it one by one, but in a language of matrix. For each basis, the basis itself is written as column, and it must return another column (because the transformed basis has to be a vector).
+So it means we should find corresponding matrix that can represent $f_i(\mathbf{e_1}, \mathbf{e_2})$. Since the result will be a column with two elements, the matrix itself has to be 2 by 2.
+
+We can use simple algebra, but to make it quick, if we want the new basis to be twice as big as the original basis, then the matrix has to be a scalar of 2. Let's say this matrix is $F$.
+
+$$
+\begin{align*}
+\mathbf{F} &= 2 \cdot \mathbf{I} \\
+&= 2 \begin{bmatrix} 1 & 0 \\ 0 & 1\end{bmatrix} \\
+&= \begin{bmatrix} 2 & 0 \\ 0 & 2\end{bmatrix}
+\end{align*}
+$$
+
+Then we define our operation as
+
+$$
+\begin{align*}
+\begin{bmatrix}\mathbf{e_1'} & \mathbf{e_2'} \end{bmatrix} &= \begin{bmatrix}\mathbf{e_1} & \mathbf{e_2} \end{bmatrix} \cdot \mathbf{F}\\
+\end{align*}
+$$
+
+You might be wondering why we put the matrix $\mathbf{F}$ in the right side, instead of left side.
+This is mainly because matrix multiplication forces us to put $\mathbf{F}$ in the right side.
+If we put it in the left side, then the multiplication failed/undefined.
+
+To summarize, if the element of $\mathbf{F}$ is $f_{ij}$ where $i$ is a row and $j$ is a column.
+Then:
+
+$$
+\begin{align*}
+\mathbf{e_1'} &= f_1(\mathbf{e_1}, \mathbf{e_2}) = f_{11} \mathbf{e_1} + f_{21} \mathbf{e_2} = 2 \mathbf{e_1} + 0 \\
+\mathbf{e_2'} &= f_2(\mathbf{e_1}, \mathbf{e_2}) = f_{12} \mathbf{e_1} + f_{22} \mathbf{e_2} = 0 + 2 \mathbf{e_2} \\
+\end{align*}
+$$
+
+Anyway we will have both the new prime basis $\mathbf{e'}$ from doing a "forward" transformation using $\mathbf{F}$.
+
+Intuitively, in order to make the vector invariant. The vector components must also transform, but in an inverted way.
+Basically if the measuring stick (the basis) is twice as long, then the component being measured will be half as long in the new measurement stick.
+
+Concretely with number, $v$ is now represented in the prime basis:
+
+$$
+\mathbf{v} = \frac{s_1}{2} \mathbf{e_1'} + \frac{s_2}{2} \mathbf{e_2'}
+$$
+
+Notice that we can also "mark" the scalars/vector components as "primed". Which means:
+
+$$
+\begin{align*}
+s_1' = \frac{s_1}{2} \\
+s_2' = \frac{s_2}{2} \\
+\end{align*}
+$$
+
+so that we can write:
+
+$$
+\mathbf{v} = s_1' \mathbf{e_1'} + s_2' \mathbf{e_2'}
+$$
+
+Now we have a neat rule. If the basis were transformed using forward transformation $F$, it means the vector component must be transformed **"contravariant"** to match with the inverse transformation $F^{-1}$.
+For simplicity, let's just say this is the backward transform $B=F^{-1}$.
+All this, is to make the vector itself **"invariant"**.
+
+# Vector components transformation
+
+If we use the basis transformation as the building block. How do we ensure that vector components will always have the contravariant transformation?
+
+One way to proof it is using the notation itself to derive the same conclusion.
+
+In the matrix operation view, the vector is written as a combination of a column matrix $S$ to represent the vector components
+and a 2 by 2 matrix $E$ to represent the basis. In here, the order is important, because we want to produce vector V in matrix form, where it is a column matrix $V$.
+So the ordering has to be like this:
+
+$$
+\mathbf{V} = \mathbf{E} \mathbf{S} = \mathbf{E'} \mathbf{S'}
+$$
+
+Now let's expand the primed matrix, while carefully grouping it. This is because order of multiplication in matrix matters.
+
+$$
+\begin{align*}
+\mathbf{V} &= (\mathbf{E}\mathbf{F})\mathbf{S'} \\
+&= \mathbf{E}(\mathbf{F}\mathbf{S'}) \\
+&= \mathbf{E}\mathbf{S} \\
+\end{align*}
+$$
+
+The above definition only possible if:
+
+$$
+\begin{align*}
+\mathbf{F}\mathbf{S'} &=  \mathbf{S} \\
+\mathbf{F^{-1}}\mathbf{F}\mathbf{S'} &=  \mathbf{F^{-1}}\mathbf{S} \\
+(\mathbf{F^{-1}}\mathbf{F})\mathbf{S'} &=  \mathbf{B}\mathbf{S} \\
+\mathbf{I}\mathbf{S'} &=  \mathbf{B}\mathbf{S} \\
+\mathbf{S'} &=  \mathbf{B}\mathbf{S} \\
+\end{align*}
+$$
+
+So this is the only way it can be true. Vector components transform in the contravariant way from the basis transformation.
+
+# Understanding vector transformation using a summation convention
+
+Originally, linear algebra can be written using a summation convention, to represent it in the "number algebra" form.
+
+Given a vector $\mathbf{v}$, we write it as such:
+
+$$
+\mathbf{v} = \sum_i s_i \mathbf{e_i}
+$$
+
+As you can see, in the summation form, there is only one index.
+
+When we do transformation in a linear combination way, then we introduce another index $j$. So then we can build a combination
+between linear map of $i$ and $j$.
+
+So the new primed basis $\mathbf{e'}$ can be written:
+
+$$
+\mathbf{e_j'} = \sum_i \mathbf{e_i} f_{ij}
+$$
+
+Again, we try to maintain the same convention with the matrix view of $\mathbf{F}$. Since $j$ denotes a column. Then we have to use $j$
+as the output index, because it will place the new basis in the $j$ column when we write $E' = \begin{bmatrix} \mathbf{e_1'} & \mathbf{e_2'} \end{bmatrix}$.
+
+Similarly, from the vector components matrix notation of $\mathbf{B}$. We can write:
+
+$$
+s_i' = \sum_j b_{ij} s_j
+$$
+
+This is because $i$ denotes the row of $s'= \begin{bmatrix} s_1 \\ s_2 \end{bmatrix}$.
+
+We now introduce our horrendous notation of summation, that will make you realize why the matrix form is more pleasing in the eye.
+
+$$
+\begin{align*}
+\mathbf{v} = \sum_i s_i \mathbf{e_i} &= \sum_i s_i' \mathbf{e_i'} \\
+&= \sum_i \left(\sum_j b_{ij} s_j \right) \mathbf{e_i'} \\
+&= \sum_i \left(\sum_j b_{ij} s_j \right) \left( \sum_j \mathbf{e_j} f_{ji} \right) \\
+\end{align*}
+$$
+
+This is super confusing to proof, so let's do a step back and find another way.
+
+Notice that the summation convention is symmetric if we flip up the prime and non-prime components.
+For example, for the vector components, we can represent old components from the new components (the other way around from what we defined earlier)
+
+$$
+s_i = \sum_j f_{ij} s_j'
+$$
+
+Proceeding with the substitution for $s_j'$ but we changed the index $i$ into $k$ to avoid confusion:
+
+$$
+s_i = \sum_j f_{ij} \left( \sum_k b_{jk} s_k \right)
+$$
+
+By multiplication rule, the sum can be expanded and grouped again into a double sum like this:
+
+$$
+s_i = \sum_j  \left( \sum_k  f_{ij}  b_{jk} s_k \right)
+$$
+
+Now here's the interesting part. In order for left and right side to be the same, then the term $f_{ij}  b_{jk} s_k$
+has to be zero when $k \neq i$ and $f_{ij}  b_{jk} s_k = s_i$ when $i=k$. In other words $f_{ij} b_{ji} = 1$
+
+To be more explicit, if we rearrange the order of the sum (possible if the index is finite):
+
+$$
+s_i = \sum_k  \left( \sum_j  f_{ij}  b_{jk}\right) s_k
+$$
+
+Then the term in the middle has to be the identity matrix, in order to match $s_i$ with $s_k$, it has to be 0 when $k \neq i$.
+In the linear algebra like this, it is usually represented as
+[Kronecker Delta](https://en.wikipedia.org/wiki/Kronecker_delta).
+
+As a short info. A Kronecker delta $\delta_{ij} = 1$ when $i=j$ and zero otherwise.
+
+So, we can say:
+
+$$
+\sum_j  f_{ij}  b_{jk} = \delta_{ik}
+$$
+
+Because multiplication is commutative here, the following is also true. The equation is symmetric:
+
+$$
+\sum_j  b_{ij}  f_{jk} = \delta_{ik}
+$$
+
+Solving down, we have:
+
+$$
+s_i = \sum_k \delta_{ik} s_k
+$$
+
+Now we can solve the whole mess above, start by replacing index $j$ from the basis transformation into $k$, because it is independent.
+
+$$
+\begin{align*}
+\sum_i s_i \mathbf{e_i} &= \sum_i \left(\sum_j b_{ij} s_j \right) \left( \sum_j \mathbf{e_j} f_{ji} \right) \\
+&= \sum_i \left( \sum_j b_{ij} s_j \right) \left( \sum_k \mathbf{e_k} f_{ki} \right) \\
+&= \sum_i \left( \sum_j \left( \sum_k b_{ij} s_j \mathbf{e_k} f_{ki} \right) \right)\\
+&= \sum_i \left( \sum_j \left( \sum_k f_{ki} b_{ij} s_j \mathbf{e_k} \right) \right) \\
+&= \sum_j \left( \sum_k \left( \sum_i f_{ki} b_{ij} s_j \mathbf{e_k} \right)  \right) \\
+&= \sum_j \left( \sum_k \left( \delta_{kj} s_j \mathbf{e_k} \right) \right)\\
+\end{align*}
+$$
+
+For the last part, since $\delta_{kj}$ is zero everywhere, unless $k=j$, then it must be that $k=j=i$.
+Causing the summation to collapse into:
+
+$$
+\begin{align*}
+\sum_i s_i \mathbf{e_i} &= \sum_j \left( \sum_k \left( \delta_{kj} s_j \mathbf{e_k} \right) \right)\\
+&= \sum_j s_j \left( \sum_k \left( \delta_{kj} \mathbf{e_k} \right) \right)\\
+&= \sum_j s_j \mathbf{e_j} \\
+\end{align*}
+$$
+
+In the end, the left and right side is the same. It just uses different index.
+
+# Getting intuitive ideas of summation in vector transformation using programming language
+
+The jump between Matrix simplicity into Summation is often a huge leap of notation.
+
+It is hard to digest whether moving summation symbols is ok or not. It's also not intuitive to figure out why Kronecker delta
+appears here.
+
+To aid this, we can think by borrowing the perspective of programming language.
+
+If we use functional language, it will just be the same as how we describe it using matrix.
+
+So we will use imperative language. To be precise, using a for loop. After all, a summation inherently uses for loop.
+
+First, we decide about the data structure needed to contain variables $s_i$ and $\mathbf{e_i}$.
+
+Since vector components in this case is one dimensional, we can just use an array/list for $s_i$.
+
+For the basis vector, we have to use two dimensional array. So we decided that given the basis vector represented as matrix:
+
+$$
+\begin{bmatrix}
+e_{11} & e_{12} \\
+e_{21} & e_{22} \\
+\end{bmatrix}
+$$
+
+It will be represented as an array like this: `[[e_11, e_21], [e_12, e_22]]`, in other words, each element is a column vector.
+
+The transformation matrix will have the data structure similar like above matrix `[[f_11, f_21], [f_12, f_22]]`.
+
+Let's try to unpack the summation formula first.
+
+To compute the new basis, we apply matrix formula $EF$.
+The corresponding summation (just expand the matrix multiplication);
+
+$$
+E' =
+\begin{bmatrix}
+e_{11} f_{11} + e_{12} f_{21} & e_{11} f_{12} + e_{12} f_{22} \\
+e_{21} f_{11} + e_{22} f_{21} & e_{21} f_{12} + e_{22} f_{22} \\
+\end{bmatrix}
+$$
+
+This corresponds to the following summation:
+
+$$
+e_{ij} = \sum_k e_{ik} f_{kj}
+$$
+
+So basis transformation will involve 3 for loops, because it has 3 indices.
+Note that in the following snippet, an element `A[j][i]` corresponds to the element of the matrix with row i and column j,
+due to how an array is structured above.
+
+```javascript
+for (let i = 0; i < dimension; i++) {
+  for (let j = 0; j < dimension; j++) {
+    for (let k = 0; k < dimension; k++) {
+      E_prime[j][i] += E[k][i] * F[j][k]
+    }
+  }
+}
+```
+
+The above instruction is a simple nested for loop. Notice that the number of loops is not the same with the number of sums.
+We only have one sum here, but we have 3 loops, because of the three indices.
+So our mental model should shift from thinking about sum to thinking about indices.
+If we have 3 indices, that means we have 3 for loops to unroll.
+
+Now consider the complicated summation case where we need the Kronecker delta:
+
+$$
+\sum_i \left( \sum_j b_{ij} s_j \right) \left( \sum_k \mathbf{e_k} f_{ki} \right)
+$$
+
+We need to expand $\mathbf{e_k}$ so it is clear that the numerical unit came from a matrix.
+Given $\mathbf{e_k}$ it can be written with elements of $e_{lk}$. So basically, another for loop of $l$ outside $k$.
+
+There are 4 indices now. We could represent it with code like this:
+
+```javascript
+function computeVector(S, E, F, B) {
+  const dimension = S.length
+  let V = new Array(dimension).fill(0)
+  // iteration of basis components by l
+  for (let l = 0; l < dimension; l++) {
+    // outer summation by i
+    let V_el = 0
+    for (let i = 0; i < dimension; i++) {
+      // components summation by j
+      let S_prime = 0
+      for (let j = 0; j < dimension; j++) {
+        S_prime += B[j][i] * S[j]
+      }
+      // basis summation by k
+      let E_prime = 0
+      for (let k = 0; k < dimension; k++) {
+        E_prime += E[k][l] * F[i][k]
+      }
+      // Vector component of V in row l
+      V_el += S_prime * E_prime
+    }
+    V[l] = V_el
+  }
+  return V
+}
+```
+
+Reordering the summation in algebra corresponds to moving the for loop inside or outside other loop.
+
+$$
+\sum_i \left( \sum_j \left( \sum_k b_{ij} s_j \mathbf{e_k} f_{ki} \right) \right)\\
+$$
+
+Will corresponds to these:
+
+```javascript
+function computeVector(S, E, F, B) {
+  const dimension = S.length
+  let V = new Array(dimension).fill(0)
+  // iteration of basis components by l
+  for (let l = 0; l < dimension; l++) {
+    // outer summation by i
+    let V_el = 0
+    for (let i = 0; i < dimension; i++) {
+      for (let j = 0; j < dimension; j++) {
+        for (let k = 0; k < dimension; k++) {
+          // Vector component of V in row l
+          V_el += B[j][i] * S[j] * E[k][l] * F[i][k]
+        }
+      }
+    }
+    V[l] = V_el
+  }
+  return V
+}
+```
+
+In the following step, you can see that swapping the summation order just means swapping the for loop.
+Also notice that since multiplication is commutative now, the multiplication order is arbitrary.
+
+$$
+\sum_j \left( \sum_k \left( \sum_i f_{ki} b_{ij} s_j \mathbf{e_k} \right)  \right) \\
+$$
+
+```javascript
+function computeVector(S, E, F, B) {
+  const dimension = S.length
+  let V = new Array(dimension).fill(0)
+  // iteration of basis components by l
+  for (let l = 0; l < dimension; l++) {
+    // outer summation by i
+    let V_el = 0
+    for (let j = 0; j < dimension; j++) {
+      for (let k = 0; k < dimension; k++) {
+        for (let i = 0; i < dimension; i++) {
+          // Vector component of V in row l
+          V_el += B[j][i] * F[i][k] * S[j] * E[k][l]
+        }
+      }
+    }
+    V[l] = V_el
+  }
+  return V
+}
+```
+
+The Kronecker delta summation relation: $\sum_i f_{ki} b_{ij} = \delta_{kj}$, is just this for loop:
+
+```javascript
+for (let i = 0; i < dimension; i++) {
+  // Vector component of V in row l
+  V_el += B[j][i] * F[i][k] * S[j] * E[k][l]
+}
+```
+
+becomes this (the loop disappears, and can be unrolled)
+
+```javascript
+if ( j !== k ) { continue }
+// Vector component of V in row l
+V_el += S[j] * E[k][l]
+```
+
+full statements:
+
+```javascript
+function computeVector(S, E, F, B) {
+  const dimension = S.length
+  let V = new Array(dimension).fill(0)
+  // iteration of basis components by l
+  for (let l = 0; l < dimension; l++) {
+    // outer summation by i
+    let V_el = 0
+    for (let j = 0; j < dimension; j++) {
+      for (let k = 0; k < dimension; k++) {
+        if ( j !== k ) { continue }
+        // Vector component of V in row l
+        V_el += S[j] * E[k][l]
+      }
+    }
+    V[l] = V_el
+  }
+  return V
+}
+```
+
+Now from the code, you can immediately see that the for loop for $k$ is redundant. Substitute assignment for $k=j$ will make the loop becomes
+
+```javascript
+function computeVector(S, E, F, B) {
+  const dimension = S.length
+  let V = new Array(dimension).fill(0)
+  // iteration of basis components by l
+  for (let l = 0; l < dimension; l++) {
+    // outer summation by i
+    let V_el = 0
+    for (let j = 0; j < dimension; j++) {
+      // Vector component of V in row l
+      V_el += S[j] * E[j][l]
+    }
+    V[l] = V_el
+  }
+  return V
+}
+```
+
+Which is just the result we need.
+
+In other words, we can simplify the summation algebra, just by rewriting code, and refactoring.
