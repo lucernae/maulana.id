@@ -21,7 +21,7 @@
 	},
 	"scripts": {
 		"dev": "npx tinacms dev -c \"astro dev\"",
-		"start": "astro dev",
+		"start": "astro dev --host 0.0.0.0",
 		"build": "astro build",
 		"sync": "astro sync",
 		"preview": "astro preview",
