@@ -10,6 +10,10 @@ import SButton from '@/components/mdx/SButton'
 import Disqus from '@/components/Disqus'
 import { disqusConfig } from '@/data/disqus.config'
 import { components } from '../../components/mixins/AutoImportComponents'
+import { siteConfig } from '@/data/site.config'
+import TwitterColorIcon from '@/components/icons/TwitterColorIcon'
+import LinkedinGlyphIcon from '@/components/icons/LinkedinGlyphIcon'
+import ShareIcon from '@/components/icons/ShareIcon'
 
 const posts = await getPosts()
 export async function getStaticPaths() {
@@ -40,6 +44,9 @@ const relatedPosts = getRelatedPosts(post)
 const { Content, headings, remarkPluginFrontmatter } = await post.render()
 
 const disqusEnabled = disqusConfig.enabled
+
+const message = siteConfig.shareMessage
+const URL = Astro.url.href
 ---
 
 <BlogPost
@@ -51,14 +58,44 @@ const disqusEnabled = disqusConfig.enabled
 	<div class='grid grid-cols-1 md:grid-cols-[20%_auto] gap-10 mt-8'>
 		<!-- aside  -->
 		<aside class='md:flex flex-col gap-8 hidden'>
-			<Share />
-			<div class='sticky top-24 self-start hidden md:block transition-all duration-200'>
+			<div class='sticky top-12 self-start'>
+				<Share />
+			</div>
+			<div class='sticky top-32 self-start hidden md:block transition-all duration-200'>
 				{headings && headings.length > 0 && <TableOfContents {headings} />}
 			</div>
 		</aside>
 
 		<!-- post -->
 		<article class='max-w-full w-full'>
+			<!-- Mobile TOC toggle -->
+			<div class='md:hidden sticky top-12 z-30 mb-4'>
+				<button
+					id='toc-toggle'
+					aria-expanded='false'
+					aria-controls='toc-panel'
+					class='w-full inline-flex items-center justify-between rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-sm font-medium shadow-sm'
+				>
+					<span>Index</span>
+					<svg
+						class='h-5 w-5 transition-transform'
+						xmlns='http://www.w3.org/2000/svg'
+						fill='none'
+						viewBox='0 0 24 24'
+						stroke='currentColor'
+					>
+						<path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'
+						></path>
+					</svg>
+				</button>
+				<div
+					id='toc-panel'
+					class='mt-2 hidden rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-3 shadow-lg'
+				>
+					{headings && headings.length > 0 && <TableOfContents {headings} />}
+				</div>
+			</div>
+
 			<div class='prose prose-lg md:prose-xl dark:prose-invert mb-12 min-w-full'>
 				<Content components={{ ...components, pre: Code, SButton }} />
 			</div>
@@ -86,6 +123,50 @@ const disqusEnabled = disqusConfig.enabled
 				</svg>
 			</button>
 
+			<!-- Mobile floating Share button and panel -->
+			<button
+				id='mobile-share-toggle'
+				aria-label='Share'
+				class='md:hidden fixed bottom-20 z-40 inline-flex items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg h-10 w-10 opacity-0 pointer-events-none transition-opacity duration-300 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400'
+				title='Share'
+				style='left:50%'
+			>
+				<!-- Heroicons share icon -->
+				<ShareIcon />
+				<!-- Panel moved inside the toggle to align in the same column -->
+				<div
+					id='mobile-share-panel'
+					class='md:hidden absolute bottom-12 z-40 hidden rounded-xl bg-slate-900 text-white dark:bg-slate-900 border border-slate-700 shadow-md px-2 py-2 left-1/2 -translate-x-1/2'
+					role='menu'
+					aria-label='Share options'
+				>
+					<ul class='flex flex-col items-center gap-2'>
+						<li>
+							<a
+								href={`https://twitter.com/intent/tweet?text=${message + ' ' + URL}`}
+								target='_blank'
+								rel='noopener noreferrer'
+								aria-label='Share on Twitter'
+								class='inline-flex items-center justify-center h-9 w-9 rounded-full bg-[#1DA1F2] text-white hover:opacity-90'
+							>
+								<TwitterColorIcon />
+							</a>
+						</li>
+						<li>
+							<a
+								href={`https://www.linkedin.com/shareArticle?mini=true&url=${URL}`}
+								target='_blank'
+								rel='noopener noreferrer'
+								aria-label='Share on LinkedIn'
+								class='inline-flex items-center justify-center h-9 w-9 rounded-full bg-[#0A66C2] text-white hover:opacity-90'
+							>
+								<LinkedinGlyphIcon />
+							</a>
+						</li>
+					</ul>
+				</div>
+			</button>
+
 			<!-- related posts -->
 			<footer>
 				<h2 class='font-bold text-lg dark:text-white mb-6'>Related Posts</h2>
@@ -96,7 +177,6 @@ const disqusEnabled = disqusConfig.enabled
 
 	{disqusEnabled && <Disqus />}
 </BlogPost>
-
 
 <script>
 	const initBackToTop = () => {
@@ -130,6 +210,130 @@ const disqusEnabled = disqusConfig.enabled
 		toggle()
 	}
 
+	const initMobileToc = () => {
+		const toggle = document.getElementById('toc-toggle')
+		const panel = document.getElementById('toc-panel')
+		if (!toggle || !panel) return
+
+		const icon = toggle.querySelector('svg')
+		const open = () => {
+			panel.classList.remove('hidden')
+			toggle.setAttribute('aria-expanded', 'true')
+			icon?.classList.add('rotate-180')
+		}
+		const close = () => {
+			panel.classList.add('hidden')
+			toggle.setAttribute('aria-expanded', 'false')
+			icon?.classList.remove('rotate-180')
+		}
+		const togglePanel = () => {
+			const isOpen = toggle.getAttribute('aria-expanded') === 'true'
+			isOpen ? close() : open()
+		}
+
+		toggle.addEventListener('click', (e) => {
+			e.preventDefault()
+			togglePanel()
+		})
+
+		panel.querySelectorAll('a[href^="#"]').forEach((a) => {
+			a.addEventListener('click', () => {
+				// close when a link is selected
+				close()
+			})
+		})
+	}
+
+		const initMobileShare = () => {
+			const toggle = document.getElementById('mobile-share-toggle') as HTMLButtonElement | null
+			const panel = document.getElementById('mobile-share-panel') as HTMLDivElement | null
+			if (!toggle || !panel) return
+
+			const position = () => {
+				const article = toggle.closest('article')
+				if (!article) return
+				const rect = article.getBoundingClientRect()
+				const centerLeft = rect.left + rect.width / 2
+				const offset = 64 // px to the right of center to avoid the Back-to-Top button
+				toggle.style.left = `${centerLeft + offset}px`
+				// panel is nested inside toggle and centered via CSS; no explicit left positioning needed
+			}
+
+			const toggleVisibility = () => {
+				const show = window.scrollY > 400
+				toggle.style.opacity = show ? '1' : '0'
+				toggle.style.pointerEvents = show ? 'auto' : 'none'
+				// when hiding the toggle, also close the panel with animation
+				if (!show) {
+					panel.classList.remove('open')
+					toggle.setAttribute('aria-expanded', 'false')
+					setTimeout(() => {
+						panel.classList.add('hidden')
+					}, 200)
+				}
+			}
+
+			const open = () => {
+				// show panel and trigger animated reveal
+				panel.classList.remove('hidden')
+				toggle.setAttribute('aria-expanded', 'true')
+				requestAnimationFrame(() => {
+					panel.classList.add('open')
+				})
+			}
+			const close = () => {
+				// start closing animation, then hide after it finishes
+				panel.classList.remove('open')
+				toggle.setAttribute('aria-expanded', 'false')
+				setTimeout(() => {
+					panel.classList.add('hidden')
+				}, 200)
+			}
+			const togglePanel = () => {
+				const isOpen = toggle.getAttribute('aria-expanded') === 'true'
+				isOpen ? close() : open()
+			}
+
+			toggle.addEventListener('click', (e) => {
+				e.preventDefault()
+				togglePanel()
+			})
+
+			document.addEventListener('click', (e) => {
+				const target = e.target as Node
+				if (!panel.contains(target) && !toggle.contains(target)) {
+					close()
+				}
+			})
+
+			window.addEventListener('scroll', toggleVisibility, { passive: true })
+			window.addEventListener('resize', position)
+
+			// initial
+			position()
+			toggleVisibility()
+		}
+
 	initBackToTop()
-	document.addEventListener('astro:after-swap', initBackToTop)
+	initMobileToc()
+	initMobileShare()
+	document.addEventListener('astro:after-swap', () => {
+		initBackToTop()
+		initMobileToc()
+		initMobileShare()
+	})
 </script>
+<style is:inline>
+  /* Mobile Share panel vertical reveal animation */
+  #mobile-share-panel li {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: transform 200ms ease, opacity 200ms ease;
+  }
+  #mobile-share-panel.open li {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #mobile-share-panel.open li:nth-child(1) { transition-delay: 40ms; }
+  #mobile-share-panel.open li:nth-child(2) { transition-delay: 100ms; }
+</style>

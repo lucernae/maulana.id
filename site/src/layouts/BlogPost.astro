@@ -97,7 +97,7 @@ const parsedTitle = await parseKatexString(title)
 			observer: IntersectionObserver
 		) {
 			entries.forEach((entry) => {
-				const index = document.querySelector(`aside a[href="#${entry.target.id}"]`)
+				const index = document.querySelector(`.toc-nav a[href="#${entry.target.id}"]`)
 
 				if (entry.isIntersecting) {
 					index?.classList.remove('bg-slate-200', 'dark:bg-slate-800') // remove bg
