@@ -66,8 +66,8 @@ importers:
         specifier: ^0.16.21
         version: 0.16.22
       mathjs:
-        specifier: ^13.2.0
-        version: 13.2.3
+        specifier: ^14.0.0
+        version: 14.8.1
       nanostores:
         specifier: ^0.11.3
         version: 0.11.4
@@ -4878,6 +4878,9 @@ packages:
   fraction.js@4.3.7:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
 
+  fraction.js@5.3.4:
+    resolution: {integrity: sha512-1X1NTtiJphryn/uLQz3whtY6jK3fTqoE3ohKs0tT+Ujr1W59oopxmoEh7Lu5p6vBaPbgoM0bzveAW4Qi5RyWDQ==}
+
   framer-motion@6.5.1:
     resolution: {integrity: sha512-o1BGqqposwi7cgDrtg0dNONhkmPsUFDaLcKXigzuTFC5x58mE8iyTazxSudFzmT6MEyJKfjjU8ItoMe3W+3fiw==}
     peerDependencies:
@@ -6014,8 +6017,8 @@ packages:
     resolution: {integrity: sha512-9W0yGtkaMAkf74XGYVy4Dqw3YUMnTNB2eeiw9aQbUl4A3KmuCEHTt2DgAB07ENzOYAjsYSAYufkAq0Zd+jU7zA==}
     engines: {node: '>=0.10.0'}
 
-  mathjs@13.2.3:
-    resolution: {integrity: sha512-I67Op0JU7gGykFK64bJexkSAmX498x0oybxfVXn1rroEMZTmfxppORhnk8mEUnPrbTfabDKCqvm18vJKMk2UJQ==}
+  mathjs@14.8.1:
+    resolution: {integrity: sha512-7UDitJFsXoPbFdK2V7S6uJp7krx9B5bQSzAvCnh7ecsceSK4w0PBbEt9B3IRg9lHqzjk3YJNT1fZg/BNK+4CQw==}
     engines: {node: '>= 18'}
     hasBin: true
 
@@ -10343,7 +10346,7 @@ snapshots:
       '@graphql-tools/utils': 9.2.1(graphql@15.8.0)
       graphql: 15.8.0
       resolve-from: 5.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@graphql-tools/load@7.8.14(graphql@15.8.0)':
     dependencies:
@@ -10357,24 +10360,24 @@ snapshots:
     dependencies:
       '@graphql-tools/utils': 9.2.1(graphql@15.8.0)
       graphql: 15.8.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@graphql-tools/optimize@1.4.0(graphql@15.8.0)':
     dependencies:
       graphql: 15.8.0
-      tslib: 2.4.1
+      tslib: 2.8.1
 
   '@graphql-tools/optimize@2.0.0(graphql@15.8.0)':
     dependencies:
       graphql: 15.8.0
-      tslib: 2.5.3
+      tslib: 2.8.1
 
   '@graphql-tools/relay-operation-optimizer@6.5.18(encoding@0.1.13)(graphql@15.8.0)':
     dependencies:
       '@ardatan/relay-compiler': 12.0.0(encoding@0.1.13)(graphql@15.8.0)
       '@graphql-tools/utils': 9.2.1(graphql@15.8.0)
       graphql: 15.8.0
-      tslib: 2.4.1
+      tslib: 2.8.1
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -10382,9 +10385,9 @@ snapshots:
   '@graphql-tools/relay-operation-optimizer@7.0.0(encoding@0.1.13)(graphql@15.8.0)':
     dependencies:
       '@ardatan/relay-compiler': 12.0.0(encoding@0.1.13)(graphql@15.8.0)
-      '@graphql-tools/utils': 10.0.7(graphql@15.8.0)
+      '@graphql-tools/utils': 10.9.1(graphql@15.8.0)
       graphql: 15.8.0
-      tslib: 2.5.3
+      tslib: 2.8.1
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -10402,7 +10405,7 @@ snapshots:
       '@graphql-typed-document-node/core': 3.2.0(graphql@15.8.0)
       dset: 3.1.4
       graphql: 15.8.0
-      tslib: 2.5.3
+      tslib: 2.8.1
 
   '@graphql-tools/utils@10.9.1(graphql@15.8.0)':
     dependencies:
@@ -10411,12 +10414,12 @@ snapshots:
       cross-inspect: 1.0.1
       dset: 3.1.4
       graphql: 15.8.0
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   '@graphql-tools/utils@8.13.1(graphql@15.8.0)':
     dependencies:
       graphql: 15.8.0
-      tslib: 2.4.1
+      tslib: 2.8.1
 
   '@graphql-tools/utils@9.2.1(graphql@15.8.0)':
     dependencies:
@@ -13570,7 +13573,7 @@ snapshots:
 
   '@whatwg-node/promise-helpers@1.3.2':
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   '@xstate/react@3.0.0(@types/react@18.2.31)(react@17.0.2)':
     dependencies:
@@ -14181,7 +14184,7 @@ snapshots:
   camel-case@4.1.2:
     dependencies:
       pascal-case: 3.1.2
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   camelcase-css@2.0.1: {}
 
@@ -14200,7 +14203,7 @@ snapshots:
   capital-case@1.0.4:
     dependencies:
       no-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.8.1
       upper-case-first: 2.0.2
 
   catering@2.1.1: {}
@@ -14261,7 +14264,7 @@ snapshots:
       path-case: 3.0.4
       sentence-case: 3.0.4
       snake-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   character-entities-html4@2.1.0: {}
 
@@ -14458,7 +14461,7 @@ snapshots:
   constant-case@3.0.4:
     dependencies:
       no-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.8.1
       upper-case: 2.0.2
 
   content-disposition@0.5.4:
@@ -14513,7 +14516,7 @@ snapshots:
 
   cross-inspect@1.0.1:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   cross-spawn@7.0.3:
     dependencies:
@@ -14833,7 +14836,7 @@ snapshots:
   dot-case@3.0.4:
     dependencies:
       no-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   dotenv@16.3.1: {}
 
@@ -15541,6 +15544,8 @@ snapshots:
 
   fraction.js@4.3.7: {}
 
+  fraction.js@5.3.4: {}
+
   framer-motion@6.5.1(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
     dependencies:
       '@motionone/dom': 10.12.0
@@ -16111,7 +16116,7 @@ snapshots:
   header-case@2.0.4:
     dependencies:
       capital-case: 1.0.4
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   hey-listen@1.0.8: {}
 
@@ -16354,7 +16359,7 @@ snapshots:
 
   is-lower-case@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   is-map@2.0.2: {}
 
@@ -16429,7 +16434,7 @@ snapshots:
 
   is-upper-case@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   is-weakmap@2.0.1: {}
 
@@ -16746,11 +16751,11 @@ snapshots:
 
   lower-case-first@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   lower-case@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   lru-cache@10.0.0: {}
 
@@ -16858,13 +16863,13 @@ snapshots:
 
   math-log2@1.0.1: {}
 
-  mathjs@13.2.3:
+  mathjs@14.8.1:
     dependencies:
       '@babel/runtime': 7.28.4
       complex.js: 2.4.2
       decimal.js: 10.6.0
       escape-latex: 1.2.0
-      fraction.js: 4.3.7
+      fraction.js: 5.3.4
       javascript-natural-sort: 0.7.1
       seedrandom: 3.0.5
       tiny-emitter: 2.1.0
@@ -18192,7 +18197,7 @@ snapshots:
   no-case@3.0.4:
     dependencies:
       lower-case: 2.0.2
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   node-abi@3.51.0:
     dependencies:
@@ -18393,7 +18398,7 @@ snapshots:
   param-case@3.0.4:
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   parent-module@1.0.1:
     dependencies:
@@ -18470,14 +18475,14 @@ snapshots:
   pascal-case@3.1.2:
     dependencies:
       no-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   path-browserify@1.0.1: {}
 
   path-case@3.0.4:
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   path-exists@4.0.0: {}
 
@@ -18946,7 +18951,7 @@ snapshots:
     dependencies:
       react: 17.0.2
       react-style-singleton: 2.2.1(@types/react@18.2.31)(react@17.0.2)
-      tslib: 2.6.2
+      tslib: 2.8.1
     optionalDependencies:
       '@types/react': 18.2.31
 
@@ -18978,7 +18983,7 @@ snapshots:
       get-nonce: 1.0.1
       invariant: 2.2.4
       react: 17.0.2
-      tslib: 2.6.2
+      tslib: 2.8.1
     optionalDependencies:
       '@types/react': 18.2.31
 
@@ -19603,7 +19608,7 @@ snapshots:
   sentence-case@3.0.4:
     dependencies:
       no-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.8.1
       upper-case-first: 2.0.2
 
   serialize-javascript@6.0.2:
@@ -19790,7 +19795,7 @@ snapshots:
   snake-case@3.0.4:
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   source-map-js@1.0.2: {}
 
@@ -19811,7 +19816,7 @@ snapshots:
 
   sponge-case@1.0.1:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   sprintf-js@1.0.3: {}
 
@@ -20019,7 +20024,7 @@ snapshots:
 
   swap-case@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   synckit@0.9.3:
     dependencies:
@@ -20204,7 +20209,7 @@ snapshots:
 
   title-case@3.0.3:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   to-float32@1.1.0: {}
 
@@ -20504,11 +20509,11 @@ snapshots:
 
   upper-case-first@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   upper-case@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   uri-js@4.4.1:
     dependencies:
@@ -20519,7 +20524,7 @@ snapshots:
   use-callback-ref@1.3.0(@types/react@18.2.31)(react@17.0.2):
     dependencies:
       react: 17.0.2
-      tslib: 2.6.2
+      tslib: 2.8.1
     optionalDependencies:
       '@types/react': 18.2.31
 
@@ -20560,7 +20565,7 @@ snapshots:
     dependencies:
       detect-node-es: 1.1.0
       react: 17.0.2
-      tslib: 2.6.2
+      tslib: 2.8.1
     optionalDependencies:
       '@types/react': 18.2.31
 
