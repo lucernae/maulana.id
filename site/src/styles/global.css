@@ -20,6 +20,20 @@
         @apply text-zinc-800 dark:text-zinc-100   !important;
     }
 
+    /* Ensure anchored headings are visible below sticky UI */
+    /* Mobile: header (3rem) + mobile TOC toggle (~2.5rem) = 5.5rem */
+    @media (max-width: 767px) {
+        .prose :is(h1, h2, h3, h4, h5, h6) {
+            scroll-margin-top: 5.5rem;
+        }
+    }
+    /* Desktop: provide a comfortable offset for the sticky header */
+    @media (min-width: 768px) {
+        .prose :is(h1, h2, h3, h4, h5, h6) {
+            scroll-margin-top: 4rem;
+        }
+    }
+
     html.dark .shiki,
     html.dark .shiki span {
         color: var(--shiki-dark) !important;
