@@ -63,6 +63,29 @@ const disqusEnabled = disqusConfig.enabled
 				<Content components={{ ...components, pre: Code, SButton }} />
 			</div>
 
+			<!-- Back to Top button (inside article) -->
+			<button
+				id='back-to-top'
+				aria-label='Back to top'
+				class='fixed bottom-20 -translate-x-1/2 transform z-40 inline-flex items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg h-10 w-10 opacity-0 pointer-events-none transition-opacity duration-300 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400'
+				title='Back to top'
+				style='left:50%'
+			>
+				<svg
+					xmlns='http://www.w3.org/2000/svg'
+					viewBox='0 0 24 24'
+					fill='none'
+					stroke='currentColor'
+					stroke-width='2'
+					stroke-linecap='round'
+					stroke-linejoin='round'
+					class='h-5 w-5'
+				>
+					<path d='M12 5v14'></path>
+					<path d='M5 12l7-7 7 7'></path>
+				</svg>
+			</button>
+
 			<!-- related posts -->
 			<footer>
 				<h2 class='font-bold text-lg dark:text-white mb-6'>Related Posts</h2>
@@ -73,3 +96,40 @@ const disqusEnabled = disqusConfig.enabled
 
 	{disqusEnabled && <Disqus />}
 </BlogPost>
+
+
+<script>
+	const initBackToTop = () => {
+		const btn = document.getElementById('back-to-top')
+		if (!btn) return
+
+		// Position the button centered relative to the closest article
+		const position = () => {
+			const article = btn.closest('article')
+			if (!article) return
+			const rect = article.getBoundingClientRect()
+			const centerLeft = rect.left + rect.width / 2
+			btn.style.left = `${centerLeft}px`
+		}
+
+		const toggle = () => {
+			const show = window.scrollY > 400
+			btn.style.opacity = show ? '1' : '0'
+			btn.style.pointerEvents = show ? 'auto' : 'none'
+		}
+
+		window.addEventListener('scroll', toggle, { passive: true })
+		window.addEventListener('resize', position)
+		btn.addEventListener('click', (e) => {
+			e.preventDefault()
+			window.scrollTo({ top: 0, behavior: 'smooth' })
+		})
+
+		// initial state
+		position()
+		toggle()
+	}
+
+	initBackToTop()
+	document.addEventListener('astro:after-swap', initBackToTop)
+</script>
