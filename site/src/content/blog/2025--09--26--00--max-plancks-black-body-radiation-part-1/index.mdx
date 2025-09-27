@@ -1,0 +1,865 @@
+---
+layout_name: blog-post
+title: "Max Planck's Black Body Radiation, Part 1: Original Derivation from Statistical Mechanic"
+description: Let's do a quick revisit on how Max Planck's started quantum revolution by using his own conjecture
+  to solve Black Body Radiation
+date: 2025-09-26T00:00:00.00Z
+category:
+  name: blog
+features:
+  - python-runner
+---
+
+import { PythonRunner} from "../../../components/python-runner.jsx"
+
+When you started learning Quantum Mechanics, most likely you will start by learning how Max Planck started with his famous
+relation $E = hf$.
+
+In this article, we are going to revisit Max Planck's paper and see it from a curiosity angle: "How in the world Max Planck
+can arrive in that conclusion?". By understanding his perspective, like watching a movie, we can really appreciate how
+thinkers at that time must decide "which truth" they need to believe in to resolve contradiction.
+
+In this article, we are going to paraphrase a bit. So the story is not told in a chronological order. But will be told
+like a bedtime story.
+
+# Source
+
+On the Law of the Energy Distribution in the Normal Spectrum; by Max Planck (1901), is originally written in German.
+I can find the faithful translation in [Zenodo](https://zenodo.org/records/10520385).
+
+# Key problem
+
+As a background story, it all started when spectral measurement of blackbody radiation shows that the current theory of
+radiation is generally not valid because it doesn't match with intensity plot measured by experiments.
+
+As Physicists, we should treat the experimental result as truth. So anything we should do to fix Physics is by fixing
+the theory to match the experiments.
+
+In general, when Physicists is trying to save a theory, they normally didn't try to build entirely from the ground up.
+Even though at this stage, Max Planck probably thought that the postulate he made in the paper is just a mathematical trick.
+However, the latest development shows that his finding is exactly what made Physics turned upside down and reveals more mystery.
+
+As a reader for now, it's not really important to understand what is a "Black body radiation." Right now, what we should
+understand is that we have a mismatch between experimental measurement vs current theory. If we assume we have no
+measurement errors or faults, then how we should fix this?
+
+Max Planck started from a theory at that time called [Wien's Law](https://en.wikipedia.org/wiki/Wien_approximation),
+now called Wien's Approximation.
+
+The form is like this:
+
+$$
+u(\nu,T)=\alpha \nu^3 e^{-\frac{\beta \nu}{T}}
+$$
+
+where
+
+- $u(\nu, T) := $ Spectral density function. A function of frequency and temperature that outputs intensity per frequency.
+  Intensity is the density of energy quantity in a point of space.
+  So, the unit is Joule per $m^3$
+- $\nu := $ (Greek Nu) Frequency of radiation in Hz. The wavelengths of the radiation is given by $\lambda = \frac{c}{\nu}$, where $c$ is the speed of light.
+- $T:=$ Absolute temperature in Kelvin
+- $\alpha, \beta$ are constants from experimental results
+
+The function matches very precisely in the lower wavelengths (high frequency), around the ultraviolet regions. But deviates from
+experimental data when the wavelengths is long. You can see the simulated comparison in the chart below where x axis is the wavelength.
+
+<PythonRunner client:only="react" pythonScriptSelector="#wienVsPlanck" plotScriptSelector="#wienVsPlanckPlot"  />
+
+<details>
+
+  <summary>Python Script (Collapsible)</summary>
+
+  <div id="wienVsPlanck">
+
+```python
+import numpy as np
+
+# Physical constants
+h = 6.62607015e-34   # Planck's constant (J*s)
+c = 3.0e8            # speed of light (m/s)
+k = 1.380649e-23     # Boltzmann constant (J/K)
+
+# Temperature
+T = 5000  # Kelvin (approx surface temp of the Sun)
+
+# Wavelength range (meters)
+wavelengths = np.linspace(1e-9, 3e-6, 500)  # 1 nm to 3 µm
+
+# Planck's Law (spectral radiance as function of wavelength)
+def planck_law(wavelength, T):
+    a = 2.0*h*c**2
+    b = h*c / (wavelength*k*T)
+    return a / ( (wavelength**5) * (np.exp(b) - 1.0) )
+
+# Wien's Law (original form, exponential decay approximation)
+def wien_law(wavelength, T):
+    c1 = 2.0*h*c**2
+    c2 = h*c/k
+    return c1 / (wavelength**5) * np.exp(-c2/(wavelength*T))
+
+# Compute values
+I_planck = planck_law(wavelengths, T)
+I_wien = wien_law(wavelengths, T)
+
+results = {
+  'T': T,
+  'wavelengths': wavelengths.tolist(),
+  'planck': I_planck.tolist(),
+  'wien': I_wien.tolist(),
+}
+results
+```
+
+  </div>
+
+  <div id="wienVsPlanckPlot">
+
+```javascript
+function generatePlot() {
+    const result = window.pythonResult
+    const generatedID = window.pyodideElementID
+    const plotID =`${generatedID}-plot`
+    let plotDiv = document.getElementById(plotID)
+
+    if(!plotDiv) {
+      plotDiv = document.createElement('div')
+      plotDiv.id = plotID
+      const parentDiv = document.getElementById(generatedID)
+      parentDiv.prepend(plotDiv)
+    }
+
+    const T = result.get('T')
+    const wavelengths = result.get('wavelengths')
+    const I_planck = result.get('planck')
+    const I_wien = result.get('wien')
+
+    const trace1 = {
+      x: wavelengths.map((w) => w * 1e9),
+      y: I_planck.map((w) => w),
+      name: "Planck's Law",
+      line: {
+        color: 'black',
+        width: 2
+      }
+    };
+
+    const trace2 = {
+      x: wavelengths.map((w) => w * 1e9),
+      y: I_wien.map((w) => w),
+      name: "Wien's Law (1896)",
+      line: {
+        color: 'red',
+        dash: 'dash',
+        width: 2
+      }
+    };
+
+    const layout = {
+      title: `Blackbody Radiation at T=${T} K`,
+      xaxis: {
+        title: 'Wavelength (nm)',
+        showgrid: true
+      },
+      yaxis: {
+        title: 'Spectral Radiance (W·sr⁻¹·m⁻³)',
+        showgrid: true
+      },
+      showlegend: true
+    };
+
+    Plotly.newPlot(plotDiv, [trace1, trace2], layout);
+    document.getElementById(`${generatedID}-spinner`).classList.add('hidden');
+}
+
+generatePlot()
+```
+
+  </div>
+
+</details>
+
+If you see the graph, you might think that the curve only deviates slightly. However $u$ is an intensity distribution per frequency.
+So to obtain energy intensity, we integrate it over all frequency, so the deviation adds up over all frequencies and the error is quite significant.
+
+# Planck's point of view
+
+Planck originally thought these small deviation can be corrected by some prefactor. So it is intuitively might be possible to find such function that fits these graph.
+The problem is how to justify it using Physical principle?
+
+For the Physical principle, Planck's thought that the blackbody or blackbox can be thought of as just any thermodynamic object.
+So following Boltzmann's view of thermodynamic, it must have thermodynamic entropy. It must also be related to some
+microstatistical ensemble or arrangement. So the thought process:
+
+1. Measured intensity is associated with the temperature of the object emitting the radiation
+2. If the system is in thermal equilibrium, then entropy for a given temperature is directly proportional to energy, which means entropy is proportional to measured intensity
+3. The total entropy is just the sum of the thermal entropy for each individual microstates in the blackbody
+4. We don't even need to care about which measureable individual microstates behaves, what matters is that it must directly correlated with the total entropy that we actually measures.
+   In essence, how the systems itself is configured at the given time won't matter. What matters is **how it is configured at equilibrium**, this is the Boltzmann's statistical view.
+
+In other words, Planck thought that if we find entropy $S$, we can relate it with energy $E$, and in turn we can relate it with the spectral density $u$ and
+get the complete formula. So we iteratively reduce and decompose the problem to find only the representation of $S$.
+
+According to Boltzmann view of thermodynamic, $S$, the entropy can be counted by considering the statistical ensemble of said black body.
+
+# Modeling the microstate (Classical)
+
+Note that in Planck's paper, he immediately explains how to count the microstates. This is because it is a paper, so it must be arranged in the order most easily understood by readers.
+
+However, for us to learn how Planck thinks, let's start in the order of the discovery.
+
+To count entropy, we must first decide how to count the microstates. To count the microstates we must model the object
+into decomposeable chunks that still obeys the same physics.
+
+The principles:
+
+1. We have a model of blackbody that has measureable entropy and energy intensity
+2. If we divide the blackbody into separate chunks, let's say two blackbodies, then the original entropy must be additively the same with the sum of these two smaller
+   blackbodies. This is because the physics must works the same for the same kind of objects, no matter how we decompose it. It is invariant.
+3. We don't actually know how the blackbody looks like exactly in the smallest possible sense. But we have to assume the model works physically the same.
+4. The smallest blackbody then must have measureable temperature, and frequency. This is the most basic model.
+
+For Planck himself, he imagine this model to be some kind of vibrating object.
+
+Why it needs to be a vibration? Because the observable properties are frequency and temperatures. A vibrating model will also have frequency, amplitude, and wavelengths.
+Basically Planck thought that even if we don't know if it is actually string or not, if it behaves like a string, we might as well think of it like a string as a practical purposes.
+
+For the sake of rediscovery, let's try following Planck's line of reasoning, but applying it
+to classical physics, so that we have the wrong answer. From there, we can appreciate how far Planck's
+leap of faith is.
+
+We started by using Boltzmann definition of entropy. Since this is before Shannon Entropy was discovered,
+we use Boltzmann's view. A measureable thermodynamic quantity called entropy $S$, a macrostate, is proportional to the
+number of combination/permutation of the microstates $W$. The relation is given by:
+
+$$
+S = k_B \operatorname{ln}(W)
+$$
+
+where:
+
+- $k_B$ is the Boltzmann constant
+
+The microstates exchanges energies with the surrounding in the systems, and all of them eventually achieving the most
+possible outcome. When that happens, each microstates will have the same temperature. This condition is called thermal equilibrium.
+This is because in this condition the energy being exchanged is equally likely between each of the object.
+
+Following along Planck's reasoning. He imagine that blackbody is consisted of composable ~~vibrator~~ vibrating resonators.
+Each have its own energy. So this model has the following constraints:
+
+The total resonators in the system is $N$.
+The total energy $E$ is obviously an additive sum **of all** the energy each resonator $i$ in the system:
+
+$$
+E = \sum_i^N E_i
+$$
+
+The entropy $S$ is also an additive sum **of all** the entropy each resonator $i$ in the system has:
+
+$$
+S = \sum_i^N S_i
+$$
+
+To count the multiplicity or combination/permutation of the systems $W$. Let's imagine that each resonator $i$, holds
+an energy $E_i$. So there is a partition of $N$ subsystems.
+
+But there are many ways of dividing these energies. Note that we don't even care now, on how these systems interact by
+exchanging energy, and with what method/mechanism. We only care about things we measure at the moment. Suppose we divided
+the blackbody into two regions, each have $E_1$ energy and $E_2$ energy, then there is exactly $E$ ways of
+dividing the energy. In modern interpretation, this is like having a uniform distribution for a length $E$ in the scale.
+So if the possibility is equally likely, the probability is exactly $\frac{1}{E}$.
+
+If we stick to the Boltzmann's interpretation, we can imagine that we have two boxes and $E$ Joules of energy, or water. So it's like
+we are pouring $E_1$ to box 1, and then pouring the rests to box 2 $E_2=E-E_1$. So we actually choosing only once to divide
+it into two group.
+
+If we have 3 boxes, we repeat the same thing, but we are choosing twice. So if we have $N$ groups, we basically **slicing**
+the blackbody $N-1$ times. For each slice, we have $E$ quantity of energy we can slice from. So the total
+many ways possible is $E^{N-1}$. But remember that each slice is indistinguishable. Meaning the slice we do at $i$ and
+$i+1$ is equally likely. So there is $(N-1)!$ identical subsystems ordering, resulting from the slices.
+
+So,
+
+$$
+W(E,N) = \frac{E^{N-1}}{(N-1)!}
+$$
+
+The entropy has to be additive. Meaning for each box of blackbody, it will have its own microstate entropy $S_i$, and the sum
+has to be the same with the actual measureable entropy observed from the outside (macrostate).
+
+$$
+\begin{align*}
+S &= k_B \operatorname{ln}(W) \\
+&= k_B \operatorname{ln}(\frac{E^{N-1}}{(N-1)!}) \\
+&= k_B (N-1) \operatorname{ln}(E) - k_B \operatorname{ln}((N-1)!)
+\end{align*}
+$$
+
+From the thermodynamic property of equilibrium, we stated that every subsystems will have the same temperature.
+So the system should be homogenous with the relation, known from Clausius law:
+
+$$
+\begin{align*}
+\frac{\partial S}{\partial E} &= \frac{1}{T} \\
+\frac{\partial \phantom{E}}{\partial E} \left[ k_B (N-1) \operatorname{ln}(E) - k_B \operatorname{ln}((N-1)!) \right] &= \frac{1}{T} \\
+k_B (N-1) \frac{1}{E} &= \frac{1}{T} \\
+E &= (N-1) k_B T
+\end{align*}
+$$
+
+The total energy of the system is directly proportional to $k_B T$.
+The factor $N-1 \approx N$ when $N$ is very large.
+What we arrived at here is actually the standard result of Boltzmann's equipartition energy theorem  $E = N k_B T$
+
+However, notice that we won't be able to actually measure the total number of subsystems $N$. So we should subsitute this.
+Remember that the same physics should applies to the subsystems. That means for each subsystem, the entropy contribution
+also affected by the equipartition of energy, then it will add up to the total entropy. So let's calculate entropy
+by assuming $N$ is very large.
+
+When $N$ is very large, we can use Stirling's approximation for $\operatorname{ln}(n!)$, the logarithm of factorials.
+
+$$
+\begin{align*}
+\operatorname{ln}(n!) &\approx n \operatorname{ln}(n) - n \\
+\operatorname{ln}((N-1)!) &\approx (N-1) \operatorname{ln}((N-1)) - (N-1) \\
+\end{align*}
+$$
+
+The entropy when $N$ is very large
+
+$$
+\begin{align*}
+S &= k_B (N-1) \operatorname{ln}(E) - k_B \operatorname{ln}((N-1)!) \\
+&\approx k_B (N-1) \operatorname{ln}(E) - k_B ((N-1) \operatorname{ln}((N-1)) - (N-1)) \\
+&\approx k_B (N-1) \left[\operatorname{ln}\left(\frac{E}{N-1} \right) + 1 \right] \\
+&\approx \frac{E}{T} \left[\operatorname{ln}\left( k_B T \right) + 1 \right] \\
+\end{align*}
+$$
+
+As we eliminated $N$ from the above expression, we can have its direct measurements from $E$ and $T$, a macroscopic measureable.
+
+Thus, the average energy also follows directly $\langle E\rangle= k_B T$.
+
+**However, soon we know that this is wrong!**
+
+Even though the we use established theories, there is just one hidden assumption that caused the whole derivation failed
+to predict real experiments. We will see this later.
+
+# From average energy to Spectral Density
+
+In its own paper, Planck, made the discovery that essentially Wien's Displacement Law can be derived to follow
+this modern form:
+
+$$
+\begin{align*}
+u(\nu) \, d \nu &= g(\nu) \langle E \rangle \, d\nu \\
+\end{align*}
+$$
+
+He began by stating the original form of Wien's Displacement Law, which is a special case of Stefan-Boltzmann Law,
+in the following form:
+
+$$
+\begin{align*}
+E \cdot d\lambda &= T^5 \psi(\lambda T) \cdot d\lambda
+\end{align*}
+$$
+
+where the variable names is the same with what we are talking about so far. In addition:
+
+- $\psi(\lambda T) := $ refers to a single parameter function, which deliberately uses symbols $\lambda T = x$ as the
+  function arguments
+
+Planck then renames/replace/substitute the variables into this:
+
+- $\lambda = \frac{c}{\nu}$ using $c$ as the speed of light to convert wavelengths into frequency
+- $\frac{c}{\nu^2} \cdot d\nu = d\lambda$ to replace differential parameter from wavelengths into frequency
+- $u(\nu, T) \cdot d\nu = E \cdot d\lambda$ to replace energy density from over wavelengths into over its frequency
+
+It became
+
+$$
+\begin{align*}
+E \cdot d\lambda &= T^5 \psi(\lambda T) \cdot d\lambda \\
+u(\nu, T) \cdot d\nu &= T^5 \, \psi(\frac{c}{\nu} T) \, \frac{c}{\nu^2} \cdot d\nu \\
+\end{align*}
+$$
+
+With further algebraic manipulation, Planck arrived to the form:
+
+$$
+\begin{align*}
+E = \nu \cdot f\left( \frac{T}{\nu} \right)
+\end{align*}
+$$
+
+where $f(x)$ is a single parameter function, with most of the constants absorbed by $\psi(x)$, so that we can effectively,
+write it as a new function.
+
+He then cleverly reasons, the shape of the equality is in such a way that we could invert the function, and the form
+can just be written like this without losing the meaning:
+
+$$
+\begin{align*}
+T &= \nu \cdot m\left( \frac{E}{\nu} \right) \\
+\frac{1}{T} &= \frac{1}{\nu} \cdot n\left( \frac{E}{\nu} \right) \\
+\end{align*}
+$$
+
+No matter how many times we change the form of $f(x)$ into other function $m(x)$ or $n(x)$ it is still a placeholder of a function
+that receives the same input. In the original paper it seems Planck doesn't bother at all to change the name of the
+function. But I annotate each modification with a new symbol so we understand it is a different function.
+
+However, this variable swap is what allows it to connect with the definition of entropy
+
+$$
+\begin{align*}
+\frac{\partial S}{\partial E} &= \frac{1}{T} \\
+\frac{\partial S}{\partial E} &= \frac{1}{\nu} \cdot n\left( \frac{E}{\nu} \right) \\
+\end{align*}
+$$
+
+However, above formulation uses partial derivatives. So it assumes that everything excepts the energy is fixed, including
+the frequency. This is a direct use case by our assumption above that the blackbody radiation is in the state of thermal
+equilibrium, meaning for a given subsystems, only the energy is different.
+
+So, if we treat $\nu$ as constant in this phase, the relationship is basically direct. Because if $x = \frac{E}{\nu}$,
+the differential $dx = \frac{1}{\nu} \cdot dE$.
+
+$$
+\begin{align*}
+\frac{\partial S}{\partial E} &= \frac{1}{\nu} \cdot n\left( \frac{E}{\nu} \right) \\
+\frac{dS}{dx} &= n\left( x \right) \\
+\end{align*}
+$$
+
+It can integrated straightforwardly.
+
+So, in the final form, it appears that whatever physical theory behind this observation turns out only depends on the
+ratio between energy $E$ and its resonant frequency $\nu$, which is $x$.
+
+Thus we arrive at the final link, by tracing backwards:
+
+1. From $S$, you can find the average energy $E$.
+2. From average energy $E$, since there will be function $f(x)$, only affected by $\frac{E}{\nu}$, the spectral distribution
+   is only affected by $\langle E \rangle$. Because spectral distribution by definition is the blackbody radiation energy
+   divided by each frequency subsystems.
+3. The spectral distribution has to be in the form of some prefactor times average energy times frequency differential.
+
+$$
+\begin{align*}
+u(\nu) \, d \nu &= g(\nu) \langle E \rangle \, d\nu \\
+\end{align*}
+$$
+
+The whole problem wholly reduce into just a matter of inserting average energy times experimental factor $g(\nu)$.
+
+We already calculate our average energy $\langle E \rangle = k_B T$.
+
+If we simulate the plot to match the previous experimental data and Wien's Approximation...
+
+We got...
+
+<PythonRunner client:only="react" pythonScriptSelector="#jeansVsWienVsPlanck" plotScriptSelector="#jeansVsWienVsPlanckPlot"  />
+
+<details>
+
+  <summary>Python Script (Collapsible)</summary>
+
+  <div id="jeansVsWienVsPlanck">
+
+```python
+import numpy as np
+
+# Physical constants
+h = 6.62607015e-34   # Planck's constant (J*s)
+c = 3.0e8            # speed of light (m/s)
+k = 1.380649e-23     # Boltzmann constant (J/K)
+
+# Temperature
+T = 5000  # Kelvin (approx surface temp of the Sun)
+
+# Wavelength range (meters)
+wavelengths = np.linspace(1e-9, 10e-6, 500)  # 1 nm to 3 µm
+
+# Planck's Law (spectral radiance as function of wavelength)
+def planck_law(wavelength, T):
+    a = 2.0*h*c**2
+    b = h*c / (wavelength*k*T)
+    return a / ( (wavelength**5) * (np.exp(b) - 1.0) )
+
+# Wien's Law (original form, exponential decay approximation)
+def wien_law(wavelength, T):
+    c1 = 2.0*h*c**2
+    c2 = h*c/k
+    return c1 / (wavelength**5) * np.exp(-c2/(wavelength*T))
+
+# Rayleigh-Jeans Law
+def jeans_law(wavelength, T):
+    c1 = 2.0*c*k*T
+    return c1 / (wavelength**4)
+
+# Compute values
+I_planck = planck_law(wavelengths, T)
+I_wien = wien_law(wavelengths, T)
+I_jeans = jeans_law(wavelengths, T)
+
+results = {
+    'T': T,
+    'wavelengths': wavelengths.tolist(),
+    'planck': I_planck.tolist(),
+    'wien': I_wien.tolist(),
+    'jeans': I_jeans.tolist(),
+}
+results
+```
+
+  </div>
+
+  <div id="jeansVsWienVsPlanckPlot">
+
+```javascript
+function generatePlot() {
+  const result = window.pythonResult
+  const generatedID = window.pyodideElementID
+  const plotID =`${generatedID}-plot`
+  let plotDiv = document.getElementById(plotID)
+
+  if(!plotDiv) {
+    plotDiv = document.createElement('div')
+    plotDiv.id = plotID
+    const parentDiv = document.getElementById(generatedID)
+    parentDiv.prepend(plotDiv)
+  }
+
+  const T = result.get('T')
+  const wavelengths = result.get('wavelengths')
+  const I_planck = result.get('planck')
+  const I_wien = result.get('wien')
+  const I_jeans = result.get('jeans')
+
+  const trace1 = {
+    x: wavelengths.map((w) => w * 1e9),
+    y: I_planck.map((w) => w),
+    name: "Planck's Law",
+    line: {
+      color: 'black',
+      width: 2
+    }
+  };
+
+  const trace2 = {
+    x: wavelengths.map((w) => w * 1e9),
+    y: I_wien.map((w) => w),
+    name: "Wien's Law (1896)",
+    line: {
+    color: 'red',
+      dash: 'dash',
+      width: 2
+    }
+  };
+
+  const trace3 = {
+    x: wavelengths.map((w) => w * 1e9),
+    y: I_jeans.map((w) => w),
+    name: "Rayleigh-Jeans's Law (1900)",
+    line: {
+      color: 'green',
+      dash: 'dash',
+      width: 2
+    }
+  };
+
+  const layout = {
+    title: `Blackbody Radiation at T=${T} K`,
+    xaxis: {
+      title: 'Wavelength (nm)',
+      showgrid: true,
+      range: [wavelengths[0]*1e9, wavelengths[wavelengths.length-1]*1e9]
+    },
+    yaxis: {
+      title: 'Spectral Radiance (W·sr⁻¹·m⁻³)',
+      showgrid: true,
+      range: [0, Math.max(...I_planck.concat(I_wien))]
+    },
+    showlegend: true
+  };
+
+  Plotly.newPlot(plotDiv, [trace1, trace2, trace3], layout);
+  document.getElementById(`${generatedID}-spinner`).classList.add('hidden');
+}
+
+generatePlot()
+```
+
+  </div>
+
+</details>
+
+**We just failed spectacularly!**
+
+The value blows up in short wavelengths area. We just rediscovered what eventually be called [Rayleigh-Jeans Law](https://en.wikipedia.org/wiki/Rayleigh–Jeans_law).
+
+At that time, this result really baffled Physicist, because the derivation starts correctly from Statistical Mechanics,
+but it failed to predict high frequency radiation (ultraviolet light). Which is why it is called ["Ultraviolet Catastrophy"](https://en.wikipedia.org/wiki/Ultraviolet_catastrophe).
+
+I even have to boxed the above plot script to make it stays within Wien's region.
+
+However if you pan far enough to the right, you will see that Rayleigh-Jeans law is more accurate than Wien's Approximation
+in higher wavelengths.
+
+So we have two polar theories here.
+
+| Law | Accuracy in Wavelengths | Accuracy in Frequencies |
+|-----|------------------------|------------------------|
+| Rayleigh-Jeans | Accurate in long wavelengths | Accurate in small frequencies |
+| Wien's | Accurate in short wavelengths | Accurate in high frequencies |
+
+
+# Modeling the microstates (Quantum)
+
+If you were baffled, I think you better be, because that's what happened as well in the 1900s.
+In fact, Planck once expressed his difficulties in trying to get to the truth.
+
+How come two contemporary theories at the time failed in each respective regions? Wien's used Maxwell's Electromagnetic
+approach to derive his Wien's Law. Meanwhile Rayleigh used Statistical Mechanic for his Law. Was only one is correct,
+or both wrong?
+
+To reconcile this madness. Planck gives up and as he himself said, "as an act of desperation" uses Boltzmann's Statistical
+Mechanic to give theoritical framework of his derivation. Even though, personally he likes the continuous nature of Maxwell's
+EM theory better.
+
+So how does he himself arrives to this solution?
+
+Mathematically speaking, just from the two results alone (both Wien's and Rayleigh's suggestion), Planck himself can
+heuristically designed a formula that will fit for both (I will explain it later). But if it doesn't have any physical
+ground, it is just a "mathematical trick".
+
+Nevertheless, he still did it anyway and published it in his paper. But the heuristic discovery works something like this.
+
+1. Planck assumes that Wien's approach using continuous EM theory is in the right direction, but it missed a crucial step, which is the step
+   where we need to define the average energy of the subsystems
+2. To fill the gap of needing to link the average energy, Planck uses Boltzmann's statistical mechanic to assume that each
+   subsystems is discrete and quantized. Not continuous.
+3. In the final step he planned to reduce the quantized variable (whatever it is) in the limit of infinitely small variables.
+   So that he can recover the behaviour of continuous EM (electromagnetic) theory
+
+It turns out, the plan doesn't go so simple. It needs some leap of faith.
+
+Note that all above derivation follows the exact same procedure, but Planck only changes one critical assumption to plug into.
+
+He assumes that the subsystems energy is not continuous.
+
+Meaning there is a limit of how small he can make it to be.
+
+Recall that in the last result from Wien's displacement, he found out that $E$ energy is proportional to $\nu$ frequency.
+He postulated that he has to slice the energy into a small indivisible chunk $\epsilon$. There is no smaller energy than
+$\epsilon$, other than 0. But later on he planned on making the $\epsilon$ continuously small using limit of calculus.
+
+But for now, he assumes it is discrete first. If it is discrete, which step he has to change? Turns out it's not that many.
+He only need to change the way he counted the microstates.
+
+Previously we slices the energy like a water distributed into boxes of subsystems.
+
+This time, because the energy is only a finite quantities, he distribute it literally like dividing cookies to multiple boxes.
+
+The only difference is that previously the statistical distribution counting uses continuous measure, this time he uses
+discrete distribution. This doesn't seems like matter a lot, but it turns out to be very important.
+
+Permutating $P$ number of discrete energies to $N$ boxes is just discrete counting. It is intuitively $(P+N-1)!$.
+
+If you have 1 cookies to be distributed to 2 person. There are $2!$ ways.
+
+Two cookies for two persons? $3!$.
+
+Three cookies for two persons? $4!$.
+
+Two cookies for three persons? This is like distributing person to the cookies, the reverse direction, so still the same
+$4!$.
+
+So for any number $N+P$ objects, the permutation is $(P+N-1)!$
+
+However, we are counting microstates. So it is important to check if the states were distinguishable or indistinguishable.
+We can reason that a discrete quanta of energy can't be differentiate with identical quanta.
+Then the subsystems of the vibrating resonator also can't be distinguished if it vibrates the same way.
+
+So we can say that the counting should be divided by $P!$ and $(N-1)!$. This is because all $P$ energy quanta is indistinguishable.
+All $N-1$ subsystems is indistinguishable. Why $(N-1)$? Because if we have N systems, we only choosing for $N-1$ subsystems,
+the last one doesn't get to choose.
+
+So the microstates counting $W$:
+
+$$
+\begin{align*}
+W &= \frac{(N+P-1)!}{(P!)(N-1)!}
+\end{align*}
+$$
+
+Total energy is $E_{total}= EN$.
+For a given energy count $P$, means the total energy is $E_{total} = P\epsilon$
+So basically $P = \frac{EN}{\epsilon}$.
+
+Calculate the entropy and apply Stirling's approximation:
+
+1. for large numbers $(N-1) \approx N$
+2. for large numbers $\operatorname{ln}(n!) \approx n \operatorname{ln}(n) - n$
+
+$$
+\begin{align*}
+S_{total} &= k_B \operatorname{ln}\left( W \right) \\
+&\approx k_B (N+P) \operatorname{ln}\left( N+P \right) - k_B (N+P) - k_B \left[ N \operatorname{ln}\left( N \right) - N \right] - k_B \left[ P \operatorname{ln}\left( P \right) - P \right] \\
+S N &= k_B N \left[ \left( 1 + \frac{E}{\epsilon} \right) \operatorname{ln}\left( 1 + \frac{E}{\epsilon} \right) - \frac{E}{\epsilon} \operatorname{ln}\left( \frac{E}{\epsilon} \right) \right] \\
+S &= k_B \left[ \left( 1 + \frac{E}{\epsilon} \right) \operatorname{ln}\left( 1 + \frac{E}{\epsilon} \right) - \frac{E}{\epsilon} \operatorname{ln}\left( \frac{E}{\epsilon} \right) \right]
+\end{align*}
+$$
+
+Where $S$ is the entropy of one resonator subsystems.
+
+From the previous section, we know that $E$ the energy of one resonator is proportional to its $\nu$ frequency. So let's just say $E=n h \nu$. Because one resonator can have
+a multiple of quantas of energy. Assuming that $\epsilon = h \nu$ with $h$ just a proportionality constant.
+
+In the classical sense, when we assume that we can divide energy continuously, we arrived at the conclusion:
+
+$$
+\frac{1}{T} = k_B (N-1) \frac{1}{E}
+$$
+
+Previously, because the original counting $W$ uses continuous integration.
+However, this time our counting is discrete.
+
+$$
+\begin{align*}
+\frac{1}{T} &= \frac{\partial S}{\partial E} = k_B \frac{\partial \phantom{E}}{\partial E} \left[\left( 1 + \frac{E}{\epsilon} \right) \operatorname{ln}\left( 1 + \frac{E}{\epsilon} \right) - \frac{E}{\epsilon} \operatorname{ln}\left( \frac{E}{\epsilon} \right) \right] \\
+&= \frac{k_B}{h \nu} \operatorname{ln}\left(1 + \frac{h\nu}{E} \right) \\
+E &= \frac{h\nu}{ e^{\frac{h\nu}{k_B T}} -1 } \\
+\end{align*}
+$$
+
+Since the resonator energy is basically the average energy per frequency. We can directly plug this into the previous Wien's Displacement Law result.
+So we got a function in the form:
+
+$$
+u(\nu, T) = g(\nu) \cdot \frac{h\nu}{ e^{\frac{h\nu}{k_B T}} -1 }
+$$
+
+From above relation, one can use other Physical theory to derive the prefactor $g(\nu)$, but in essence, the form of the function will look like that.
+
+# Deriving Wien's and Rayleigh-Jeans approximation from Planck's Law
+
+When we write the full form of Planck's Law:
+
+$$
+\begin{align*}
+u(\nu, T) = \frac{8\pi h \nu^3}{c^3} \cdot \frac{1}{e^{\frac{h\nu}{k_B T}} -1}
+\end{align*}
+$$
+
+We can revisit Planck's original intention regarding the value of $h$. Originally he want to make that $\lim h \to 0$.
+But now you see that it's not possible to take the limit from that function, since the form will just becomes $0$.
+Meaning that $h$ is not just for practicality, but for essentiality, it needs to have finite value, albeit very small.
+
+But from this form, we can derive both Wien's and Rayleigh-Jeans (RJ) result.
+
+## Wien's Approximation
+
+For Wien's, start by the assumption that in the high frequencies, short wavelengths, $h \nu \gg k_B T$, the portion of 
+$e^{\frac{h\nu}{k_B T}}$ will be significantly greater than 1. Causing:
+
+$$
+\begin{align*}
+\frac{1}{e^{\frac{h\nu}{k_B T}} -1} \approx e^{-\frac{h\nu}{k_B T}}
+\end{align*}
+$$
+
+Hence' we recover Wien's approximation factor to becomes:
+
+$$
+\begin{align*}
+u(\nu, T) = \frac{8\pi h \nu^3}{c^3} \cdot e^{-\frac{h\nu}{k_B T}}
+\end{align*}
+$$
+
+## Rayleigh-Jeans Approximation
+
+For Rayleigh-Jeans, we start by the assumption that in the low frequencies, long wavelengths, $h \nu \approx k_B T$. Remember 
+that the physics works in such a way that the energy quanta is very small but can't be infinitely small.
+So, $h \nu$ can't be smaller than $k_B T$, which is the statistical average unit of energy per resonator.
+Hence we can try to approximate the exponential function using Taylor series expansion.
+
+$$
+\begin{align*}
+e^{\frac{h\nu}{k_B T}} &= 1 + \frac{h\nu}{k_B T} + \frac{(h\nu)^2}{2!(k_B T)^2} + \frac{(h\nu)^3}{3!(k_B T)^3} + \ldots \\
+&\approx 1 + \frac{h\nu}{k_B T} \\
+\frac{1}{e^{\frac{h\nu}{k_B T}} -1} &\approx \frac{k_B T}{h\nu}
+\end{align*}
+$$
+
+So we recover Rayleigh-Jeans approximation factor to becomes:
+
+$$
+\begin{align*}
+u(\nu, T) = \frac{8\pi \nu^2}{c^3} \cdot k_B T
+\end{align*}
+$$
+
+# Comparison table between classical and quantum perspecives for blackbody radiation
+
+To easily highlight how and why Planck's approach regarding quanta of energy is fundamentally a new perspective, 
+that can't be explained by classical theory. Here is a comparison table:
+
+<table>
+  <thead>
+    <tr>
+      <th>Aspect</th>
+      <th>Classical (Rayleigh-Jeans' and Wien's)</th>
+      <th>Quantum (Planck's)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>**Theoritical Basis**</td>
+      <td>Wien's using purely EM theory. <br/> Rayleigh–Jeans using purely Statistical Mechanic</td>
+      <td>Statistical Mechanical assumptions is used to make EM measurement emergent</td>
+    </tr>
+    <tr>
+      <td>**Physical measurements**</td>
+      <td>EM theory fit the curve of strong EM signals (high frequency).<br/> Statistical Mechanic fit the curve of homogenous thermodynamic conditions (long wavelengths). <br/> But neither fit the whole curve</td>
+      <td>Fit and predict the whole curve</td>
+    </tr>
+    <tr>
+      <td>**Microstate Model**</td>
+      <td>Hidden assumptions in the existing theoritical basis, that energy is distributed in continuous flow</td>
+      <td>Explicit postulate to say that energy is distributed in discrete chunks (called quanta)</td>
+    </tr>
+    <tr>
+      <td>**Energy Distribution factor**</td>
+      <td>EM: $e^{-\frac{\beta \nu}{T}}$ <br/> SM: $k_B T$</td>
+      <td>$\frac{1}{e^{\frac{h\nu}{k_B T}} -1}$</td>
+    </tr>
+    <tr>
+      <td>**High Frequency Behavior**</td>
+      <td>SM from RJ predicts that intensity is infinite because high frequency implies energy can be arbitrarily emmitted by dividing the energy infinitely small </td>
+      <td>Energy quanta is discrete, so the intensity is finite. There can't be intensity for energy with value lower than the quanta of that frequency. The higher the frequency, the higher the smallest quanta bar. Fewer intensities can be emitted</td>
+    </tr>
+    <tr>
+      <td>**Long wavelengths Behavior**</td>
+      <td>EM from Wien's predicts that intensity is lower than experimental results because it assumes that long wavelengths has weak energies, compared with statistical energy from the given temperature</td>
+      <td>Energy quanta is discrete, so if long wavelengths emit radiation, it has to be higher or the same with statistical energy from the given temperature. Otherwise it can't emit any radiation at all. <br/> If the EM waves still has frequency, it must have non-zero quanta, even though the frequency is small.</td>
+    </tr>
+    <tr>
+      <td>**Physical Entropy calculation**</td>
+      <td>Continuous energy distribution implies using integrals to sums all subsystems entropy.</td>
+      <td>Discrete energy distribution implies using combinatorics and discrete sums to sums all subsystems entropy.</td>
+    </tr>
+    <tr>
+      <td>**Physical Entropy measurement**</td>
+      <td>In the same thermodynamic equilibrium at a given temperature, the entropy change of blackbody is proportional to its change in energy intensity. </td>
+      <td>In the same thermodynamic equilibrium at a given temperature, the entropy change of blackbody is proportional to its change in energy intensity. </td>
+    </tr>
+    <tr>
+      <td>**Ratio between Energy and Frequency**</td>
+      <td>Intensity is proportional to the function of the ratio. <br /> Energy can be divided infinitely small, so the ratio can be infinitely small as well.</td>
+      <td>Intensity is proportional to the function of the ratio. <br /> Energy can only be divided into discrete chunks, so the ratio can only be discrete as well. The smallest ratio is $h$.</td>
+    </tr>
+  </tbody>
+</table>

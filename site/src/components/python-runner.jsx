@@ -7,19 +7,35 @@ export const PythonRunner = ({ pythonScriptSelector, plotScriptSelector }) => {
 	const plotScriptContent = plotScriptCodeBlock.textContent.trim()
 	const generatedID = React.useId()
 	const spinnerID = `${generatedID}-spinner`
-	const loadAndRunPythonScript = async () => {
-		let pyodide = await loadPyodide()
+	const loadAndRunPythonScript = async (e) => {
+		// Disable the button
+		e.target.disabled = true
+		// Optionally, you can also add a visual indication that the button is disabled
+		e.target.classList.add('opacity-50', 'cursor-not-allowed')
+
 		const spinner = document.getElementById(spinnerID)
 		spinner.classList.remove('hidden')
 		console.log('loading packages...')
-		pyodide.loadPackage(['numpy', 'scipy']).then(() => {
-			console.log('python execution started.')
-			const pythonResult = pyodide.runPython(pythonScriptContent)
-			window.pythonResult = pythonResult
-			window.pyodideElementID = generatedID
-			console.log('python execution finished.')
-			setTimeout(plotScriptContent, 1)
-		})
+
+		try {
+			let pyodide = await loadPyodide()
+			pyodide.loadPackage(['numpy', 'scipy']).then(() => {
+				console.log('python execution started.')
+				const pythonResult = pyodide.runPython(pythonScriptContent)
+				window.pythonResult = pythonResult
+				window.pyodideElementID = generatedID
+				console.log('python execution finished.')
+				// Re-enable the button in case of error
+				e.target.disabled = false
+				e.target.classList.remove('opacity-50', 'cursor-not-allowed')
+				setTimeout(plotScriptContent, 1)
+			})
+		} catch (error) {
+			console.error('Error running Python script:', error)
+			// Re-enable the button in case of error
+			e.target.disabled = false
+			e.target.classList.remove('opacity-50', 'cursor-not-allowed')
+		}
 	}
 	return (
 		<div id={generatedID} className='p-6 border border-gray-200 rounded-lg'>
