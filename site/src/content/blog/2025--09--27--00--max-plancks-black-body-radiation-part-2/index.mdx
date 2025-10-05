@@ -1,0 +1,616 @@
+---
+layout_name: blog-post
+title: "Max Planck's Black Body Radiation, Part 2: Information theoritic approach"
+description: We are going to rederive Max Planck's Black Body Radiation using information theory
+date: 2025-09-27T00:00:00.00Z
+category:
+  name: blog
+features:
+  - python-runner
+---
+
+import { PythonRunner} from "../../../components/python-runner.jsx"
+
+In the previous post [Black Body Radiation derivation](../2025--09--26--00--max-plancks-black-body-radiation-part-1/), we
+derive Black Body Radiation spectrum using Boltzmann's statistic and Quantum Energy Postulate.
+
+In this post, we are going to rederive it using information theory. We then show that the quanta of energy
+is just a direct consequence of the energy distribution from the experimental data.
+
+By using this information-theoritic approach, hopefully you can understand that Max Planck's postulate doesn't
+appear at random. It was rather an educated guess or scientific intuition, similar of using Bayesian update to match
+probability distribution of the model/theory to the real experimental data.
+
+# Perceiving radiation as information exchange
+
+When observing black body radiation, we can perceive it as information exchange from measurements.
+
+Things that we can measure is the macroscopic variables:
+
+- energy intensity
+- spectrum of frequency
+- temperature
+
+The set of measurements is the information, which is a spectrum in the function of $u(\nu, T)$. We have a plot of intensity,
+with the frequency of the radiation as the x-axis, and $T$ temperature controlling the curve and peak intensity.
+
+So we observed some information. The spectrum itself is essentially an un-normalized distribution over all possible frequencies.
+Radiation then can be thought of as a means to transfer information. When the temperature is at equilibrium, that means:
+
+1. It is the maximum amount of information that can be transferred, since the distribution doesn't change anymore.
+2. The information is mutual, in the sense that what we observed has to be exactly or proportional to the information
+   each microstates wants to send to the observer.
+
+In other words, the information entropy we calculate must be the same with the sum of information entropy from microstates
+of the black body/black box.
+
+# Calculating information entropy of a single chunk of datum
+
+We will now consider if the Black Body can be divided into infinite or finite of smallest black body that can emit information.
+
+Let's start as usual, with continuous and discrete summations of information entropy. The variables for the information to
+measure in this case is "energy", since this is what we measure to be different by frequency.
+
+## Continuous entropy
+
+Suppose there is a continuous distribution $p(E)$. With continuous energy, the Shannon entropy looks like this:
+
+$$
+\begin{align*}
+S = - \int_0^\infty p(E) \operatorname{ln}(p(E)) \, dE \\
+\end{align*}
+$$
+
+To apply Maximum Entropy principle, we gradually add least-biased constraints.
+
+The usual normalization constraint of probability distribution: $\int_0^\infty p(E) \, dE=1$
+
+The average energy constraint, the one we observed from the measurements $\int_0^\infty E \, p(E)\, dE = \langle E \rangle$
+
+If you are still confused on why we have average energy as the constraint, then remember that the physical measurements of energy spectrum
+of black body are stabilizing into the same curve for the same temperature. In other words, the energy settles into the same number
+for a given frequency. It doesn't increase indefinitely. So the energy spectrum averages out into the same number.
+
+Applying Lagrangian constraint for Maximum Entropy principle (or equivalently, stationary action principle), we derived:
+
+$$
+\begin{align*}
+\frac{\partial \phantom{p}}{\partial p} \left[ S + \alpha C_1 + \beta C_2 \right] &= 0 \\
+\frac{\partial \phantom{p}}{\partial p} \left[ - \int_0^\infty p(E) \operatorname{ln}(p(E)) \, dE + \alpha (\int_0^\infty p(E) \, dE - 1) + \beta (\int_0^\infty E \, p(E)\, dE - \langle E \rangle) \right] &= 0 \\
+\frac{\partial \phantom{p}}{\partial p} \left[ - p(E) \operatorname{ln}(p(E)) + \alpha p(E) + \beta E \, p(E) \right] &= 0 \\
+-\operatorname{ln}(p(E)) - 1 + \alpha + \beta E &= 0 \\
+p(E) = e^{\alpha-1} e^{\beta E} \\
+\end{align*}
+$$
+
+From
+
+$$
+\begin{align*}
+\int_0^\infty p(E) \, dE &= 1 \\
+\int_0^\infty e^{\alpha-1} e^{\beta E} \, dE &= 1 \\
+e^{\alpha-1} \int_0^\infty e^{\beta E} \, dE &= 1 \\
+e^{\alpha-1} \frac{1}{-\beta} &= 1 \\
+\beta = - e^{\alpha-1} \\
+\end{align*}
+$$
+
+Because probability can't be a negative number, then this means that $\beta$ is a negative constant. If we
+switched the convention that $\beta$ is a positive constant by flipping $\beta$ signs, then:
+
+$$
+p(E) = \beta \, e^{-\beta E}
+$$
+
+The average energy then becomes
+
+$$
+\begin{align*}
+\int_0^\infty E \, p(E) \, dE &= \langle E \rangle \\
+\int_0^\infty E \,\beta e^{-\beta E} \, dE &=  \\
+\beta \int_0^\infty E \, e^{-\beta E} \, dE &=  \\
+\beta \frac{1}{\beta^2} &=  \\
+\frac{1}{\beta} &= \langle E \rangle \\
+\end{align*}
+$$
+
+The probability distribution becomes
+
+$$
+p(E) = \frac{1}{\langle E \rangle} \, e^{-\frac{E}{\langle E \rangle}}
+$$
+
+## Discrete entropy
+
+If we assume the Shannon entropy to be discrete, because the space of states is finite/discrete. The entropy formula uses sum
+over discrete states
+
+$$
+\begin{align*}
+S = - \sum_{n=0}^\infty p(E_n) \, \operatorname{ln}(p(E_n)) \\
+\end{align*}
+$$
+
+Applying Max Entropy the same way using Lagrangian constraints of both normalization and average energy, we get:
+
+$$
+\begin{align*}
+\frac{\partial \phantom{p}}{\partial p} \left[ S + \alpha C_1 + \beta C_2 \right] &= 0 \\
+\frac{\partial \phantom{p}}{\partial p} \left[ - \sum_{n=0}^\infty p(E_n) \operatorname{ln}(p(E_n)) + \alpha (\sum_{n=0}^\infty p(E_n) - 1) + \beta (\sum_{n=0}^\infty E_n \, p(E_n) - \langle E \rangle) \right] &= 0 \\
+- \operatorname{ln}(p(E_n)) - 1 + \alpha + \beta E_n &= 0 \\
+p(E_n) = e^{\alpha-1} e^{\beta E_n} \\
+\end{align*}
+$$
+
+Seems that not much of difference, don't you think? Assuming that probability is normalized, we can choose positive $\beta$ again.
+However, this time because the energy state is discrete. The normalization factor is a discrete sum.
+
+$$
+\begin{align*}
+1 &= \sum_{n=0}^\infty \, p(E_n) \\
+&= \sum_{n=0}^\infty \, e^{\alpha -1} \, e^{-\beta E_n} \\
+&= e^{\alpha -1} \, \sum_{n=0}^\infty \, e^{-\beta E_n} \\
+e^{1-\alpha} &= \sum_{n=0}^\infty \, e^{-\beta E_n} \\
+Z(\beta) &= \sum_{n=0}^\infty \, e^{-\beta E_n} \\
+\end{align*}
+$$
+
+Notice that we rename the sum as $Z(\beta)$ as convenience. Because it depends on parameter $\beta$. The probability
+distribution can then be simplified into.
+
+$$
+p(\beta, E_n) =\frac{1}{Z(\beta)} e^{-\beta E_n} \\
+$$
+
+With average energy:
+
+$$
+\begin{align*}
+\langle E_n \rangle &= \sum_{n=0}^\infty E_n \, p(E_n) \\
+&= \frac{1}{Z(\beta)} \sum_{n=0}^\infty E_n \, e^{-\beta E_n} \\
+\end{align*}
+$$
+
+If we substitute back $Z(\beta)$ then
+
+$$
+p(\beta, E_n) =\frac{\langle E \rangle e^{-\beta E_n}}{\sum_{n=0}^\infty E_n \, e^{-\beta E_n}}  \\
+$$
+
+You might say that this doesn't look like Planck's quantum distribution at all. The form is still very similar to the
+average energy we get from continuous Shannon entropy. So why bother?
+
+# Energy statistics and information
+
+By assuming that each chunk of blackbody emits average energy as a form of information exchange, we can then relate
+the information with the physical measurements.
+
+We have experimental data of spectrum $u(\nu, T)$, which is a function of frequency $\nu$ and $T$ temperature.
+It is usually a plot graph of continuous $\nu$ in x-axis with $u$ as y-axis, for a specific temperature $T$.
+This is because it is not so easy to variate smooth temperature observation, because all the measurements has to be
+done on thermal equilibrium. If we variate the temperature, it destroys the thermodynamic equalibrium.
+So the way to measure is usually by choosing an exact temperature of the black body cavity (can be calibrated using
+the wall's temperature), then waits until the temperature is uniform. Record the spectrum, and then move on to a different
+temperature.
+
+Thus, we can imagine that for one session of observation/experiments, we choose temperature $T$.
+The radiation emitted by the cavity of black body is then detected by a specific frequency $\nu$, then we record the energy
+density. We then get the value of intensity $u(\nu, T)$.
+
+If we are using information-theoritical perspectives, then the individual black body states must have some kind of
+microstates. Doesn't matter what. But since we assume that the microstates only depends on variable frequency $\nu$,
+we just call it $g(\nu)$. For a setup of parameter $\nu$ and $T$, we can then imply the energy $E$ has some kind of
+distribution over parameter $\nu$ and $T$. The information we retrieve from the radiation then must be proportional
+to the average energy of that distribution $\langle E \rangle$.
+
+Because for each session, the temperature is fixed. Let's call this average energy $\langle E_T \rangle (\nu)$.
+
+It is proportional with the microstates prefactor $g(\nu)$, which is also usually called modes (will explain later).
+
+So the relation we have now:
+
+$$
+u(\nu, T) = g(\nu) \, \langle E_T \rangle (\nu) \\
+$$
+
+We now need to calculate $g(\nu)$. Which unfortunately, need some kind of intuition of the physics behind the models.
+So, it can't be purely mathematical.
+
+Remember in the last article, Planck's modeled the black body objects to be of a vibrating resonator. The resonator
+uses EM waves model. The derivation probably worth another articles. But basically, for a frequency $\nu$, the emitted
+energy exists in multiple form of modes. So the total energy for a given frequency is the average energy times the total
+modes. The density of modes per unit volume per unit frequency is $\frac{8\pi \nu^2}{c^3}$.
+
+<details>
+
+  <summary>Expand the density mode calculation here</summary>
+
+  We are skipping the derivation of the modes density because it's not the focus of this article.
+  Explaining this will require us to explain how the Electromagnetic waves model works in the cavity of black body.
+  I'm just going to assume you understand the glossary.
+
+  Basically an electromagnetic waves can travel in any direction in 3D spaces.
+  EM waves contains both electric waves and magnetic waves. It has two polarization modes. Meaning switching the polarization
+  still carry the same energy (symmetry around polarization). So each mode of energy has to be multiplied by 2.
+
+  In a cubic space of volume $V$, the energy modes can only live in standing waves, because non-standing waves will interfere
+  each other and cancel out the contribution of other waves. Only standing waves superpose in a constructive way.
+  However the standing waves depends on the wavelength. For a cube with dimension $L^3$, it means the standing wave
+  has to have wavelength of $L/2$, $L$, $3L/2$, and so on.
+
+  But we want to calculate the mode by frequency, not wavelengths.
+
+  For EM waves, the frequency is $\nu = \frac{c}{\lambda}$.
+
+  If we imagine that the waves can occupy a microstate, or configuration $k$, then it has to be a combination of possible
+  standing waves in 3D space. So we have 3 axes to choose from. In one axis it has to be a multiple of $\frac{2 \pi}{L}$.
+  Because $2\pi$ is for one full waves, and $L$ is one full length of the cavity.
+
+  Then the total number of modes per unit volume per wavelengths are the polarization factor, times mode counts density,
+  times spherical volume:
+
+  $$
+  \begin{align*}
+  g(\nu) &= 2 \cdot \frac{1}{(2\pi)^3} \cdot 4 \pi \left(\frac{2\pi \nu}{c}\right)^2 \cdot \frac{2\pi}{c} \\
+  &= \frac{8 \pi \nu^2}{c^3}
+  \end{align*}
+  $$
+
+</details>
+
+The value of $g(\nu)$ is invariant to how the information itself is transferred. It's just a scaling factor from the
+contribution of the total microstates, or mode configuration, that the blackbody has.
+
+So, how do we justify which energy distribution to choose, based on the experimental data?
+
+This is where the statistics came into play.
+We basically wants to calculate the likelihood of our two possible distribution, matched with the experimental data.
+
+In order to do that, at least we need to know the average and variance of our predicted models. We then compare which
+one fits the distribution from our Max Entropy principle.
+
+We have two parameters $\nu$ and $T$. However, the average energy is using parameter of $\nu$ assuming $T$ is fixed.
+We need to know how the distribution behaves when we variate $T$ in a fixed $\nu$.
+
+## Average Energy
+
+From thermodynamic relations of partition function $Z(\beta)$
+
+$$
+\begin{align*}
+\langle E_\nu \rangle (\beta) &= - \frac{\partial \phantom{\beta}}{\partial \beta} \operatorname{ln}(Z(\beta))\\
+&= - \frac{1}{Z(\beta)} \frac{\partial \phantom{\beta}}{\partial \beta} Z(\beta)
+\end{align*}
+$$
+
+If the current observed object only variates by temperature, $\beta = \frac{1}{k_B T}$ by thermodynamic relations of canonical
+ensemble. If we have multiple measurements of the blackbody radiation in different temperature, then we can calculate
+the statistics to check the dependence of energy $E$ with $\nu$. Knowing $T$ will mean knowing $\beta$, so that we can
+have multiple values of $\langle E_\nu \rangle$ to derive its statistics.
+
+## Variance of Energy states
+
+The variance of the energy states can also be computed from the partition function $Z(\beta)$
+
+$$
+\begin{align*}
+\sigma_{E_\nu}^2 &= \langle E_\nu^2 \rangle (\beta) - \langle E_\nu \rangle ^2 (\beta) \\
+&= \frac{\partial^2 \phantom{\beta^2} }{\partial \beta^2} \operatorname{ln}(Z(\beta))\\
+&= - \frac{\partial \phantom{\beta^2} }{\partial \beta} \langle E_\nu \rangle(\beta) \\
+\end{align*}
+$$
+
+## Determining which distribution fits the blackbody spectral curves
+
+Rewriting the equation above, for convenience, so it is clear what parameters we are comparing about.
+
+For $m$ sets of temperature measurements, we have $m$ by $n$ data of average energy per frequency $\langle E_\nu \rangle$.
+With $n$ corresponds to total numbers of energy states that depends directly from frequency $\nu$.
+
+So we can calculate the variance of energy values by frequency $\nu$, from varying temperature $T$.
+
+$$
+\begin{align*}
+\sigma_{E_\nu}^2 (\beta) &= - \frac{\partial \langle E_\nu \rangle(\beta)}{\partial \beta} \\
+\sigma_{E_\nu}^2 (T) &= k_B T^2 \frac{\partial \phantom{T}}{\partial T} \langle E_\nu \rangle(T) \\
+\end{align*}
+$$
+
+The idea is basically as follows, we can compare theoritical variance vs experimental variance.
+Let's say the left hand side is the theoritical variance (we derive it algebraically).
+The right hand side is the experimental variance.
+For a given frequency $\nu$, the experimental variance of energy from all possible microstates, can be computed
+from an exact chosen $T$, for a given average energy per frequency $\langle E_\nu \rangle(T)$, with the derivative
+(from the differential of $T$) $\frac{\partial \phantom{T}}{\partial T} \langle E_\nu \rangle(T)$, which we can compute
+numerically.
+
+In a given value of $\nu$ and $T$, the experimental data of $u(\nu, T)$ will let us retrieve $\langle E_T \rangle(\nu)$,
+which is the average energy per frequency, when the temperature $T$ is fixed.
+However, notice that in that point of time, due to thermal equilibrium, it is also the average energy per frequency,
+when the frequency $\nu$ is fixed, and the temperature $T$ variates.
+
+So, essentially $\langle E_\nu \rangle = \langle E_T \rangle$ in that specific point of combination of $\nu$ and $T$.
+This way, we can compute the right hand side numerically.
+
+So the right hand side will be the same for both continuous and discrete energy derivation.
+
+The left hand side, however, will be different.
+
+If we calculate the variance to the continuous Shannon entropy derivation:
+
+$$
+\begin{align*}
+\sigma_{E_\nu}^2 (T) = \sigma_{E_\nu}^2 (\beta) &= \langle E_\nu^2 \rangle (\beta) - \langle E_\nu \rangle ^2 (\beta) \\
+&= \int_0^\infty E_\nu^2 p(E_nu) \, dE_nu - \langle E_\nu \rangle ^2 (\beta) \\
+&= \int_0^\infty E_\nu^2 \, \beta e^{-\beta E_nu} \, dE_nu - \langle E_\nu \rangle ^2 (\beta) \\
+&= \beta \int_0^\infty E_\nu^2 \, e^{-\beta E_nu} \, dE_nu  - \langle E_\nu \rangle ^2 (\beta) \\
+&= \beta \frac{2}{\beta^3} - \langle E_\nu \rangle ^2 (\beta) \\
+&= \frac{1}{\beta^2} = \langle E_\nu \rangle ^2 (\beta) \\
+\sigma_{E_\nu}^2 (T) &= \langle E_\nu \rangle ^2 (T) \\
+\end{align*}
+$$
+
+Meanwhile for the discrete Shannon entropy derivation, we won't have the closed form algebraic solution if
+we don't make any assumptions about the relation between $E_\nu$ and $\nu$.
+So here's where Planck's postulate came into play.
+
+Planck's assume that energy quanta is an integer multiple of a discrete energy $\epsilon(\nu)$ which is some function of $\nu$.
+This is the simplest discrete energy states arrangements, where multiple energy packet of the same mode can be accumulated without limit.
+
+$$
+\begin{align*}
+Z(\beta) &= \sum_{n=0}^\infty e^{-\beta n \epsilon(\nu)} \\
+&= \sum_{n=0}^\infty (e^{-\beta \epsilon(\nu)})^n \\
+&= \frac{1}{1-e^{-\beta \epsilon(\nu)}} \\
+\end{align*}
+$$
+
+In other words, $Z(\beta)$ can be rewritten in closed form, because it is a geometric series now.
+
+The average energy is then:
+
+$$
+\begin{align*}
+\langle E_\nu \rangle(\nu, \beta) &= \frac{\epsilon(\nu) e^{-\beta \epsilon(\nu)}}{1 - e^{-\beta \epsilon(\nu)}}
+\end{align*}
+$$
+
+The variance is then:
+
+$$
+\begin{align*}
+\sigma_{E_\nu}^2(\nu, \beta) &= e^{\beta \epsilon(\nu)} \, \langle E_\nu \rangle^2(\nu, \beta) \\
+&= \langle E_\nu \rangle^2(\nu, \beta) + \epsilon(\nu) \langle E_\nu \rangle (\nu, \beta) \\
+\end{align*}
+$$
+
+As you can see that the theoritical/algebraic derivation for the variance is different, even though the average energy
+per frequency is the same. This way, which distribution we should use is pretty much clearly can be determined
+from experimental data.
+
+Spoiler alert, the experimental variance only matches the discretized distribution. So we have no choice but to accept
+that the energy is quantized.
+
+We can easily graphed the difference between continuous and discretized distribution. As you can see above, the
+variance differs by $\epsilon(\nu) \langle E_\nu \rangle (\nu, \beta)$, which only been affected by the unknown discretization factor $\epsilon(\nu)$.
+
+Case closed.
+
+# Some simulation
+
+If you are interested in seeing how we can compute it from the plot, we can make a little simulation.
+Of course using synthetic data set instead of the actual experimental black body radiation.
+We already knew that the Planck's Radiation formula is the correct one.
+
+<PythonRunner client:only="react" pythonScriptSelector="#continuousVsDiscreteDistribution" plotScriptSelector="#continuousVsDiscreteDistributionPlot"  />
+
+<details>
+
+  <summary>Python Script (Collapsible)</summary>
+
+  <div id="continuousVsDiscreteDistribution">
+
+```python
+import numpy as np
+from scipy.constants import h, c, k
+from scipy.optimize import curve_fit
+
+np.random.seed(0)
+nu = np.linspace(1e12, 3e14, 400)  # Hz
+T_vals = np.linspace(600, 2000, 25)  # 25 temperatures
+noise_level = 0.01
+
+def planck_u(nu, T):
+    return (8*np.pi*h*nu**3 / c**3) / (np.exp(h*nu/(k*T)) - 1)
+
+# generate noisy u
+u = np.array([planck_u(nu, T)*(1 + noise_level*np.random.randn(len(nu))) for T in T_vals])
+u = np.clip(u, a_min=0, a_max=None)
+
+# compute average energy $\langle E_\nu \rangle$
+E_nu = (c**3 / (8*np.pi*nu**2)) * u  # shape (nT, nunu)
+
+# partial derivative of E_nu by T
+dmu_dT = np.zeros_like(E_nu)
+for j in range(len(nu)):
+    y = E_nu[:, j]
+    dmu_dT[:, j] = np.gradient(y, T_vals)
+
+# compute experimental variance of energy states
+T_matrix = T_vals[:, None]
+Var_experimental = k * (T_matrix**2) * dmu_dT
+
+# compute variance difference with continuous energy distribution
+R_Var_discrete = Var_experimental - E_nu**2
+
+# choose reference T (middle)
+idx_ref = len(T_vals)//2
+T_ref = T_vals[idx_ref]
+mu_ref = E_nu[idx_ref]
+R_ref = R_Var_discrete[idx_ref]
+
+# estimate eps_hat = R/E_nu for E_nu>0
+eps_hat = np.full_like(mu_ref, np.nan)
+mask = mu_ref > 0
+eps_hat[mask] = R_ref[mask] / mu_ref[mask]
+
+# fit linear and power law
+mask_fit = mask & np.isfinite(eps_hat) & (eps_hat > 0)
+nu_fit = nu[mask_fit]
+eps_fit = eps_hat[mask_fit]
+
+def linear(nu, alpha):
+    return alpha * nu
+
+popt_lin, pcov_lin = curve_fit(linear, nu_fit, eps_fit, maxfev=10000)
+alpha_hat = popt_lin[0]
+alpha_se = np.sqrt(np.diag(pcov_lin))[0]
+
+log_nu = np.log(nu_fit)
+log_eps = np.log(eps_fit)
+slope, intercept = np.polyfit(log_nu, log_eps, 1)
+p_hat = slope
+A_hat = np.exp(intercept)
+
+eps_lin_pred = linear(nu, alpha_hat)
+eps_pow_pred = A_hat * nu**p_hat
+rss_lin = np.nansum((eps_hat - eps_lin_pred)**2)
+rss_pow = np.nansum((eps_hat - eps_pow_pred)**2)
+
+results = {
+    'nu': nu.tolist(),
+    'R_Var': R_Var_discrete.tolist(),
+    'E_nu': E_nu.tolist(),
+    'idx_ref': idx_ref,
+    'T_ref': T_ref,
+    'T_vals': T_vals.tolist(),
+    'eps_hat': eps_hat.tolist(),
+    'eps_lin_pred': eps_lin_pred.tolist(),
+}
+results
+```
+
+  </div>
+
+  <div id="continuousVsDiscreteDistributionPlot">
+
+```javascript
+    function generatePlot() {
+      const result = window.pythonResult
+      const generatedID = window.pyodideElementID
+      const plotID =`${generatedID}-plot`
+      let plotDiv = document.getElementById(plotID)
+
+      if(!plotDiv) {
+        plotDiv = document.createElement('div')
+        plotDiv.id = plotID
+        const parentDiv = document.getElementById(generatedID)
+        parentDiv.prepend(plotDiv)
+      }
+
+      const nu = result.get('nu')
+      const E_nu = result.get('E_nu')
+      const R_Var = result.get('R_Var')
+      const T_vals = result.get('T_vals')
+      const eps_hat = result.get('eps_hat')
+      const eps_lin_pred = result.get('eps_lin_pred')
+      const idx_ref = result.get('idx_ref')
+      const T_ref = result.get('T_ref')
+
+      const layoutVariance = {
+        title:`Energy variance difference at T=${T_vals[Math.floor(T_vals.length/2)]} K`,
+        xaxis: {
+          title: 'Frequency (Hz)',
+          showgrid: true,
+        },
+        yaxis: {
+          title: 'Variance - ⟨E⟩^2',
+          showgrid: true,
+        },
+        showlegend: true,
+      }
+
+    const trVar = {
+      x: nu.map((w) => w),
+      y: R_Var[idx_ref].map((w) => w),
+      mode: 'markers',
+      name: 'Variance - ⟨E⟩^2',
+      line: {
+        color: 'red',
+        width: 2,
+      }
+    }
+
+      const trace1 = {
+        x: nu.map((w) => w),
+        y: eps_hat.map((w) => w),
+        mode: 'markers',
+        name: "Variance Ratio Data",
+        marker: {
+          color: 'blue',
+          size: 3
+        }
+      };
+
+      const trace2 = {
+        x: nu.map((w) => w),
+        y: eps_lin_pred.map((w) => w),
+        mode: 'lines',
+        name: "Linear Fit of Variance Ratio Data",
+        line: {
+          color: 'red',
+          width: 2
+        }
+      };
+
+      const layout = {
+        title: `Variance Ratio vs Frequency at T=${T_vals[Math.floor(T_vals.length/2)]} K`,
+        xaxis: {
+          title: 'Frequency (Hz)',
+          showgrid: true
+        },
+        yaxis: {
+          title: 'Energy quanta (ε = R/⟨E⟩)',
+          showgrid: true
+        },
+        showlegend: true
+      };
+    
+
+
+      divVar = document.createElement('div')
+      divQuanta = document.createElement('div')
+      plotDiv.appendChild(divVar)
+      plotDiv.appendChild(divQuanta)
+      Plotly.newPlot(divVar, [trVar], layoutVariance)
+      Plotly.newPlot(divQuanta, [trace1, trace2], layout);
+      document.getElementById(`${generatedID}-spinner`).classList.add('hidden');
+    }
+
+    generatePlot()
+```
+
+  </div>
+
+</details>
+
+In the graph above, we can see that in the first graph of $\sigma_{E_\nu}^2 - \langle E_\nu \rangle^2$ is non-zero.
+It implies that the energy distribution is definitely not continuous, but rather discretized, so that the variance is
+actually bigger than classical limit.
+
+The difference in variance is exactly $\epsilon(\nu) \langle E_\nu \rangle$, which we already discussed above.
+
+Moreover, since we know $\langle E_\nu \rangle$, the average energy value from the experimental data, we can compute $\epsilon(\nu)$.
+The quantity $\epsilon(\nu)$ is simply the difference of variance from the first graph, divided by the average energy.
+
+$$
+\epsilon(\nu) = \frac{\sigma_{E_\nu}^2 - \langle E_\nu \rangle^2}{\langle E_\nu \rangle}
+$$
+
+Although the plot deliberately contains noise to fudge the average energy computation, we can clearly see that $\epsilon(\nu)$,
+can be smoothly interpolated by a line.
+This means that $\epsilon(\nu)$ is a linear scale of $\nu$. Which then suggest that the quanta of energy $\epsilon(\nu)= h \nu$,
+with $h$ can be computed by the gradient of the plot.
+
+From these mechanism, we can immediately sure without a doubt that Blackbody radiation suggests that energy were transitted in
+discrete chunk, with discrete Shannon information/entropy transfer.
