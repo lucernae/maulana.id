@@ -1,13 +1,7 @@
-import { useState, useCallback, useMemo, useRef } from 'react'
-import Loadable from 'react-loadable'
+import { useState, useCallback, useMemo, useRef, lazy, Suspense } from 'react'
 import * as React from 'react'
 
-const LoadablePlotlyPlot = Loadable({
-	loader: () => import('react-plotly.js'),
-	loading() {
-		return <div>Loading...</div>
-	}
-})
+const PlotlyPlot = lazy(() => import('react-plotly.js'))
 
 export function FunctionPlot() {
 	const [appliedK, setAppliedK] = useState(0.1)
@@ -133,96 +127,97 @@ export function FunctionPlot() {
 					Apply
 				</button>
 			</div>
-			<LoadablePlotlyPlot
-				client:only={'react'}
-				className={'bg-white'}
-				data={[
-					{
-						x: points.map((p) => p.x),
-						y: points.map((p) => p.y),
-						type: 'scatter',
-						mode: 'lines+markers',
-						name: `f(t) = (k(t-2)+1)/(t+1), k=${appliedK}`,
-						hoverinfo: 'x+y',
-						hoverlabel: {
-							bgcolor: '#FFF',
-							bordercolor: '#4a90e2',
-							font: { size: 12 }
-						},
-						marker: {
-							size: points.map((_, idx) => (hoveredPoint === idx ? 15 : 6)),
-							color: points.map((_, idx) => (hoveredPoint === idx ? 'blue' : '#4a90e2')),
-							opacity: points.map((_, idx) => (hoveredPoint === idx ? 1 : 0)),
+			<Suspense fallback={<div>Loading...</div>}>
+				<PlotlyPlot
+					className={'bg-white'}
+					data={[
+						{
+							x: points.map((p) => p.x),
+							y: points.map((p) => p.y),
+							type: 'scatter',
+							mode: 'lines+markers',
+							name: `f(t) = (k(t-2)+1)/(t+1), k=${appliedK}`,
+							hoverinfo: 'x+y',
+							hoverlabel: {
+								bgcolor: '#FFF',
+								bordercolor: '#4a90e2',
+								font: { size: 12 }
+							},
+							marker: {
+								size: points.map((_, idx) => (hoveredPoint === idx ? 15 : 6)),
+								color: points.map((_, idx) => (hoveredPoint === idx ? 'blue' : '#4a90e2')),
+								opacity: points.map((_, idx) => (hoveredPoint === idx ? 1 : 0)),
+								line: {
+									color: points.map((_, idx) => (hoveredPoint === idx ? 'darkblue' : '#4a90e2')),
+									width: points.map((_, idx) => (hoveredPoint === idx ? 2 : 0))
+								}
+							},
 							line: {
-								color: points.map((_, idx) => (hoveredPoint === idx ? 'darkblue' : '#4a90e2')),
-								width: points.map((_, idx) => (hoveredPoint === idx ? 2 : 0))
-							}
+								color: '#4a90e2'
+							},
+							hovertemplate:
+								'Current Point:<br>' +
+								't: %{x:.3f}<br>' +
+								'f(t): %{y:.3f}<br>' +
+								'<span><span style="color: red;">' +
+								'Transformed Point:<br>1+2/t: %{customdata[0]:.3f}<br>f(1+2/t): %{customdata[1]:.3f}<br>' +
+								'2f(1+2/t)+f(t)=1:<br>2*%{customdata[1]:.3f}+%{y:.3f}=%{customdata[2]:.3f}' +
+								'</span>' +
+								'</span>',
+							customdata: points.map((p) => {
+								const qx = 1 + 2 / p.x
+								const qy = (appliedK * (qx - 2) + 1) / (qx + 1)
+								const computedRelation = 2 * qy + p.y
+								return [qx, qy, computedRelation]
+							})
 						},
-						line: {
-							color: '#4a90e2'
-						},
-						hovertemplate:
-							'Current Point:<br>' +
-							't: %{x:.3f}<br>' +
-							'f(t): %{y:.3f}<br>' +
-							'<span><span style="color: red;">' +
-							'Transformed Point:<br>1+2/t: %{customdata[0]:.3f}<br>f(1+2/t): %{customdata[1]:.3f}<br>' +
-							'2f(1+2/t)+f(t)=1:<br>2*%{customdata[1]:.3f}+%{y:.3f}=%{customdata[2]:.3f}' +
-							'</span>' +
-							'</span>',
-						customdata: points.map((p) => {
-							const qx = 1 + 2 / p.x
-							const qy = (appliedK * (qx - 2) + 1) / (qx + 1)
-							const computedRelation = 2 * qy + p.y
-							return [qx, qy, computedRelation]
-						})
-					},
-					{
-						x: dualPoints.map((p) => p.x),
-						y: dualPoints.map((p) => p.y),
-						type: 'scatter',
-						mode: 'lines+markers',
-						name: `f(t) = (k(t-2)+1)/(t+1), k=${appliedK}`,
-						hoverinfo: 'skip',
-						hoverlabel: {
-							bgcolor: '#FFF',
-							bordercolor: '#4a90e2',
-							font: { size: 12 }
-						},
-						showlegend: false,
-						marker: {
-							size: dualPoints.map((_, idx) => (hoveredPoint === idx ? 15 : 0)),
-							color: dualPoints.map((_, idx) => (hoveredPoint === idx ? 'red' : '#4a90e2')),
-							opacity: dualPoints.map((_, idx) => (hoveredPoint === idx ? 1 : 0)),
+						{
+							x: dualPoints.map((p) => p.x),
+							y: dualPoints.map((p) => p.y),
+							type: 'scatter',
+							mode: 'lines+markers',
+							name: `f(t) = (k(t-2)+1)/(t+1), k=${appliedK}`,
+							hoverinfo: 'skip',
+							hoverlabel: {
+								bgcolor: '#FFF',
+								bordercolor: '#4a90e2',
+								font: { size: 12 }
+							},
+							showlegend: false,
+							marker: {
+								size: dualPoints.map((_, idx) => (hoveredPoint === idx ? 15 : 0)),
+								color: dualPoints.map((_, idx) => (hoveredPoint === idx ? 'red' : '#4a90e2')),
+								opacity: dualPoints.map((_, idx) => (hoveredPoint === idx ? 1 : 0)),
+								line: {
+									color: dualPoints.map((_, idx) => (hoveredPoint === idx ? 'darkred' : '#4a90e2')),
+									width: dualPoints.map((_, idx) => (hoveredPoint === idx ? 2 : 0))
+								}
+							},
 							line: {
-								color: dualPoints.map((_, idx) => (hoveredPoint === idx ? 'darkred' : '#4a90e2')),
-								width: dualPoints.map((_, idx) => (hoveredPoint === idx ? 2 : 0))
+								color: '#4a90e2'
 							}
-						},
-						line: {
-							color: '#4a90e2'
 						}
-					}
-				]}
-				layout={{
-					title: 'Function Plot',
-					xaxis: { title: 't', range: [appliedTMin, appliedTMax] },
-					yaxis: {
-						title: 'f(t)',
-						range: [Math.min(...points.map((p) => p.y), Math.max(...points.map((p) => p.y)))]
-					},
-					width: 800,
-					height: 500,
-					hovermode: 'closest',
-					hoverdistance: 10,
-					showlegend: true
-				}}
-				config={{
-					displayModeBar: true,
-					responsive: true
-				}}
-				onClick={handleClick}
-			/>
+					]}
+					layout={{
+						title: 'Function Plot',
+						xaxis: { title: 't', range: [appliedTMin, appliedTMax] },
+						yaxis: {
+							title: 'f(t)',
+							range: [Math.min(...points.map((p) => p.y), Math.max(...points.map((p) => p.y)))]
+						},
+						width: 800,
+						height: 500,
+						hovermode: 'closest',
+						hoverdistance: 10,
+						showlegend: true
+					}}
+					config={{
+						displayModeBar: true,
+						responsive: true
+					}}
+					onClick={handleClick}
+				/>
+			</Suspense>
 		</div>
 	)
 }
