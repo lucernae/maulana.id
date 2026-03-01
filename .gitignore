@@ -80,3 +80,6 @@ yarn-error.log
 .direnv
 result
 .venv
+
+# Claude
+.claude
