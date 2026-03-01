@@ -1,0 +1,141 @@
+---
+layout_name: blog-post
+title: Running Qwen-3.5 locally in my machine using llama-cpp
+description: >
+  LLM local inference in consumer grade machine is now possible with the latest Qwen-3.5 model and llama-cpp library.
+category:
+  name: llm
+date: 2026-03-02T00:00:00.00Z
+---
+
+Qwen-3.5 is the latest iteration of the Qwen series of large language models developed by Alibaba Cloud.
+This model brings significant improvements in performance, multilingual capabilities, multimodal and efficiency.
+
+Those're so many buzzwords. But why do we care? Why do I care?
+
+Because everyone on Twitter said it can run with relatively high token per second (TPS) on consumer grade machines, and I want to see it for myself.
+Most cloud LLM API providers I experienced have TPS in about 50 tps.
+But most people who have tried said that Qwen-3.5 can run at 100+ tps on consumer grade machines, which is very impressive. ALSO, with the quality 
+of Anthropic Sonnet models.
+If this is true, we can run it locally and triage most daily and boring tasks using local inference for free, and then offload the 
+more complex and creative tasks to the cloud. Like using Opus model.
+
+# Where to get the models?
+
+I got the models from [Unsloth AI Guide](https://unsloth.ai/docs/models/qwen3.5), 
+in the huggingface hub repo.
+
+We have several flavors there.
+
+
+# First iteration: using Ollama
+
+The machine that I own (I want to try multiple setup):
+
+| Device | RAM | GPU |
+|--------|-----|-----|
+| Macbook Air M2 | 16GB | 8-core GPU |
+| Macbook Pro M4 | 24GB | 12-core GPU |
+| Desktop PC | 16GB DDR4 | GTX 1080 8GB VRAM |
+
+Based on my RAM size, I choose 27B parameter model variant, which is the smallest one.
+I also use the 4-bit quantized version.
+
+In this first experiment, the result:
+
+| Device | RAM | GPU | Results |
+|--------|-----|-----|-----|
+| Macbook Air M2 | 16GB | 8-core GPU | Able to run using Ollama, but hang without response |
+| Macbook Pro M4 | 24GB | 12-core GPU | Not able to be offloaded to GPU at all |
+| Desktop PC | 16GB DDR4 | GTX 1080 8GB VRAM | Not able to run using Ollama, so I switched to use llama-cpp |
+
+The weird thing here is why it can't run on my company's Macbook Pro M4, which has more RAM and better GPU than my Macbook Air M2.
+I suspect this is because the RAM is used by other corporate software/bloatware/security features, such as CrowdStrike.
+Since I'm only running this locally. It should be fine. But of course, I don't want to kill the CrowdStrike process. 
+So I kill most of the other processes to free up as much RAM as possible.
+
+I actually uses Claude Code in these 3 machines to help set up the environment using nix (to make it as reproducible as possible in different machines).
+So I worked on all three in parallel.
+The biggest bottleneck of the setup (considering Indonesia's internet speed), is of course:
+
+1. Downloading the model weights which is around 16GB on all 3 machines.
+2. Nix packages rebuilding, since we have one Linux machine in x86_64 and two macOS ARM systems.
+
+# Second iteration: using llama-cpp with custom Nix overrides
+
+So in the next iteration, I ditched Ollama in all three (to avoid rebuilding Ollama), and prefer to build llama-cpp
+using custom Nix overrides. Which is a bit easier, since the patches is all there.
+It's a little bit slow on Linux since I have to ensure the CUDA drivers, and GPU acceleration support were also built.
+Meanwhile on MacOS, most of it were already in public caches of nixos-unstable.
+
+In this second iteration:
+
+1. Use 27B parameter 2bits quantized model.
+2. Use llama-cpp with custom Nix overrides to build it with CUDA support on Linux
+
+Results:
+
+| Device | RAM | GPU | Results |
+|--------|-----|-----|-----|
+| Macbook Air M2 | 16GB | 8-core GPU | Didn't try on this yet, since my wife used it for playing Dota in the weekend |
+| Macbook Pro M4 | 24GB | 12-core GPU | Fully offloaded to GPU and able to run |
+| Desktop PC | 16GB DDR4 | GTX 1080 8GB VRAM | Didn't successfully offload all layers to GPU, but was able to run, slower than MBP 24GB |
+
+Good progress. Since we can see some results.
+
+Throughout the experiment, I was advised by [@pebaryan](https://x.com/pebaryan) to try the 2bits version of the 35B-A3B model.
+The reason being it only uses 3B activated parameters, which is much smaller than the 27B model, 
+and should be able to run faster on consumer grade machines.
+
+This time we see real progress!
+Although I don't measure the actual TPS, I was only do a test practice by 
+giving prompt via Claude Code and see how fast the response is.
+
+I give the same prompt:
+
+"Find the process that uses port 8001"
+
+As ballpark figure. On the MBP M4, it finished in 1minutes. While in the Linux Desktop it finished in 5minutes.
+
+# Third iteration: customizing run parameters
+
+Since the model has only 3B activated parameters, I was wondering if it can fit inside GTX 1080 that has 8GB RAM, right?
+I tweaked the llama-server parameters to change the batch-size and ubatch-size, and also the n-gpu-layers options.
+Out of 41 layers, I can only offload 22 layers to GTX 1080.
+However the log showed that there are a good chunk of unused VRAM, almost 3GB.
+
+After testing by omitting the `-ngl` option, it turns out that llama can automatically estimate the VRAM needed.
+For some reason, it can offload 41 layers now. Still don't know why it can. But I was wondering if there exists 
+some kind of unified RAM+VRAM addressing that can allow it to seamlessly switch the layers to the GPU (or probably it actually fits there).
+
+The tps increased dramatically from like 2 tps to around 10 tps downstream or so?
+Anyway, it's significant improvement.
+
+On the other hand, tweaking the batch-size and ubatch-size doesn't have any significant effect.
+
+
+# Fourth iteration: using Pi coding agent
+
+@pebaryan also suggests to try Pi coding agent instead of Claude Code, because it have smaller initial prompts.
+So it is much more responsive.
+I simply swapped the agent to interact with the model.
+And it was indeed very responsive.
+
+Since the main reason on why I want to try this local inference is to test the tool calling and vision capabilities, 
+I tried to give it a prompt with vision/screenshot input, and ask it to get today's weather data.
+It works. So it understands that it needs to fetch realtime data from public API (I intentionally didn't say from where to the AI).
+
+With Pi coding agent, the response is much faster, and I can see the thinking and response stream.
+
+# Remarks
+
+Just like usual. In order to easily reproduce the setup on other machine (be it succeed or got reliable errors), 
+I put the setup as a nix flake in my github repo [here](https://github.com/lucernae/nix-config/tree/main/process-compose/llm/qwen-3-5)
+
+You can do `nix run` directly to test if it works in your machine:
+
+```shell
+nix run "github:lucernae/nix-config?dir=process-compose/llm/qwen-3-5"
+```
+
+Thanks to [@pebaryan](https://x.com/pebaryan) for the suggestions and help along the way!
