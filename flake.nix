@@ -124,6 +124,7 @@
             pkgs.rsync
             # Playwright system dependencies
             pkgs.playwright-driver.browsers
+            pkgs.ffmpeg          # Video recording for Playwright tests
             # DuckDB CLI for data processing
             pkgs.duckdb
             # Cloudflare R2 management

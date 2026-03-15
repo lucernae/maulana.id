@@ -38,9 +38,21 @@ import { join } from 'path';
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
 
-    const context = await browser.newContext({
+    // Enable video recording if RECORD_VIDEO env var is set
+    const shouldRecordVideo = process.env.RECORD_VIDEO === 'true';
+    const contextOptions = {
       viewport: { width: 1280, height: 800 }
-    });
+    };
+
+    if (shouldRecordVideo) {
+      console.log('📹 Video recording enabled\n');
+      contextOptions.recordVideo = {
+        dir: 'playwright-videos/',
+        size: { width: 1280, height: 800 }
+      };
+    }
+
+    const context = await browser.newContext(contextOptions);
 
     const page = await context.newPage();
 
@@ -96,9 +108,17 @@ import { join } from 'path';
     });
     console.log('✅ Page loaded\n');
 
-    // Click the lazy-load button
-    console.log('🔘 Clicking "Load Interactive Map" button...');
-    const loadButton = page.locator('button:has-text("Load Interactive Map")').first();
+    // Scroll to Indramayu section
+    console.log('📜 Scrolling to Indramayu section...');
+    const indramayuHeading = page.locator('h3:has-text("Indramayu Region Example")');
+    await indramayuHeading.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(500);
+    console.log('✅ Scrolled to Indramayu section\n');
+
+    // Click the Indramayu section's lazy-load button (find button after the heading)
+    console.log('🔘 Clicking "Load Interactive Map" button for Indramayu...');
+    // Find the button that comes after the Indramayu heading
+    const loadButton = page.locator('h3:has-text("Indramayu Region Example") ~ * button:has-text("Load Interactive Map")').first();
     await loadButton.waitFor({ timeout: 10000 });
     await loadButton.click();
     console.log('✅ Map loading initiated\n');
@@ -321,7 +341,18 @@ import { join } from 'path';
     console.log('='.repeat(60));
     console.log('\n🎉 All tests completed successfully!\n');
 
-    await browser.close();
+    // Save video if recording was enabled
+    if (shouldRecordVideo) {
+      console.log('🎥 Saving video recording...');
+      const videoPath = await page.video().path();
+      await page.close();
+      await context.close();
+      await browser.close();
+      console.log(`✅ Video saved to: ${videoPath}\n`);
+    } else {
+      await browser.close();
+    }
+
     process.exit(0);
 
   } catch (error) {
@@ -329,7 +360,16 @@ import { join } from 'path';
     console.error(error.stack);
 
     if (browser) {
-      await browser.close();
+      try {
+        console.log('\n🎥 Saving video of failed test...');
+        const videoPath = await page.video().path();
+        await page.close();
+        await context.close();
+        await browser.close();
+        console.log(`✅ Video saved to: ${videoPath}\n`);
+      } catch (videoError) {
+        await browser.close();
+      }
     }
 
     process.exit(1);

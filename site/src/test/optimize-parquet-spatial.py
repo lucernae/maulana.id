@@ -127,10 +127,11 @@ def optimize_parquet_file(input_path, output_path, row_group_size=50000):
     print("\n🔀 Sorting by spatial location (Hilbert curve)...")
     result_sorted = result.sort_values('hilbert_dist')
 
-    # Drop temporary columns
-    result_sorted = result_sorted.drop(columns=['hilbert_dist', 'lon', 'lat'])
+    # Drop ONLY the hilbert_dist column, KEEP lon/lat for efficient querying!
+    result_sorted = result_sorted.drop(columns=['hilbert_dist'])
 
     print("   ✅ Sorted by spatial locality")
+    print(f"   ✅ Keeping lon/lat columns for efficient spatial filtering")
 
     # Convert back to Arrow table
     print(f"\n💾 Writing optimized parquet file: {output_path}")

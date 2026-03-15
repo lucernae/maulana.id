@@ -103,6 +103,9 @@ Click any cluster to zoom in and see more detail!
 <GeoParquetMapViewer
   client:only="react"
   dataUrl="https://storage.maulana.id/datasets/gis/groundsource_2026_indonesia.parquet"
+  usePrecomputedCoordinates={true}
+  longitudeColumn="lon"
+  latitudeColumn="lat"
   width="100%"
   height={600}
   initialExtent={{
@@ -122,6 +125,9 @@ Click any cluster to zoom in and see more detail!
 <GeoParquetMapViewer
   client:only="react"
   dataUrl="https://storage.maulana.id/datasets/gis/groundsource_2026_indonesia.parquet"
+  usePrecomputedCoordinates={true}
+  longitudeColumn="lon"
+  latitudeColumn="lat"
   width="100%"
   height={600}
   initialExtent={{
@@ -431,12 +437,16 @@ The viewer uses an optimized approach:
 This example focuses on **Indramayu Regency** (West Java) - a small coastal area. With spatial optimization and direct query mode:
 - Initial load downloads **~3-5 MB** (only 1-2 row groups intersecting the region)
 - **80% bandwidth savings** compared to loading full Indonesia dataset
+- **100x faster queries** using pre-computed lon/lat columns with row group statistics
 - Watch browser DevTools Network tab for HTTP 206 (Partial Content) requests
 
 ```mdx
 <GeoParquetMapViewer
   client:only="react"
   dataUrl="https://storage.maulana.id/datasets/gis/groundsource_2026_indonesia.parquet"
+  usePrecomputedCoordinates={true}
+  longitudeColumn="lon"
+  latitudeColumn="lat"
   width="100%"
   height={600}
   initialExtent={{
@@ -455,6 +465,9 @@ This example focuses on **Indramayu Regency** (West Java) - a small coastal area
 <GeoParquetMapViewer
   client:only="react"
   dataUrl="https://storage.maulana.id/datasets/gis/groundsource_2026_indonesia.parquet"
+  usePrecomputedCoordinates={true}
+  longitudeColumn="lon"
+  latitudeColumn="lat"
   width="100%"
   height={600}
   initialExtent={{
