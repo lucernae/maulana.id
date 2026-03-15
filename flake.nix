@@ -64,6 +64,9 @@
                   numpy
                   scipy
                   matplotlib
+                  pandas
+                  pyarrow
+                  duckdb
                 ]);
             }
             {
@@ -119,11 +122,22 @@
           packages = [
             pkgs.getconf
             pkgs.rsync
+            # Playwright system dependencies
+            pkgs.playwright-driver.browsers
+            # DuckDB CLI for data processing
+            pkgs.duckdb
+            # Cloudflare R2 management
+            pkgs.wrangler        # Official Cloudflare CLI for R2 buckets
+            pkgs.rclone          # Universal cloud storage tool (S3-compatible)
           ];
           env = [
             {
               name = "NODE_OPTIONS";
               value = "--max-old-space-size=4096";
+            }
+            {
+              name = "PLAYWRIGHT_BROWSERS_PATH";
+              value = "${pkgs.playwright-driver.browsers}";
             }
           ];
         };

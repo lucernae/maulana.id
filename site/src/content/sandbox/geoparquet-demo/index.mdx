@@ -1,0 +1,500 @@
+---
+layout_name: blog-post
+title: GeoParquet Map Viewer
+description: Interactive visualization of GeoParquet data with full geometry rendering using DuckDB-WASM
+category:
+  name: sandbox
+date: 2026-03-14T00:00:00.00Z
+tags: [geoparquet, duckdb, maps, geospatial]
+---
+
+> As part of my experiment with Claude Code, I tried making this sandbox to see if Claude can one-shot this.
+> Unfortunately it can't. So the capabilities design and technical choices were based on my input, but Claude Code implement this 
+> according to my tests of Agent Harness implemented in this repo.
+> The explanation texts here, is mostly a summary made by Claude.
+
+# GeoParquet Map Viewer Demo
+
+This demo showcases client-side visualization of GeoParquet files using DuckDB-WASM for data queries and deck.gl + MapLibre GL JS for rendering.
+
+The viewer automatically detects and renders Points, LineStrings, Polygons, and Multi-geometries with their actual shapes. It combines intelligent clustering for dense areas with full geometry rendering for individual features, providing both performance and visual accuracy.
+
+## Datasets
+
+I used Groundsource dataset by Google, snapshot 2026.
+The tweet was actually what inspired me to vibecoded the React component used here.
+
+<blockquote className='twitter-tweet'>
+	<p lang='en' dir='ltr'>
+		We trained a new flood forecasting model designed to predict flash floods in urban areas up to 24 hours in advance.
+		<br />
+		<br />
+		To help address a flash floods data gap, we created Groundsource: a new AI methodology using Gemini to identify 2.6M+ historical events across 150+ countries.…
+		<a href='https://t.co/NLRe71uOD0'>pic.twitter.com/NLRe71uOD0</a>
+	</p>
+	&mdash; Sundar Pichai (@sundarpichai)
+	<a href='https://twitter.com/sundarpichai/status/2032137438089658764?ref_src=twsrc%5Etfw'>
+		March 12, 2026
+	</a>
+</blockquote>
+<script async src='https://platform.twitter.com/widgets.js' charset='utf-8'></script> 
+
+import { GeoParquetMapViewer } from "../../../components/geoparquet-map.jsx"
+
+## Loading GeoParquet Data
+
+The component supports two ways to load data:
+
+### 1. Remote Parquet (from R2/S3)
+
+For large datasets, serve them from cloud storage like Cloudflare R2:
+
+```mdx
+<GeoParquetMapViewer
+  dataUrl="https://storage.maulana.id/datasets/gis/groundsource_2026_indonesia.parquet"
+  ...
+/>
+```
+
+**Benefits:**
+- ✅ Keeps git repo lightweight (no large binary files)
+- ✅ Efficient HTTP range requests (DuckDB-WASM only downloads needed row groups)
+- ✅ Free bandwidth with Cloudflare R2
+- ✅ Easy to update datasets without redeploying site
+
+### 2. Co-located Parquet (local files)
+
+For smaller datasets, place the `.parquet` file alongside your `.mdx`:
+
+```mdx
+import { GeoParquetMapViewer } from "../../../components/geoparquet-map.jsx"
+import parquetUrl from './groundsource_2026_indonesia.parquet?url'
+
+<GeoParquetMapViewer
+  dataUrl={parquetUrl}
+  ...
+/>
+```
+
+**Benefits:**
+- ✅ Works offline in development
+- ✅ Vite optimizes asset loading
+- ✅ Good for smaller sample datasets
+
+**For this demo**, we use the **remote parquet** from R2 for the main examples (75MB Indonesia dataset), and keep an identical **co-located copy** for the last example to demonstrate both loading methods.
+
+## Hybrid Rendering: Clusters + Geometries (Default)
+
+The map below uses **hybrid rendering** to efficiently display large datasets. At any zoom level, you'll see:
+- **Clusters** (blue circles) for dense areas with many overlapping points
+- **Individual geometries** (actual shapes) for sparse areas and individual features
+
+Click any cluster to zoom in and see more detail!
+
+**Features:**
+- 🗺️ **Full geometry rendering** - Lines, polygons, and complex shapes rendered with actual geometries
+- 🎯 **Dynamic clustering** - Dense areas automatically cluster for better performance
+- 📊 **Cluster size** indicates number of points
+- 🔍 **Click clusters** to drill down
+- ⚡ **Automatic re-querying** for optimal performance
+- 🎨 **Smart layer selection** - Automatically uses the right deck.gl layer for each geometry type
+
+```mdx
+<GeoParquetMapViewer
+  client:only="react"
+  dataUrl="https://storage.maulana.id/datasets/gis/groundsource_2026_indonesia.parquet"
+  width="100%"
+  height={600}
+  initialExtent={{
+    minLon: 95,
+    maxLon: 141,
+    minLat: -11,
+    maxLat: 6
+  }}
+  enableClustering={true}
+  clusterZoomThreshold={10}
+  clusterRadiusMultiplier={1000}
+  getFillColor={[255, 0, 0]}
+  tooltipColumns={['area_km2']}
+/>
+```
+
+<GeoParquetMapViewer
+  client:only="react"
+  dataUrl="https://storage.maulana.id/datasets/gis/groundsource_2026_indonesia.parquet"
+  width="100%"
+  height={600}
+  initialExtent={{
+    minLon: 95,
+    maxLon: 141,
+    minLat: -11,
+    maxLat: 6
+  }}
+  enableClustering={true}
+  clusterZoomThreshold={10}
+  clusterRadiusMultiplier={1000}
+  getFillColor={[255, 0, 0]}
+  tooltipColumns={['area_km2']}
+/>
+
+## Individual Points View (No Clustering)
+
+You can disable clustering to show all individual points. Useful for smaller datasets or when you need to see every feature:
+
+```mdx
+<GeoParquetMapViewer
+  client:only="react"
+  dataUrl="https://storage.maulana.id/datasets/gis/groundsource_2026_indonesia.parquet"
+  width="100%"
+  height={600}
+  initialExtent={{
+    minLon: 95,
+    maxLon: 141,
+    minLat: -11,
+    maxLat: 6
+  }}
+  enableClustering={false}
+  getRadius={5000}
+  getFillColor={[255, 140, 0]}
+  tooltipColumns={['area_km2']}
+/>
+```
+
+<GeoParquetMapViewer
+  client:only="react"
+  dataUrl="https://storage.maulana.id/datasets/gis/groundsource_2026_indonesia.parquet"
+  width="100%"
+  height={600}
+  initialExtent={{
+    minLon: 95,
+    maxLon: 141,
+    minLat: -11,
+    maxLat: 6
+  }}
+  enableClustering={false}
+  getRadius={5000}
+  getFillColor={[255, 140, 0]}
+  tooltipColumns={['area_km2']}
+/>
+
+## Initial Extent Configuration
+
+The component automatically fits to the data extent on load. You can optionally specify `initialExtent` to focus on a specific region:
+
+```jsx
+// Example: Focus on Indonesian archipelago
+initialExtent={{
+  minLon: 95,   // Western extent (Sumatra)
+  maxLon: 141,  // Eastern extent (Papua)
+  minLat: -11,  // Southern extent
+  maxLat: 6     // Northern extent
+}}
+```
+
+The component automatically calculates the optimal center and zoom level to fit this bounding box, ensuring the entire spatial extent is visible regardless of viewport size.
+
+## Custom Clustering Configuration
+
+Fine-tune clustering behavior:
+
+- `clusterZoomThreshold`: Zoom level to switch from clusters to individual points (default: 10)
+- `minClusterZoom`: Minimum zoom for smallest clusters (default: 3)
+- `clusterRadiusMultiplier`: Base size for cluster circles (default: 1000)
+
+```mdx
+<GeoParquetMapViewer
+  client:only="react"
+  dataUrl="https://storage.maulana.id/datasets/gis/groundsource_2026_indonesia.parquet"
+  width="100%"
+  height={600}
+  initialExtent={{
+    minLon: 95,
+    maxLon: 141,
+    minLat: -11,
+    maxLat: 6
+  }}
+  enableClustering={true}
+  clusterZoomThreshold={12}
+  minClusterZoom={4}
+  clusterRadiusMultiplier={1500}
+  getFillColor={[0, 200, 100]}
+  tooltipColumns={['area_km2']}
+/>
+```
+
+<GeoParquetMapViewer
+  client:only="react"
+  dataUrl="https://storage.maulana.id/datasets/gis/groundsource_2026_indonesia.parquet"
+  width="100%"
+  height={600}
+  initialExtent={{
+    minLon: 95,
+    maxLon: 141,
+    minLat: -11,
+    maxLat: 6
+  }}
+  enableClustering={true}
+  clusterZoomThreshold={12}
+  minClusterZoom={4}
+  clusterRadiusMultiplier={1500}
+  getFillColor={[0, 200, 100]}
+  tooltipColumns={['area_km2']}
+/>
+
+## Geometry Rendering Capabilities
+
+The viewer supports full geometry rendering, automatically displaying the actual shapes of your geometries instead of just centroids.
+
+### How It Works
+
+1. **Automatic Detection**: The component automatically detects geometry types from your GeoParquet file
+2. **Smart Rendering**:
+   - **Points/MultiPoints** → Rendered as circles (ScatterplotLayer)
+   - **LineStrings/MultiLineStrings** → Rendered as lines (GeoJsonLayer)
+   - **Polygons/MultiPolygons** → Rendered as filled shapes with strokes (GeoJsonLayer)
+3. **Hybrid Mode**: Clusters and individual geometries can appear together at the same zoom level
+   - Dense areas → Show as cluster circles
+   - Sparse/individual features → Show full geometry shapes
+
+### Supported Geometry Types
+
+- ✅ Point
+- ✅ MultiPoint
+- ✅ LineString
+- ✅ MultiLineString
+- ✅ Polygon
+- ✅ MultiPolygon
+
+### Geometry Styling Props
+
+Customize how different geometry types are rendered:
+
+```jsx
+<GeoParquetMapViewer
+  // Enable/disable geometry rendering (default: true)
+  enableGeometryRendering={true}
+
+  // Point styling (clusters and point geometries)
+  getRadius={100}
+  getFillColor={[255, 0, 0]}
+
+  // Line styling (LineString, MultiLineString)
+  getLineColor={[255, 140, 0, 200]}
+  getLineWidth={2}
+
+  // Polygon styling (Polygon, MultiPolygon)
+  getPolygonFillColor={[0, 200, 100, 150]}
+/>
+```
+
+### Example: Styling LineStrings
+
+For datasets with road or river networks:
+
+```jsx
+<GeoParquetMapViewer
+  dataUrl="/data/rivers.parquet"
+  enableGeometryRendering={true}
+  getLineColor={[30, 144, 255, 200]}  // Dodger blue for rivers
+  getLineWidth={3}
+  getFillColor={[30, 144, 255]}
+/>
+```
+
+### Example: Styling Polygons
+
+For datasets with administrative boundaries or land parcels:
+
+```jsx
+<GeoParquetMapViewer
+  dataUrl="/data/boundaries.parquet"
+  enableGeometryRendering={true}
+  getPolygonFillColor={[255, 200, 0, 100]}  // Semi-transparent yellow
+  getLineColor={[255, 100, 0, 255]}  // Orange border
+  getLineWidth={2}
+/>
+```
+
+### Disabling Geometry Rendering
+
+If you prefer the old behavior (centroids only), you can disable it:
+
+```jsx
+<GeoParquetMapViewer
+  dataUrl={parquetUrl}
+  enableGeometryRendering={false}  // Back to centroid-only rendering
+/>
+```
+
+## How Hybrid Clustering + Geometry Rendering Works
+
+The component uses **Supercluster** for client-side intelligent clustering combined with **full geometry rendering**:
+
+### Clustering Algorithm
+
+1. **Supercluster Algorithm**: Uses a spatial index to efficiently cluster nearby points
+   - **Low zoom**: Points close together are clustered into single markers
+   - **High zoom**: Points spread out and show individually
+   - **Configurable threshold**: `clusterZoomThreshold` determines when clustering stops (default: 10)
+
+2. **Dynamic Clustering**: At any zoom level, Supercluster determines:
+   - Which features should cluster together (dense areas)
+   - Which features should show individually (sparse areas)
+
+3. **Dual-Layer Rendering**:
+   - **Cluster Layer** (ScatterplotLayer): Renders clustered features as blue circles
+   - **Geometry Layer** (GeoJsonLayer): Renders individual features with their actual shapes
+
+4. **Click-to-Expand**: Clicking a cluster:
+   - Calculates optimal expansion zoom level
+   - Animates transition to that zoom level
+   - Re-centers map on the cluster location
+
+5. **Visual Encoding**:
+   - Cluster circle size scales with `√point_count` for better visual perception
+   - Cluster color intensity increases with point density
+   - Individual geometries show their true shapes (lines, polygons, etc.)
+
+## How It Works
+
+### Data Processing Pipeline
+
+1. **Co-located Assets**: The `.parquet` file is placed alongside this `index.mdx` file
+2. **Vite Asset Handling**: Imported with `?url` suffix, Vite resolves it to the final public URL
+3. **DuckDB-WASM Spatial Queries**:
+   - Queries the file using HTTP range requests (only downloads needed row groups)
+   - Extracts centroids: `ST_X(ST_Centroid(ST_GeomFromWKB(geometry)))`
+   - Converts full geometries to GeoJSON: `ST_AsGeoJSON(ST_GeomFromWKB(geometry))`
+   - Detects geometry types: `ST_GeometryType(ST_GeomFromWKB(geometry))`
+4. **Apache Arrow** format preserves efficient columnar data representation
+5. **Supercluster** creates spatial index for intelligent clustering
+
+### Rendering Pipeline
+
+6. **Dual-Layer Rendering** (when `enableGeometryRendering={true}`):
+   - **ScatterplotLayer**: Renders cluster markers as circles
+   - **GeoJsonLayer**: Renders individual geometries with their actual shapes
+     - Points → circles
+     - LineStrings → stroked lines
+     - Polygons → filled shapes with borders
+7. **MapLibre GL JS** provides the OSM basemap
+
+### Architecture Benefits
+
+- ✅ **Client-side Processing**: All data processing happens in the browser
+- ✅ **No Backend Required**: Static file server only serves the parquet file
+- ✅ **Efficient Loading**: HTTP range requests fetch only needed data
+- ✅ **Geometry Preservation**: Full WKB geometries rendered with correct shapes
+- ✅ **Hybrid Visualization**: Clusters for dense areas, geometries for individuals
+
+## Example: Co-located Parquet File
+
+Below is an example using a co-located parquet file (Indonesia subset, 75MB). This demonstrates loading local files bundled with your site:
+
+```mdx
+import parquetUrl from './groundsource_2026_indonesia.parquet?url'
+
+<GeoParquetMapViewer
+  client:only="react"
+  dataUrl={parquetUrl}
+  width="100%"
+  height={600}
+  initialExtent={{
+    minLon: 95,
+    maxLon: 141,
+    minLat: -11,
+    maxLat: 6
+  }}
+  enableClustering={true}
+  clusterZoomThreshold={10}
+  getFillColor={[139, 0, 139]}
+  tooltipColumns={['area_km2']}
+/>
+```
+
+**Note:** The examples above use the **remote parquet** from R2, while this example uses an identical **co-located file**. Both load the same Indonesia dataset - the only difference is the loading method. Both approaches work seamlessly with the same component!
+
+## Spatial HTTP Range Optimization
+
+All examples on this page use **direct query mode** for true spatial HTTP range optimization. The component queries the parquet file directly without caching the full dataset in memory.
+
+### How It Works
+
+The viewer uses an optimized approach:
+- Parquet file organized into **8 spatially-sorted row groups** (Hilbert curve ordering)
+- Each query includes spatial extent filter (`WHERE lon BETWEEN ... AND lat BETWEEN ...`)
+- DuckDB-WASM reads row group metadata and downloads **only intersecting row groups**
+- Smaller viewport extent = fewer row groups downloaded = bandwidth savings
+
+### Indramayu Region Example
+
+This example focuses on **Indramayu Regency** (West Java) - a small coastal area. With spatial optimization and direct query mode:
+- Initial load downloads **~3-5 MB** (only 1-2 row groups intersecting the region)
+- **80% bandwidth savings** compared to loading full Indonesia dataset
+- Watch browser DevTools Network tab for HTTP 206 (Partial Content) requests
+
+```mdx
+<GeoParquetMapViewer
+  client:only="react"
+  dataUrl="https://storage.maulana.id/datasets/gis/groundsource_2026_indonesia.parquet"
+  width="100%"
+  height={600}
+  initialExtent={{
+    minLon: 108.0,  // Indramayu Region, West Java
+    maxLon: 108.6,
+    minLat: -6.6,
+    maxLat: -6.0
+  }}
+  enableClustering={true}
+  clusterZoomThreshold={10}
+  getFillColor={[255, 100, 0]}
+  tooltipColumns={['area_km2']}
+/>
+```
+
+<GeoParquetMapViewer
+  client:only="react"
+  dataUrl="https://storage.maulana.id/datasets/gis/groundsource_2026_indonesia.parquet"
+  width="100%"
+  height={600}
+  initialExtent={{
+    minLon: 108.0,
+    maxLon: 108.6,
+    minLat: -6.6,
+    maxLat: -6.0
+  }}
+  enableClustering={true}
+  clusterZoomThreshold={10}
+  getFillColor={[255, 100, 0]}
+  tooltipColumns={['area_km2']}
+/>
+
+### Monitoring HTTP Range Requests
+
+To see the optimization in action:
+
+1. **Open Browser DevTools** (F12)
+2. **Go to Network tab**
+3. **Filter by `.parquet`**
+4. **Reload the page**
+5. **Observe:**
+   - HTTP 206 (Partial Content) responses
+   - `Content-Range` headers showing byte ranges
+   - Only 3-5 MB transferred (not full 26 MB)
+6. **Pan the map significantly**
+   - New HTTP 206 requests appear
+   - Downloads additional row groups as needed
+
+### Why This is Efficient
+
+The component uses **direct query mode** which:
+- Queries `read_parquet(url)` directly (no temporary table)
+- Each viewport change triggers a spatial query with extent filter
+- DuckDB-WASM reads row group metadata and downloads only intersecting row groups
+- Smaller spatial extent = fewer row groups = less data transfer
+
+**Key Benefits:**
+- 🎯 **Focused regions** - Download only what you need
+- 📱 **Mobile-friendly** - Minimize data transfer
+- ⚡ **Fast initial load** - Don't wait for full dataset
+- 💰 **Cost-effective** - Reduce egress bandwidth from R2/S3

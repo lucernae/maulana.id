@@ -17,6 +17,7 @@
     },
     "devDependencies": {
         "numeric": "^1.2.6",
+        "playwright": "^1.58.2",
         "prettier": "^2.8.0"
     },
     "workspaces": [

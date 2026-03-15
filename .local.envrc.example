@@ -1,0 +1,17 @@
+# Cloudflare R2 Configuration
+# Copy this to .local.envrc and fill in your credentials
+
+# For Wrangler (Official Cloudflare CLI)
+export CLOUDFLARE_ACCOUNT_ID="your-account-id-here"
+export CLOUDFLARE_API_TOKEN="your-api-token-here"
+
+# For rclone (S3-compatible access)
+export RCLONE_CONFIG_R2_TYPE="s3"
+export RCLONE_CONFIG_R2_PROVIDER="Cloudflare"
+export RCLONE_CONFIG_R2_ACCESS_KEY_ID="your-r2-access-key-id"
+export RCLONE_CONFIG_R2_SECRET_ACCESS_KEY="your-r2-secret-access-key"
+export RCLONE_CONFIG_R2_ENDPOINT="https://<account-id>.r2.cloudflarestorage.com"
+export RCLONE_CONFIG_R2_ACL="public-read"
+
+# Optional: Set default R2 bucket name
+export R2_BUCKET_NAME="your-bucket-name"

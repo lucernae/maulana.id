@@ -81,5 +81,9 @@ yarn-error.log
 result
 .venv
 
+# Dataset related (must be added manually to avoid accidentally committing large files)
+*.parquet
+
 # Claude
 .claude
+.local.envrc

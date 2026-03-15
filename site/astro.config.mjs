@@ -13,7 +13,18 @@ import { remarkMathHeadings } from './src/plugins/remark-math-headings.js'
 export default defineConfig({
 	site: 'https://maulana.id/', // Write here your website url
 	vite: {
-		assetsInclude: ['**/*.fit']
+		assetsInclude: ['**/*.fit', '**/*.parquet'],
+		optimizeDeps: {
+			exclude: ['@duckdb/duckdb-wasm']
+		},
+		worker: {
+			format: 'es'
+		},
+		resolve: {
+			alias: {
+				'@geoarrow/deck.gl-layers': '/home/lucernae/WorkingDir/personal/maulana.id/node_modules/@geoarrow/deck.gl-layers/dist/dist.es.mjs'
+			}
+		}
 	},
 	markdown: {
 		remarkPlugins: [remarkReadingTime, RemarkMermaidClient, remarkMath, remarkMathHeadings],
