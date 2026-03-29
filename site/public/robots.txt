@@ -1,4 +1,42 @@
+# robots.txt for maulana.id
+
 User-agent: *
 Allow: /
 
-Sitemap: https://blog-template-gray.vercel.app/sitemap-index.xml
+# AI Agent Information
+# For AI agents and LLMs, see: https://maulana.id/llms.txt
+# This file contains usage terms, attribution requirements, and author profile
+
+# AI/LLM Crawlers - Explicitly welcomed for learning and employment matching
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+# Sitemap
+Sitemap: https://maulana.id/sitemap-index.xml
