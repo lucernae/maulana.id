@@ -42,7 +42,14 @@ export const getCategoryName = (cat: string | any) => {
 export const getPosts = async (max?: number) => {
 	// return (await getCollection('soft-dev'))
 	return (await getAllCollection())
-		.filter((post) => !post.data.draft && !post.data.index)
+		.filter((post) => {
+			// In development, show all posts except index pages
+			// In production, hide both drafts and index pages
+			if (import.meta.env.DEV) {
+				return !post.data.index
+			}
+			return !post.data.draft && !post.data.index
+		})
 		.map((post) => {
 			post.data.pubDate = post.data.pubDate || post.data.date
 			if (post.data.pubDate === undefined) {

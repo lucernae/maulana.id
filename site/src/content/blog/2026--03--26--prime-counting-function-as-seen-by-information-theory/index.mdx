@@ -1,0 +1,407 @@
+---
+layout_name: blog-post
+title: "Prime Counting Function: As seen by Information Theory"
+description: "The existence of prime numbers is deterministic, so why people talking about its unpredictability?"
+date: 2026-03-29T00:00:00.00Z
+category:
+  name: blog
+features:
+  - python-runner
+draft: true
+---
+
+import { PythonRunner} from "../../../components/python-runner.jsx"
+
+I was planning to write a post about prime counting function for the Pi Day. But I was too busy with my work and Ramadhan month.
+
+Pi is not always about the circumference of a circle. We have a function with Pi symbol in it, called the [Prime Counting Function](https://en.wikipedia.org/wiki/Prime-counting_function), with a symbol $$\pi(x)$$.
+
+# Definition of Prime Counting Function
+
+The prime counting function is a peculiar function that has one input $x$. It returns the number of prime numbers less than $x$.
+So $\pi(10)$ equals to 4, because there are 4 primes less than 10, which is 2,3,5,7.
+
+The graph of $\pi(x)$ if the $x$ is continuous will show a shape of sharp jumps, whenever a new prime number is found.
+
+<PythonRunner client:only="react" pythonScriptSelector="#primeCountingFunction" plotScriptSelector="#primeCountingFunctionPlot"  />
+
+<details>
+
+  <summary>Python Script (Collapsible)</summary>
+
+  <div id="primeCountingFunction">
+
+```python
+import numpy as np
+import js
+
+# Check if results already cached in window
+if hasattr(js.window, 'primeCountingResults') and js.window.primeCountingResults is not None:
+    # Return cached results directly
+    results = js.window.primeCountingResults.to_py()
+else:
+    def sieve_of_eratosthenes(limit):
+        """Generate all primes up to limit using Sieve of Eratosthenes"""
+        if limit < 2:
+            return []
+
+        is_prime = np.ones(limit + 1, dtype=bool)
+        is_prime[0:2] = False
+
+        for i in range(2, int(np.sqrt(limit)) + 1):
+            if is_prime[i]:
+                is_prime[i*i:limit+1:i] = False
+
+        return np.where(is_prime)[0]
+
+    # Generate primes up to 1000
+    limit = 1000
+    primes = sieve_of_eratosthenes(limit)
+
+    # Generate x values for the prime counting function (smooth/continuous)
+    x_values = np.linspace(0, limit, limit*100)
+
+    # Calculate pi(x) - the prime counting function
+    pi_x = np.searchsorted(primes, x_values, side='right')
+
+    results = {
+        'x_values': x_values.tolist(),
+        'pi_x': pi_x.tolist(),
+        'primes': primes.tolist()
+    }
+
+    # Cache results for future use
+    js.window.primeCountingResults = results
+
+results
+```
+
+  </div>
+
+  <div id="primeCountingFunctionPlot">
+
+```javascript
+    function generatePlot() {
+      const result = window.pythonResult
+      console.log(result.get('pi_x'))
+      const generatedID = window.pyodideElementID
+      const plotID = `${generatedID}-plot`
+      let plotDiv = document.getElementById(plotID)
+
+      if(!plotDiv) {
+        plotDiv = document.createElement('div')
+        plotDiv.id = plotID
+        const parentDiv = document.getElementById(generatedID)
+        parentDiv.prepend(plotDiv)
+      }
+
+      const x_values = result.get('x_values')
+      const pi_x = result.get('pi_x')
+
+      // Find y-range for initial x-range [0, 100]
+      const x_min = 0
+      const x_max = 100
+      const indices_in_range = x_values
+        .map((x, i) => x >= x_min && x <= x_max ? i : -1)
+        .filter(i => i !== -1)
+      const y_values_in_range = indices_in_range.map(i => pi_x[i])
+      const y_min = Math.min(...y_values_in_range)
+      const y_max = Math.max(...y_values_in_range)
+
+      const trace1 = {
+        x: x_values.map((x) => x),
+        y: pi_x.map((pi) => pi),
+        mode: 'lines',
+        name: 'π(x)',
+        line: {
+          color: 'blue',
+          width: 2
+        }
+      }
+
+      const layout = {
+        title: 'Prime Counting Function π(x) for x <= 100,000',
+        xaxis: {
+          title: 'x',
+          showgrid: true,
+          range: [x_min, x_max]
+        },
+        yaxis: {
+          title: 'π(x) - Number of primes less than or equal x',
+          showgrid: true,
+          range: [y_min, y_max]
+        },
+        showlegend: true
+      }
+
+      Plotly.newPlot(plotDiv, [trace1], layout)
+      document.getElementById(`${generatedID}-spinner`).classList.add('hidden')
+    }
+
+    generatePlot()
+```
+  </div>
+
+</details>
+
+The above graph shows the prime counting function up to 1000.
+
+# The "Unpredictability" of Prime Counting Function
+
+We know from number theory that the prime counting function is deterministic. This is because identifying a prime is
+using a deterministic algorithm. A number is a prime if it is divisible by only 1 and itself.
+So if we want to test that a number $x$ is prime or not, at least we need to divide it by all integers
+up to $\sqrt{x}$, then check if the only divisors are 1.
+
+There is a deterministic and arithmetical algorithm to find the prime number, called [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes).
+It is what I actually used in above plot to identify primes up to 1000.
+
+The question now, if finding primes is deterministic, then why people are talking about as if
+prime numbers were unpredictable? There is nothing random about the existence of prime numbers.
+Once prime numbers are found, it is always a prime number. It won't suddenly change into non-prime numbers.
+
+The "unpredictability" stems from our epistemic understanding of the location of the primes.
+We can't know where the prime is in advance. We have to test and evaluate it first.
+It is different from a simple algebraic function like $y=x^2$ where we know the value of y immediately by
+computing from $x$. The prime counting function $\pi(x)$ requires us to at least know the value of $\pi(x-1)$ and
+then test if $x$ is prime or not. It is unpredictable in the sense of knowing that $x$ is prime or not
+requires us to know and update our information about the location of the primes.
+
+We simply don't have all the information in advance. We have to **update** our information, and this is where
+the "unpredictability" comes in.
+
+We can try to make sense of it using Information Theory if there is a way to measure its unpredictability.
+
+# Informational value of finding a prime number
+
+Assuming that people are right that locating prime is an unpredictable process. Then we can treat it
+as like doing a random guess. Pick a number and guess if it is a prime or not.
+If it is prime, then there is a "surprise" and we can think of it as informational value gained.
+
+But then how do we pick a number? The answer naturally comes from the density of primes itself in the range of $x$.
+Intuitively, we think that the density of primes is higher when $x$ is close to 0 (the beginning of the range).
+As we go further away from 0, primes should become sparse since most numbers were constructed by multiplying earlier primes.
+
+In fact, there are already existing theorem for this called the [Prime Number Theorem (PNT)](https://en.wikipedia.org/wiki/Prime_number_theorem).
+This theorem is probably famous, because mathematicians conjectured its existence ever since 18th century.
+In fact, Gauss said that he conjectured some form of how PNT looks like while he was still 15 or 16 years old.
+The conjecture was given based on empirical data (the table of found primes).
+
+It was said that the prime counting function for very large $x$ is proportional to $\frac{x}{\ln x}$. Usually written in
+asymptotic notation as $\pi(x) \sim \frac{x}{\ln x}$. Notice how the logarithmic function is used in the formula. It showed
+profound insights.
+
+Intuitively, for some reason the density of primes in large range of $x$ is proportional to the logarithm of $x$.
+It only means that the density of primes has to be scale invariance, multiplicatively.
+
+As a simple illustration, for prime counting function, we need to ask the right question to understand its symmetry and unpredictability.
+
+If we are asking, "how similar is the density of prime numbers between [100,200] vs [1000, 1100]?". Both using a range difference of 100, but the density is vastly different.
+
+But if we are asking, "how similar is the density of prime numbers between [100,200] vs [1000, 2000]?". Both using a scale difference of 2 times, and the density is somewhat similar.
+
+If we rearrange PNT into some form like this:
+
+$$
+\frac{\pi(x)}{x} \cdot \ln x \approx 1
+$$
+
+Notice that $\frac{\pi(x)}{x}$ is essentially a density of primes around $x$. The empirical data of PNT said that the density of prime is proportional to the inverse of the logarithm of $x$.
+
+Now, if we want to use Information Theory, specifically the Maximum Entropy principle, we need to ask the right question, so that we are calculating against the correct reference measure or prior.
+
+## Choosing the correct density/distribution measure for prime counting function
+
+When counting entropy, we have to specify what is the probability distribution of the data.
+
+But Prime numbers are actually arithmetically deterministic. It's not a random number in any way. However, it still has a statistics.
+
+So we reframe our question, instead of dealing with probabilistic events, we are asking question about our epistemic understanding.
+
+Suppose that prime number has its own **true** distribution. But prime numbers are infinite. There will always be a greater prime numbers.
+So the question we need to ask is "what is the distribution of prime numbers, in a given range of numbers."
+
+Previously we discussed that the density is affected not just by the range, but also midpoint of the range. The density of prime numbers with spacing 10 numbers around midpoint integer 5
+is of course denser (we have 2,3,5,7). Compared with also 10 numbers around midpoint of 10000. So we need to find a measure that is invariant to the question being asked.
+Same type of question should not change the symmetry or constancy of the problem at hand.
+
+As opposed to the **true** distribution, we also have the **estimated** distribution, which is the distribution or density we are currently trying to guess.
+We are going to apply Maximum Entropy principle to the **estimated** distribution instead. Applying Maximum Entropy means we want to find the **true** distribution with
+as little bias as possible. We want to reconstruct it from as close to first principle as possible.
+
+So we have the true measure $dx$ (the spacing of numbers), but we want to estimate using a reference measure that is nice under symmetry.
+
+For empirical data and examples previously, intuitively we understand that the density of prime numbers not only affected by the spacing of numbers, but also the midpoint of the
+number itself. If we are measuring density for large number $x$, we need to make wider spacing, to get somewhat relevant density. Essentially, the number spacing needs to be larger in order
+for us to capture more prime numbers for the same density. This is intuitive enough.
+
+Mathematically, with the new measure variable (the one we estimate) as $t$, we have a new relationship:
+
+$$
+dt = \frac{dx}{x}
+$$
+
+Notice that if we integrate both sides, we now have $\Delta t = \ln x$. We need to transform $x$ into a new coordinate $t$ using this relation.
+Since the smallest prime number is 2, essentially $t = \ln\frac{x}{2}$.
+
+## Choosing the correct informational value
+
+We now want to estimate the true distribution iteratively from our estimated distribution. So this is kind of like inferential process.
+Start with our estimated distribution/measure, then if we found a new prime in the range we are trying to check, then we get a "surprise" or "information".
+
+The problem is now to quantify how much information we will have from this process, because the value is related with the distribution space itself. It's all relative.
+
+In some range of $\Delta t$, suppose that we are "guessing" a point at $t_p$ (p here means it is a prime), and it turns out to be a prime.
+The weight of that slot in $t$ space is essentially the difference between finding a prime or not. Since prime is always an integer, so at most the difference between
+two neighboring points being checked is proportional to
+
+$$
+\begin{align*}
+\delta t &= \ln(p + 1) - \ln(p) \\
+&= \ln(1 + \frac{1}{p}) \approx  \frac{1}{p}
+\end{align*}
+$$
+
+It's circling back to our previous definition above, but in a more intuitive manner.
+
+Now the key punchline is that the information value for this is going to be somewhat binary. Because numbers are either prime or not-prime. It can't be both.
+So as a sketch if we define the information value of $t$, $I(t) = 0$ if $t$ is not on a prime p and $I(t) = I_p$ if $t_p$ is on prime p.
+We actually need to find the value of $I_p$.
+
+For a probability distribution $\rho(t)$, the information content of specific probability is just
+
+$$
+\begin{align*}
+I(\rho(t_p)) &= -\ln(\rho(t_p)) \\
+&= - \ln(\delta t_p) \\
+&\approx - \ln(\frac{1}{p}) \\
+&\approx \ln(p)
+\end{align*}
+$$
+
+It turns out the relative informational value is $\ln(p)$
+
+## Information of prime as an encoding of integers
+
+The result above is very surprising, yet intuitive. Because the information ended up just a simple $\ln(p)$ with $p$ the prime number itself.
+
+This is similar with talking about encoding in bits. For example, if we encode an integer $x=4$ into bits, we needed to use 2 bits, because $\frac{\ln(4)}{\ln(2)}=2$.
+
+In analogy with that, information theory break apart a number into its encoding, using prime number as its base.
+
+Suppose that a number 10. Its **total** informational value in $t$ space has to be $\ln(2) + \ln(5)$ because the number is constructed using two primes.
+Same with number 8. Its **total** informational value in $t$ space has to be $3 \ln(2)$. Essentially the value is the **coding length** needed in nats, to encode that said number using primes as bases.
+
+This beautiful result is what is called the [Von Mangoldt](https://en.wikipedia.org/wiki/Von_Mangoldt_function) function derived
+from Max Entropy using first principle.
+
+As a building block, define a function $\Lambda(n)$, where it return $\ln(p)$ if $n = p^k$ for integer k. It return 0 otherwise.
+Von Mangoldt function is essentially an informational value that tells if a prime number p solely construct integer $n$.
+
+# Constructing Prime Counting Function from waves
+
+Let's recap what we know so far:
+
+1. Prime Counting Function is a deterministic function that appears like a step/staircase function due to the density of primes
+2. Applying Max Entropy principle, with least-biased constraints, we know that the informational value of prime number p in a given range of numbers around p, is proportional to $\ln(p)$.
+
+We are now going to take a leap of faith...
+
+A sufficiently nice step function can be thought of constructed from superpositions of waves.
+This is a very physically intuitive model. There is a chance that maybe the prime counting function is also a wave function in disguise.
+If it is, then we have a beautiful connection between Prime Numbers, Information Theory, and Waves.
+
+If Prime Counting Function is superpositions of waves, we can think of the function as having main principal wave (the function that generates the asymptotic line),
+plus the oscillatory modes that correct the function into steps. This is just a standard Fourier view of the function.
+
+So, let us suppose:
+
+$$
+\pi(x) = \underbrace{\text{principal wave}}_{\text{smooth trend}} + \underbrace{\text{oscillatory modes}}_{\text{the steps}}
+$$
+
+Since the principal waves is basically the asymptotic approximation. We can guess that it is in the form of Prime Number Theory result.
+So we can just skip it for now.
+
+The important thing now is to figure out the oscillatory modes using Fourier Transform.
+
+The sketch of the strategy is as follow:
+
+1. From the $\Lambda(n)$ function building block construct a function $\psi(x)$ which basically collect information about the "primality" of numbers up to $x$
+2. Then $\psi(x)$ is essentially a cumulative signals that kind of like $\pi(x)$ but behaves in a nicer way, because its domain is already aligned with our information-theoritic view
+3. Do a forward Fourier transform $F(s)$ to get the "spectrum", or the description of $\psi(x)$ but in the frequency domain (complex numbers $s$)
+4. Enforce normalization by trying to find an appropriate partition function $Z(s)$, so that the spectrum in $F(s)$ is properly averaged.
+5. By analogy with Information theory and Statistical physics, we know that $F(s)$ is essentially the average total information, which means it is by analogy, is also the average
+   of the energy of statistical physical systems.
+6. Average energy is directly proportional to the negative of derivative of the log of the partition function before. Meaning:
+
+   $$
+   F(s) = -\frac{d}{ds} \ln Z(s) = -\frac{Z'(s)}{Z(s)}
+   $$
+
+7. Using these two description of the same thing ($F(s)$ as forward transform from $\psi(x)$ and $F(s)$ as the log derivative of $Z(s)$), we can retrieve the partition function $Z(s)$.
+8. Once we know the partition function $Z(s)$, it immediately follows from Complex Analytic theory that the inverse transform can be used to get $\psi(x)$ back from the residue of the partition function.
+
+Using the steps above we will have two description of $\psi(x)$ that can be written in two equivalent forms. First as a cumulative step function (just like $\pi(x)$).
+The second, is in the form similar to a wave mechanical equation, which is a closed exact formula.
+
+From the second form, we can just directly see that the oscillatory modes correspond to zeroes and poles of the partition function.
+
+The step-by-step seems deceptively simple, but it took centuries for mathematician to build rigorous building block.
+Which is why I called it a leap of faith.
+
+The result is remarkably brilliant and illuminating, and perhaps it was better appreciated by revealing the result one by one.
+
+## $\psi(x)$: Function to count cumulative information of primality of integers
+
+$$
+\psi(x) = \sum_{n\leq x} \Lambda(n)
+$$
+
+The $\psi(x)$ function (now better known as [Chebysev function](https://en.wikipedia.org/wiki/Chebyshev_function)),
+is described as cumulative step signals that counts information of primality of integer $n$ up to $x$.
+
+## $F(s)$: Spectrum of $\psi(x)$
+
+From using the forward Fourier definition the function $F(s)$ is simply like below just by using construction
+
+$$
+F(s) = \sum_{n=1}^{\infty} \Lambda(n) \cdot n^{-s} = \sum_{n=1}^{\infty} \frac{\Lambda(n)}{n^s}
+$$
+
+## Relation between information and energy
+
+We got this by associating that the normalization factor (partition function) of the spectrum, has to be related with the average information.
+
+$$
+F(s) = -\frac{d}{ds} \ln Z(s) = -\frac{Z'(s)}{Z(s)}
+$$
+
+## $Z(s)$: The partition function of prime distribution
+
+Due to immediate relation between $F(s)$ on both as spectrum and as average information/energy, we got a quick derivation:
+
+$$
+-\frac{Z'(s)}{Z(s)} = \sum_{n=1}^{\infty} \frac{\Lambda(n)}{n^s}
+$$
+
+Which can be solved into:
+
+$$
+Z(s) = \prod_{p \text{ prime}} \frac{1}{1 - p^{-s}}
+$$
+
+Which is a [**Euler product**](https://en.wikipedia.org/wiki/Proof_of_the_Euler_product_formula_for_the_Riemann_zeta_function).
+
+Also due to the connection with Fundamental Theorem of Arithmetic, Euler product is exactly equivalent with Dirichlet Series
+for [**Riemann zeta function**](https://en.wikipedia.org/wiki/Riemann_zeta_function). So we can just essentially renaming
+our $Z(s)$ partition function into the Riemann Zeta function $\zeta(s)$.
+
+## $\psi(x)$: As the inverse transform using $\zeta(s)$
+
+Because we can interchangibly uses the partition function as replacement for $F(s)$, we can use inverse transform to get back $\psi(x)$.
+But the partition function turns out to be Riemann Zeta function. The Zeta function for the complex domain can be analytically continued to
+cover all complex numbers. Which means we can just use Complex Number theory to get back the inverse transform.
+
+Doing inverse transform will looks like this:
+
