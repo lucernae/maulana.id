@@ -41,7 +41,7 @@
 		"@astrojs/react": "^3.6.2",
 		"@astrojs/rss": "4.0.11",
 		"@astrojs/starlight": "^0.28.3",
-		"@astrojs/starlight-docsearch": "^0.2.0",
+		"@astrojs/starlight-docsearch": "^0.7.0",
 		"@duckdb/duckdb-wasm": "^1.29.0",
 		"@emotion/react": "^11.13.3",
 		"@emotion/styled": "^11.13.0",
