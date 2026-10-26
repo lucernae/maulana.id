@@ -62,7 +62,7 @@
 		"maplibre-gl": "^4.0.0",
 		"mathjs": "^13.2.0",
 		"nanostores": "^0.11.3",
-		"next-mdx-remote": "^5.0.0",
+		"next-mdx-remote": "^6.0.0",
 		"plotly.js": "^2.35.2",
 		"react-loadable": "^5.5.0",
 		"react-map-gl": "^7.1.0",
